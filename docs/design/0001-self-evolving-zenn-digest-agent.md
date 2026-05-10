@@ -481,8 +481,6 @@ mentioned_topic_contribution = feature_weight * salience * 0.3
 }
 ```
 
-
-
 ## 記事推薦
 
 ### 記事同一性
