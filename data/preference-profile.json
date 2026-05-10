@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "weight_range": {
+    "min": -3.0,
+    "max": 3.0
+  },
+  "seed_weight_range": {
+    "min": -1.0,
+    "max": 1.0
+  },
+  "feature_weights": {
+    "topics": {},
+    "feature_axes": {
+      "content_types": {},
+      "evidence_signals": {},
+      "practical_signals": {},
+      "depth_signals": {},
+      "title_signals": {},
+      "audience_levels": {}
+    }
+  },
+  "updated_at": null
+}

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "topics": {},
+  "feature_axes": {
+    "content_types": {
+      "description_ja": "記事の形式や構成",
+      "features": {}
+    },
+    "evidence_signals": {
+      "description_ja": "記事の主張や学びを支える根拠の種類",
+      "features": {}
+    },
+    "practical_signals": {
+      "description_ja": "実務で再利用しやすい具体性や応用可能性",
+      "features": {}
+    },
+    "depth_signals": {
+      "description_ja": "記事の掘り下げの深さや表層性",
+      "features": {}
+    },
+    "title_signals": {
+      "description_ja": "タイトルから読み取れる具体性や傾向",
+      "features": {}
+    },
+    "audience_levels": {
+      "description_ja": "記事が想定している読者の経験レベル",
+      "features": {}
+    }
+  }
+}
