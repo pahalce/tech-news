@@ -65,7 +65,7 @@ The multiplier used when a **Mentioned Topic** affects scoring or preference upd
 _Avoid_: full topic weight, ignored mention
 
 **Topic Normalization Dictionary**:
-The `topics` section of the **Feature Vocabulary Config**, mapping canonical topic keys to display names, aliases, and Japanese descriptions.
+The `topics` section of the **Feature Vocabulary Config**, mapping lowercase canonical topic keys to display names, lowercase aliases, and Japanese descriptions.
 _Avoid_: free-form topic strings, other_signals for technologies
 
 **Unknown Topic**:
@@ -156,6 +156,10 @@ _Avoid_: unbounded preference score, seed weight
 An initial feature weight derived from the design quality criteria before personal feedback accumulates.
 _Avoid_: learned preference, final vocabulary
 
+**Initial Feature Vocabulary**:
+The first concrete **Feature Vocabulary Config** used before feedback-driven vocabulary maintenance begins.
+_Avoid_: complete taxonomy, permanent vocabulary
+
 **Rule Score**:
 A deterministic article score calculated from **Preference Profile** weights and **Feature Salience**.
 _Avoid_: final recommendation, LLM judgment
@@ -181,10 +185,12 @@ _Avoid_: first-pass scoring, all-candidate ranking
 - Article topic features distinguish **Primary Topic** from **Mentioned Topic**.
 - The initial **Mentioned Topic Factor** is `0.3`.
 - **Topic Normalization Dictionary** normalizes topic aliases, and **Unknown Topic** values are reported in weekly vocabulary maintenance.
+- Topic matching is case-insensitive; canonical keys and aliases are stored lowercase, while display casing belongs to `display_name`.
 - **Feature Vocabulary Config** is the shared source for LLM prompts, validation, **Rule Score**, and weekly vocabulary suggestions.
 - **Topic Key** values live directly under `topics`; topic entries do not use an `items` wrapper.
 - A **Vocabulary Skeleton** may exist before concrete feature keys are finalized.
 - **Seed Weight** values belong to the initial **Preference Profile**, not the **Feature Vocabulary Config**.
+- **Initial Feature Vocabulary** starts with web development, production learning, implementation practicality, and depth-oriented signals.
 - **Article Features** use **Feature Vocabulary** keys by default and **Other Signals** for candidate keys not yet promoted.
 - **Vocabulary Promotion Candidates** are reported to Discord on Saturday mornings for manual review.
 - Each **Article Feature** has **Feature Salience** used to scale preference updates.

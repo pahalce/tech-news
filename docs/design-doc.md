@@ -164,9 +164,18 @@ chore(data): suggest feature vocabulary for YYYY-MM-DD
 - `-2`: 避けたい
 - `-3`: 強く避けたい
 
-初期 seed weights は `-1.0` から `+1.0` の範囲に収める。初期特徴量の具体的なセットは別途検討し、ここでは確定しない。
+初期 seed weights は `-1.0` から `+1.0` の範囲に収める。初期特徴量の具体的なセットは `config/feature-vocabulary.json` に、対応する seed weights は `data/preference-profile.json` に保存する。
 
 リアクションによる更新後の値は `-3.0` から `+3.0` に clamp する。
+
+初期 seed weights は、個人フィードバックが溜まる前の暫定的な初期嗜好として `data/preference-profile.json` に保存する。初期値は品質基準に沿って、以下の傾向を弱めに反映する。
+
+- 実装ガイド、production事例、設計解説、障害・失敗からの学びを高めにする。
+- コード例、計測結果、実運用経験、比較、失敗例を高めにする。
+- 実行可能な手順、設計判断材料、運用に活かせる内容、再利用可能な実装パターンを高めにする。
+- トレードオフ分析、深い技術解説、境界条件、制約説明を高めにする。
+- 薄いニュース、広いだけのトレンド概説、表層的まとめ、汎用的なAI期待論を低めにする。
+- beginner 向け記事は完全には除外せず、実務的な学びが少ない場合だけ弱く下げる。
 
 例:
 
@@ -286,7 +295,7 @@ Article Features は、カテゴリごとの管理語彙を優先して抽出す
 
 管理語彙は `config/feature-vocabulary.json` に保存し、LLM プロンプト、Feature Extraction のバリデーション、Rule Score、週次の語彙昇格候補通知から参照する。
 
-設計確定後、初期スケルトンとして `config/feature-vocabulary.json` を作成する。ただし、初期特徴量 key は別途検討し、スケルトン作成時点では最小限に留める。
+`config/feature-vocabulary.json` は、最初にスケルトンを作成し、その後に初期 Feature Vocabulary の具体 key を追加する。
 
 `config/feature-vocabulary.json` は特徴量 key と `description_ja` のみを持つ。seed weights は語彙ではなく初期の好みなので、`data/preference-profile.json` の初期値として保存する。
 
@@ -298,7 +307,7 @@ Article Features は、カテゴリごとの管理語彙を優先して抽出す
   "topics": {
     "nextjs": {
       "display_name": "Next.js",
-      "aliases": ["next.js", "next", "Next.js"],
+      "aliases": ["next.js", "next", "nextjs"],
       "description_ja": "React ベースのWebアプリケーションフレームワーク"
     }
   },
@@ -331,7 +340,9 @@ Article Features は、カテゴリごとの管理語彙を優先して抽出す
 }
 ```
 
-`topics` は `items` のような中間キーを挟まず、正規化済み topic key を直下に置く。`feature_axes` の各軸は `description_ja` と `features` を持つ。スケルトン作成時点では `topics` も `features` も空または最小限にし、具体 key は後で詰める。
+`topics` は `items` のような中間キーを挟まず、正規化済み topic key を直下に置く。`feature_axes` の各軸は `description_ja` と `features` を持つ。
+
+初期 Feature Vocabulary の具体 key は `config/feature-vocabulary.json` に保存する。初期セットは、Zenn の対象RSSと品質基準から、TypeScript / React / Next.js / frontend / backend / Web開発 / AI活用 / LLM / testing / performance / security / DevOps を topic として持つ。Feature Axis は `content_types`、`evidence_signals`、`practical_signals`、`depth_signals`、`title_signals`、`audience_levels` の6軸とする。
 
 `topics` は、通常の管理語彙ではなく技術名・領域名の正規化辞書として扱う。
 
@@ -342,12 +353,14 @@ Article Features は、カテゴリごとの管理語彙を優先して抽出す
   "topics": {
     "nextjs": {
       "display_name": "Next.js",
-      "aliases": ["next.js", "next", "Next.js"],
+      "aliases": ["next.js", "next", "nextjs"],
       "description_ja": "React ベースのWebアプリケーションフレームワーク"
     }
   }
 }
 ```
+
+topic の canonical key と aliases は大文字小文字を区別せず、保存時は小文字に正規化する。表示上の表記は `display_name` を使う。
 
 未知の topic は `other_signals` には入れず、`unknown_topics` に保存する。週次の語彙メンテナンス通知では、`unknown_topics` も正規化候補として知らせる。
 

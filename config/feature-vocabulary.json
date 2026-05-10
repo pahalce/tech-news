@@ -1,30 +1,214 @@
 {
   "version": 1,
-  "topics": {},
+  "topics": {
+    "typescript": {
+      "display_name": "TypeScript",
+      "aliases": ["ts", "typescript"],
+      "description_ja": "JavaScript に静的型付けを加えたプログラミング言語"
+    },
+    "react": {
+      "display_name": "React",
+      "aliases": ["react", "reactjs", "react.js"],
+      "description_ja": "UI をコンポーネントとして構築するための JavaScript ライブラリ"
+    },
+    "nextjs": {
+      "display_name": "Next.js",
+      "aliases": ["next", "next.js", "nextjs"],
+      "description_ja": "React ベースのWebアプリケーションフレームワーク"
+    },
+    "frontend": {
+      "display_name": "Frontend",
+      "aliases": ["frontend", "front-end", "フロントエンド"],
+      "description_ja": "Webアプリケーションのユーザー接点やクライアント側実装"
+    },
+    "backend": {
+      "display_name": "Backend",
+      "aliases": ["backend", "back-end", "バックエンド"],
+      "description_ja": "サーバー側のAPI、データ処理、認証、永続化などの実装領域"
+    },
+    "web_development": {
+      "display_name": "Web Development",
+      "aliases": ["web", "web development", "web開発", "ウェブ開発"],
+      "description_ja": "WebアプリケーションやWebサービスの設計・実装・運用"
+    },
+    "ai_engineering": {
+      "display_name": "AI Engineering",
+      "aliases": ["ai engineering", "ai活用", "aiエンジニアリング"],
+      "description_ja": "AIを開発・実装・運用の具体的なワークフローに組み込む技術領域"
+    },
+    "llm": {
+      "display_name": "LLM",
+      "aliases": ["llm", "large language model", "大規模言語モデル"],
+      "description_ja": "大規模言語モデルの利用、設計、評価、運用に関する領域"
+    },
+    "testing": {
+      "display_name": "Testing",
+      "aliases": ["test", "testing", "テスト", "自動テスト"],
+      "description_ja": "品質を検証するためのテスト設計、実装、自動化"
+    },
+    "performance": {
+      "display_name": "Performance",
+      "aliases": ["performance", "perf", "パフォーマンス", "性能改善"],
+      "description_ja": "速度、応答時間、メモリ、ビルド時間などの性能改善"
+    },
+    "security": {
+      "display_name": "Security",
+      "aliases": ["security", "セキュリティ", "appsec"],
+      "description_ja": "アプリケーションや開発プロセスの安全性に関する領域"
+    },
+    "devops": {
+      "display_name": "DevOps",
+      "aliases": ["devops", "ci/cd", "deployment", "デプロイ"],
+      "description_ja": "CI/CD、デプロイ、運用自動化、開発基盤に関する領域"
+    }
+  },
   "feature_axes": {
     "content_types": {
       "description_ja": "記事の形式や構成",
-      "features": {}
+      "features": {
+        "production_case_study": {
+          "description_ja": "実際のプロダクトや本番環境での事例紹介"
+        },
+        "implementation_guide": {
+          "description_ja": "特定の実装を進めるための手順やガイド"
+        },
+        "architecture_explanation": {
+          "description_ja": "システム設計、構成、責務分割などを説明する記事"
+        },
+        "postmortem": {
+          "description_ja": "障害、失敗、問題発生後の原因分析や再発防止を扱う記事"
+        },
+        "comparative_evaluation": {
+          "description_ja": "複数の技術、設計、ツールを比較評価する記事"
+        },
+        "tool_introduction": {
+          "description_ja": "ライブラリ、ツール、サービスの紹介"
+        },
+        "release_news": {
+          "description_ja": "新機能、リリース、アップデート情報の紹介"
+        },
+        "trend_overview": {
+          "description_ja": "技術動向や話題の概要を広く紹介する記事"
+        },
+        "opinion_essay": {
+          "description_ja": "筆者の考えや主張を中心に展開する記事"
+        }
+      }
     },
     "evidence_signals": {
       "description_ja": "記事の主張や学びを支える根拠の種類",
-      "features": {}
+      "features": {
+        "code_examples": {
+          "description_ja": "コード例や設定例があり、内容を具体的に確認できる"
+        },
+        "measured_results": {
+          "description_ja": "性能、品質、開発効率などを測定した結果が示されている"
+        },
+        "real_world_experience": {
+          "description_ja": "実際の開発・運用経験に基づく観察や判断が含まれている"
+        },
+        "comparison": {
+          "description_ja": "複数の選択肢、手法、ツールを比較している"
+        },
+        "failure_example": {
+          "description_ja": "失敗例、落とし穴、うまくいかなかった方法が説明されている"
+        },
+        "source_links": {
+          "description_ja": "公式ドキュメント、仕様、関連資料など根拠となるリンクがある"
+        }
+      }
     },
     "practical_signals": {
       "description_ja": "実務で再利用しやすい具体性や応用可能性",
-      "features": {}
+      "features": {
+        "actionable_steps": {
+          "description_ja": "読後に実行できる手順や導入ステップが示されている"
+        },
+        "architecture_decision_support": {
+          "description_ja": "設計判断や技術選定の材料として使える"
+        },
+        "operationally_applicable": {
+          "description_ja": "本番運用、監視、保守、障害対応に活かせる"
+        },
+        "reusable_implementation_pattern": {
+          "description_ja": "他のプロジェクトでも再利用できる実装パターンが含まれている"
+        },
+        "developer_productivity": {
+          "description_ja": "開発効率、保守性、チームの生産性改善に接続している"
+        },
+        "migration_guidance": {
+          "description_ja": "移行、アップグレード、置き換えの進め方が説明されている"
+        },
+        "checklist_or_playbook": {
+          "description_ja": "判断や実行に使えるチェックリスト、手順書、運用プレイブックがある"
+        }
+      }
     },
     "depth_signals": {
       "description_ja": "記事の掘り下げの深さや表層性",
-      "features": {}
+      "features": {
+        "tradeoff_analysis": {
+          "description_ja": "メリット・デメリットや制約まで踏み込んで説明している"
+        },
+        "deep_technical_explanation": {
+          "description_ja": "仕組みや内部挙動まで掘り下げて説明している"
+        },
+        "edge_cases": {
+          "description_ja": "例外ケース、境界条件、実装時に問題になりやすい点に触れている"
+        },
+        "constraints_explained": {
+          "description_ja": "前提条件、制約、採用しなかった選択肢が説明されている"
+        },
+        "surface_level_summary": {
+          "description_ja": "表層的な概要説明が中心で、深い判断材料は少ない"
+        },
+        "beginner_only": {
+          "description_ja": "初心者向けの基礎説明が中心で、実務上の発見は少ない"
+        },
+        "thin_content": {
+          "description_ja": "情報量が少なく、再利用できる具体的な知見が乏しい"
+        },
+        "generic_ai_hype": {
+          "description_ja": "AIの一般論や期待感が中心で、実装や運用への接続が弱い"
+        }
+      }
     },
     "title_signals": {
       "description_ja": "タイトルから読み取れる具体性や傾向",
-      "features": {}
+      "features": {
+        "specific_problem": {
+          "description_ja": "解決したい問題や対象がタイトルから具体的に分かる"
+        },
+        "concrete_technology_named": {
+          "description_ja": "具体的な技術名、ライブラリ名、サービス名がタイトルに含まれる"
+        },
+        "production_context_named": {
+          "description_ja": "本番運用、実案件、現場、実例など実務文脈がタイトルに含まれる"
+        },
+        "listicle_summary": {
+          "description_ja": "まとめ、一覧、n選など網羅的紹介を示すタイトル"
+        },
+        "clickbait": {
+          "description_ja": "過度に煽る、断定が強すぎる、内容より注目獲得を優先したタイトル"
+        },
+        "vague_title": {
+          "description_ja": "対象や得られる知見がタイトルから読み取りにくい"
+        }
+      }
     },
     "audience_levels": {
       "description_ja": "記事が想定している読者の経験レベル",
-      "features": {}
+      "features": {
+        "beginner": {
+          "description_ja": "前提知識が少ない読者向けの入門・基礎説明"
+        },
+        "intermediate": {
+          "description_ja": "基本を理解している開発者向けの実践的な内容"
+        },
+        "advanced": {
+          "description_ja": "経験者向けの深い設計、運用、性能、内部挙動に関する内容"
+        }
+      }
     }
   }
 }
