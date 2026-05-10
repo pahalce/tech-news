@@ -6,9 +6,17 @@
   "type": "module",
   "scripts": {
     "test": "vp test",
-    "check": "vp check"
+    "check": "vp check",
+    "collect-feedback": "flue run collect-feedback --target node --id collect-feedback --payload '{}'",
+    "zenn-digest": "flue run zenn-digest --target node --id zenn-digest --payload '{}'",
+    "suggest-feature-vocabulary": "flue run suggest-feature-vocabulary --target node --id suggest-feature-vocabulary --payload '{}'"
+  },
+  "dependencies": {
+    "@flue/sdk": "^0.3.11",
+    "valibot": "^1.4.0"
   },
   "devDependencies": {
+    "@flue/cli": "^0.3.11",
     "@types/node": "^25.6.2",
     "@typescript/native-preview": "7.0.0-dev.20260509.2",
     "typescript": "^6.0.3",

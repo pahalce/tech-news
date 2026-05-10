@@ -20,6 +20,6 @@
     "noImplicitReturns": true,
     "noUnusedParameters": true
   },
-  "include": ["agents/**/*.ts", ".flue/**/*.ts"],
+  "include": ["src/**/*.ts", ".flue/**/*.ts", "vite.config.ts"],
   "exclude": ["dist"]
 }
