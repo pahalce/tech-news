@@ -121,9 +121,9 @@ canonical flow から外れる変更は、理由がコードや ADR に残って
 
 `vp lint` が lint entrypoint である。`oxlint` を直接呼ぶ前提の script やドキュメントを追加している場合は指摘する。
 
-現時点では `.oxlintrc.json` と `lint` script が未実装である。境界 enforcement を実装する変更では、`package.json` に `vp lint` を走らせる lint entrypoint を追加し、`.oxlintrc.json` で module deep import の禁止を表現することを確認する。
+Vite+ の推奨に従い、lint 設定は `vite.config.ts` の `lint` block に直接定義する。`.oxlintrc.json` や `oxlint.config.ts` を追加して lint 設定を分散している場合は指摘する。
 
-oxlint で表現しづらい source-dependent な layer 依存は小さな architecture check で補う。境界違反を「レビューで気をつける」だけにしている変更は、lint または check で検出できる形にできないか確認する。
+oxlint で表現しづらい source-dependent な layer 依存は `scripts/check-architecture.ts` で補う。境界違反を「レビューで気をつける」だけにしている変更は、lint または check で検出できる形にできないか確認する。
 
 ## レビュー時の指摘例
 

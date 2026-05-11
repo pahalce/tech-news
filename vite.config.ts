@@ -11,6 +11,28 @@ export default defineConfig({
     exports: true,
   },
   lint: {
+    plugins: ["unicorn", "typescript", "oxc", "import"],
+    rules: {
+      "import/no-cycle": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "src/modules/*/domain/*",
+                "src/modules/*/application/*",
+                "src/modules/*/infrastructure/*",
+                "@/modules/*/domain/*",
+                "@/modules/*/application/*",
+                "@/modules/*/infrastructure/*",
+              ],
+              message: "Import other modules through their public index.ts API.",
+            },
+          ],
+        },
+      ],
+    },
     options: {
       typeAware: true,
       typeCheck: true,
