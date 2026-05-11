@@ -75,9 +75,17 @@ Domain service は `domain/` に置き、純粋な domain decision だけを担�
 
 正しい分担:
 
-- `agent-state`: Agent State の保存形式、読み書き、Data Commit
-- 各 domain module: 自分の state slice の型、不変条件、更新ルール
-- `workflows`: 各 module の public API を呼んで次の Agent State を合成し、最後に persist する
+- `agent-state`: Agent State の保存形式、読み書き、Data Commit、versioned persisted state の組み立て
+- 各 domain module: 自分の state slice の型、不変条件、更新ルール、parse/serialize boundary
+- `workflows`: 各 module の public API を呼んで検証済み slice から次の Agent State を合成し、最後に persist する
+
+`agent-state` は各 module の public API から slice codec を import してよい。`agent-state` が slice の不変条件を再実装している場合、または `workflows` が raw JSON を直接 composition している場合は指摘する。
+
+## Feature Vocabulary Ownership
+
+**Feature Vocabulary Config** の型、検証、topic normalization、prompt / validation / Rule Score から使う read-only access は `feature` module が所有する。
+
+`vocabulary-maintenance` は **Unknown Topic**、**Other Signals**、**Vocabulary Promotion Candidates** のレビュー workflow を所有するが、vocabulary schema や normalization rule を所有しない。`vocabulary-maintenance` が vocabulary config の構造を直接解釈・更新している場合は、`feature` public API を経由させるよう指摘する。
 
 ## Recommendation Publication 用語
 
@@ -113,7 +121,9 @@ canonical flow から外れる変更は、理由がコードや ADR に残って
 
 `vp lint` が lint entrypoint である。`oxlint` を直接呼ぶ前提の script やドキュメントを追加している場合は指摘する。
 
-`.oxlintrc.json` で module deep import の禁止を表現し、oxlint で表現しづらい source-dependent な layer 依存は小さな architecture check で補う。境界違反を「レビューで気をつける」だけにしている変更は、lint または check で検出できる形にできないか確認する。
+現時点では `.oxlintrc.json` と `lint` script が未実装である。境界 enforcement を実装する変更では、`package.json` に `vp lint` を走らせる lint entrypoint を追加し、`.oxlintrc.json` で module deep import の禁止を表現することを確認する。
+
+oxlint で表現しづらい source-dependent な layer 依存は小さな architecture check で補う。境界違反を「レビューで気をつける」だけにしている変更は、lint または check で検出できる形にできないか確認する。
 
 ## レビュー時の指摘例
 
