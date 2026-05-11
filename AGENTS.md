@@ -13,3 +13,7 @@
 ### Domain docs
 
 Single-context: ルートの `CONTEXT.md` と `docs/adr/`。詳細は `docs/agents/domain.md`。
+
+### Code review
+
+コードレビュー時は通常のバグ・退行・テスト不足に加えて、`docs/agents/code-review.md` のアーキテクチャ境界と命名規約を確認する。

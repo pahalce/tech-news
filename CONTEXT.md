@@ -104,13 +104,13 @@ _Avoid_: content-change tracking, re-extraction
 An article that appears in the current digest run's RSS inputs.
 _Avoid_: historical backlog, stale candidate
 
-**Digest Generation**:
-The LLM step that creates Discord-facing summary, recommendation reason, learning points, and used signals for selected articles.
-_Avoid_: feature extraction, scoring
+**Recommendation Content**:
+Owner-facing summary, recommendation reason, learning points, and used signals created for a selected article.
+_Avoid_: feature extraction, scoring, raw LLM summary, Discord message
 
-**Discord Post Record**:
-The repository state entry that maps a successfully posted Discord message to an **Article ID**.
-_Avoid_: generated digest text, failed post
+**Publication Record**:
+An **Agent State** entry that maps a successfully published recommendation to an **Article ID** and external message identity.
+_Avoid_: generated recommendation content, failed publish, Discord-only post record
 
 **Failed Extraction Attempt**:
 A failed LLM feature extraction attempt recorded for retry without creating **Feature Extraction**.
@@ -128,12 +128,12 @@ _Avoid_: date-based analysis id, raw URL
 An article that has been posted to Discord and recorded with `first_recommended_at`.
 _Avoid_: seen article, RSS candidate
 
-**Repository State**:
-JSON files committed to the repository that persist digest state between GitHub Actions runs.
-_Avoid_: database, external state store, runtime cache
+**Agent State**:
+JSON files committed to the repository that persist the agent's state between GitHub Actions runs.
+_Avoid_: database, external state store, runtime cache, repository pattern
 
 **Data Commit**:
-A single commit at the end of a GitHub Actions job that persists updated **Repository State**.
+A single commit at the end of a GitHub Actions job that persists updated **Agent State**.
 _Avoid_: per-step commit, partial state commit
 
 **Feedback Collection Window**:
@@ -168,6 +168,14 @@ _Avoid_: final recommendation, LLM judgment
 The LLM selection step that chooses the final digest articles from top **Rule Score** candidates.
 _Avoid_: first-pass scoring, all-candidate ranking
 
+**Digest Job**:
+A thin scheduled workflow that orchestrates domain modules for one digest-related run.
+_Avoid_: business logic module, state owner
+
+**Domain Module**:
+A module that owns one cohesive digest-agent capability and its rules.
+_Avoid_: job step, utility folder
+
 ## Relationships
 
 - An **Owner** has exactly one **Preference Profile**.
@@ -196,20 +204,22 @@ _Avoid_: first-pass scoring, all-candidate ranking
 - Each **Article Feature** has **Feature Salience** used to scale preference updates.
 - The initial **Salience Threshold** is `0.3`.
 - Recommendation selection and feedback updates refer to **Feature Extraction**.
-- **Digest Generation** runs only for recommended articles and may analyze the article body again.
-- **Discord Post Record** stores posting metadata without duplicating **Digest Generation** text.
+- **Recommendation Content** is created only for recommended articles and may analyze the article body again.
+- **Publication Record** stores publishing metadata without duplicating **Recommendation Content** text.
 - An article becomes a **Recommended Article** only after a successful Discord post.
 - A **Failed Extraction Attempt** may be retried if the article appears again as a **Current Feed Candidate**.
 - An unreadable **Feature Extraction** is saved and not retried.
 - Articles that are not **Readable Articles** are excluded from recommendation candidates.
-- **Repository State** stores the **Preference Profile**, seen articles, **Feature Extraction**, digest generation output, Discord message mappings, and vocabulary suggestion history.
-- Each job writes at most one **Data Commit** after its state updates are complete.
-- Feedback collection reads only saved Discord message mappings that are uncollected and inside the **Feedback Collection Window**.
+- **Agent State** stores the **Preference Profile**, seen articles, **Feature Extraction**, **Recommendation Content**, **Publication Records**, and vocabulary suggestion history.
+- Each job writes at most one **Data Commit** after its **Agent State** updates are complete.
+- Feedback collection reads only saved **Publication Records** that are uncollected and inside the **Feedback Collection Window**.
 - **Reaction Feedback** records processing state per target emoji instead of using a message-level collected flag.
 - Initial **Feedback Weight** is `+1` for positive reactions and `-1` for negative reactions.
 - The initial **Feature Weight Range** is `-3.0` to `+3.0`.
 - **Seed Weight** values stay within `-1.0` to `+1.0`, and the concrete initial feature set remains undecided.
 - Recommendation selection first computes **Rule Score**, then applies **LLM Rerank** to choose up to ten articles.
+- A **Digest Job** orchestrates **Domain Modules** and does not own domain rules.
+- **Domain Modules** are organized around domain capabilities, not scheduled job names.
 
 ## Example dialogue
 
@@ -237,11 +247,11 @@ _Avoid_: first-pass scoring, all-candidate ranking
 > **Dev:** "Does seeing an article in RSS exclude it forever?"
 > **Domain expert:** "No. Only a **Recommended Article** with `first_recommended_at` is excluded from future recommendation."
 >
-> **Dev:** "Does feature extraction generate the Discord summary?"
-> **Domain expert:** "No. **Feature Extraction** only stores readability and features; **Digest Generation** creates summary and learning points for recommended articles."
+> **Dev:** "Does feature extraction generate recommendation content?"
+> **Domain expert:** "No. **Feature Extraction** only stores readability and features; **Recommendation Content** creates the summary and learning points for recommended articles."
 >
 > **Dev:** "Do we need an external database for the first version?"
-> **Domain expert:** "No. Persist state as **Repository State** so GitHub Actions runs can update it without a separate service."
+> **Domain expert:** "No. Persist state as **Agent State** so GitHub Actions runs can update it without a separate service."
 >
 > **Dev:** "Does feedback collection scan the whole Discord channel?"
 > **Domain expert:** "No. It fetches saved message ids only when their feedback is uncollected and the article is inside the **Feedback Collection Window**."
