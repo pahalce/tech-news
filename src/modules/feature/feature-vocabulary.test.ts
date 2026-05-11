@@ -94,6 +94,43 @@ describe("Feature Vocabulary Config に関するテスト", () => {
     // Assert
     await expect(actual).rejects.toThrow("quality_signals is not a supported Feature Axis");
   });
+
+  it("同じ topic alias を複数の Topic Key が持つとき、config 検証エラーとなる", async () => {
+    // Arrange
+    const repositoryRoot = await createRepositoryWithFeatureVocabulary({
+      version: 1,
+      topics: {
+        typescript: {
+          display_name: "TypeScript",
+          aliases: ["ts", "typescript"],
+          description_ja: "JavaScript に静的型付けを加えたプログラミング言語",
+        },
+        testing: {
+          display_name: "Testing",
+          aliases: ["test", "ts"],
+          description_ja: "品質を検証するためのテスト設計、実装、自動化",
+        },
+      },
+      feature_axes: {
+        content_types: {
+          description_ja: "記事の形式や構成",
+          features: {
+            implementation_guide: {
+              description_ja: "特定の実装を進めるための手順やガイド",
+            },
+          },
+        },
+      },
+    });
+
+    // Act
+    const actual = loadFeatureVocabularyConfig(repositoryRoot);
+
+    // Assert
+    await expect(actual).rejects.toThrow(
+      "Topic alias ts is already used by typescript and cannot be used by testing",
+    );
+  });
 });
 
 async function createRepositoryWithFeatureVocabulary(featureVocabulary: unknown) {

@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import * as v from "valibot";
 
 const LowercaseKeySchema = v.pipe(
@@ -64,7 +62,6 @@ export type FeatureVocabularyConfig = FeatureVocabularyConfigData & {
   normalizeTopic(topic: string): TopicNormalizationResult;
 };
 
-const defaultRepositoryRoot = join(import.meta.dirname, "../../../..");
 const supportedFeatureAxes = new Set([
   "content_types",
   "evidence_signals",
@@ -74,25 +71,15 @@ const supportedFeatureAxes = new Set([
   "audience_levels",
 ]);
 
-export async function loadFeatureVocabularyConfig(
-  repositoryRoot = defaultRepositoryRoot,
-): Promise<FeatureVocabularyConfig> {
-  const value = JSON.parse(
-    await readFile(join(repositoryRoot, "config", "feature-vocabulary.json"), "utf8"),
-  ) as unknown;
-
-  return parseFeatureVocabularyConfig(value);
-}
-
 export function parseFeatureVocabularyConfig(value: unknown): FeatureVocabularyConfig {
   const config = v.parse(FeatureVocabularyConfigSchema, value);
   assertSupportedFeatureAxes(config);
   const topicsByAlias = new Map<string, { displayName: string; topicKey: string }>();
 
   for (const [topicKey, topic] of Object.entries(config.topics)) {
-    topicsByAlias.set(topicKey, { displayName: topic.display_name, topicKey });
+    registerTopicAlias(topicsByAlias, topicKey, topicKey, topic.display_name);
     for (const alias of topic.aliases) {
-      topicsByAlias.set(alias, { displayName: topic.display_name, topicKey });
+      registerTopicAlias(topicsByAlias, alias, topicKey, topic.display_name);
     }
   }
 
@@ -116,6 +103,23 @@ export function parseFeatureVocabularyConfig(value: unknown): FeatureVocabularyC
       };
     },
   };
+}
+
+function registerTopicAlias(
+  topicsByAlias: Map<string, { displayName: string; topicKey: string }>,
+  alias: string,
+  topicKey: string,
+  displayName: string,
+): void {
+  const existingTopic = topicsByAlias.get(alias);
+
+  if (existingTopic && existingTopic.topicKey !== topicKey) {
+    throw new Error(
+      `Topic alias ${alias} is already used by ${existingTopic.topicKey} and cannot be used by ${topicKey}.`,
+    );
+  }
+
+  topicsByAlias.set(alias, { displayName, topicKey });
 }
 
 function assertSupportedFeatureAxes(config: FeatureVocabularyConfigData): void {
