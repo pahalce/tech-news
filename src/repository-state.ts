@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as v from "valibot";
 
+import { loadFeatureVocabularyConfig, type FeatureVocabularyConfig } from "./modules/feature";
+
 const FiniteNumberSchema = v.pipe(v.number(), v.finite());
 
 const WeightRangeSchema = v.pipe(
@@ -41,6 +43,7 @@ export type PreferenceProfile = v.InferOutput<typeof PreferenceProfileSchema>;
 export type PreferenceSummaryHistory = v.InferOutput<typeof PreferenceSummaryHistorySchema>;
 
 export type RepositoryState = {
+  featureVocabulary: FeatureVocabularyConfig;
   preferenceProfile: PreferenceProfile;
   preferenceSummaryHistory: PreferenceSummaryHistory;
 };
@@ -55,13 +58,17 @@ const defaultRepositoryRoot = join(import.meta.dirname, "..");
 export async function loadRepositoryState(
   repositoryRoot = defaultRepositoryRoot,
 ): Promise<RepositoryState> {
-  const [preferenceProfileJson, preferenceSummaryHistoryJson] = await Promise.all([
-    readJson(join(repositoryRoot, "data", "preference-profile.json")),
-    readJson(join(repositoryRoot, "data", "preference-summary-history.json")),
-  ]);
+  const [featureVocabulary, preferenceProfileJson, preferenceSummaryHistoryJson] =
+    await Promise.all([
+      loadFeatureVocabularyConfig(repositoryRoot),
+      readJson(join(repositoryRoot, "data", "preference-profile.json")),
+      readJson(join(repositoryRoot, "data", "preference-summary-history.json")),
+    ]);
+  const preferenceProfile = parsePreferenceProfile(preferenceProfileJson, featureVocabulary);
 
   return {
-    preferenceProfile: parsePreferenceProfile(preferenceProfileJson),
+    featureVocabulary,
+    preferenceProfile,
     preferenceSummaryHistory: parsePreferenceSummaryHistory(preferenceSummaryHistoryJson),
   };
 }
@@ -70,7 +77,10 @@ async function readJson(path: string): Promise<unknown> {
   return JSON.parse(await readFile(path, "utf8")) as unknown;
 }
 
-function parsePreferenceProfile(value: unknown): PreferenceProfile {
+function parsePreferenceProfile(
+  value: unknown,
+  featureVocabulary: FeatureVocabularyConfig,
+): PreferenceProfile {
   const profile = v.parse(PreferenceProfileSchema, value);
   assertWeightsInRange(
     profile.feature_weights.topics,
@@ -84,6 +94,23 @@ function parsePreferenceProfile(value: unknown): PreferenceProfile {
       `Preference Profile feature_weights.feature_axes.${axis}`,
       profile.weight_range,
     );
+  }
+  assertPreferenceProfileMatchesFeatureVocabulary(profile, featureVocabulary);
+
+  if (profile.updated_at === null) {
+    assertWeightsInRange(
+      profile.feature_weights.topics,
+      "Preference Profile seed feature_weights.topics",
+      profile.seed_weight_range,
+    );
+
+    for (const [axis, weights] of Object.entries(profile.feature_weights.feature_axes)) {
+      assertWeightsInRange(
+        weights,
+        `Preference Profile seed feature_weights.feature_axes.${axis}`,
+        profile.seed_weight_range,
+      );
+    }
   }
 
   return profile;
@@ -101,6 +128,61 @@ function assertWeightsInRange(
   for (const [key, weight] of Object.entries(weights)) {
     if (weight < weightRange.min || weight > weightRange.max) {
       throw new Error(`${label}.${key} must be between ${weightRange.min} and ${weightRange.max}.`);
+    }
+  }
+}
+
+function assertPreferenceProfileMatchesFeatureVocabulary(
+  profile: PreferenceProfile,
+  featureVocabulary: FeatureVocabularyConfig,
+): void {
+  assertKnownKeys(
+    profile.feature_weights.topics,
+    featureVocabulary.topics,
+    "Preference Profile feature_weights.topics",
+    "Feature Vocabulary",
+  );
+
+  for (const [axis, vocabularyAxis] of Object.entries(featureVocabulary.feature_axes)) {
+    const profileAxis = profile.feature_weights.feature_axes[axis];
+    if (!profileAxis) {
+      throw new Error(
+        `Preference Profile feature_weights.feature_axes.${axis} is required by Feature Vocabulary.`,
+      );
+    }
+
+    assertKnownKeys(
+      profileAxis,
+      vocabularyAxis.features,
+      `Preference Profile feature_weights.feature_axes.${axis}`,
+      "Feature Vocabulary",
+    );
+  }
+
+  for (const axis of Object.keys(profile.feature_weights.feature_axes)) {
+    if (!Object.hasOwn(featureVocabulary.feature_axes, axis)) {
+      throw new Error(
+        `Preference Profile feature_weights.feature_axes.${axis} is not defined in Feature Vocabulary.`,
+      );
+    }
+  }
+}
+
+function assertKnownKeys(
+  profileWeights: Record<string, number>,
+  vocabularyEntries: Record<string, unknown>,
+  profilePath: string,
+  vocabularyLabel: string,
+): void {
+  for (const key of Object.keys(vocabularyEntries)) {
+    if (!Object.hasOwn(profileWeights, key)) {
+      throw new Error(`${profilePath}.${key} is required by ${vocabularyLabel}.`);
+    }
+  }
+
+  for (const key of Object.keys(profileWeights)) {
+    if (!Object.hasOwn(vocabularyEntries, key)) {
+      throw new Error(`${profilePath}.${key} is not defined in ${vocabularyLabel}.`);
     }
   }
 }
