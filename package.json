@@ -5,8 +5,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "lint": "vp lint",
+    "check:architecture": "node scripts/check-architecture.ts",
     "test": "vp test",
-    "check": "vp check",
+    "check": "vp check && node scripts/check-architecture.ts",
     "collect-feedback": "flue run collect-feedback --target node --id collect-feedback --payload '{}'",
     "zenn-digest": "flue run zenn-digest --target node --id zenn-digest --payload '{}'",
     "suggest-feature-vocabulary": "flue run suggest-feature-vocabulary --target node --id suggest-feature-vocabulary --payload '{}'"
