@@ -5,6 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "sync:subagents": "node scripts/sync-subagents.ts",
     "lint": "vp lint",
     "check:architecture": "node scripts/check-architecture.ts",
     "test": "vp test",

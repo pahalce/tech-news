@@ -2,7 +2,7 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   staged: {
-    "*": "vp check --fix",
+    "*": "vp check --fix && node scripts/check-architecture.ts",
   },
   pack: {
     dts: {
