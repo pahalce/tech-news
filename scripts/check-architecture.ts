@@ -1,6 +1,8 @@
 import { existsSync } from "node:fs";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, join, normalize, relative, resolve, sep } from "node:path";
+import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 type SourceArea = "jobs" | "workflows" | "modules" | "shared" | "other";
 type ModuleLayer = string | undefined;
@@ -12,39 +14,73 @@ type ClassifiedSourceFile = {
   relativePath: string;
 };
 
-const repositoryRoot = resolve(import.meta.dirname, "..");
-const sourceRoot = join(repositoryRoot, "src");
-const modulesRoot = join(sourceRoot, "modules");
-const workflowsRoot = join(sourceRoot, "workflows");
-const jobsRoot = join(sourceRoot, "jobs");
-const sharedRoot = join(sourceRoot, "shared");
+type ArchitectureCheckPaths = {
+  repositoryRoot: string;
+  sourceRoot: string;
+  modulesRoot: string;
+  workflowsRoot: string;
+  jobsRoot: string;
+  sharedRoot: string;
+};
+
+export type ArchitectureCheckOptions = {
+  repositoryRoot?: string;
+};
+
+const defaultRepositoryRoot = resolve(import.meta.dirname, "..");
 
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".mts"]);
 const importPattern =
   /\bimport\s+(?:type\s+)?(?:[^'";]*?\s+from\s+)?["']([^"']+)["']|\bexport\s+(?:type\s+)?(?:[^'";]*?\s+from\s+)?["']([^"']+)["']|\bimport\s*\(\s*["']([^"']+)["']\s*\)/g;
 
-const files = await listSourceFiles(sourceRoot);
-const errors: string[] = [];
+export async function checkArchitecture(options: ArchitectureCheckOptions = {}): Promise<string[]> {
+  const paths = createArchitectureCheckPaths(options.repositoryRoot ?? defaultRepositoryRoot);
+  const files = await listSourceFiles(paths.sourceRoot);
+  const errors: string[] = [];
 
-for (const file of files) {
-  const source = await readFile(file, "utf8");
-  for (const specifier of extractSpecifiers(source)) {
-    const resolvedImport = resolveImport(file, specifier);
+  for (const file of files) {
+    const source = await readFile(file, "utf8");
+    for (const specifier of extractSpecifiers(source)) {
+      const resolvedImport = resolveImport(paths, file, specifier);
 
-    if (!resolvedImport || !isInside(resolvedImport, sourceRoot)) {
-      continue;
+      if (!resolvedImport || !isInside(resolvedImport, paths.sourceRoot)) {
+        continue;
+      }
+
+      checkImport(paths, errors, file, specifier, resolvedImport);
     }
+  }
 
-    checkImport(file, specifier, resolvedImport);
+  return errors;
+}
+
+if (isMainModule()) {
+  const errors = await checkArchitecture();
+
+  if (errors.length > 0) {
+    console.error("Architecture check failed:");
+    for (const error of errors) {
+      console.error(`- ${error}`);
+    }
+    process.exitCode = 1;
   }
 }
 
-if (errors.length > 0) {
-  console.error("Architecture check failed:");
-  for (const error of errors) {
-    console.error(`- ${error}`);
-  }
-  process.exitCode = 1;
+function createArchitectureCheckPaths(repositoryRoot: string): ArchitectureCheckPaths {
+  const sourceRoot = join(repositoryRoot, "src");
+
+  return {
+    repositoryRoot,
+    sourceRoot,
+    modulesRoot: join(sourceRoot, "modules"),
+    workflowsRoot: join(sourceRoot, "workflows"),
+    jobsRoot: join(sourceRoot, "jobs"),
+    sharedRoot: join(sourceRoot, "shared"),
+  };
+}
+
+function isMainModule(): boolean {
+  return process.argv[1] ? import.meta.url === pathToFileURL(resolve(process.argv[1])).href : false;
 }
 
 async function listSourceFiles(root: string): Promise<string[]> {
@@ -89,20 +125,24 @@ function extractSpecifiers(source: string): string[] {
   return specifiers;
 }
 
-function resolveImport(fromFile: string, specifier: string): string | null {
+function resolveImport(
+  paths: ArchitectureCheckPaths,
+  fromFile: string,
+  specifier: string,
+): string | null {
   if (specifier.startsWith(".")) {
     return resolveRelativeImport(dirname(fromFile), specifier);
   }
 
   if (specifier.startsWith("@/")) {
-    return resolveRelativeImport(sourceRoot, specifier.slice(2));
+    return resolveRelativeImport(paths.sourceRoot, specifier.slice(2));
   }
 
   if (specifier.startsWith("src/")) {
-    return resolveRelativeImport(repositoryRoot, specifier);
+    return resolveRelativeImport(paths.repositoryRoot, specifier);
   }
 
-  if (isAbsolute(specifier) && isInside(specifier, sourceRoot)) {
+  if (isAbsolute(specifier) && isInside(specifier, paths.sourceRoot)) {
     return resolveRelativeImport("/", specifier);
   }
 
@@ -112,21 +152,33 @@ function resolveImport(fromFile: string, specifier: string): string | null {
 function resolveRelativeImport(baseDir: string, specifier: string): string {
   const base = resolve(baseDir, specifier);
   const candidates = [
-    base,
     ...[...sourceExtensions].map((extension) => `${base}${extension}`),
     ...[...sourceExtensions].map((extension) => join(base, `index${extension}`)),
+    base,
   ];
 
   return candidates.find((candidate) => existsSync(candidate)) ?? normalize(base);
 }
 
-function checkImport(fromFile: string, specifier: string, toFile: string): void {
-  const from = classifySourceFile(fromFile);
-  const to = classifySourceFile(toFile);
+function checkImport(
+  paths: ArchitectureCheckPaths,
+  errors: string[],
+  fromFile: string,
+  specifier: string,
+  toFile: string,
+): void {
+  const from = classifySourceFile(paths, fromFile);
+  const to = classifySourceFile(paths, toFile);
 
   if (from.area === "jobs") {
     if (to.area !== "workflows" && !isSharedPublicApi(to)) {
-      report(fromFile, specifier, "jobs may only import workflows or shared public APIs.");
+      report(
+        paths,
+        errors,
+        fromFile,
+        specifier,
+        "jobs may only import workflows or shared public APIs.",
+      );
     }
     return;
   }
@@ -134,6 +186,8 @@ function checkImport(fromFile: string, specifier: string, toFile: string): void 
   if (from.area === "workflows") {
     if (to.area === "modules" && !isModulePublicApi(to)) {
       report(
+        paths,
+        errors,
         fromFile,
         specifier,
         "workflows must import modules through their public index.ts APIs.",
@@ -147,18 +201,30 @@ function checkImport(fromFile: string, specifier: string, toFile: string): void 
   }
 
   if (to.area === "modules" && from.moduleName !== to.moduleName && !isModulePublicApi(to)) {
-    report(fromFile, specifier, "cross-module imports must go through the target module index.ts.");
+    report(
+      paths,
+      errors,
+      fromFile,
+      specifier,
+      "cross-module imports must go through the target module index.ts.",
+    );
     return;
   }
 
   if (from.layer === "domain") {
     if (to.area === "modules" && from.moduleName === to.moduleName && to.layer !== "domain") {
-      report(fromFile, specifier, "domain code may only import same-module domain code.");
+      report(
+        paths,
+        errors,
+        fromFile,
+        specifier,
+        "domain code may only import same-module domain code.",
+      );
       return;
     }
 
     if (to.area === "shared" && to.layer !== "domain" && !isSharedPublicApi(to)) {
-      report(fromFile, specifier, "domain code may only import shared/domain.");
+      report(paths, errors, fromFile, specifier, "domain code may only import shared/domain.");
       return;
     }
   }
@@ -169,12 +235,24 @@ function checkImport(fromFile: string, specifier: string, toFile: string): void 
       from.moduleName === to.moduleName &&
       to.layer === "infrastructure"
     ) {
-      report(fromFile, specifier, "application code must not import infrastructure adapters.");
+      report(
+        paths,
+        errors,
+        fromFile,
+        specifier,
+        "application code must not import infrastructure adapters.",
+      );
       return;
     }
 
     if (to.area === "shared" && to.layer === "infrastructure") {
-      report(fromFile, specifier, "application code must not import shared infrastructure.");
+      report(
+        paths,
+        errors,
+        fromFile,
+        specifier,
+        "application code must not import shared infrastructure.",
+      );
       return;
     }
   }
@@ -186,6 +264,8 @@ function checkImport(fromFile: string, specifier: string, toFile: string): void 
     !isModulePublicApi(to)
   ) {
     report(
+      paths,
+      errors,
       fromFile,
       specifier,
       "infrastructure may only import other modules through public APIs.",
@@ -193,11 +273,11 @@ function checkImport(fromFile: string, specifier: string, toFile: string): void 
   }
 }
 
-function classifySourceFile(file: string): ClassifiedSourceFile {
+function classifySourceFile(paths: ArchitectureCheckPaths, file: string): ClassifiedSourceFile {
   const path = normalize(file);
 
-  if (isInside(path, modulesRoot)) {
-    const parts = relative(modulesRoot, path).split(sep);
+  if (isInside(path, paths.modulesRoot)) {
+    const parts = relative(paths.modulesRoot, path).split(sep);
     return {
       area: "modules",
       moduleName: parts[0],
@@ -206,16 +286,19 @@ function classifySourceFile(file: string): ClassifiedSourceFile {
     };
   }
 
-  if (isInside(path, workflowsRoot)) {
-    return { area: "workflows", relativePath: relative(workflowsRoot, path).split(sep).join("/") };
+  if (isInside(path, paths.workflowsRoot)) {
+    return {
+      area: "workflows",
+      relativePath: relative(paths.workflowsRoot, path).split(sep).join("/"),
+    };
   }
 
-  if (isInside(path, jobsRoot)) {
-    return { area: "jobs", relativePath: relative(jobsRoot, path).split(sep).join("/") };
+  if (isInside(path, paths.jobsRoot)) {
+    return { area: "jobs", relativePath: relative(paths.jobsRoot, path).split(sep).join("/") };
   }
 
-  if (isInside(path, sharedRoot)) {
-    const parts = relative(sharedRoot, path).split(sep);
+  if (isInside(path, paths.sharedRoot)) {
+    const parts = relative(paths.sharedRoot, path).split(sep);
     return {
       area: "shared",
       layer: parts[0],
@@ -223,7 +306,7 @@ function classifySourceFile(file: string): ClassifiedSourceFile {
     };
   }
 
-  return { area: "other", relativePath: relative(sourceRoot, path).split(sep).join("/") };
+  return { area: "other", relativePath: relative(paths.sourceRoot, path).split(sep).join("/") };
 }
 
 function isModulePublicApi(target: ClassifiedSourceFile): boolean {
@@ -239,10 +322,16 @@ function isInside(path: string, parent: string): boolean {
   return relationship === "" || (!relationship.startsWith("..") && !isAbsolute(relationship));
 }
 
-function report(fromFile: string, specifier: string, message: string): void {
-  errors.push(`${formatPath(fromFile)} imports "${specifier}": ${message}`);
+function report(
+  paths: ArchitectureCheckPaths,
+  errors: string[],
+  fromFile: string,
+  specifier: string,
+  message: string,
+): void {
+  errors.push(`${formatPath(paths, fromFile)} imports "${specifier}": ${message}`);
 }
 
-function formatPath(path: string): string {
-  return relative(repositoryRoot, path).split(sep).join("/");
+function formatPath(paths: ArchitectureCheckPaths, path: string): string {
+  return relative(paths.repositoryRoot, path).split(sep).join("/");
 }
