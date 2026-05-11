@@ -65,7 +65,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 49. As an Owner, I want Long-Term Preference Summary と Recent Preference Summary を分けてほしい, so that 長期嗜好と短期傾向を混同しない。
 50. As an Owner, I want Preference Summary History を保存してほしい, so that 好みの変化を後から分析できる。
 51. As an Owner, I want summary history 全件を毎回 prompt に入れないでほしい, so that 古い傾向と token 量が推薦を邪魔しない。
-52. As an Owner, I want Repository State を JSON として repo に保存してほしい, so that 外部DBなしで GitHub Actions 間の状態を持てる。
+52. As an Owner, I want Agent State を JSON として repo に保存してほしい, so that 外部DBなしで GitHub Actions 間の状態を持てる。
 53. As an Owner, I want 各 job が最後に1回だけ Data Commit してほしい, so that 中途半端な state commit を避けられる。
 54. As an Owner, I want collect-feedback, zenn-digest, suggest-feature-vocabulary を Vite+ run command として実行できてほしい, so that 開発と運用の入り口が揃う。
 55. As an Owner, I want LLM model を環境変数で切り替えられるようにしてほしい, so that Gemini 無料枠から別モデルへ移行しやすい。
@@ -80,7 +80,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 - Build a scheduler/workflow layer with three entrypoints: collect feedback at 08:00 JST daily, generate Zenn digest at 09:00 JST daily, and suggest feature vocabulary at 08:30 JST on Saturdays.
 - Build a feed ingestion module that reads the configured Zenn trend and topic RSS feeds, tolerates per-feed failure, and fails the job when all feeds fail.
 - Build an article identity module that canonicalizes URLs, removes tracking query parameters and fragments, prefers Zenn canonical URLs where available, and derives Article ID from source plus canonical URL hash.
-- Build a Repository State module that reads and writes JSON state files, performs schema validation, and writes one Data Commit per job after all state updates are complete.
+- Build an Agent State module that reads and writes JSON state files, performs schema validation, and writes one Data Commit per job after all state updates are complete.
 - Build a Feature Vocabulary module backed by the Feature Vocabulary Config. It must normalize topic aliases case-insensitively, keep canonical topic keys and aliases lowercase, use display_name for presentation casing, and expose feature axis descriptions and feature descriptions for prompts and validation.
 - Build a Feature Extraction module that fetches article bodies, calls the LLM to produce readability and Article Features, validates extracted keys against the Feature Vocabulary, and records Other Signals and Unknown Topics separately.
 - Feature Extraction does not create summary, recommendation reason, learning points, or Discord post text.
@@ -110,7 +110,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 - Tests should assert external behavior and state transitions, not private implementation details. Good tests should feed realistic inputs into modules and verify stable JSON outputs, selected Article IDs, score values, and Discord payload decisions.
 - Test the article identity module with URL variants: trailing slash, fragments, tracking query params, http/https differences, duplicate RSS appearances, and Zenn canonical URL preference.
 - Test the Feature Vocabulary module for lowercase topic keys, lowercase aliases, case-insensitive matching, display_name preservation, unknown topic handling, and feature axis validation.
-- Test Repository State writes so each job produces the expected changed JSON files and does not update state prematurely on failed intermediate steps.
+- Test Agent State writes so each job produces the expected changed JSON files and does not update state prematurely on failed intermediate steps.
 - Test Feature Extraction validation with readable, unreadable, unknown feature, other signal, unknown topic, and failed LLM cases.
 - Test that an Extracted Article is not extracted again and can return as a candidate only when it appears in the current feed.
 - Test Rule Score calculation, including Salience Threshold, Mentioned Topic Factor, missing feature weights as zero, and weight clamping after feedback.
@@ -137,7 +137,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 
 ## Further Notes
 
-- Domain language should follow CONTEXT.md. Prefer Owner, Preference Profile, Feature Extraction, Digest Generation, Article ID, Feature Vocabulary, Feature Axis, Reaction Feedback, Repository State, and Data Commit.
+- Domain language should follow CONTEXT.md. Prefer Owner, Preference Profile, Feature Extraction, Digest Generation, Article ID, Feature Vocabulary, Feature Axis, Reaction Feedback, Agent State, and Data Commit.
 - The current repository contains design docs and JSON seed state but no implementation code yet.
 - The PRD assumes the existing Feature Vocabulary Config and initial Preference Profile seed weights are the starting point.
 - Issue tracker publication is not yet configured in this workspace because no git remote is set.

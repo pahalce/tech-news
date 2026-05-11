@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as v from "valibot";
 
-import { loadFeatureVocabularyConfig, type FeatureVocabularyConfig } from "./modules/feature";
+import { loadFeatureVocabularyConfig, type FeatureVocabularyConfig } from "../../feature";
 
 const FiniteNumberSchema = v.pipe(v.number(), v.finite());
 
@@ -42,7 +42,7 @@ export type PreferenceProfile = v.InferOutput<typeof PreferenceProfileSchema>;
 
 export type PreferenceSummaryHistory = v.InferOutput<typeof PreferenceSummaryHistorySchema>;
 
-export type RepositoryState = {
+export type AgentState = {
   featureVocabulary: FeatureVocabularyConfig;
   preferenceProfile: PreferenceProfile;
   preferenceSummaryHistory: PreferenceSummaryHistory;
@@ -53,11 +53,9 @@ type WeightRange = {
   max: number;
 };
 
-const defaultRepositoryRoot = join(import.meta.dirname, "..");
+const defaultRepositoryRoot = join(import.meta.dirname, "../../../..");
 
-export async function loadRepositoryState(
-  repositoryRoot = defaultRepositoryRoot,
-): Promise<RepositoryState> {
+export async function loadAgentState(repositoryRoot = defaultRepositoryRoot): Promise<AgentState> {
   const [featureVocabulary, preferenceProfileJson, preferenceSummaryHistoryJson] =
     await Promise.all([
       loadFeatureVocabularyConfig(repositoryRoot),

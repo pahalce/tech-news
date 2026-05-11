@@ -264,7 +264,7 @@ chore(data): suggest feature vocabulary for YYYY-MM-DD
 
 `reaction_feedback` には、今後の拡張性のため Discord user id と対象リアクションごとの `processed_at` を保持する。
 
-フィードバック収集 job は Discord チャンネル履歴を全走査しない。`Repository State` に保存された message id のうち、以下を満たすものだけを Discord API で取得する。
+フィードバック収集 job は Discord チャンネル履歴を全走査しない。`Agent State` に保存された message id のうち、以下を満たすものだけを Discord API で取得する。
 
 - 対象リアクションの `processed_at` が未設定
 - `posted_at` が直近7日以内
