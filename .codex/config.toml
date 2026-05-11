@@ -4,6 +4,6 @@ codex_hooks = true
 [[hooks.Stop]]
 [[hooks.Stop.hooks]]
 type = "command"
-command = 'sh "$(git rev-parse --show-toplevel)/.agents/hooks/run-quality-checks.sh"'
+command = 'sh "$(git rev-parse --show-toplevel)/.codex/hooks/codex-stop-quality-check.sh"'
 timeout = 600
 statusMessage = "Running vp check --fix and architecture check"
