@@ -10,7 +10,7 @@ Owner は毎日 Zenn のトレンドや関心トピックから、実務に役�
 
 GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn のトレンド RSS と指定トピック RSS から記事候補を集め、本文取得と Feature Extraction を行い、Preference Profile と Feature Vocabulary に基づく Rule Score と LLM Rerank で最大10本を選ぶ。
 
-推薦された記事だけ Digest Generation を行い、Discord に1記事1メッセージで投稿する。投稿後の 👍 / 👎 リアクションを毎朝収集し、Reaction Feedback として Preference Profile に反映する。Feature Vocabulary は初期語彙から始め、Other Signals と Unknown Topic を週次で Discord に通知して手動メンテナンスできるようにする。
+推薦された記事だけ Recommendation Content を生成し、Discord に1記事1メッセージで投稿する。投稿後の 👍 / 👎 リアクションを毎朝収集し、Reaction Feedback として Preference Profile に反映する。Feature Vocabulary は初期語彙から始め、Other Signals と Unknown Topic を週次で Discord に通知して手動メンテナンスできるようにする。
 
 ## User Stories
 
@@ -26,7 +26,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 10. As an Owner, I want 一度 Feature Extraction した記事を再抽出しないでほしい, so that LLM コストを抑えられる。
 11. As an Owner, I want Feature Extraction 済みだが未推薦の記事を、その日の RSS に出ている場合だけ再候補にしてほしい, so that 古い候補の backlog で推薦が濁らない。
 12. As an Owner, I want Feature Extraction では summary や learning points を生成しないでほしい, so that 学習用構造データと投稿文生成の責務が混ざらない。
-13. As an Owner, I want 推薦された記事だけ Digest Generation してほしい, so that 不要な LLM 呼び出しを減らせる。
+13. As an Owner, I want 推薦された記事だけ Recommendation Content を生成してほしい, so that 不要な LLM 呼び出しを減らせる。
 14. As an Owner, I want Discord 投稿に summary, why recommended, learning points, signals used を含めてほしい, so that 記事本文を開く前に読む価値を判断できる。
 15. As an Owner, I want 毎日最大10本まで推薦してほしい, so that digest が多すぎて読めなくならない。
 16. As an Owner, I want 良い記事が少ない日は10本未満でもよい, so that 数合わせの低品質記事を避けられる。
@@ -73,7 +73,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 57. As an Owner, I want 全 feed が失敗した場合は job failed にしてほしい, so that digest が空でも成功扱いにならない。
 58. As an Owner, I want Feature Extraction LLM 失敗は再試行可能にしてほしい, so that 一時的な LLM 障害で記事が永久除外されない。
 59. As an Owner, I want unreadable 判定された Feature Extraction は再試行しないでほしい, so that 要約不能な記事に毎日コストを使わない。
-60. As an Owner, I want Digest Generation や Discord 投稿の失敗記事を推薦済みにしないでほしい, so that 実際に届かなかった記事が再候補になれる。
+60. As an Owner, I want Recommendation Content 生成や Discord 投稿の失敗記事を推薦済みにしないでほしい, so that 実際に届かなかった記事が再候補になれる。
 
 ## Implementation Decisions
 
@@ -90,10 +90,10 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 - Build a scoring module that computes Rule Score as the sum of feature weight multiplied by Feature Salience. It excludes features below the Salience Threshold of 0.3.
 - Mentioned Topic contribution uses a Mentioned Topic Factor of 0.3 and only applies when salience is at least 0.7.
 - Build an LLM Rerank module that takes top Rule Score candidates, Long-Term Preference Summary, Recent Preference Summary, and quality criteria, then selects up to ten final articles.
-- Build a Digest Generation module that runs only for recommended articles and creates Discord-facing summary, why recommended, learning points, and signals used.
-- Build a Discord notification module that posts one message per article and records a Discord Post Record only after the post succeeds.
+- Build a Recommendation Content module that runs only for recommended articles and creates Discord-facing summary, why recommended, learning points, and signals used.
+- Build a Discord notification module that posts one message per article and records a Publication Record only after the post succeeds.
 - The article becomes a Recommended Article only after Discord posting succeeds.
-- Build a feedback collection module that loads saved Discord Post Records, fetches only target messages within seven days of posted_at, and processes target Reaction Feedback.
+- Build a feedback collection module that loads saved Publication Records, fetches only target messages within seven days of posted_at, and processes target Reaction Feedback.
 - Initial target reactions are 👍 as positive and 👎 as negative. Bookmark-like reactions are not preference feedback.
 - Reaction Feedback stores user ids, processed_at per target emoji, and ignored_reason when feedback is contradictory.
 - If positive and negative feedback both exist for the same article, do not update the Preference Profile and leave processed_at empty with ignored_reason.
@@ -115,8 +115,8 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 - Test that an Extracted Article is not extracted again and can return as a candidate only when it appears in the current feed.
 - Test Rule Score calculation, including Salience Threshold, Mentioned Topic Factor, missing feature weights as zero, and weight clamping after feedback.
 - Test LLM Rerank at the boundary where fewer than ten high-quality articles are available.
-- Test Digest Generation separately from Feature Extraction so summary and learning points are not required for scoring.
-- Test Discord posting behavior: one article per message, no Discord Post Record on post failure, and first_recommended_at only after post success.
+- Test Recommendation Content separately from Feature Extraction so summary and learning points are not required for scoring.
+- Test Discord posting behavior: one article per message, no Publication Record on post failure, and first_recommended_at only after post success.
 - Test feedback collection with saved message ids only, posted_at within and outside seven days, processed_at per reaction, contradictory 👍 / 👎 handling, and ignored_reason.
 - Test Preference Profile updates for positive and negative feedback, salience scaling, seed range, learned weight range, and summary history update behavior.
 - Test weekly vocabulary suggestions for Other Signals and Unknown Topics, including duplicate detection and no auto-promotion.
@@ -137,7 +137,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 
 ## Further Notes
 
-- Domain language should follow CONTEXT.md. Prefer Owner, Preference Profile, Feature Extraction, Digest Generation, Article ID, Feature Vocabulary, Feature Axis, Reaction Feedback, Agent State, and Data Commit.
+- Domain language should follow CONTEXT.md. Prefer Owner, Preference Profile, Feature Extraction, Recommendation Content, Article ID, Feature Vocabulary, Feature Axis, Reaction Feedback, Agent State, and Data Commit.
 - The current repository contains design docs and JSON seed state but no implementation code yet.
 - The PRD assumes the existing Feature Vocabulary Config and initial Preference Profile seed weights are the starting point.
 - Issue tracker publication is not yet configured in this workspace because no git remote is set.
