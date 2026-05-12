@@ -64,9 +64,7 @@ src/
     infrastructure/
 ```
 
-`jobs/` contains thin Flue entrypoints. `workflows/` contains cross-module orchestration. `modules/` contains domain capabilities. Modules do not expose barrel `index.ts` files. Imports must name the concrete layer file (`domain/`, `application/`, or `infrastructure/`) so ownership remains visible at the call site.
-
-Cross-module imports target `application/` files by default. This keeps other modules coupled to use cases rather than to another module's domain model or adapter details. `workflows/` may import module `application/` files and, when wiring concrete runtime behavior, module `infrastructure/` adapters. The `agent-state` infrastructure is the narrow exception: it may import other modules' domain codecs and infrastructure loaders to assemble persisted **Agent State** slices.
+`jobs/` contains thin Flue entrypoints. `workflows/` contains cross-module orchestration. `modules/` contains domain capabilities. ADR-0002 defines the detailed import boundary rules, including the decision to avoid module barrel files and keep layer ownership visible at import sites.
 
 Application services are named `*-use-case.ts`. Domain services are pure domain decisions in `domain/`, named either by the decision they make or `*-service.ts` when they coordinate multiple domain objects. Infrastructure adapters live beside the module that needs them; shared low-level clients may live in `shared/infrastructure/`, but prompts, policies, and domain decisions stay in the owning module.
 

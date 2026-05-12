@@ -7,6 +7,7 @@
 - `issue-tracker.md`: GitHub Issues の作成、閲覧、コメント、ラベル操作。
 - `triage-labels.md`: canonical triage role と GitHub label の対応。
 - `domain.md`: `CONTEXT.md` と ADR を読むための方針。
+- `testing.md`: layer ごとのテスト配置とテスト設計方針。
 - `code-review.md`: このリポジトリ固有のコードレビュー観点。
 
 ## Subagent definitions
