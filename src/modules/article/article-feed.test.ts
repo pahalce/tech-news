@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vite-plus/test";
 
 import { collectCurrentFeedCandidates } from "./application/collect-current-feed-candidates-use-case";
-import { createArticleFeedEntry } from "./domain/article";
+import { createArticleFeedEntry } from "./domain/article-feed";
+import { parseArticleIdentity } from "./domain/article-identity";
+import { parseCurrentFeedCandidate } from "./domain/current-feed-candidate";
 import { defaultZennArticleFeeds } from "./infrastructure/zenn-article-feeds";
 import { readZennRssFeed } from "./infrastructure/zenn-rss-feed-reader";
 
@@ -233,5 +235,38 @@ describe("Current Feed Candidate 収集に関するテスト", () => {
 
     // Assert
     expect(actual).toThrow("Article Feed Entry title must not be empty");
+  });
+
+  it("Article Identity の Article ID が Canonical URL と一致しないとき、domain validation エラーとなる", () => {
+    // Arrange
+    const identity = {
+      articleId: "zenn:0000000000000000000000000000000000000000000000000000000000000000",
+      source: "zenn",
+      canonicalUrl: "https://zenn.dev/kazuyataira/articles/rss-entry",
+    };
+
+    // Act
+    const actual = () => parseArticleIdentity(identity);
+
+    // Assert
+    expect(actual).toThrow("Article ID must match source and Canonical URL");
+  });
+
+  it("Current Feed Candidate の feedIds が空のとき、domain validation エラーとなる", () => {
+    // Arrange
+    const candidate = {
+      articleId: "zenn:488e4f9f9007621f5a60d198e3953705eb8ffcae9c31c0b3d69502c626b87d76",
+      source: "zenn",
+      canonicalUrl: "https://zenn.dev/kazuyataira/articles/rss-entry",
+      title: "RSS entry",
+      feedIds: [],
+      firstSeenInCurrentFeedsAt: null,
+    };
+
+    // Act
+    const actual = () => parseCurrentFeedCandidate(candidate);
+
+    // Assert
+    expect(actual).toThrow("Current Feed Candidate feedIds must not be empty");
   });
 });

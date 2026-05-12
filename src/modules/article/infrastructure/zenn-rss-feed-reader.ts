@@ -1,6 +1,10 @@
 import { XMLParser } from "fast-xml-parser";
 
-import { createArticleFeedEntry, type ArticleFeed, type ArticleFeedEntry } from "../domain/article";
+import {
+  createArticleFeedEntry,
+  type ArticleFeed,
+  type ArticleFeedEntry,
+} from "../domain/article-feed";
 
 type FetchText = (url: string) => Promise<string>;
 

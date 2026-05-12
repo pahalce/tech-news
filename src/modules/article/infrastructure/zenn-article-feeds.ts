@@ -1,5 +1,4 @@
-import { createArticleFeed } from "../domain/article";
-import type { ArticleFeed } from "../domain/article";
+import { createArticleFeed, type ArticleFeed } from "../domain/article-feed";
 
 const zennInterestTopics = ["typescript", "react", "nextjs", "frontend", "backend"] as const;
 

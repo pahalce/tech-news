@@ -1,10 +1,9 @@
 import {
   createCurrentFeedCandidate,
   recordFeedAppearance,
-  type ArticleFeed,
-  type ArticleFeedEntry,
   type CurrentFeedCandidate,
-} from "../domain/article";
+} from "../domain/current-feed-candidate";
+import { type ArticleFeed, type ArticleFeedEntry } from "../domain/article-feed";
 
 export type FeedCollectionFailure = {
   feedId: string;
