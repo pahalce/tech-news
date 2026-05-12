@@ -32,28 +32,30 @@ src/
 
 `workflows/` は複数 module をまたぐ orchestration の置き場であり、`modules/` と同列に domain module として置かない。`jobs/` は Flue entrypoint と payload parsing 程度に薄く保つ。
 
-## Module Public API
+## Module Import Boundary
 
-各 module は `src/modules/<module>/index.ts` を public API とする。他 module から次のような deep import をしている場合は指摘する。
+各 module は barrel `src/modules/<module>/index.ts` を作らない。import path には `domain/`, `application/`, `infrastructure/` の layer が見える必要がある。layer を隠す barrel を追加している場合は指摘する。
+
+他 module から次のような domain / infrastructure への直接 import をしている場合は、例外に当たるか確認し、通常は指摘する。
 
 ```ts
 import { FeatureExtraction } from "../feature/domain/feature-extraction";
 import { OpenAIFeatureExtractor } from "../feature/infrastructure/openai-feature-extractor";
 ```
 
-他 module からは原則として `index.ts` 経由で import する。
+他 module からは原則として対象 module の `application/` にある use case を import する。
 
 ```ts
-import type { FeatureExtraction } from "../feature";
+import { extractArticleFeatures } from "../feature/application/extract-article-features-use-case";
 ```
 
-同一 module 内で `domain/`, `application/`, `infrastructure/` を import するのは許容する。ただし依存方向の規約に従う。
+同一 module 内で `domain/`, `application/`, `infrastructure/` を import するのは許容する。ただし依存方向の規約に従う。`agent-state/infrastructure` は永続化された **Agent State** を組み立てるため、他 module の domain codec と infrastructure loader を import できる狭い例外である。
 
 ## 依存方向
 
 `domain/` は純粋な domain model, value object, policy, domain service を置く層である。`domain/` から `application/`, `infrastructure/`, 外部 SDK, filesystem, HTTP, Discord, LLM client を import している場合は指摘する。
 
-`application/` は use case と port interface を置く層である。同一 module の `domain/` と、必要最小限の他 module public API に依存してよい。外部 I/O の具象実装を直接呼んでいる場合は、port を切るべきか確認する。
+`application/` は use case と port interface を置く層である。同一 module の `domain/` と、必要最小限の他 module `application/` use case に依存してよい。外部 I/O の具象実装を直接呼んでいる場合は、port を切るべきか確認する。
 
 `infrastructure/` は同一 module の application port を実装する層である。外部 SDK, filesystem, HTTP, Discord, LLM client はここに置く。prompt, scoring policy, vocabulary rule, preference update rule などの domain decision が `infrastructure/` に入っている場合は指摘する。
 
@@ -77,15 +79,15 @@ Domain service は `domain/` に置き、純粋な domain decision だけを担�
 
 - `agent-state`: Agent State の保存形式、読み書き、Data Commit、versioned persisted state の組み立て
 - 各 domain module: 自分の state slice の型、不変条件、更新ルール、parse/serialize boundary
-- `workflows`: 各 module の public API を呼んで検証済み slice から次の Agent State を合成し、最後に persist する
+- `workflows`: 各 module の application use case を呼んで検証済み slice から次の Agent State を合成し、最後に persist する
 
-`agent-state` は各 module の public API から slice codec を import してよい。`agent-state` が slice の不変条件を再実装している場合、または `workflows` が raw JSON を直接 composition している場合は指摘する。
+`agent-state/infrastructure` は各 module の concrete layer file から slice codec / loader を import してよい。`agent-state` が slice の不変条件を再実装している場合、または `workflows` が raw JSON を直接 composition している場合は指摘する。
 
 ## Feature Vocabulary Ownership
 
 **Feature Vocabulary Config** の型、検証、topic normalization、prompt / validation / Rule Score から使う read-only access は `feature` module が所有する。
 
-`vocabulary-maintenance` は **Unknown Topic**、**Other Signals**、**Vocabulary Promotion Candidates** のレビュー workflow を所有するが、vocabulary schema や normalization rule を所有しない。`vocabulary-maintenance` が vocabulary config の構造を直接解釈・更新している場合は、`feature` public API を経由させるよう指摘する。
+`vocabulary-maintenance` は **Unknown Topic**、**Other Signals**、**Vocabulary Promotion Candidates** のレビュー workflow を所有するが、vocabulary schema や normalization rule を所有しない。`vocabulary-maintenance` が vocabulary config の構造を直接解釈・更新している場合は、`feature/application` use case を経由させるよう指摘する。
 
 ## Recommendation Publication 用語
 
@@ -127,7 +129,7 @@ oxlint で表現しづらい source-dependent な layer 依存は `scripts/check
 
 ## レビュー時の指摘例
 
-- 他 module の `domain/` を deep import しているため、module public API 境界を破っている。
+- 他 module の `domain/` を直接 import しており、module 間の依存が application use case を迂回している。
 - Application service が `*-service.ts` と命名されており、use case と domain service の区別が曖昧になっている。
 - Domain service が OpenAI client を直接呼んでおり、domain が infrastructure に依存している。
 - Discord 固有の module を追加しており、publication domain と infrastructure adapter の境界が崩れている。

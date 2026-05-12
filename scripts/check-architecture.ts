@@ -39,6 +39,17 @@ export async function checkArchitecture(options: ArchitectureCheckOptions = {}):
   const errors: string[] = [];
 
   for (const file of files) {
+    const classifiedFile = classifySourceFile(paths, file);
+    if (isModuleBarrel(classifiedFile)) {
+      report(
+        paths,
+        errors,
+        file,
+        "./index",
+        "module barrel index.ts is not allowed; import concrete layer files so layer ownership remains visible.",
+      );
+    }
+
     const source = await readFile(file, "utf8");
     for (const specifier of extractSpecifiers(source)) {
       const resolvedImport = resolveImport(paths, file, specifier);
@@ -184,13 +195,13 @@ function checkImport(
   }
 
   if (from.area === "workflows") {
-    if (to.area === "modules" && !isModulePublicApi(to)) {
+    if (to.area === "modules" && to.layer !== "application" && to.layer !== "infrastructure") {
       report(
         paths,
         errors,
         fromFile,
         specifier,
-        "workflows must import modules through their public index.ts APIs.",
+        "workflows may only import module application or infrastructure files.",
       );
     }
     return;
@@ -200,14 +211,20 @@ function checkImport(
     return;
   }
 
-  if (to.area === "modules" && from.moduleName !== to.moduleName && !isModulePublicApi(to)) {
-    report(
-      paths,
-      errors,
-      fromFile,
-      specifier,
-      "cross-module imports must go through the target module index.ts.",
-    );
+  if (to.area === "modules" && from.moduleName !== to.moduleName) {
+    if (isAgentStateSliceImport(from, to)) {
+      return;
+    }
+
+    if (to.layer !== "application") {
+      report(
+        paths,
+        errors,
+        fromFile,
+        specifier,
+        "cross-module imports must target application layer files.",
+      );
+    }
     return;
   }
 
@@ -257,20 +274,7 @@ function checkImport(
     }
   }
 
-  if (
-    from.layer === "infrastructure" &&
-    to.area === "modules" &&
-    from.moduleName !== to.moduleName &&
-    !isModulePublicApi(to)
-  ) {
-    report(
-      paths,
-      errors,
-      fromFile,
-      specifier,
-      "infrastructure may only import other modules through public APIs.",
-    );
-  }
+  return;
 }
 
 function classifySourceFile(paths: ArchitectureCheckPaths, file: string): ClassifiedSourceFile {
@@ -309,8 +313,18 @@ function classifySourceFile(paths: ArchitectureCheckPaths, file: string): Classi
   return { area: "other", relativePath: relative(paths.sourceRoot, path).split(sep).join("/") };
 }
 
-function isModulePublicApi(target: ClassifiedSourceFile): boolean {
+function isModuleBarrel(target: ClassifiedSourceFile): boolean {
   return target.area === "modules" && target.relativePath === `${target.moduleName}/index.ts`;
+}
+
+function isAgentStateSliceImport(from: ClassifiedSourceFile, to: ClassifiedSourceFile): boolean {
+  return (
+    from.area === "modules" &&
+    from.moduleName === "agent-state" &&
+    from.layer === "infrastructure" &&
+    to.area === "modules" &&
+    (to.layer === "domain" || to.layer === "infrastructure")
+  );
 }
 
 function isSharedPublicApi(target: ClassifiedSourceFile): boolean {

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vite-plus/test";
 
-import { loadAgentState } from ".";
+import { loadAgentState } from "./infrastructure/file-agent-state";
 
 describe("Agent State 読み込みに関するテスト", () => {
   describe("有効データの読み込みに関するテスト", () => {

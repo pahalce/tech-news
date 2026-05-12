@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vite-plus/test";
 
-import { loadFeatureVocabularyConfig } from ".";
+import { loadFeatureVocabularyConfig } from "./infrastructure/file-feature-vocabulary-config";
 
 describe("Feature Vocabulary Config に関するテスト", () => {
   it("既定 config を読み込んだとき、topic alias を大文字小文字を無視して canonical Topic Key に正規化できる", async () => {
