@@ -6,6 +6,8 @@
 
 - `CONTEXT.md`
 - `docs/adr/0001-domain-sliced-ddd-architecture.md`
+- `docs/adr/0002-layer-visible-imports-and-colocated-tests.md`
+- `docs/agents/testing.md`
 - 変更対象に近い既存コード
 
 ## ディレクトリ境界
@@ -18,7 +20,6 @@ src/
   workflows/
   modules/
     <module>/
-      index.ts
       domain/
       application/
       infrastructure/
@@ -32,32 +33,44 @@ src/
 
 `workflows/` は複数 module をまたぐ orchestration の置き場であり、`modules/` と同列に domain module として置かない。`jobs/` は Flue entrypoint と payload parsing 程度に薄く保つ。
 
-## Module Public API
+module 内のファイルは、概念や use case ごとに分割する。`domain/article.ts` のような広い集約ファイルが entity、value object、normalization、candidate operation を抱えている場合は、`article-identity.ts`, `current-feed-candidate.ts`, `canonical-url.ts` のように用語単位で分けるべきか確認する。
 
-各 module は `src/modules/<module>/index.ts` を public API とする。他 module から次のような deep import をしている場合は指摘する。
+## Module Import Boundary
+
+各 module は barrel `src/modules/<module>/index.ts` を作らない。import path には `domain/`, `application/`, `infrastructure/` の layer が見える必要がある。layer を隠す barrel を追加している場合は指摘する。
+
+他 module から次のような domain / infrastructure への直接 import をしている場合は、例外に当たるか確認し、通常は指摘する。
 
 ```ts
 import { FeatureExtraction } from "../feature/domain/feature-extraction";
 import { OpenAIFeatureExtractor } from "../feature/infrastructure/openai-feature-extractor";
 ```
 
-他 module からは原則として `index.ts` 経由で import する。
+他 module からは原則として対象 module の `application/` にある use case を import する。
 
 ```ts
-import type { FeatureExtraction } from "../feature";
+import { extractArticleFeatures } from "../feature/application/extract-article-features-use-case";
 ```
 
-同一 module 内で `domain/`, `application/`, `infrastructure/` を import するのは許容する。ただし依存方向の規約に従う。
+同一 module 内で `domain/`, `application/`, `infrastructure/` を import するのは許容する。ただし依存方向の規約に従う。`agent-state/infrastructure` は永続化された **Agent State** を組み立てるため、他 module の domain codec と infrastructure loader を import できる狭い例外である。
 
 ## 依存方向
 
 `domain/` は純粋な domain model, value object, policy, domain service を置く層である。`domain/` から `application/`, `infrastructure/`, 外部 SDK, filesystem, HTTP, Discord, LLM client を import している場合は指摘する。
 
-`application/` は use case と port interface を置く層である。同一 module の `domain/` と、必要最小限の他 module public API に依存してよい。外部 I/O の具象実装を直接呼んでいる場合は、port を切るべきか確認する。
+`application/` は use case と port interface を置く層である。同一 module の `domain/` と、必要最小限の他 module `application/` use case に依存してよい。外部 I/O の具象実装を直接呼んでいる場合は、port を切るべきか確認する。
 
 `infrastructure/` は同一 module の application port を実装する層である。外部 SDK, filesystem, HTTP, Discord, LLM client はここに置く。prompt, scoring policy, vocabulary rule, preference update rule などの domain decision が `infrastructure/` に入っている場合は指摘する。
 
 `shared/` は本当に複数箇所で使う小さな横断部品だけに使う。`shared/infrastructure/openai-client.ts` のような低レベル client は許容するが、Feature Extraction, LLM Rerank, Recommendation Content の prompt や判断を shared に逃がしてはいけない。
+
+## Domain Model と Validation
+
+`domain/` の entity / value object は、不変条件を constructor / parser function に集める。class は必須ではない。関数型にする場合は `createArticleIdentity`, `parseCurrentFeedCandidate`, `recordFeedAppearance` のように、生成・検証・操作が domain に残っているか確認する。
+
+Valibot を使う既存方針に合わせ、外部入力や persisted state から domain object を作る boundary は `v.parse` などで検証する。型 alias だけで validation がない domain object、または use case / infrastructure が domain invariant を個別に検証している場合は指摘する。
+
+Domain object が別 domain module の具体型を直接 import している場合は、cross-module domain coupling として確認する。必要な情報が少ないなら構造型や application use case を使い、domain 間を直接結ばない。
 
 ## Application Service と Domain Service
 
@@ -77,15 +90,23 @@ Domain service は `domain/` に置き、純粋な domain decision だけを担�
 
 - `agent-state`: Agent State の保存形式、読み書き、Data Commit、versioned persisted state の組み立て
 - 各 domain module: 自分の state slice の型、不変条件、更新ルール、parse/serialize boundary
-- `workflows`: 各 module の public API を呼んで検証済み slice から次の Agent State を合成し、最後に persist する
+- `workflows`: 各 module の application use case を呼んで検証済み slice から次の Agent State を合成し、最後に persist する
 
-`agent-state` は各 module の public API から slice codec を import してよい。`agent-state` が slice の不変条件を再実装している場合、または `workflows` が raw JSON を直接 composition している場合は指摘する。
+`agent-state/infrastructure` は各 module の concrete layer file から slice codec / loader を import してよい。`agent-state` が slice の不変条件を再実装している場合、または `workflows` が raw JSON を直接 composition している場合は指摘する。
 
 ## Feature Vocabulary Ownership
 
 **Feature Vocabulary Config** の型、検証、topic normalization、prompt / validation / Rule Score から使う read-only access は `feature` module が所有する。
 
-`vocabulary-maintenance` は **Unknown Topic**、**Other Signals**、**Vocabulary Promotion Candidates** のレビュー workflow を所有するが、vocabulary schema や normalization rule を所有しない。`vocabulary-maintenance` が vocabulary config の構造を直接解釈・更新している場合は、`feature` public API を経由させるよう指摘する。
+`vocabulary-maintenance` は **Unknown Topic**、**Other Signals**、**Vocabulary Promotion Candidates** のレビュー workflow を所有するが、vocabulary schema や normalization rule を所有しない。`vocabulary-maintenance` が vocabulary config の構造を直接解釈・更新している場合は、`feature/application` use case を経由させるよう指摘する。
+
+## Test Placement
+
+テストは対象 layer に colocate する。`domain/` の pure rule と validation は `domain/*.test.ts`、use case の orchestration と失敗扱いは `application/*-use-case.test.ts`、adapter の parsing / protocol mapping は `infrastructure/*.test.ts` に置く。
+
+module root の広い `src/modules/<module>/<module>.test.ts` に複数 layer の仕様が混ざっている場合は、layer ごとに分けられないか指摘する。複数 module をまたぐ振る舞いは `workflows/*-workflow.test.ts` が自然か確認する。
+
+テスト追加時は、単に coverage を増やしているかではなく、どの layer contract を守っているかを見る。domain validation、URL canonicalization、ID derivation、partial failure / all failure、malformed adapter response など、壊れると user-facing behavior や Agent State に影響する境界が優先である。
 
 ## Recommendation Publication 用語
 
@@ -127,7 +148,10 @@ oxlint で表現しづらい source-dependent な layer 依存は `scripts/check
 
 ## レビュー時の指摘例
 
-- 他 module の `domain/` を deep import しているため、module public API 境界を破っている。
+- 他 module の `domain/` を直接 import しており、module 間の依存が application use case を迂回している。
+- module barrel `index.ts` を追加しており、import path から layer ownership が見えなくなっている。
+- domain object が型定義だけで、Valibot parser / constructor による invariant validation を持っていない。
+- module root の大きな test file に domain / application / infrastructure の仕様が混在している。
 - Application service が `*-service.ts` と命名されており、use case と domain service の区別が曖昧になっている。
 - Domain service が OpenAI client を直接呼んでおり、domain が infrastructure に依存している。
 - Discord 固有の module を追加しており、publication domain と infrastructure adapter の境界が崩れている。

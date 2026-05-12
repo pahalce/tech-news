@@ -64,16 +64,16 @@ src/
     infrastructure/
 ```
 
-`jobs/` contains thin Flue entrypoints. `workflows/` contains cross-module orchestration. `modules/` contains domain capabilities. Each module exposes its public API through `index.ts`; other modules must not deep-import from another module's `domain/`, `application/`, or `infrastructure/` directories.
+`jobs/` contains thin Flue entrypoints. `workflows/` contains cross-module orchestration. `modules/` contains domain capabilities. ADR-0002 defines the detailed import boundary rules, including the decision to avoid module barrel files and keep layer ownership visible at import sites.
 
 Application services are named `*-use-case.ts`. Domain services are pure domain decisions in `domain/`, named either by the decision they make or `*-service.ts` when they coordinate multiple domain objects. Infrastructure adapters live beside the module that needs them; shared low-level clients may live in `shared/infrastructure/`, but prompts, policies, and domain decisions stay in the owning module.
 
-`feature` owns **Feature Vocabulary Config** types, validation, topic normalization, and read-only access used by prompts, validation, and **Rule Score**. `vocabulary-maintenance` owns review workflows for **Unknown Topic**, **Other Signals**, and **Vocabulary Promotion Candidates**, but it proposes changes through the `feature` public API instead of owning the vocabulary schema or normalization rules.
+`feature` owns **Feature Vocabulary Config** types, validation, topic normalization, and read-only access used by prompts, validation, and **Rule Score**. `vocabulary-maintenance` owns review workflows for **Unknown Topic**, **Other Signals**, and **Vocabulary Promotion Candidates**, but it proposes changes through `feature` application use cases instead of owning the vocabulary schema or normalization rules.
 
 The `publish-recommendations-workflow` is source-agnostic. Zenn is an article feed adapter, not part of the workflow name. The canonical flow is: load **Agent State**, read configured feeds, create **Current Feed Candidates**, resolve **Canonical URL** and **Article ID**, reuse or create **Feature Extraction**, exclude unreadable and already recommended articles, compute **Rule Score**, apply **LLM Rerank**, create **Recommendation Content**, publish recommendations, record **Publication Records** and **Recommended Articles**, then persist **Agent State** with one **Data Commit**.
 
 ## Consequences
 
-`Agent State` owns persistence shape, schema versioning, JSON file mapping, and the final data commit. Each domain module owns its state slice types, invariants, update rules, and parse/serialize boundary for that slice. `agent-state` may import those public slice codecs through module `index.ts` to assemble versioned persisted state, but it must not duplicate slice invariants or update rules. Workflows compose validated slices and persist the resulting state, but they do not embed domain rules or compose raw JSON.
+`Agent State` owns persistence shape, schema versioning, JSON file mapping, and the final data commit. Each domain module owns its state slice types, invariants, update rules, and parse/serialize boundary for that slice. `agent-state` may import those concrete slice codecs and loaders directly from the owning module's layer files to assemble versioned persisted state, but it must not duplicate slice invariants or update rules. Workflows compose validated slices and persist the resulting state, but they do not embed domain rules or compose raw JSON.
 
 Boundary enforcement is implemented through the Vite+ `lint` block in `vite.config.ts`, the `vp lint` package script, and `scripts/check-architecture.ts`. Oxlint handles broad import restrictions and cycle checks; the architecture check handles source-dependent layer rules that `no-restricted-imports` cannot express cleanly.

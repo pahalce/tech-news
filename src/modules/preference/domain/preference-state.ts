@@ -1,7 +1,5 @@
 import * as v from "valibot";
 
-import type { FeatureVocabularyConfig } from "../../feature";
-
 const FiniteNumberSchema = v.pipe(v.number(), v.finite());
 
 const WeightRangeSchema = v.pipe(
@@ -40,6 +38,11 @@ export type PreferenceProfile = v.InferOutput<typeof PreferenceProfileSchema>;
 
 export type PreferenceSummaryHistory = v.InferOutput<typeof PreferenceSummaryHistorySchema>;
 
+type PreferenceFeatureVocabulary = {
+  topics: Record<string, unknown>;
+  feature_axes: Record<string, { features: Record<string, unknown> }>;
+};
+
 type WeightRange = {
   min: number;
   max: number;
@@ -47,7 +50,7 @@ type WeightRange = {
 
 export function parsePreferenceProfile(
   value: unknown,
-  featureVocabulary: FeatureVocabularyConfig,
+  featureVocabulary: PreferenceFeatureVocabulary,
 ): PreferenceProfile {
   const profile = v.parse(PreferenceProfileSchema, value);
   assertWeightsInRange(
@@ -102,7 +105,7 @@ function assertWeightsInRange(
 
 function assertPreferenceProfileMatchesFeatureVocabulary(
   profile: PreferenceProfile,
-  featureVocabulary: FeatureVocabularyConfig,
+  featureVocabulary: PreferenceFeatureVocabulary,
 ): void {
   assertKnownKeys(
     profile.feature_weights.topics,

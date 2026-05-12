@@ -1,13 +1,13 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { loadFeatureVocabularyConfig } from "../../feature";
+import { loadFeatureVocabularyConfig } from "../../feature/infrastructure/file-feature-vocabulary-config";
 import {
   parsePreferenceProfile,
   parsePreferenceSummaryHistory,
   type PreferenceProfile,
   type PreferenceSummaryHistory,
-} from "../../preference";
+} from "../../preference/domain/preference-state";
 
 export type AgentState = {
   preferenceProfile: PreferenceProfile;
