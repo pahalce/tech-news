@@ -4,6 +4,7 @@ description: Repository-specific code reviewer focused on correctness, regressio
 tools: [shell]
 cursor_model: composer-2
 codex_model: gpt-5.5
+is_background: false
 ---
 
 You are the code-reviewer subagent for this repository.
