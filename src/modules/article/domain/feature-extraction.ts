@@ -12,6 +12,11 @@ const LlmFeatureSchema = v.object({
   salience: SalienceSchema,
 });
 
+const LlmTopicSchema = v.union([
+  v.pipe(v.string(), v.nonEmpty("Article Topic key must not be empty.")),
+  LlmFeatureSchema,
+]);
+
 const LlmOtherSignalSchema = v.object({
   key: v.pipe(v.string(), v.nonEmpty("Other Signal key must not be empty.")),
   salience: SalienceSchema,
@@ -44,8 +49,8 @@ const OtherSignalSchema = v.strictObject({
 });
 
 const ArticleFeaturesSchema = v.strictObject({
-  primaryTopics: v.array(v.string()),
-  mentionedTopics: v.array(v.string()),
+  primaryTopics: v.array(FeatureSignalSchema),
+  mentionedTopics: v.array(FeatureSignalSchema),
   unknownTopics: v.array(v.string()),
   featureAxes: v.record(v.string(), v.array(FeatureSignalSchema)),
   otherSignals: v.array(OtherSignalSchema),
@@ -88,8 +93,8 @@ const LlmFeatureExtractionSchema = v.strictObject({
     is_readable: v.boolean(),
     reason: v.nullable(v.string()),
   }),
-  primary_topics: v.array(v.string()),
-  mentioned_topics: v.array(v.string()),
+  primary_topics: v.array(LlmTopicSchema),
+  mentioned_topics: v.array(LlmTopicSchema),
   feature_axes: v.record(v.string(), v.array(LlmFeatureSchema)),
   other_signals: v.array(LlmOtherSignalSchema),
 });
@@ -123,8 +128,8 @@ export type FeatureExtraction = {
 };
 
 export type ArticleFeatures = {
-  primaryTopics: string[];
-  mentionedTopics: string[];
+  primaryTopics: FeatureSignal[];
+  mentionedTopics: FeatureSignal[];
   unknownTopics: string[];
   featureAxes: Record<string, FeatureSignal[]>;
   otherSignals: OtherSignal[];
@@ -235,37 +240,50 @@ export function parseFeatureExtractionState(input: unknown): FeatureExtractionSt
 }
 
 function normalizeTopics(
-  primaryTopicsInput: string[],
-  mentionedTopicsInput: string[],
+  primaryTopicsInput: Array<string | FeatureSignal>,
+  mentionedTopicsInput: Array<string | FeatureSignal>,
   featureVocabulary: FeatureExtractionVocabulary,
 ) {
-  const primaryTopics: string[] = [];
-  const mentionedTopics: string[] = [];
+  const primaryTopics: FeatureSignal[] = [];
+  const mentionedTopics: FeatureSignal[] = [];
   const unknownTopics: string[] = [];
 
   for (const topic of primaryTopicsInput) {
-    const normalized = featureVocabulary.normalizeTopic(topic);
+    const topicSignal = normalizeTopicInput(topic);
+    const normalized = featureVocabulary.normalizeTopic(topicSignal.key);
     if (normalized.kind === "known_topic") {
-      primaryTopics.push(normalized.topicKey);
+      primaryTopics.push({ key: normalized.topicKey, salience: topicSignal.salience });
     } else {
       unknownTopics.push(normalized.normalizedTopic);
     }
   }
 
   for (const topic of mentionedTopicsInput) {
-    const normalized = featureVocabulary.normalizeTopic(topic);
+    const topicSignal = normalizeTopicInput(topic);
+    const normalized = featureVocabulary.normalizeTopic(topicSignal.key);
     if (normalized.kind === "known_topic") {
-      mentionedTopics.push(normalized.topicKey);
+      mentionedTopics.push({ key: normalized.topicKey, salience: topicSignal.salience });
     } else {
       unknownTopics.push(normalized.normalizedTopic);
     }
   }
 
   return {
-    primaryTopics: unique(primaryTopics),
-    mentionedTopics: unique(mentionedTopics),
+    primaryTopics: mergeFeatureSignalsByMaxSalience(primaryTopics),
+    mentionedTopics: removePrimaryTopics(
+      mergeFeatureSignalsByMaxSalience(mentionedTopics),
+      primaryTopics,
+    ),
     unknownTopics: unique(unknownTopics),
   };
+}
+
+function normalizeTopicInput(topic: string | FeatureSignal): FeatureSignal {
+  if (typeof topic === "string") {
+    return { key: topic, salience: 1 };
+  }
+
+  return topic;
 }
 
 function normalizeFeatureAxes(
@@ -294,4 +312,27 @@ function normalizeFeatureAxes(
 
 function unique(values: string[]): string[] {
   return [...new Set(values)];
+}
+
+function mergeFeatureSignalsByMaxSalience(values: FeatureSignal[]): FeatureSignal[] {
+  const mergedByKey = new Map<string, FeatureSignal>();
+
+  for (const value of values) {
+    const existing = mergedByKey.get(value.key);
+
+    if (!existing || value.salience > existing.salience) {
+      mergedByKey.set(value.key, value);
+    }
+  }
+
+  return [...mergedByKey.values()];
+}
+
+function removePrimaryTopics(
+  mentionedTopics: FeatureSignal[],
+  primaryTopics: FeatureSignal[],
+): FeatureSignal[] {
+  const primaryTopicKeys = new Set(primaryTopics.map((topic) => topic.key));
+
+  return mentionedTopics.filter((topic) => !primaryTopicKeys.has(topic.key));
 }

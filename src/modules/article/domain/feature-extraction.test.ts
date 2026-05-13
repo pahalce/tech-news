@@ -33,7 +33,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
             is_readable: true,
             reason: null,
           },
-          primary_topics: ["TypeScript"],
+          primary_topics: [{ key: "TypeScript", salience: 0.9 }],
           mentioned_topics: [],
           feature_axes: {},
           other_signals: [],
@@ -43,7 +43,86 @@ describe("Feature Extraction domain model に関するテスト", () => {
     );
 
     // Assert
-    expect(actual.articleFeatures?.primaryTopics).toEqual(["typescript"]);
+    expect(actual.articleFeatures?.primaryTopics).toEqual([{ key: "typescript", salience: 0.9 }]);
+  });
+
+  it("同じ Primary Topic の alias が複数抽出されたとき、最大 salience で保存される", () => {
+    // Arrange
+    const identity = createArticleIdentity(
+      "zenn",
+      "https://zenn.dev/kazuyataira/articles/primary-topic-aliases",
+    );
+    const featureVocabulary = {
+      feature_axes: {},
+      normalizeTopic(topic: string) {
+        return ["typescript", "ts"].includes(topic.toLowerCase())
+          ? { kind: "known_topic" as const, topicKey: "typescript", displayName: "TypeScript" }
+          : { kind: "unknown_topic" as const, normalizedTopic: topic.toLowerCase() };
+      },
+    };
+
+    // Act
+    const actual = createFeatureExtraction(
+      {
+        articleId: identity.articleId,
+        extractedAt: "2026-05-13T00:00:00.000Z",
+        llmOutput: {
+          readability: {
+            is_readable: true,
+            reason: null,
+          },
+          primary_topics: [
+            { key: "TypeScript", salience: 0.4 },
+            { key: "ts", salience: 0.9 },
+          ],
+          mentioned_topics: [],
+          feature_axes: {},
+          other_signals: [],
+        },
+      },
+      featureVocabulary,
+    );
+
+    // Assert
+    expect(actual.articleFeatures?.primaryTopics).toEqual([{ key: "typescript", salience: 0.9 }]);
+  });
+
+  it("同じ Topic が Primary Topic と Mentioned Topic に抽出されたとき、Primary Topic だけに保存される", () => {
+    // Arrange
+    const identity = createArticleIdentity(
+      "zenn",
+      "https://zenn.dev/kazuyataira/articles/primary-mentioned-overlap",
+    );
+    const featureVocabulary = {
+      feature_axes: {},
+      normalizeTopic(topic: string) {
+        return ["typescript", "ts"].includes(topic.toLowerCase())
+          ? { kind: "known_topic" as const, topicKey: "typescript", displayName: "TypeScript" }
+          : { kind: "unknown_topic" as const, normalizedTopic: topic.toLowerCase() };
+      },
+    };
+
+    // Act
+    const actual = createFeatureExtraction(
+      {
+        articleId: identity.articleId,
+        extractedAt: "2026-05-13T00:00:00.000Z",
+        llmOutput: {
+          readability: {
+            is_readable: true,
+            reason: null,
+          },
+          primary_topics: [{ key: "TypeScript", salience: 0.8 }],
+          mentioned_topics: [{ key: "ts", salience: 1 }],
+          feature_axes: {},
+          other_signals: [],
+        },
+      },
+      featureVocabulary,
+    );
+
+    // Assert
+    expect(actual.articleFeatures?.mentionedTopics).toEqual([]);
   });
 
   it("Unknown Topic が抽出されたとき、unknownTopics に保存される", () => {
