@@ -18,6 +18,17 @@ describe("Agent State 読み込みに関するテスト", () => {
       expect(actual.preferenceProfile.version).toBe(1);
     });
 
+    it("既定データを読み込んだとき、Feature Extraction State の version が 1 となる", async () => {
+      // Arrange
+      const repositoryRoot = undefined;
+
+      // Act
+      const actual = await loadAgentState(repositoryRoot);
+
+      // Assert
+      expect(actual.featureExtractionState.version).toBe(1);
+    });
+
     it("既定データを読み込んだとき、topics.typescript の重みが 0.6 となる", async () => {
       // Arrange
       const repositoryRoot = undefined;
@@ -223,6 +234,12 @@ async function writeAgentState(repositoryRoot: string, preferenceProfile: unknow
     },
   });
   await writeJson(join(repositoryRoot, "data", "preference-profile.json"), preferenceProfile);
+  await writeJson(join(repositoryRoot, "data", "feature-extraction-state.json"), {
+    version: 1,
+    extractions: [],
+    bodyFetchFailures: [],
+    failedExtractionAttempts: [],
+  });
   await writeJson(join(repositoryRoot, "data", "preference-summary-history.json"), {
     version: 1,
     long_term_summary: null,
