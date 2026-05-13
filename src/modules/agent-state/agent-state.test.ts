@@ -63,6 +63,17 @@ describe("Agent State 読み込みに関するテスト", () => {
         "insufficient_feedback",
       );
     });
+
+    it("既定データを読み込んだとき、Recommendation Content State の version が 1 となる", async () => {
+      // Arrange
+      const repositoryRoot = undefined;
+
+      // Act
+      const actual = await loadAgentState(repositoryRoot);
+
+      // Assert
+      expect(actual.recommendationContentState.version).toBe(1);
+    });
   });
 
   describe("重みバリデーションに関するテスト", () => {
@@ -249,6 +260,10 @@ async function writeAgentState(repositoryRoot: string, preferenceProfile: unknow
       confidence: "insufficient_feedback",
     },
     history: [],
+  });
+  await writeJson(join(repositoryRoot, "data", "recommendation-content-state.json"), {
+    version: 1,
+    recommendationContents: [],
   });
 }
 
