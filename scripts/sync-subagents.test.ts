@@ -78,6 +78,36 @@ describe("Subagent 同期に関するテスト", () => {
     expect(actual).toContain('model = "gpt-5.5"');
   });
 
+  it("is_background を指定した共通定義を同期したとき、Cursor と Codex の出力に反映される", async () => {
+    const repositoryRoot = await mkdtemp(join(tmpdir(), "sync-subagents-"));
+    const sourceDir = join(repositoryRoot, ".agents", "agents");
+    const cursorDir = join(repositoryRoot, ".cursor", "agents");
+    const codexDir = join(repositoryRoot, ".codex", "agents");
+    await mkdir(sourceDir, { recursive: true });
+    await writeFile(
+      join(sourceDir, "reviewer.agent.md"),
+      [
+        "---",
+        "name: reviewer",
+        "description: Does reviews.",
+        "cursor_model: composer-2",
+        "codex_model: gpt-5.5",
+        "is_background: false",
+        "---",
+        "",
+        "Review only.",
+        "",
+      ].join("\n"),
+    );
+
+    syncSubagents({ sourceDir, cursorDir, codexDir });
+    const cursorOut = await readFile(join(cursorDir, "reviewer.md"), "utf8");
+    const codexOut = await readFile(join(codexDir, "reviewer.toml"), "utf8");
+
+    expect(cursorOut).toContain("is_background: false");
+    expect(codexOut).toContain("is_background = false");
+  });
+
   it("description がない共通定義を同期したとき、必須メタデータエラーとなる", async () => {
     // Arrange
     const repositoryRoot = await mkdtemp(join(tmpdir(), "sync-subagents-"));

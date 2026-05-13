@@ -9,6 +9,8 @@ type AgentDefinition = {
     model?: string;
     cursorModel?: string;
     codexModel?: string;
+    /** When set, emitted for Cursor subagents (foreground vs background). */
+    isBackground?: boolean;
   };
   body: string;
   sourcePath: string;
@@ -45,11 +47,32 @@ function parseAgentFile(sourcePath: string): AgentDefinition {
       continue;
     }
 
+    if (key === "is_background") {
+      const normalized = value.toLowerCase();
+      if (normalized === "true" || normalized === "1" || normalized === "yes") {
+        metadata.is_background = "true";
+      } else if (normalized === "false" || normalized === "0" || normalized === "no") {
+        metadata.is_background = "false";
+      } else {
+        throw new Error(
+          `${sourcePath}: is_background must be true or false, got ${JSON.stringify(value)}`,
+        );
+      }
+      continue;
+    }
+
     metadata[key] = value;
   }
 
   if (!metadata.name || !metadata.description) {
     throw new Error(`${sourcePath} must define name and description`);
+  }
+
+  let isBackground: boolean | undefined;
+  if (metadata.is_background === "true") {
+    isBackground = true;
+  } else if (metadata.is_background === "false") {
+    isBackground = false;
   }
 
   return {
@@ -59,6 +82,7 @@ function parseAgentFile(sourcePath: string): AgentDefinition {
       model: metadata.model,
       cursorModel: metadata.cursor_model,
       codexModel: metadata.codex_model,
+      isBackground,
     },
     body: body.trimEnd(),
     sourcePath,
@@ -67,11 +91,16 @@ function parseAgentFile(sourcePath: string): AgentDefinition {
 
 function toCursorMarkdown(agent: AgentDefinition): string {
   const cursorModel = agent.metadata.cursorModel ?? agent.metadata.model;
+  const isBackground =
+    agent.metadata.isBackground === undefined
+      ? undefined
+      : `is_background: ${agent.metadata.isBackground}`;
   const frontmatter = [
     "---",
     `name: ${agent.metadata.name}`,
     `description: ${agent.metadata.description}`,
     cursorModel ? `model: ${cursorModel}` : undefined,
+    isBackground,
     "---",
   ].filter(Boolean);
 
@@ -95,6 +124,10 @@ function toCodexToml(agent: AgentDefinition): string {
 
   if (codexModel && codexModel !== "inherit") {
     lines.push(`model = ${toTomlString(codexModel)}`);
+  }
+
+  if (agent.metadata.isBackground !== undefined) {
+    lines.push(`is_background = ${agent.metadata.isBackground}`);
   }
 
   lines.push(`developer_instructions = ${toTomlMultiline(agent.body)}`);

@@ -1,6 +1,7 @@
 name = "code-reviewer"
 description = "Repository-specific code reviewer focused on correctness, regressions, tests, architecture boundaries, and naming conventions."
 model = "gpt-5.5"
+is_background = false
 developer_instructions = """
 You are the code-reviewer subagent for this repository.
 

@@ -2,6 +2,7 @@
 name: code-reviewer
 description: Repository-specific code reviewer focused on correctness, regressions, tests, architecture boundaries, and naming conventions.
 model: composer-2
+is_background: false
 ---
 
 You are the code-reviewer subagent for this repository.
