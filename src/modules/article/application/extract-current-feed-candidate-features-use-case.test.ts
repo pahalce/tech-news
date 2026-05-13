@@ -377,7 +377,7 @@ describe("Feature Extraction use case に関するテスト", () => {
               reason: null,
             },
             articleFeatures: {
-              primaryTopics: ["typescript"],
+              primaryTopics: [{ key: "typescript", salience: 1 }],
               mentionedTopics: [],
               unknownTopics: [],
               featureAxes: {},
