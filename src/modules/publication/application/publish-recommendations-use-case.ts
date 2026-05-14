@@ -7,6 +7,8 @@ import {
 
 type RecommendationContent = {
   articleId: string;
+  canonicalUrl: string;
+  title: string;
   summary: string;
   whyRecommended: string;
   learningPoints: readonly string[];

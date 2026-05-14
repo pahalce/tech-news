@@ -185,8 +185,22 @@ export async function runZennDigestWorkflow(
   logger.info("publishing recommendations", {
     recommendationContentCount: contents.recommendationContents.length,
   });
+  const selectedCandidatesByArticleId = new Map(
+    reranked.selectedCandidates.map((candidate) => [candidate.articleId, candidate]),
+  );
   const published = await publishRecommendations({
-    recommendationContents: contents.recommendationContents,
+    recommendationContents: contents.recommendationContents.map((content) => {
+      const candidate = selectedCandidatesByArticleId.get(content.articleId);
+      if (!candidate) {
+        throw new Error("Recommendation Content Article ID must match selected candidate.");
+      }
+
+      return {
+        ...content,
+        canonicalUrl: candidate.canonicalUrl,
+        title: candidate.title,
+      };
+    }),
     existingPublicationRecords: input.agentState.publicationState.publicationRecords,
     existingRecommendedArticles: input.agentState.publicationState.recommendedArticles,
     publisher: input.publisher,

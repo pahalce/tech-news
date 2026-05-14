@@ -19,6 +19,8 @@ import { runZennDigestJob } from "./zenn-digest-job";
 
 type DiscordRecommendationContent = {
   articleId: string;
+  canonicalUrl: string;
+  title: string;
   summary: string;
   whyRecommended: string;
   learningPoints: readonly string[];
@@ -381,12 +383,18 @@ function formatDiscordMessage(content: DiscordRecommendationContent): string {
   return [
     `**${content.summary}**`,
     "",
+    `記事: [${content.title}](${content.canonicalUrl})`,
+    "",
     `Why: ${content.whyRecommended}`,
     "",
     "Learning points:",
     ...content.learningPoints.map((point) => `- ${point}`),
     "",
     `Signals: ${content.signalsUsed.join(", ")}`,
+    "",
+    "Feedback:",
+    "- 👍 気に入った記事なら押してください。今後、類似する記事を推薦しやすくなります。",
+    "- 👎 合わなかった記事なら押してください。今後、似た記事を控えます。",
   ].join("\n");
 }
 

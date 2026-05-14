@@ -105,6 +105,8 @@ const articleIdB = `zenn:${"b".repeat(64)}`;
 function createRecommendationContent(articleId: string) {
   return {
     articleId,
+    canonicalUrl: `https://zenn.dev/example/articles/${articleId.replace(":", "-")}`,
+    title: "TypeScript の実装記事",
     summary: "本文の要約",
     whyRecommended: "Owner の嗜好に合うため",
     learningPoints: ["実装判断を学べる"],
