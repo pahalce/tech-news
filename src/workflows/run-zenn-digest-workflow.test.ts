@@ -127,4 +127,113 @@ describe("Zenn Digest Workflow に関するテスト", () => {
       recommendedCount: 1,
     });
   });
+
+  it("スコア対象がないとき、LLM rerank を呼ばず Feature Extraction State を返す", async () => {
+    // Arrange
+    const featureVocabulary = parseFeatureVocabularyConfig({
+      version: 1,
+      topics: {
+        typescript: {
+          display_name: "TypeScript",
+          aliases: ["typescript"],
+          description_ja: "JavaScript に静的型付けを加えたプログラミング言語",
+        },
+      },
+      feature_axes: {
+        content_types: {
+          description_ja: "記事の形式",
+          features: {
+            implementation_guide: {
+              description_ja: "実装手順が具体的に説明されている",
+            },
+          },
+        },
+      },
+    });
+    let rerankCount = 0;
+
+    // Act
+    const actual = await runZennDigestWorkflow({
+      agentState: {
+        featureExtractionState: {
+          version: 1,
+          extractions: [],
+          bodyFetchFailures: [],
+          failedExtractionAttempts: [],
+        },
+        preferenceProfile: {
+          version: 1,
+          weight_range: { min: -3, max: 3 },
+          seed_weight_range: { min: -1, max: 1 },
+          feature_weights: {
+            topics: { typescript: 0.6 },
+            feature_axes: { content_types: { implementation_guide: 0.8 } },
+          },
+          updated_at: null,
+        },
+        preferenceSummaryHistory: {
+          version: 1,
+          long_term_summary: null,
+          recent_summary: {
+            window_days: 7,
+            summary: null,
+            confidence: "insufficient_feedback",
+          },
+          history: [],
+        },
+        publicationState: {
+          version: 1,
+          publicationRecords: [],
+          recommendedArticles: [],
+        },
+        recommendationContentState: {
+          version: 1,
+          recommendationContents: [],
+        },
+        vocabularySuggestionState: {
+          version: 1,
+          suggestionRuns: [],
+        },
+      },
+      featureVocabulary,
+      feeds: [{ id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" }],
+      feedReader: async () => [
+        {
+          title: "Unreadable",
+          url: "https://zenn.dev/example/articles/unreadable",
+          publishedAt: null,
+        },
+      ],
+      now: () => "2026-05-14T00:00:00.000Z",
+      fetchArticleBody: async () => ({ body: "body" }),
+      extractArticleFeatures: async () => ({
+        readability: { is_readable: false, reason: "not an article" },
+        primary_topics: [],
+        mentioned_topics: [],
+        feature_axes: {},
+        other_signals: [],
+      }),
+      llmReranker: {
+        rerank: async () => {
+          rerankCount += 1;
+          return { selectedArticleIds: [] };
+        },
+      },
+      recommendationContentCreator: {
+        create: async () => {
+          throw new Error("should not create recommendation content");
+        },
+      },
+      publisher: {
+        publish: async () => {
+          throw new Error("should not publish recommendation content");
+        },
+      },
+    });
+
+    // Assert
+    expect(rerankCount).toBe(0);
+    expect(actual.agentState.featureExtractionState.extractions).toHaveLength(1);
+    expect(actual.agentState.publicationState.recommendedArticles).toHaveLength(0);
+  });
 });

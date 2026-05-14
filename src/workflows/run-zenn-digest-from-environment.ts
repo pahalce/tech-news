@@ -102,21 +102,32 @@ export async function runZennDigestFromEnvironment(
         featureExtractionTotal: progress.total,
         featureExtractionProgress: `${progress.index}/${progress.total}`,
       });
-      const result = await requestJsonFromLlm(llmProviderConfig, {
-        model: modelConfig.featureExtractionModel,
-        system: "You extract structured article features for a personal Zenn digest agent.",
-        user: [
-          "Return only JSON with keys readability, primary_topics, mentioned_topics, feature_axes, other_signals.",
-          "Use readability.is_readable boolean and readability.reason nullable string.",
-          "Topics and features must include salience from 0 to 1.",
-          `Title: ${candidate.title}`,
-          `URL: ${candidate.canonicalUrl}`,
-          `Body:\n${body.slice(0, 20000)}`,
-        ].join("\n\n"),
-      });
+      let result: any;
+      try {
+        result = await requestJsonFromLlm(llmProviderConfig, {
+          model: modelConfig.featureExtractionModel,
+          system: "You extract structured article features for a personal Zenn digest agent.",
+          user: [
+            "Return only JSON with keys readability, primary_topics, mentioned_topics, feature_axes, other_signals.",
+            "Use readability.is_readable boolean and readability.reason nullable string.",
+            "Topics and features must include salience from 0 to 1.",
+            `Title: ${candidate.title}`,
+            `URL: ${candidate.canonicalUrl}`,
+            `Body:\n${body.slice(0, 20000)}`,
+          ].join("\n\n"),
+        });
+      } catch (error) {
+        logger.error("feature extraction LLM request failed", {
+          articleId: candidate.articleId,
+          elapsedMs: elapsedMs(startedAt),
+          llmError: errorDetails(error),
+        });
+        throw error;
+      }
       logger.info("feature extraction LLM request finished", {
         articleId: candidate.articleId,
         elapsedMs: elapsedMs(startedAt),
+        llmResponse: result,
       });
       return result;
     },
@@ -128,23 +139,32 @@ export async function runZennDigestFromEnvironment(
           candidateCount: input.topScoredCandidates.length,
           maxRecommendations: input.maxRecommendations,
         });
-        const result = await requestJsonFromLlm(llmProviderConfig, {
-          model: modelConfig.rerankModel,
-          system: "You select the best Zenn articles for a concise personal technical digest.",
-          user: [
-            "Return only JSON with key selectedArticleIds as an array of article IDs.",
-            `Max recommendations: ${input.maxRecommendations}`,
-            `Long-term preference summary: ${input.longTermPreferenceSummary ?? "none"}`,
-            `Recent preference summary: ${input.recentPreferenceSummary ?? "none"}`,
-            `Quality criteria: ${input.qualityCriteria.join(", ")}`,
-            `Candidates: ${JSON.stringify(input.topScoredCandidates)}`,
-          ].join("\n\n"),
-        });
+        let result: any;
+        try {
+          result = await requestJsonFromLlm(llmProviderConfig, {
+            model: modelConfig.rerankModel,
+            system: "You select the best Zenn articles for a concise personal technical digest.",
+            user: [
+              "Return only JSON with key selectedArticleIds as an array of article IDs.",
+              `Max recommendations: ${input.maxRecommendations}`,
+              `Long-term preference summary: ${input.longTermPreferenceSummary ?? "none"}`,
+              `Recent preference summary: ${input.recentPreferenceSummary ?? "none"}`,
+              `Quality criteria: ${input.qualityCriteria.join(", ")}`,
+              `Candidates: ${JSON.stringify(input.topScoredCandidates)}`,
+            ].join("\n\n"),
+          });
+        } catch (error) {
+          logger.error("rerank LLM request failed", {
+            elapsedMs: elapsedMs(startedAt),
+            candidateCount: input.topScoredCandidates.length,
+            llmError: errorDetails(error),
+          });
+          throw error;
+        }
         logger.info("rerank LLM request finished", {
           elapsedMs: elapsedMs(startedAt),
-          selectedArticleCount: Array.isArray(result.selectedArticleIds)
-            ? result.selectedArticleIds.length
-            : null,
+          selectedArticleCount: selectedArticleCount(result),
+          llmResponse: result,
         });
         return result;
       },
@@ -156,23 +176,34 @@ export async function runZennDigestFromEnvironment(
           articleId: candidate.articleId,
           model: modelConfig.recommendationContentModel,
         });
-        const result = await requestJsonFromLlm(llmProviderConfig, {
-          model: modelConfig.recommendationContentModel,
-          system:
-            "You write concise Japanese Discord recommendation content for one technical article.",
-          user: [
-            "Return only JSON with keys articleId, summary, whyRecommended, learningPoints, signalsUsed.",
-            "learningPoints and signalsUsed must be non-empty string arrays.",
-            `Article ID: ${candidate.articleId}`,
-            `Title: ${candidate.title}`,
-            `URL: ${candidate.canonicalUrl}`,
-            `Rule score: ${candidate.ruleScore}`,
-            `Feature extraction: ${JSON.stringify(featureExtraction)}`,
-          ].join("\n\n"),
-        });
+        let result: any;
+        try {
+          result = await requestJsonFromLlm(llmProviderConfig, {
+            model: modelConfig.recommendationContentModel,
+            system:
+              "You write concise Japanese Discord recommendation content for one technical article.",
+            user: [
+              "Return only JSON with keys articleId, summary, whyRecommended, learningPoints, signalsUsed.",
+              "learningPoints and signalsUsed must be non-empty string arrays.",
+              `Article ID: ${candidate.articleId}`,
+              `Title: ${candidate.title}`,
+              `URL: ${candidate.canonicalUrl}`,
+              `Rule score: ${candidate.ruleScore}`,
+              `Feature extraction: ${JSON.stringify(featureExtraction)}`,
+            ].join("\n\n"),
+          });
+        } catch (error) {
+          logger.error("recommendation content LLM request failed", {
+            articleId: candidate.articleId,
+            elapsedMs: elapsedMs(startedAt),
+            llmError: errorDetails(error),
+          });
+          throw error;
+        }
         logger.info("recommendation content LLM request finished", {
           articleId: candidate.articleId,
           elapsedMs: elapsedMs(startedAt),
+          llmResponse: result,
         });
         return result;
       },
@@ -330,4 +361,30 @@ function readPositiveIntegerEnv(
   }
 
   return parsed;
+}
+
+function selectedArticleCount(result: unknown): number | null {
+  if (
+    result &&
+    typeof result === "object" &&
+    "selectedArticleIds" in result &&
+    Array.isArray(result.selectedArticleIds)
+  ) {
+    return result.selectedArticleIds.length;
+  }
+
+  return null;
+}
+
+function errorDetails(error: unknown): Record<string, unknown> {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      cause: error.cause,
+    };
+  }
+
+  return { message: String(error) };
 }

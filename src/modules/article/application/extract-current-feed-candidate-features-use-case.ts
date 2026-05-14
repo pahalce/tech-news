@@ -19,6 +19,11 @@ export type ExtractCurrentFeedCandidateFeaturesInput = {
     body: string;
     progress: FeatureExtractionProgress;
   }): Promise<unknown>;
+  onFeatureExtractionFailure?(input: {
+    candidate: CurrentFeedCandidate;
+    progress: FeatureExtractionProgress;
+    message: string;
+  }): void;
 };
 
 export type FeatureExtractionProgress = {
@@ -40,6 +45,10 @@ export async function extractCurrentFeedCandidateFeatures(
   );
 
   for (const [index, candidate] of targetCandidates.entries()) {
+    const progress = {
+      index: index + 1,
+      total: targetCandidates.length,
+    };
     let body: { body: string };
     try {
       body = await input.fetchArticleBody(candidate);
@@ -58,10 +67,7 @@ export async function extractCurrentFeedCandidateFeatures(
       const llmOutput = await input.extractArticleFeatures({
         candidate,
         body: body.body,
-        progress: {
-          index: index + 1,
-          total: targetCandidates.length,
-        },
+        progress,
       });
 
       state.extractions.push(
@@ -82,6 +88,11 @@ export async function extractCurrentFeedCandidateFeatures(
           message: errorMessage(error),
         }),
       );
+      input.onFeatureExtractionFailure?.({
+        candidate,
+        progress,
+        message: errorMessage(error),
+      });
     }
   }
 

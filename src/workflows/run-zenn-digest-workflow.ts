@@ -90,6 +90,15 @@ export async function runZennDigestWorkflow(
     now: input.now,
     fetchArticleBody: input.fetchArticleBody,
     extractArticleFeatures: input.extractArticleFeatures,
+    onFeatureExtractionFailure: ({ candidate, progress, message }) => {
+      logger.warn("feature extraction failed", {
+        articleId: candidate.articleId,
+        featureExtractionIndex: progress.index,
+        featureExtractionTotal: progress.total,
+        featureExtractionProgress: `${progress.index}/${progress.total}`,
+        message,
+      });
+    },
   });
   logger.info("extracted candidate features", {
     elapsedMs: elapsedMs(extractionStartedAt),
@@ -120,6 +129,17 @@ export async function runZennDigestWorkflow(
     elapsedMs: elapsedMs(scoreStartedAt),
     scoredCandidateCount: scored.scoredCandidates.length,
   });
+
+  if (scored.scoredCandidates.length === 0) {
+    logger.warn("skipping rerank because there are no scored candidates");
+    logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
+    return {
+      agentState: {
+        ...input.agentState,
+        featureExtractionState: extracted.state,
+      },
+    };
+  }
 
   const featuresByArticleId = new Map(
     readable.readableCandidates.map((candidate) => [

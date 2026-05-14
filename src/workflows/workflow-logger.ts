@@ -1,4 +1,4 @@
-export type WorkflowLogFields = Record<string, string | number | boolean | null | undefined>;
+export type WorkflowLogFields = Record<string, unknown>;
 
 export type WorkflowLogger = {
   info(message: string, fields?: WorkflowLogFields): void;
@@ -36,8 +36,6 @@ function formatLogLine(
 
 function removeUndefined(fields: WorkflowLogFields): WorkflowLogFields {
   return Object.fromEntries(
-    Object.entries(fields).filter(
-      (entry): entry is [string, string | number | boolean | null] => entry[1] !== undefined,
-    ),
+    Object.entries(fields).filter((entry): entry is [string, unknown] => entry[1] !== undefined),
   );
 }
