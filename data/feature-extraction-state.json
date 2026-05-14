@@ -1,6 +1,672 @@
 {
   "version": 1,
-  "extractions": [],
+  "extractions": [
+    {
+      "articleId": "zenn:3a18abd0cd47fefee6e348aae255b58b51abaf24722d1122ff79e518fdb1698f",
+      "extractedAt": "2026-05-14T14:36:37.119Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Article is well-structured and clearly explains the Notion Developer Platform announcement."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "ai_engineering",
+            "salience": 0.9
+          },
+          {
+            "key": "web_development",
+            "salience": 0.9
+          },
+          {
+            "key": "typescript",
+            "salience": 0.8
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.4
+          },
+          {
+            "key": "backend",
+            "salience": 0.5
+          },
+          {
+            "key": "devops",
+            "salience": 0.6
+          },
+          {
+            "key": "llm",
+            "salience": 0.7
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            },
+            {
+              "key": "advanced",
+              "salience": 0.6
+            },
+            {
+              "key": "beginner",
+              "salience": 0.4
+            }
+          ],
+          "content_types": [
+            {
+              "key": "release_news",
+              "salience": 1
+            },
+            {
+              "key": "implementation_guide",
+              "salience": 0.9
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.8
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.9
+            },
+            {
+              "key": "constraints_explained",
+              "salience": 0.7
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "source_links",
+              "salience": 0.9
+            },
+            {
+              "key": "code_examples",
+              "salience": 0.7
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.6
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.9
+            },
+            {
+              "key": "operationally_applicable",
+              "salience": 0.9
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.8
+            },
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 1
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "platform_announcement",
+            "salience": 1
+          },
+          {
+            "key": "api_integration",
+            "salience": 0.8
+          },
+          {
+            "key": "automation",
+            "salience": 0.8
+          },
+          {
+            "key": "ecosystem_expansion",
+            "salience": 0.6
+          },
+          {
+            "key": "developer_experience",
+            "salience": 0.7
+          },
+          {
+            "key": "multi_role_benefit_analysis",
+            "salience": 0.9
+          }
+        ]
+      }
+    },
+    {
+      "articleId": "zenn:12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
+      "extractedAt": "2026-05-14T14:36:56.578Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Article provides clear, actionable guidelines for improving code quality using AI-assisted development."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "web_development",
+            "salience": 1
+          },
+          {
+            "key": "ai_engineering",
+            "salience": 0.9
+          },
+          {
+            "key": "typescript",
+            "salience": 0.8
+          },
+          {
+            "key": "frontend",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "nextjs",
+            "salience": 1
+          },
+          {
+            "key": "react",
+            "salience": 0.6
+          },
+          {
+            "key": "performance",
+            "salience": 0.7
+          },
+          {
+            "key": "backend",
+            "salience": 0.4
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 1
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 1
+            },
+            {
+              "key": "opinion_essay",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "constraints_explained",
+              "salience": 0.8
+            },
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.5
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.3
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "real_world_experience",
+              "salience": 1
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 1
+            },
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.9
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.8
+            },
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 1
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "ai_agent_prompting_guidelines",
+            "salience": 1
+          },
+          {
+            "key": "initial_project_setup_advice",
+            "salience": 0.9
+          },
+          {
+            "key": "documentation_best_practices",
+            "salience": 0.8
+          },
+          {
+            "key": "code_review_checklist_items",
+            "salience": 0.7
+          }
+        ]
+      }
+    },
+    {
+      "articleId": "zenn:d2296916cd5f1d5b935cdba0c724344e55f30da651c9cf652913d85fe1c5c090",
+      "extractedAt": "2026-05-14T14:37:20.374Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Article is a clear, well-structured personal narrative about career transition in the tech industry, including practical advice and technical insights."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.8
+          },
+          {
+            "key": "ai_engineering",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.6
+          },
+          {
+            "key": "frontend",
+            "salience": 0.5
+          },
+          {
+            "key": "backend",
+            "salience": 0.3
+          },
+          {
+            "key": "llm",
+            "salience": 0.6
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "advanced",
+              "salience": 0.9
+            },
+            {
+              "key": "intermediate",
+              "salience": 0.7
+            },
+            {
+              "key": "beginner",
+              "salience": 0.3
+            }
+          ],
+          "content_types": [
+            {
+              "key": "opinion_essay",
+              "salience": 0.9
+            },
+            {
+              "key": "implementation_guide",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.6
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.7
+            },
+            {
+              "key": "constraints_explained",
+              "salience": 0.7
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "real_world_experience",
+              "salience": 1
+            },
+            {
+              "key": "source_links",
+              "salience": 0.8
+            },
+            {
+              "key": "comparison",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.8
+            },
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.7
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.7
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "career_transition",
+            "salience": 1
+          },
+          {
+            "key": "engineering_manager",
+            "salience": 0.9
+          },
+          {
+            "key": "individual_contributor",
+            "salience": 0.9
+          },
+          {
+            "key": "ai_collaboration",
+            "salience": 0.8
+          },
+          {
+            "key": "reskilling_unlearning",
+            "salience": 0.8
+          },
+          {
+            "key": "personal_narrative",
+            "salience": 0.9
+          },
+          {
+            "key": "startup_culture",
+            "salience": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "articleId": "zenn:143f54e2572bfb08ac4f20642ab4589ee93b08e5c213bc3fe0088a2cbccf01c1",
+      "extractedAt": "2026-05-14T14:37:33.842Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Article is well-structured and written in Japanese."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "ai_engineering",
+            "salience": 0.9
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "llm",
+            "salience": 0.7
+          },
+          {
+            "key": "frontend",
+            "salience": 0.2
+          },
+          {
+            "key": "backend",
+            "salience": 0.2
+          },
+          {
+            "key": "web_development",
+            "salience": 0.1
+          },
+          {
+            "key": "devops",
+            "salience": 0.1
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "beginner",
+              "salience": 0.9
+            },
+            {
+              "key": "intermediate",
+              "salience": 0.7
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.8
+            },
+            {
+              "key": "opinion_essay",
+              "salience": 0.6
+            },
+            {
+              "key": "trend_overview",
+              "salience": 0.5
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "surface_level_summary",
+              "salience": 0.8
+            },
+            {
+              "key": "constraints_explained",
+              "salience": 0.7
+            },
+            {
+              "key": "beginner_only",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "real_world_experience",
+              "salience": 0.8
+            },
+            {
+              "key": "comparison",
+              "salience": 0.6
+            },
+            {
+              "key": "code_examples",
+              "salience": 0.3
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.9
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.8
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.7
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "career_development",
+            "salience": 0.8
+          },
+          {
+            "key": "skill_acquisition",
+            "salience": 0.9
+          }
+        ]
+      }
+    },
+    {
+      "articleId": "zenn:d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
+      "extractedAt": "2026-05-14T14:37:47.257Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Article is well-structured and provides clear technical details about porting Qt 6 to Zephyr RTOS on microcontrollers."
+      },
+      "articleFeatures": {
+        "primaryTopics": [],
+        "mentionedTopics": [],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "advanced",
+              "salience": 1
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.8
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 1
+            },
+            {
+              "key": "constraints_explained",
+              "salience": 0.8
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.9
+            },
+            {
+              "key": "source_links",
+              "salience": 1
+            },
+            {
+              "key": "comparison",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.7
+            },
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.8
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            },
+            {
+              "key": "actionable_steps",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 1
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "embedded_systems_focus",
+            "salience": 1
+          },
+          {
+            "key": "rtos_focus",
+            "salience": 1
+          },
+          {
+            "key": "gui_framework_porting",
+            "salience": 1
+          },
+          {
+            "key": "microcontroller_target",
+            "salience": 1
+          },
+          {
+            "key": "cxx_programming",
+            "salience": 0.8
+          },
+          {
+            "key": "low_level_programming",
+            "salience": 0.9
+          }
+        ]
+      }
+    }
+  ],
   "bodyFetchFailures": [],
   "failedExtractionAttempts": []
 }

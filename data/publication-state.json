@@ -1,5 +1,79 @@
 {
   "version": 1,
-  "publicationRecords": [],
-  "recommendedArticles": []
+  "publicationRecords": [
+    {
+      "articleId": "zenn:12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
+      "messageId": "1504493090876952607",
+      "channelId": "1504276981490122833",
+      "postedAt": "2026-05-14T14:38:24.995000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    },
+    {
+      "articleId": "zenn:d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
+      "messageId": "1504493092139700407",
+      "channelId": "1504276981490122833",
+      "postedAt": "2026-05-14T14:38:25.296000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    },
+    {
+      "articleId": "zenn:3a18abd0cd47fefee6e348aae255b58b51abaf24722d1122ff79e518fdb1698f",
+      "messageId": "1504493093439672471",
+      "channelId": "1504276981490122833",
+      "postedAt": "2026-05-14T14:38:25.606000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    }
+  ],
+  "recommendedArticles": [
+    {
+      "articleId": "zenn:12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
+      "firstRecommendedAt": "2026-05-14T14:38:24.995000+00:00"
+    },
+    {
+      "articleId": "zenn:d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
+      "firstRecommendedAt": "2026-05-14T14:38:25.296000+00:00"
+    },
+    {
+      "articleId": "zenn:3a18abd0cd47fefee6e348aae255b58b51abaf24722d1122ff79e518fdb1698f",
+      "firstRecommendedAt": "2026-05-14T14:38:25.606000+00:00"
+    }
+  ]
 }

@@ -93,7 +93,7 @@ const RecommendationContentOutputSchema = jsonSchema<
   },
 );
 
-const maxFeedEntriesPerRun = 20;
+const maxFeedEntriesPerRun = 5;
 
 export async function validateZennDigestDryRun(): Promise<void> {
   await loadAgentState();

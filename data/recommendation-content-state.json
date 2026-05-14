@@ -1,4 +1,74 @@
 {
   "version": 1,
-  "recommendationContents": []
+  "recommendationContents": [
+    {
+      "articleId": "zenn:12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
+      "summary": "AIを用いた開発でコード品質を高め、AIの出力を安定させるためのCLAUDE.md/AGENTS.mdの活用法を紹介。",
+      "whyRecommended": "AIを活用した開発ワークフローにおけるコード品質向上とレビューコスト削減に直結する実践的な手法を提供します。AIと連携する開発者必読です。",
+      "learningPoints": [
+        "AIエージェントに明確な指示を与える方法",
+        "CLAUDE.md/AGENTS.mdによるAI出力の品質向上",
+        "開発効率とコード品質を高めるAI活用術"
+      ],
+      "signalsUsed": [
+        "ai_agent_prompting_guidelines",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "developer_productivity",
+        "documentation_best_practices"
+      ]
+    },
+    {
+      "articleId": "zenn:d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
+      "summary": "Zephyr RTOS上でフルスペックのQt 6を動作させるための移植プロジェクト詳細。NXP MIMXRT1060-EVKをターゲットに、Qt for MCUsを使わず、QPAカスタマイズ、FreeType/HarfBuzz導入、OpenGL ESバックエンド移植など、低レベルからの実装プロセスと課題解決を解説。",
+      "whyRecommended": "マイコン向けRTOS「Zephyr」でフル機能の「Qt 6」を動かすという、高度な組み込みシステム開発とGUIフレームワーク移植の具体例が詳細に解説されており、深い技術的知見が得られます。",
+      "learningPoints": [
+        "Zephyr RTOSでのQt 6移植の具体的なステップと技術的課題",
+        "Qtのレンダリングバックエンド（QPA）のカスタマイズと組み込みシステムへの適用",
+        "マイコン環境におけるFreeType/HarfBuzzによるフォントレンダリングの実装",
+        "OpenGL ESバックエンドの移植とCMakeビルドシステム構築の詳細",
+        "低リソース環境でのGUIフレームワーク最適化とデバッグ手法"
+      ],
+      "signalsUsed": [
+        "advanced",
+        "implementation_guide",
+        "architecture_explanation",
+        "deep_technical_explanation",
+        "constraints_explained",
+        "code_examples",
+        "real_world_experience",
+        "source_links",
+        "reusable_implementation_pattern",
+        "architecture_decision_support",
+        "embedded_systems_focus",
+        "rtos_focus",
+        "gui_framework_porting",
+        "microcontroller_target",
+        "cxx_programming",
+        "low_level_programming"
+      ]
+    },
+    {
+      "articleId": "zenn:3a18abd0cd47fefee6e348aae255b58b51abaf24722d1122ff79e518fdb1698f",
+      "summary": "Notion Developer Platformの新発表（Workers/Agents/CLI）を解説し、各機能が「誰にどのような恩恵をもたらすか」を整理した記事です。",
+      "whyRecommended": "Notionの最新開発者プラットフォームの全容と、Workers、Agents、CLIといった各機能がターゲットとするユーザー層と提供価値を明確に理解できるため推薦します。",
+      "learningPoints": [
+        "Notion Developer Platformの全体像と主要な構成要素（Workers, Agents, CLI）。",
+        "Notion Workersによる自動化・連携機能と、その恩恵を受けるユーザー像。",
+        "Notion AgentsによるAI連携の可能性と、ワークフロー改善への寄与。",
+        "Notion CLIが開発者に提供する効率化のメリット。"
+      ],
+      "signalsUsed": [
+        "platform_announcement",
+        "multi_role_benefit_analysis",
+        "api_integration",
+        "automation",
+        "developer_experience",
+        "release_news",
+        "architecture_explanation",
+        "developer_productivity",
+        "concrete_technology_named"
+      ]
+    }
+  ]
 }
