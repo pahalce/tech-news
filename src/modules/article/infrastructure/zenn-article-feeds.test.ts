@@ -8,9 +8,6 @@ describe("Zenn Article Feed 設定に関するテスト", () => {
       "zenn-trend",
       "zenn-topic-typescript",
       "zenn-topic-react",
-      "zenn-topic-nextjs",
-      "zenn-topic-frontend",
-      "zenn-topic-backend",
     ]);
   });
 });

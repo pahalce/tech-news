@@ -639,4 +639,102 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Assert
     expect(actual.state.extractions).toHaveLength(1);
   });
+
+  it("Feature Extraction 対象内の進捗を LLM 抽出に渡す", async () => {
+    // Arrange
+    const featureVocabulary = parseFeatureVocabularyConfig({
+      version: 1,
+      topics: {
+        typescript: {
+          display_name: "TypeScript",
+          aliases: ["typescript", "ts"],
+          description_ja: "JavaScript に静的型付けを加えたプログラミング言語",
+        },
+      },
+      feature_axes: {
+        content_types: {
+          description_ja: "記事の形式や構成",
+          features: {
+            production_case_study: {
+              description_ja: "実際のプロダクトや本番環境での事例紹介",
+            },
+          },
+        },
+      },
+    });
+    const existingCandidate = createCurrentFeedCandidate(
+      { id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" },
+      {
+        title: "Article already-extracted",
+        url: "https://zenn.dev/kazuyataira/articles/already-extracted",
+        publishedAt: null,
+      },
+    );
+    const firstTargetCandidate = createCurrentFeedCandidate(
+      { id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" },
+      {
+        title: "Article first-target",
+        url: "https://zenn.dev/kazuyataira/articles/first-target",
+        publishedAt: null,
+      },
+    );
+    const secondTargetCandidate = createCurrentFeedCandidate(
+      { id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" },
+      {
+        title: "Article second-target",
+        url: "https://zenn.dev/kazuyataira/articles/second-target",
+        publishedAt: null,
+      },
+    );
+    const progressValues: { index: number; total: number }[] = [];
+
+    // Act
+    await extractCurrentFeedCandidateFeatures({
+      candidates: [existingCandidate, firstTargetCandidate, secondTargetCandidate],
+      featureExtractionState: {
+        version: 1,
+        extractions: [
+          {
+            articleId: existingCandidate.articleId,
+            extractedAt: "2026-05-13T00:00:00.000Z",
+            readability: {
+              isReadable: true,
+              reason: null,
+            },
+            articleFeatures: {
+              primaryTopics: [{ key: "typescript", salience: 1 }],
+              mentionedTopics: [],
+              unknownTopics: [],
+              featureAxes: {},
+              otherSignals: [],
+            },
+          },
+        ],
+        bodyFetchFailures: [],
+        failedExtractionAttempts: [],
+      },
+      featureVocabulary,
+      now: () => "2026-05-13T03:00:00.000Z",
+      fetchArticleBody: async () => ({ body: "本文" }),
+      extractArticleFeatures: async ({ progress }) => {
+        progressValues.push(progress);
+        return {
+          readability: {
+            is_readable: true,
+            reason: null,
+          },
+          primary_topics: ["TypeScript"],
+          mentioned_topics: [],
+          feature_axes: {},
+          other_signals: [],
+        };
+      },
+    });
+
+    // Assert
+    expect(progressValues).toEqual([
+      { index: 1, total: 2 },
+      { index: 2, total: 2 },
+    ]);
+  });
 });

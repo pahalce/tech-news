@@ -1,9 +1,9 @@
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vite-plus/test";
 
-import { loadAgentState } from "./infrastructure/file-agent-state";
+import { loadAgentState, saveAgentState } from "./infrastructure/file-agent-state";
 
 describe("Agent State 読み込みに関するテスト", () => {
   describe("有効データの読み込みに関するテスト", () => {
@@ -73,6 +73,28 @@ describe("Agent State 読み込みに関するテスト", () => {
 
       // Assert
       expect(actual.recommendationContentState.version).toBe(1);
+    });
+
+    it("既定データを読み込んだとき、Publication State の version が 1 となる", async () => {
+      // Arrange
+      const repositoryRoot = undefined;
+
+      // Act
+      const actual = await loadAgentState(repositoryRoot);
+
+      // Assert
+      expect(actual.publicationState.version).toBe(1);
+    });
+
+    it("既定データを読み込んだとき、Vocabulary Suggestion State の version が 1 となる", async () => {
+      // Arrange
+      const repositoryRoot = undefined;
+
+      // Act
+      const actual = await loadAgentState(repositoryRoot);
+
+      // Assert
+      expect(actual.vocabularySuggestionState.version).toBe(1);
     });
   });
 
@@ -219,6 +241,54 @@ describe("Agent State 読み込みに関するテスト", () => {
       );
     });
   });
+
+  describe("保存に関するテスト", () => {
+    it("Agent State を保存したとき、保存後の JSON を再読み込みできる", async () => {
+      // Arrange
+      const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
+      await writeAgentState(repositoryRoot, {
+        version: 1,
+        weight_range: { min: -3, max: 3 },
+        seed_weight_range: { min: -1, max: 1 },
+        feature_weights: {
+          topics: {
+            typescript: 0.6,
+          },
+          feature_axes: {
+            depth_signals: {
+              thin_content: -0.9,
+            },
+          },
+        },
+        updated_at: null,
+      });
+      const state = await loadAgentState(repositoryRoot);
+
+      // Act
+      await saveAgentState(
+        {
+          ...state,
+          preferenceProfile: {
+            ...state.preferenceProfile,
+            feature_weights: {
+              ...state.preferenceProfile.feature_weights,
+              topics: {
+                ...state.preferenceProfile.feature_weights.topics,
+                typescript: 0.8,
+              },
+            },
+          },
+        },
+        repositoryRoot,
+      );
+      const actual = JSON.parse(
+        await readFile(join(repositoryRoot, "data", "preference-profile.json"), "utf8"),
+      ) as { feature_weights: { topics: { typescript: number } } };
+
+      // Assert
+      expect(actual.feature_weights.topics.typescript).toBe(0.8);
+    });
+  });
 });
 
 async function writeAgentState(repositoryRoot: string, preferenceProfile: unknown) {
@@ -264,6 +334,15 @@ async function writeAgentState(repositoryRoot: string, preferenceProfile: unknow
   await writeJson(join(repositoryRoot, "data", "recommendation-content-state.json"), {
     version: 1,
     recommendationContents: [],
+  });
+  await writeJson(join(repositoryRoot, "data", "publication-state.json"), {
+    version: 1,
+    publicationRecords: [],
+    recommendedArticles: [],
+  });
+  await writeJson(join(repositoryRoot, "data", "vocabulary-suggestion-state.json"), {
+    version: 1,
+    suggestionRuns: [],
   });
 }
 

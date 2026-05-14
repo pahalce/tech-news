@@ -17,7 +17,20 @@ export type ExtractCurrentFeedCandidateFeaturesInput = {
   extractArticleFeatures(input: {
     candidate: CurrentFeedCandidate;
     body: string;
+    progress: FeatureExtractionProgress;
+    featureVocabulary: FeatureVocabularyConfig;
   }): Promise<unknown>;
+  onFeatureExtractionFailure?(input: {
+    candidate: CurrentFeedCandidate;
+    progress: FeatureExtractionProgress;
+    message: string;
+    llmResponse?: unknown;
+  }): void;
+};
+
+export type FeatureExtractionProgress = {
+  index: number;
+  total: number;
 };
 
 export type ExtractCurrentFeedCandidateFeaturesResult = {
@@ -28,12 +41,16 @@ export async function extractCurrentFeedCandidateFeatures(
   input: ExtractCurrentFeedCandidateFeaturesInput,
 ): Promise<ExtractCurrentFeedCandidateFeaturesResult> {
   const state = parseFeatureExtractionState(input.featureExtractionState);
+  const extractedArticleIds = new Set(state.extractions.map((extraction) => extraction.articleId));
+  const targetCandidates = input.candidates.filter(
+    (candidate) => !extractedArticleIds.has(candidate.articleId),
+  );
 
-  for (const candidate of input.candidates) {
-    if (state.extractions.some((extraction) => extraction.articleId === candidate.articleId)) {
-      continue;
-    }
-
+  for (const [index, candidate] of targetCandidates.entries()) {
+    const progress = {
+      index: index + 1,
+      total: targetCandidates.length,
+    };
     let body: { body: string };
     try {
       body = await input.fetchArticleBody(candidate);
@@ -48,10 +65,13 @@ export async function extractCurrentFeedCandidateFeatures(
       continue;
     }
 
+    let llmOutput: unknown;
     try {
-      const llmOutput = await input.extractArticleFeatures({
+      llmOutput = await input.extractArticleFeatures({
         candidate,
         body: body.body,
+        progress,
+        featureVocabulary: input.featureVocabulary,
       });
 
       state.extractions.push(
@@ -72,6 +92,12 @@ export async function extractCurrentFeedCandidateFeatures(
           message: errorMessage(error),
         }),
       );
+      input.onFeatureExtractionFailure?.({
+        candidate,
+        progress,
+        message: errorMessage(error),
+        llmResponse: typeof llmOutput === "undefined" ? undefined : llmOutput,
+      });
     }
   }
 

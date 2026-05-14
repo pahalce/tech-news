@@ -10,12 +10,20 @@
     "check:architecture": "node scripts/check-architecture.ts",
     "test": "vp test",
     "check": "vp check --fix && node scripts/check-architecture.ts",
-    "collect-feedback": "flue run collect-feedback --target node --id collect-feedback --payload '{}'",
-    "zenn-digest": "flue run zenn-digest --target node --id zenn-digest --payload '{}'",
-    "suggest-feature-vocabulary": "flue run suggest-feature-vocabulary --target node --id suggest-feature-vocabulary --payload '{}'"
+    "collect-feedback": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts",
+    "collect-feedback:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts --dry-run",
+    "publish-recommendations": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
+    "publish-recommendations:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts --dry-run",
+    "zenn-digest": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
+    "zenn-digest:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts --dry-run",
+    "suggest-feature-vocabulary": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/suggest-feature-vocabulary.ts",
+    "suggest-feature-vocabulary:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/suggest-feature-vocabulary.ts --dry-run"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.73",
+    "@ai-sdk/openai": "^3.0.63",
     "@flue/sdk": "^0.3.11",
+    "ai": "^6.0.180",
     "fast-xml-parser": "^5.7.3",
     "valibot": "^1.4.0"
   },
