@@ -1,9 +1,13 @@
+import { jsonSchema, type JSONSchema7 } from "ai";
+import * as v from "valibot";
+
 import { defaultZennArticleFeeds } from "../modules/article/infrastructure/zenn-article-feeds";
 import { readZennRssFeed } from "../modules/article/infrastructure/zenn-rss-feed-reader";
 import {
   loadAgentState,
   saveAgentState,
 } from "../modules/agent-state/infrastructure/file-agent-state";
+import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
 import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
 import {
   readLlmProviderConfig,
@@ -20,6 +24,74 @@ type DiscordRecommendationContent = {
   learningPoints: readonly string[];
   signalsUsed: readonly string[];
 };
+
+type LlmFeatureSignal = {
+  key: string;
+  salience: number;
+};
+
+type LlmFeatureExtractionOutput = {
+  readability: {
+    is_readable: boolean;
+    reason: string | null;
+  };
+  primary_topics: LlmFeatureSignal[];
+  mentioned_topics: LlmFeatureSignal[];
+  feature_axes: Record<string, LlmFeatureSignal[]>;
+  other_signals: LlmFeatureSignal[];
+};
+
+const LlmRerankResultSchema = v.strictObject({
+  selectedArticleIds: v.array(v.string()),
+});
+const LlmRerankResultOutputSchema = jsonSchema<v.InferOutput<typeof LlmRerankResultSchema>>(
+  {
+    type: "object",
+    properties: {
+      selectedArticleIds: { type: "array", items: { type: "string" } },
+    },
+    required: ["selectedArticleIds"],
+    additionalProperties: false,
+  },
+  {
+    validate: (value) => validateValibot(LlmRerankResultSchema, value),
+  },
+);
+
+const RecommendationContentSchema = v.strictObject({
+  articleId: v.string(),
+  summary: v.pipe(v.string(), v.nonEmpty()),
+  whyRecommended: v.pipe(v.string(), v.nonEmpty()),
+  learningPoints: v.pipe(v.array(v.pipe(v.string(), v.nonEmpty())), v.minLength(1)),
+  signalsUsed: v.pipe(v.array(v.pipe(v.string(), v.nonEmpty())), v.minLength(1)),
+});
+const RecommendationContentOutputSchema = jsonSchema<
+  v.InferOutput<typeof RecommendationContentSchema>
+>(
+  {
+    type: "object",
+    properties: {
+      articleId: { type: "string" },
+      summary: { type: "string", minLength: 1 },
+      whyRecommended: { type: "string", minLength: 1 },
+      learningPoints: {
+        type: "array",
+        items: { type: "string", minLength: 1 },
+        minItems: 1,
+      },
+      signalsUsed: {
+        type: "array",
+        items: { type: "string", minLength: 1 },
+        minItems: 1,
+      },
+    },
+    required: ["articleId", "summary", "whyRecommended", "learningPoints", "signalsUsed"],
+    additionalProperties: false,
+  },
+  {
+    validate: (value) => validateValibot(RecommendationContentSchema, value),
+  },
+);
 
 const maxFeedEntriesPerRun = 20;
 
@@ -93,8 +165,9 @@ export async function runZennDigestFromEnvironment(
       });
       return { body };
     },
-    extractArticleFeatures: async ({ candidate, body, progress }) => {
+    extractArticleFeatures: async ({ candidate, body, progress, featureVocabulary }) => {
       const startedAt = performance.now();
+      const featureVocabularyPrompt = formatFeatureVocabularyPrompt(featureVocabulary);
       logger.info("feature extraction LLM request started", {
         articleId: candidate.articleId,
         model: modelConfig.featureExtractionModel,
@@ -107,10 +180,15 @@ export async function runZennDigestFromEnvironment(
         result = await requestJsonFromLlm(llmProviderConfig, {
           model: modelConfig.featureExtractionModel,
           system: "You extract structured article features for a personal Zenn digest agent.",
+          schema: createFeatureExtractionOutputSchema(featureVocabulary),
           user: [
-            "Return only JSON with keys readability, primary_topics, mentioned_topics, feature_axes, other_signals.",
-            "Use readability.is_readable boolean and readability.reason nullable string.",
-            "Topics and features must include salience from 0 to 1.",
+            "Extract article features using the provided structured output schema.",
+            "Every signal must use key and salience.",
+            "feature_axes must be an object keyed by allowed axis keys, not an array.",
+            "other_signals must be an array of { key, salience } objects. Use snake_case keys.",
+            "If the article is not readable, set readability.is_readable false, readability.reason to a short string, and return empty arrays/objects for the other keys.",
+            "Use only the allowed topic keys and feature keys below. Put unmatched topics into primary_topics or mentioned_topics using the closest allowed topic key only when it genuinely fits; otherwise omit them.",
+            featureVocabularyPrompt,
             `Title: ${candidate.title}`,
             `URL: ${candidate.canonicalUrl}`,
             `Body:\n${body.slice(0, 20000)}`,
@@ -144,8 +222,9 @@ export async function runZennDigestFromEnvironment(
           result = await requestJsonFromLlm(llmProviderConfig, {
             model: modelConfig.rerankModel,
             system: "You select the best Zenn articles for a concise personal technical digest.",
+            schema: LlmRerankResultOutputSchema,
             user: [
-              "Return only JSON with key selectedArticleIds as an array of article IDs.",
+              "Select article IDs using the provided structured output schema.",
               `Max recommendations: ${input.maxRecommendations}`,
               `Long-term preference summary: ${input.longTermPreferenceSummary ?? "none"}`,
               `Recent preference summary: ${input.recentPreferenceSummary ?? "none"}`,
@@ -182,8 +261,9 @@ export async function runZennDigestFromEnvironment(
             model: modelConfig.recommendationContentModel,
             system:
               "You write concise Japanese Discord recommendation content for one technical article.",
+            schema: RecommendationContentOutputSchema,
             user: [
-              "Return only JSON with keys articleId, summary, whyRecommended, learningPoints, signalsUsed.",
+              "Write recommendation content using the provided structured output schema.",
               "learningPoints and signalsUsed must be non-empty string arrays.",
               `Article ID: ${candidate.articleId}`,
               `Title: ${candidate.title}`,
@@ -374,6 +454,204 @@ function selectedArticleCount(result: unknown): number | null {
   }
 
   return null;
+}
+
+function createFeatureExtractionOutputSchema(featureVocabulary: FeatureVocabularyConfig) {
+  const topicKeys = Object.keys(featureVocabulary.topics);
+  const featureAxes = Object.entries(featureVocabulary.feature_axes);
+  const schema: JSONSchema7 = {
+    type: "object",
+    properties: {
+      readability: {
+        type: "object",
+        properties: {
+          is_readable: { type: "boolean" },
+          reason: { type: ["string", "null"] },
+        },
+        required: ["is_readable", "reason"],
+        additionalProperties: false,
+      },
+      primary_topics: { type: "array", items: featureSignalJsonSchema(topicKeys) },
+      mentioned_topics: { type: "array", items: featureSignalJsonSchema(topicKeys) },
+      feature_axes: {
+        type: "object",
+        properties: Object.fromEntries(
+          featureAxes.map(([axis, config]) => [
+            axis,
+            {
+              type: "array",
+              items: featureSignalJsonSchema(Object.keys(config.features)),
+            },
+          ]),
+        ),
+        additionalProperties: false,
+      },
+      other_signals: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            key: { type: "string", pattern: "^[a-z0-9_]+$" },
+            salience: { type: "number", minimum: 0, maximum: 1 },
+          },
+          required: ["key", "salience"],
+          additionalProperties: false,
+        },
+      },
+    },
+    required: [
+      "readability",
+      "primary_topics",
+      "mentioned_topics",
+      "feature_axes",
+      "other_signals",
+    ],
+    additionalProperties: false,
+  };
+
+  return jsonSchema<LlmFeatureExtractionOutput>(schema, {
+    validate: (value) => validateFeatureExtractionOutput(value, featureVocabulary),
+  });
+}
+
+function featureSignalJsonSchema(allowedKeys: string[]): JSONSchema7 {
+  return {
+    type: "object",
+    properties: {
+      key: allowedKeys.length > 0 ? { type: "string", enum: allowedKeys } : { type: "string" },
+      salience: { type: "number", minimum: 0, maximum: 1 },
+    },
+    required: ["key", "salience"],
+    additionalProperties: false,
+  };
+}
+
+function validateFeatureExtractionOutput(
+  value: unknown,
+  featureVocabulary: FeatureVocabularyConfig,
+) {
+  try {
+    const output = parseFeatureExtractionOutputShape(value);
+    const topicKeys = new Set(Object.keys(featureVocabulary.topics));
+
+    for (const topic of [...output.primary_topics, ...output.mentioned_topics]) {
+      assertAllowedKey(topic.key, topicKeys, "topic");
+    }
+
+    for (const [axis, features] of Object.entries(output.feature_axes)) {
+      const axisConfig = featureVocabulary.feature_axes[axis];
+      if (!axisConfig) {
+        throw new Error(`${axis} is not an allowed feature axis.`);
+      }
+
+      const featureKeys = new Set(Object.keys(axisConfig.features));
+      for (const feature of features) {
+        assertAllowedKey(feature.key, featureKeys, `${axis} feature`);
+      }
+    }
+
+    return { success: true as const, value: output };
+  } catch (error) {
+    return {
+      success: false as const,
+      error: error instanceof Error ? error : new Error(String(error)),
+    };
+  }
+}
+
+function parseFeatureExtractionOutputShape(value: unknown): LlmFeatureExtractionOutput {
+  if (!isRecord(value)) {
+    throw new Error("Feature extraction output must be an object.");
+  }
+
+  const readability = value.readability;
+  if (!isRecord(readability) || typeof readability.is_readable !== "boolean") {
+    throw new Error("Feature extraction readability is invalid.");
+  }
+
+  if (readability.reason !== null && typeof readability.reason !== "string") {
+    throw new Error("Feature extraction readability reason is invalid.");
+  }
+
+  return {
+    readability: {
+      is_readable: readability.is_readable,
+      reason: readability.reason,
+    },
+    primary_topics: parseFeatureSignals(value.primary_topics, "primary_topics"),
+    mentioned_topics: parseFeatureSignals(value.mentioned_topics, "mentioned_topics"),
+    feature_axes: parseFeatureAxes(value.feature_axes),
+    other_signals: parseFeatureSignals(value.other_signals, "other_signals"),
+  };
+}
+
+function parseFeatureAxes(value: unknown): Record<string, LlmFeatureSignal[]> {
+  if (!isRecord(value)) {
+    throw new Error("feature_axes must be an object.");
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).map(([axis, features]) => [axis, parseFeatureSignals(features, axis)]),
+  );
+}
+
+function parseFeatureSignals(value: unknown, field: string): LlmFeatureSignal[] {
+  if (!Array.isArray(value)) {
+    throw new Error(`${field} must be an array.`);
+  }
+
+  return value.map((signal, index) => {
+    if (!isRecord(signal)) {
+      throw new Error(`${field}[${index}] must be an object.`);
+    }
+
+    if (typeof signal.key !== "string" || signal.key.length === 0) {
+      throw new Error(`${field}[${index}].key must be a non-empty string.`);
+    }
+
+    if (
+      typeof signal.salience !== "number" ||
+      !Number.isFinite(signal.salience) ||
+      signal.salience < 0 ||
+      signal.salience > 1
+    ) {
+      throw new Error(`${field}[${index}].salience must be a number between 0 and 1.`);
+    }
+
+    return { key: signal.key, salience: signal.salience };
+  });
+}
+
+function assertAllowedKey(key: string, allowedKeys: Set<string>, label: string): void {
+  if (!allowedKeys.has(key)) {
+    throw new Error(`${key} is not an allowed ${label} key.`);
+  }
+}
+
+function validateValibot<Output>(
+  schema: v.GenericSchema<unknown, Output>,
+  value: unknown,
+): { success: true; value: Output } | { success: false; error: Error } {
+  const result = v.safeParse(schema, value);
+  if (result.success) {
+    return { success: true, value: result.output };
+  }
+
+  return { success: false, error: new Error(v.summarize(result.issues)) };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function formatFeatureVocabularyPrompt(featureVocabulary: FeatureVocabularyConfig): string {
+  return [
+    `Allowed topic keys: ${Object.keys(featureVocabulary.topics).join(", ")}`,
+    "Allowed feature axes and feature keys:",
+    ...Object.entries(featureVocabulary.feature_axes).map(
+      ([axis, config]) => `- ${axis}: ${Object.keys(config.features).join(", ")}`,
+    ),
+  ].join("\n");
 }
 
 function errorDetails(error: unknown): Record<string, unknown> {

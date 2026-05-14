@@ -1,6 +1,6 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateObject, type LanguageModel } from "ai";
+import { generateText, Output, type FlexibleSchema, type LanguageModel } from "ai";
 
 export type LlmProvider = "openai" | "gemini" | "openai-compatible";
 
@@ -12,10 +12,11 @@ export type LlmProviderConfig = {
   timeoutMs?: number;
 };
 
-export type LlmJsonRequest = {
+export type LlmJsonRequest<OutputSchema> = {
   model: string;
   system: string;
   user: string;
+  schema: FlexibleSchema<OutputSchema>;
 };
 
 export function readLlmProviderConfig(env: Record<string, string | undefined>): LlmProviderConfig {
@@ -53,19 +54,21 @@ export function assertRequiredLlmEnvironment(env: Record<string, string | undefi
   readLlmProviderConfig(env);
 }
 
-export async function requestJsonFromLlm(
+export async function requestJsonFromLlm<OutputSchema>(
   config: LlmProviderConfig,
-  request: LlmJsonRequest,
-): Promise<any> {
-  const { object } = await generateObject({
+  request: LlmJsonRequest<OutputSchema>,
+): Promise<OutputSchema> {
+  const { output } = await generateText({
     model: createLanguageModel(config, request.model),
-    output: "no-schema",
+    output: Output.object({
+      schema: request.schema,
+    }),
     system: request.system,
     prompt: request.user,
     timeout: { totalMs: config.timeoutMs ?? 90_000 },
   });
 
-  return object;
+  return output;
 }
 
 function readLlmProvider(value: string | undefined): LlmProvider {

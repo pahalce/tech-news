@@ -1,6 +1,16 @@
+import { jsonSchema } from "ai";
 import { describe, expect, it } from "vite-plus/test";
 
 import { readLlmProviderConfig, requestJsonFromLlm } from "./llm-json-client";
+
+const TestSchema = jsonSchema<{ ok: boolean }>({
+  type: "object",
+  properties: {
+    ok: { type: "boolean" },
+  },
+  required: ["ok"],
+  additionalProperties: false,
+});
 
 describe("LLM JSON client に関するテスト", () => {
   it("LLM_PROVIDER 未指定のとき、Gemini API key を読む", () => {
@@ -81,7 +91,7 @@ describe("LLM JSON client に関するテスト", () => {
         baseUrl: "https://gateway.example/v1",
         fetch: fetchImpl,
       },
-      { model: "provider/model", system: "system", user: "user" },
+      { model: "provider/model", system: "system", user: "user", schema: TestSchema },
     );
 
     // Assert
@@ -98,7 +108,12 @@ describe("LLM JSON client に関するテスト", () => {
       requestedBody = JSON.parse(toRequestBody(init?.body));
       return new Response(
         JSON.stringify({
-          candidates: [{ content: { parts: [{ text: '{"ok":true}' }] } }],
+          candidates: [
+            {
+              content: { parts: [{ text: '{"ok":true}' }] },
+              finishReason: "STOP",
+            },
+          ],
         }),
         { status: 200 },
       );
@@ -107,7 +122,7 @@ describe("LLM JSON client に関するテスト", () => {
     // Act
     const actual = await requestJsonFromLlm(
       { provider: "gemini", apiKey: "gemini-key", fetch: fetchImpl },
-      { model: "gemini-2.5-flash", system: "system", user: "user" },
+      { model: "gemini-2.5-flash", system: "system", user: "user", schema: TestSchema },
     );
 
     // Assert
@@ -116,7 +131,12 @@ describe("LLM JSON client に関するテスト", () => {
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
     );
     expect(requestedBody).toMatchObject({
-      generationConfig: { responseMimeType: "application/json" },
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+        },
+      },
     });
   });
 

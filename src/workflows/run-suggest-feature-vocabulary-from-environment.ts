@@ -1,3 +1,6 @@
+import { jsonSchema } from "ai";
+import * as v from "valibot";
+
 import {
   loadAgentState,
   saveAgentState,
@@ -10,6 +13,30 @@ import {
 } from "../shared/infrastructure/llm-json-client";
 import { readLlmModelConfig } from "./scheduled-jobs-config";
 import { runSuggestFeatureVocabularyJob } from "./suggest-feature-vocabulary-job";
+
+const VocabularyCandidateDescriptionSchema = v.strictObject({
+  description_ja: v.pipe(v.string(), v.nonEmpty()),
+});
+const VocabularyCandidateDescriptionOutputSchema = jsonSchema<
+  v.InferOutput<typeof VocabularyCandidateDescriptionSchema>
+>(
+  {
+    type: "object",
+    properties: {
+      description_ja: { type: "string", minLength: 1 },
+    },
+    required: ["description_ja"],
+    additionalProperties: false,
+  },
+  {
+    validate: (value) => {
+      const result = v.safeParse(VocabularyCandidateDescriptionSchema, value);
+      return result.success
+        ? { success: true, value: result.output }
+        : { success: false, error: new Error(v.summarize(result.issues)) };
+    },
+  },
+);
 
 export async function validateSuggestFeatureVocabularyDryRun(): Promise<void> {
   await loadAgentState();
@@ -35,8 +62,9 @@ export async function runSuggestFeatureVocabularyFromEnvironment(
           model: modelConfig.vocabularySuggestionModel,
           system:
             "You write concise Japanese descriptions for feature vocabulary promotion candidates.",
+          schema: VocabularyCandidateDescriptionOutputSchema,
           user: [
-            "Return only JSON with key description_ja.",
+            "Write the description using the provided structured output schema.",
             `Candidate key: ${input.key}`,
             `Kind: ${input.kind}`,
             `Occurrence count: ${input.occurrenceCount}`,

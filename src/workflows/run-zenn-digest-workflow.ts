@@ -90,13 +90,14 @@ export async function runZennDigestWorkflow(
     now: input.now,
     fetchArticleBody: input.fetchArticleBody,
     extractArticleFeatures: input.extractArticleFeatures,
-    onFeatureExtractionFailure: ({ candidate, progress, message }) => {
+    onFeatureExtractionFailure: ({ candidate, progress, message, llmResponse }) => {
       logger.warn("feature extraction failed", {
         articleId: candidate.articleId,
         featureExtractionIndex: progress.index,
         featureExtractionTotal: progress.total,
         featureExtractionProgress: `${progress.index}/${progress.total}`,
         message,
+        llmResponse,
       });
     },
   });

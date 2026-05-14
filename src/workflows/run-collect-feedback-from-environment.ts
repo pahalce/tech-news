@@ -1,3 +1,6 @@
+import { jsonSchema } from "ai";
+import * as v from "valibot";
+
 import {
   loadAgentState,
   saveAgentState,
@@ -10,6 +13,35 @@ import {
 } from "../shared/infrastructure/llm-json-client";
 import { readLlmModelConfig } from "./scheduled-jobs-config";
 import { runCollectFeedbackJob } from "./collect-feedback-job";
+
+const PreferenceSummarySchema = v.strictObject({
+  long_term_summary: v.nullable(v.string()),
+  recent_summary: v.nullable(v.string()),
+  recent_confidence: v.picklist(["insufficient_feedback", "low", "medium", "high"]),
+});
+const PreferenceSummaryOutputSchema = jsonSchema<v.InferOutput<typeof PreferenceSummarySchema>>(
+  {
+    type: "object",
+    properties: {
+      long_term_summary: { type: ["string", "null"] },
+      recent_summary: { type: ["string", "null"] },
+      recent_confidence: {
+        type: "string",
+        enum: ["insufficient_feedback", "low", "medium", "high"],
+      },
+    },
+    required: ["long_term_summary", "recent_summary", "recent_confidence"],
+    additionalProperties: false,
+  },
+  {
+    validate: (value) => {
+      const result = v.safeParse(PreferenceSummarySchema, value);
+      return result.success
+        ? { success: true, value: result.output }
+        : { success: false, error: new Error(v.summarize(result.issues)) };
+    },
+  },
+);
 
 export async function validateCollectFeedbackDryRun(): Promise<void> {
   await loadAgentState();
@@ -106,9 +138,9 @@ async function updatePreferenceSummary(input: {
   const summary = await requestJsonFromLlm(input.llmProviderConfig, {
     model: input.model,
     system: "You summarize a single owner's technical article preferences in Japanese.",
+    schema: PreferenceSummaryOutputSchema,
     user: [
-      "Return only JSON with keys long_term_summary, recent_summary, recent_confidence.",
-      "recent_confidence should be insufficient_feedback, low, medium, or high.",
+      "Summarize preferences using the provided structured output schema.",
       `Collected at: ${input.collectedAt}`,
       `Processed feedback count: ${input.processedFeedbackCount}`,
       `Previous summary history: ${JSON.stringify(input.previousSummaryHistory)}`,

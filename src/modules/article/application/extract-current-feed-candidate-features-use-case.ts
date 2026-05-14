@@ -18,11 +18,13 @@ export type ExtractCurrentFeedCandidateFeaturesInput = {
     candidate: CurrentFeedCandidate;
     body: string;
     progress: FeatureExtractionProgress;
+    featureVocabulary: FeatureVocabularyConfig;
   }): Promise<unknown>;
   onFeatureExtractionFailure?(input: {
     candidate: CurrentFeedCandidate;
     progress: FeatureExtractionProgress;
     message: string;
+    llmResponse?: unknown;
   }): void;
 };
 
@@ -63,11 +65,13 @@ export async function extractCurrentFeedCandidateFeatures(
       continue;
     }
 
+    let llmOutput: unknown;
     try {
-      const llmOutput = await input.extractArticleFeatures({
+      llmOutput = await input.extractArticleFeatures({
         candidate,
         body: body.body,
         progress,
+        featureVocabulary: input.featureVocabulary,
       });
 
       state.extractions.push(
@@ -92,6 +96,7 @@ export async function extractCurrentFeedCandidateFeatures(
         candidate,
         progress,
         message: errorMessage(error),
+        llmResponse: typeof llmOutput === "undefined" ? undefined : llmOutput,
       });
     }
   }
