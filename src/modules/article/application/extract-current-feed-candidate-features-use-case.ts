@@ -17,7 +17,13 @@ export type ExtractCurrentFeedCandidateFeaturesInput = {
   extractArticleFeatures(input: {
     candidate: CurrentFeedCandidate;
     body: string;
+    progress: FeatureExtractionProgress;
   }): Promise<unknown>;
+};
+
+export type FeatureExtractionProgress = {
+  index: number;
+  total: number;
 };
 
 export type ExtractCurrentFeedCandidateFeaturesResult = {
@@ -28,12 +34,12 @@ export async function extractCurrentFeedCandidateFeatures(
   input: ExtractCurrentFeedCandidateFeaturesInput,
 ): Promise<ExtractCurrentFeedCandidateFeaturesResult> {
   const state = parseFeatureExtractionState(input.featureExtractionState);
+  const extractedArticleIds = new Set(state.extractions.map((extraction) => extraction.articleId));
+  const targetCandidates = input.candidates.filter(
+    (candidate) => !extractedArticleIds.has(candidate.articleId),
+  );
 
-  for (const candidate of input.candidates) {
-    if (state.extractions.some((extraction) => extraction.articleId === candidate.articleId)) {
-      continue;
-    }
-
+  for (const [index, candidate] of targetCandidates.entries()) {
     let body: { body: string };
     try {
       body = await input.fetchArticleBody(candidate);
@@ -52,6 +58,10 @@ export async function extractCurrentFeedCandidateFeatures(
       const llmOutput = await input.extractArticleFeatures({
         candidate,
         body: body.body,
+        progress: {
+          index: index + 1,
+          total: targetCandidates.length,
+        },
       });
 
       state.extractions.push(

@@ -21,6 +21,8 @@ type DiscordRecommendationContent = {
   signalsUsed: readonly string[];
 };
 
+const maxFeedEntriesPerRun = 20;
+
 export async function validateZennDigestDryRun(): Promise<void> {
   await loadAgentState();
   await loadFeatureVocabularyConfig();
@@ -35,6 +37,7 @@ export async function runZennDigestFromEnvironment(
   const httpRequestTimeoutMs = readPositiveIntegerEnv(env, "HTTP_REQUEST_TIMEOUT_MS") ?? 20_000;
   const discordBotToken = requiredEnv(env, "DISCORD_BOT_TOKEN");
   const discordChannelId = requiredEnv(env, "DISCORD_CHANNEL_ID");
+  let remainingFeedEntryBudget = maxFeedEntriesPerRun;
 
   logger.info("runtime config loaded", {
     llmProvider: llmProviderConfig.provider,
@@ -42,6 +45,7 @@ export async function runZennDigestFromEnvironment(
     rerankModel: modelConfig.rerankModel,
     recommendationContentModel: modelConfig.recommendationContentModel,
     httpRequestTimeoutMs,
+    maxFeedEntriesPerRun,
     llmRequestTimeoutMs: llmProviderConfig.timeoutMs ?? 90_000,
   });
 
@@ -60,12 +64,16 @@ export async function runZennDigestFromEnvironment(
           failurePrefix: "RSS feed fetch failed",
         }),
       );
+      const selectedEntries = entries.slice(0, remainingFeedEntryBudget);
+      remainingFeedEntryBudget -= selectedEntries.length;
       logger.info("RSS feed fetch finished", {
         feedId: feed.id,
         elapsedMs: elapsedMs(startedAt),
         entryCount: entries.length,
+        selectedEntryCount: selectedEntries.length,
+        remainingFeedEntryBudget,
       });
-      return entries;
+      return selectedEntries;
     },
     now: () => new Date().toISOString(),
     fetchArticleBody: async (candidate) => {
@@ -85,11 +93,14 @@ export async function runZennDigestFromEnvironment(
       });
       return { body };
     },
-    extractArticleFeatures: async ({ candidate, body }) => {
+    extractArticleFeatures: async ({ candidate, body, progress }) => {
       const startedAt = performance.now();
       logger.info("feature extraction LLM request started", {
         articleId: candidate.articleId,
         model: modelConfig.featureExtractionModel,
+        featureExtractionIndex: progress.index,
+        featureExtractionTotal: progress.total,
+        featureExtractionProgress: `${progress.index}/${progress.total}`,
       });
       const result = await requestJsonFromLlm(llmProviderConfig, {
         model: modelConfig.featureExtractionModel,
