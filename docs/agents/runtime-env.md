@@ -29,4 +29,9 @@ Model names are read from GitHub Actions variables or process environment variab
 different models for extraction, rerank, content writing, preference summaries, or vocabulary
 descriptions. If none are set, the default is `gemini-2.5-flash`.
 
+Optional timeout variables:
+
+- `LLM_REQUEST_TIMEOUT_MS`: per LLM request timeout. Defaults to `90000`.
+- `HTTP_REQUEST_TIMEOUT_MS`: RSS, article body, and Discord request timeout. Defaults to `20000`.
+
 Each scheduled job performs its Agent State writes before a single final Data Commit step is added to the workflow that owns persistence.

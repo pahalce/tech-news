@@ -22,6 +22,7 @@ import {
   type LlmReranker,
 } from "../modules/recommendation/application/rerank-current-feed-candidates-use-case";
 import { scoreCurrentFeedCandidates } from "../modules/recommendation/application/score-current-feed-candidates-use-case";
+import { elapsedMs, silentWorkflowLogger, type WorkflowLogger } from "./workflow-logger";
 
 export type RunZennDigestWorkflowInput = {
   agentState: AgentState;
@@ -34,6 +35,7 @@ export type RunZennDigestWorkflowInput = {
   llmReranker: LlmReranker;
   recommendationContentCreator: RecommendationContentCreator;
   publisher: RecommendationPublisher;
+  logger?: WorkflowLogger;
 };
 
 export type RunZennDigestWorkflowResult = {
@@ -49,9 +51,37 @@ const qualityCriteria = [
 export async function runZennDigestWorkflow(
   input: RunZennDigestWorkflowInput,
 ): Promise<RunZennDigestWorkflowResult> {
+  const logger = input.logger ?? silentWorkflowLogger;
+  const workflowStartedAt = performance.now();
+  logger.info("workflow started", { feedCount: input.feeds.length });
+
+  const collectStartedAt = performance.now();
+  logger.info("collecting feed candidates", { feedCount: input.feeds.length });
   const collected = await collectCurrentFeedCandidates({
     feeds: input.feeds,
     feedReader: input.feedReader,
+  });
+  logger.info("collected feed candidates", {
+    elapsedMs: elapsedMs(collectStartedAt),
+    candidateCount: collected.candidates.length,
+    failureCount: collected.failures.length,
+  });
+  for (const failure of collected.failures) {
+    logger.warn("feed collection failed", {
+      feedId: failure.feedId,
+      message: failure.message,
+    });
+  }
+
+  const extractionStartedAt = performance.now();
+  const previousExtractionCount = input.agentState.featureExtractionState.extractions.length;
+  const previousBodyFetchFailureCount =
+    input.agentState.featureExtractionState.bodyFetchFailures.length;
+  const previousFailedExtractionAttemptCount =
+    input.agentState.featureExtractionState.failedExtractionAttempts.length;
+  logger.info("extracting candidate features", {
+    candidateCount: collected.candidates.length,
+    existingExtractionCount: previousExtractionCount,
   });
   const extracted = await extractCurrentFeedCandidateFeatures({
     candidates: collected.candidates,
@@ -61,10 +91,24 @@ export async function runZennDigestWorkflow(
     fetchArticleBody: input.fetchArticleBody,
     extractArticleFeatures: input.extractArticleFeatures,
   });
+  logger.info("extracted candidate features", {
+    elapsedMs: elapsedMs(extractionStartedAt),
+    newExtractionCount: extracted.state.extractions.length - previousExtractionCount,
+    newBodyFetchFailureCount:
+      extracted.state.bodyFetchFailures.length - previousBodyFetchFailureCount,
+    newFailedExtractionAttemptCount:
+      extracted.state.failedExtractionAttempts.length - previousFailedExtractionAttemptCount,
+  });
+
   const readable = selectReadableCurrentFeedCandidates({
     currentFeedCandidates: collected.candidates,
     featureExtractionState: extracted.state,
   });
+  logger.info("selected readable candidates", {
+    readableCandidateCount: readable.readableCandidates.length,
+  });
+
+  const scoreStartedAt = performance.now();
   const scored = scoreCurrentFeedCandidates({
     currentFeedCandidateFeatures: readable.readableCandidates,
     preferenceProfile: input.agentState.preferenceProfile,
@@ -72,12 +116,21 @@ export async function runZennDigestWorkflow(
       (article) => article.articleId,
     ),
   });
+  logger.info("scored candidates", {
+    elapsedMs: elapsedMs(scoreStartedAt),
+    scoredCandidateCount: scored.scoredCandidates.length,
+  });
+
   const featuresByArticleId = new Map(
     readable.readableCandidates.map((candidate) => [
       candidate.candidate.articleId,
       candidate.articleFeatures,
     ]),
   );
+  const rerankStartedAt = performance.now();
+  logger.info("reranking scored candidates", {
+    scoredCandidateCount: scored.scoredCandidates.length,
+  });
   const reranked = await rerankCurrentFeedCandidates({
     scoredCandidates: scored.scoredCandidates.map((candidate) => ({
       ...candidate,
@@ -88,10 +141,28 @@ export async function runZennDigestWorkflow(
     qualityCriteria,
     llmReranker: input.llmReranker,
   });
+  logger.info("reranked candidates", {
+    elapsedMs: elapsedMs(rerankStartedAt),
+    selectedCandidateCount: reranked.selectedCandidates.length,
+  });
+
+  const contentStartedAt = performance.now();
+  logger.info("creating recommendation contents", {
+    selectedCandidateCount: reranked.selectedCandidates.length,
+  });
   const contents = await createRecommendationContents({
     selectedCandidates: reranked.selectedCandidates,
     featureExtractions: extracted.state.extractions,
     recommendationContentCreator: input.recommendationContentCreator,
+  });
+  logger.info("created recommendation contents", {
+    elapsedMs: elapsedMs(contentStartedAt),
+    recommendationContentCount: contents.recommendationContents.length,
+  });
+
+  const publishStartedAt = performance.now();
+  logger.info("publishing recommendations", {
+    recommendationContentCount: contents.recommendationContents.length,
   });
   const published = await publishRecommendations({
     recommendationContents: contents.recommendationContents,
@@ -99,6 +170,13 @@ export async function runZennDigestWorkflow(
     existingRecommendedArticles: input.agentState.publicationState.recommendedArticles,
     publisher: input.publisher,
   });
+  logger.info("published recommendations", {
+    elapsedMs: elapsedMs(publishStartedAt),
+    publicationRecordCount: published.publicationRecords.length,
+    recommendedArticleCount: published.recommendedArticles.length,
+    failedArticleCount: published.failedArticleIds.length,
+  });
+  logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
 
   return {
     agentState: {

@@ -9,6 +9,7 @@ export type LlmProviderConfig = {
   apiKey: string;
   baseUrl?: string;
   fetch?: typeof fetch;
+  timeoutMs?: number;
 };
 
 export type LlmJsonRequest = {
@@ -28,6 +29,7 @@ export function readLlmProviderConfig(env: Record<string, string | undefined>): 
         "GOOGLE_GENERATIVE_AI_API_KEY",
         "LLM_API_KEY",
       ]),
+      ...optionalTimeout(env),
     };
   }
 
@@ -36,12 +38,14 @@ export function readLlmProviderConfig(env: Record<string, string | undefined>): 
       provider,
       apiKey: requiredFirstEnv(env, ["LLM_API_KEY"]),
       baseUrl: trimTrailingSlash(requiredEnv(env, "LLM_BASE_URL")),
+      ...optionalTimeout(env),
     };
   }
 
   return {
     provider,
     apiKey: requiredFirstEnv(env, ["OPENAI_API_KEY", "LLM_API_KEY"]),
+    ...optionalTimeout(env),
   };
 }
 
@@ -58,6 +62,7 @@ export async function requestJsonFromLlm(
     output: "no-schema",
     system: request.system,
     prompt: request.user,
+    timeout: { totalMs: config.timeoutMs ?? 90_000 },
   });
 
   return object;
@@ -120,4 +125,28 @@ function requiredEnv(env: Record<string, string | undefined>, key: string): stri
 
 function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/u, "");
+}
+
+function readOptionalPositiveInteger(
+  env: Record<string, string | undefined>,
+  key: string,
+): number | undefined {
+  const value = env[key];
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(`${key} must be a positive integer.`);
+  }
+
+  return parsed;
+}
+
+function optionalTimeout(
+  env: Record<string, string | undefined>,
+): Pick<LlmProviderConfig, "timeoutMs"> {
+  const timeoutMs = readOptionalPositiveInteger(env, "LLM_REQUEST_TIMEOUT_MS");
+  return timeoutMs ? { timeoutMs } : {};
 }
