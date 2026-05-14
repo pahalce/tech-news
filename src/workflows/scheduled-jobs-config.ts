@@ -12,18 +12,21 @@ export type ScheduledJobConfig = {
 export const scheduledJobs: ScheduledJobConfig[] = [
   {
     name: "collect-feedback",
+    // 08:00 JST daily.
     cron: "0 23 * * *",
     command: "pnpm collect-feedback",
     requiredEnvironmentVariables: ["DISCORD_BOT_TOKEN", "DISCORD_CHANNEL_ID"],
   },
   {
     name: "zenn-digest",
+    // 09:00 JST daily.
     cron: "0 0 * * *",
     command: "pnpm zenn-digest",
     requiredEnvironmentVariables: ["DISCORD_BOT_TOKEN", "DISCORD_CHANNEL_ID"],
   },
   {
     name: "suggest-feature-vocabulary",
+    // 08:30 JST Saturdays.
     cron: "30 23 * * 5",
     command: "pnpm suggest-feature-vocabulary",
     requiredEnvironmentVariables: ["DISCORD_BOT_TOKEN", "DISCORD_CHANNEL_ID"],
