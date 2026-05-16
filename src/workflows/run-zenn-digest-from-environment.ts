@@ -17,7 +17,7 @@ import { readLlmModelConfig } from "./scheduled-jobs-config";
 import { createConsoleWorkflowLogger, elapsedMs } from "./workflow-logger";
 import { runZennDigestJob } from "./zenn-digest-job";
 
-type DiscordRecommendationContent = {
+export type DiscordRecommendationContent = {
   articleId: string;
   canonicalUrl: string;
   title: string;
@@ -26,6 +26,8 @@ type DiscordRecommendationContent = {
   learningPoints: readonly string[];
   signalsUsed: readonly string[];
 };
+
+const recommendationContentBodyMaxLength = 20_000;
 
 type LlmFeatureSignal = {
   key: string;
@@ -253,6 +255,20 @@ export async function runZennDigestFromEnvironment(
     recommendationContentCreator: {
       create: async ({ candidate, featureExtraction }) => {
         const startedAt = performance.now();
+        logger.info("recommendation content body fetch started", {
+          articleId: candidate.articleId,
+          url: candidate.canonicalUrl,
+        });
+        const bodyFetchStartedAt = performance.now();
+        const articleBody = await fetchReadableText({
+          url: candidate.canonicalUrl,
+          timeoutMs: httpRequestTimeoutMs,
+        });
+        logger.info("recommendation content body fetch finished", {
+          articleId: candidate.articleId,
+          elapsedMs: elapsedMs(bodyFetchStartedAt),
+          bodyLength: articleBody.length,
+        });
         logger.info("recommendation content LLM request started", {
           articleId: candidate.articleId,
           model: modelConfig.recommendationContentModel,
@@ -262,16 +278,20 @@ export async function runZennDigestFromEnvironment(
           result = await requestJsonFromLlm(llmProviderConfig, {
             model: modelConfig.recommendationContentModel,
             system:
-              "You write concise Japanese Discord recommendation content for one technical article.",
+              "You write concise Japanese Discord recommendation content for one technical article. learningPoints must be concrete takeaways from the article body that remain useful without opening the article.",
             schema: RecommendationContentOutputSchema,
             user: [
               "Write recommendation content using the provided structured output schema.",
-              "learningPoints and signalsUsed must be non-empty string arrays.",
+              "summary: 2-3 sentences summarizing the article.",
+              "whyRecommended: why this article fits the owner's preferences and quality bar.",
+              'learningPoints: 3-5 items. Each item must be a concrete fact, comparison, setting, step, or insight taken from the article body. Write standalone Japanese sentences. Do not write chapter titles, topic labels, or phrases like "〜について学べる" or "〜の違い" without stating the actual difference.',
+              "signalsUsed: non-empty string array of signal keys used from feature extraction.",
               `Article ID: ${candidate.articleId}`,
               `Title: ${candidate.title}`,
               `URL: ${candidate.canonicalUrl}`,
               `Rule score: ${candidate.ruleScore}`,
               `Feature extraction: ${JSON.stringify(featureExtraction)}`,
+              `Body:\n${articleBody.slice(0, recommendationContentBodyMaxLength)}`,
             ].join("\n\n"),
           });
         } catch (error) {
@@ -383,22 +403,24 @@ async function publishDiscordRecommendation(input: {
   };
 }
 
-function formatDiscordMessage(content: DiscordRecommendationContent): string {
+export function formatDiscordMessage(content: DiscordRecommendationContent): string {
   return [
-    `**${content.summary}**`,
+    `**[${content.title}](${content.canonicalUrl})**`,
     "",
-    `記事: [${content.title}](${content.canonicalUrl})`,
+    "**要約**",
+    content.summary,
     "",
-    `Why: ${content.whyRecommended}`,
+    "**推薦理由**",
+    content.whyRecommended,
     "",
-    "Learning points:",
-    ...content.learningPoints.map((point) => `- ${point}`),
+    "**この記事から得られる学び**",
+    ...content.learningPoints.map((point) => `• ${point}`),
     "",
-    `Signals: ${content.signalsUsed.join(", ")}`,
+    `_Signals:_ ${content.signalsUsed.join(", ")}`,
     "",
-    "Feedback:",
-    "- 👍 気に入った記事なら押してください。今後、類似する記事を推薦しやすくなります。",
-    "- 👎 合わなかった記事なら押してください。今後、似た記事を控えます。",
+    "**フィードバック**",
+    "• 👍 気に入った記事なら押してください。今後、類似する記事を推薦しやすくなります。",
+    "• 👎 合わなかった記事なら押してください。今後、似た記事を控えます。",
   ].join("\n");
 }
 
