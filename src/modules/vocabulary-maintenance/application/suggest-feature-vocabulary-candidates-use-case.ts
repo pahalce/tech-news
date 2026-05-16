@@ -21,6 +21,7 @@ type ArticleFeatures = {
 
 type FeatureExtraction = {
   articleId: string;
+  extractedAt: string;
   articleFeatures: ArticleFeatures | null;
 };
 
@@ -70,6 +71,8 @@ export type SuggestFeatureVocabularyCandidatesResult = {
 };
 
 const minimumOccurrenceCount = 2;
+const suggestionLookbackDays = 7;
+const highSalienceThreshold = 0.8;
 
 export async function suggestFeatureVocabularyCandidates(
   input: SuggestFeatureVocabularyCandidatesInput,
@@ -108,6 +111,10 @@ async function collectCandidates(
   >();
 
   for (const extraction of input.featureExtractions) {
+    if (!isInsideSuggestionLookbackWindow(extraction.extractedAt, input.suggestedAt)) {
+      continue;
+    }
+
     if (!extraction.articleFeatures) {
       continue;
     }
@@ -125,7 +132,7 @@ async function collectCandidates(
         continue;
       }
 
-      addOccurrence(unknownTopics, topic, extraction.articleId, 1);
+      addOccurrence(unknownTopics, topic, extraction.articleId, 0);
     }
   }
 
@@ -147,7 +154,7 @@ async function appendCandidates(
   relatedFeedbackCounts: Map<string, number>,
 ): Promise<void> {
   for (const [key, occurrence] of occurrences) {
-    if (occurrence.count < minimumOccurrenceCount && occurrence.maxSalience < 0.8) {
+    if (!meetsPromotionThreshold(occurrence, kind)) {
       continue;
     }
 
@@ -169,6 +176,27 @@ async function appendCandidates(
           : "Feature Axis への追加を検討",
     });
   }
+}
+
+export function isInsideSuggestionLookbackWindow(
+  extractedAt: string,
+  suggestedAt: string,
+): boolean {
+  const elapsedMs = Date.parse(suggestedAt) - Date.parse(extractedAt);
+  return elapsedMs >= 0 && elapsedMs <= suggestionLookbackDays * 24 * 60 * 60 * 1000;
+}
+
+function meetsPromotionThreshold(
+  occurrence: { count: number; maxSalience: number },
+  kind: "other_signal" | "unknown_topic",
+): boolean {
+  if (kind === "unknown_topic") {
+    return occurrence.count >= minimumOccurrenceCount;
+  }
+
+  return (
+    occurrence.count >= minimumOccurrenceCount || occurrence.maxSalience >= highSalienceThreshold
+  );
 }
 
 function addOccurrence(

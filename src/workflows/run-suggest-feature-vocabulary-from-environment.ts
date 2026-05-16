@@ -13,6 +13,7 @@ import {
 } from "../shared/infrastructure/llm-json-client";
 import { readLlmModelConfig } from "./scheduled-jobs-config";
 import { runSuggestFeatureVocabularyJob } from "./suggest-feature-vocabulary-job";
+import { createConsoleWorkflowLogger, elapsedMs, type WorkflowLogger } from "./workflow-logger";
 
 const VocabularyCandidateDescriptionSchema = v.strictObject({
   description_ja: v.pipe(v.string(), v.nonEmpty()),
@@ -48,32 +49,67 @@ export async function runSuggestFeatureVocabularyFromEnvironment(
 ): Promise<void> {
   const modelConfig = readLlmModelConfig(env);
   const llmProviderConfig = readLlmProviderConfig(env);
+  const logger = createConsoleWorkflowLogger("suggest-feature-vocabulary");
   const discordBotToken = normalizeDiscordBotToken(requiredEnv(env, "DISCORD_BOT_TOKEN"));
   const discordChannelId = requiredEnv(env, "DISCORD_CHANNEL_ID");
+
+  logger.info("runtime config loaded", {
+    llmProvider: llmProviderConfig.provider,
+    vocabularySuggestionModel: modelConfig.vocabularySuggestionModel,
+    llmRequestTimeoutMs: llmProviderConfig.timeoutMs ?? 90_000,
+    discordChannelId,
+  });
 
   await runSuggestFeatureVocabularyJob({
     loadAgentState,
     saveAgentState,
     loadFeatureVocabulary: loadFeatureVocabularyConfig,
     suggestedAt: () => new Date().toISOString(),
+    logger,
     describer: {
       describe: async (input) => {
-        const described = await requestJsonFromLlm(llmProviderConfig, {
-          model: modelConfig.vocabularySuggestionModel,
-          system:
-            "You write concise Japanese descriptions for feature vocabulary promotion candidates.",
-          schema: VocabularyCandidateDescriptionOutputSchema,
-          user: [
-            "Write the description using the provided structured output schema.",
-            `Candidate key: ${input.key}`,
-            `Kind: ${input.kind}`,
-            `Occurrence count: ${input.occurrenceCount}`,
-          ].join("\n\n"),
+        const startedAt = performance.now();
+        logger.info("vocabulary candidate description LLM request started", {
+          key: input.key,
+          kind: input.kind,
+          occurrenceCount: input.occurrenceCount,
         });
 
-        return typeof described.description_ja === "string" && described.description_ja.length > 0
-          ? described.description_ja
-          : `${input.key} に関する昇格候補`;
+        try {
+          const described = await requestJsonFromLlm(llmProviderConfig, {
+            model: modelConfig.vocabularySuggestionModel,
+            system:
+              "You write concise Japanese descriptions for feature vocabulary promotion candidates.",
+            schema: VocabularyCandidateDescriptionOutputSchema,
+            user: [
+              "Write the description using the provided structured output schema.",
+              `Candidate key: ${input.key}`,
+              `Kind: ${input.kind}`,
+              `Occurrence count: ${input.occurrenceCount}`,
+            ].join("\n\n"),
+          });
+
+          const descriptionJa =
+            typeof described.description_ja === "string" && described.description_ja.length > 0
+              ? described.description_ja
+              : `${input.key} に関する昇格候補`;
+
+          logger.info("vocabulary candidate description LLM request finished", {
+            key: input.key,
+            elapsedMs: elapsedMs(startedAt),
+            descriptionLength: descriptionJa.length,
+          });
+
+          return descriptionJa;
+        } catch (error) {
+          logger.error("vocabulary candidate description LLM request failed", {
+            key: input.key,
+            kind: input.kind,
+            elapsedMs: elapsedMs(startedAt),
+            message: errorMessage(error),
+          });
+          throw error;
+        }
       },
     },
     notifier: {
@@ -83,12 +119,14 @@ export async function runSuggestFeatureVocabularyFromEnvironment(
           suggestedAt,
           botToken: discordBotToken,
           channelId: discordChannelId,
+          logger,
         }),
     },
   });
 }
 
-export const DISCORD_MESSAGE_CONTENT_MAX_LENGTH = 4000;
+/** Discord thread messages allow at most 2000 characters in `content`. */
+export const DISCORD_MESSAGE_CONTENT_MAX_LENGTH = 2000;
 
 const DISCORD_THREAD_AUTO_ARCHIVE_MINUTES = 10080;
 
@@ -184,30 +222,105 @@ async function publishDiscordVocabularySuggestions(input: {
   suggestedAt: string;
   botToken: string;
   channelId: string;
+  logger: WorkflowLogger;
 }): Promise<void> {
-  const starterMessageId = await postDiscordMessage({
+  const publishStartedAt = performance.now();
+  const threadMessages = formatDiscordVocabularySuggestionMessages(input.candidates);
+  const threadName = formatDiscordVocabularyThreadName(input.suggestedAt);
+
+  input.logger.info("Discord vocabulary suggestion publish started", {
+    candidateCount: input.candidates.length,
+    threadMessageCount: threadMessages.length,
+    threadName,
     channelId: input.channelId,
-    botToken: input.botToken,
-    content: formatDiscordVocabularyThreadStarterContent(input.candidates),
-    errorPrefix: "Discord vocabulary suggestion starter publish failed",
   });
 
-  const threadId = await createDiscordPublicThreadFromMessage({
-    channelId: input.channelId,
-    messageId: starterMessageId,
-    botToken: input.botToken,
-    name: formatDiscordVocabularyThreadName(input.suggestedAt),
-    errorPrefix: "Discord vocabulary suggestion thread create failed",
-  });
-
-  for (const content of formatDiscordVocabularySuggestionMessages(input.candidates)) {
-    await postDiscordMessage({
-      channelId: threadId,
+  let starterMessageId: string;
+  const starterPublishStartedAt = performance.now();
+  input.logger.info("Discord vocabulary suggestion starter publish started");
+  try {
+    starterMessageId = await postDiscordMessage({
+      channelId: input.channelId,
       botToken: input.botToken,
-      content,
-      errorPrefix: "Discord vocabulary suggestion publish failed",
+      content: formatDiscordVocabularyThreadStarterContent(input.candidates),
+      errorPrefix: "Discord vocabulary suggestion starter publish failed",
     });
+    input.logger.info("Discord vocabulary suggestion starter publish finished", {
+      elapsedMs: elapsedMs(starterPublishStartedAt),
+      messageId: starterMessageId,
+    });
+  } catch (error) {
+    input.logger.error("Discord vocabulary suggestion starter publish failed", {
+      elapsedMs: elapsedMs(starterPublishStartedAt),
+      message: errorMessage(error),
+    });
+    throw error;
   }
+
+  let threadId: string;
+  const threadCreateStartedAt = performance.now();
+  input.logger.info("Discord vocabulary suggestion thread create started", { threadName });
+  try {
+    threadId = await createDiscordPublicThreadFromMessage({
+      channelId: input.channelId,
+      messageId: starterMessageId,
+      botToken: input.botToken,
+      name: threadName,
+      errorPrefix: "Discord vocabulary suggestion thread create failed",
+    });
+    input.logger.info("Discord vocabulary suggestion thread create finished", {
+      elapsedMs: elapsedMs(threadCreateStartedAt),
+      threadId,
+    });
+  } catch (error) {
+    input.logger.error("Discord vocabulary suggestion thread create failed", {
+      elapsedMs: elapsedMs(threadCreateStartedAt),
+      message: errorMessage(error),
+    });
+    throw error;
+  }
+
+  for (const [index, content] of threadMessages.entries()) {
+    const messagePublishStartedAt = performance.now();
+    input.logger.info("Discord vocabulary suggestion thread message publish started", {
+      threadId,
+      messageIndex: index + 1,
+      messageCount: threadMessages.length,
+      contentLength: content.length,
+    });
+
+    try {
+      const messageId = await postDiscordMessage({
+        channelId: threadId,
+        botToken: input.botToken,
+        content,
+        errorPrefix: "Discord vocabulary suggestion publish failed",
+      });
+      input.logger.info("Discord vocabulary suggestion thread message publish finished", {
+        threadId,
+        messageIndex: index + 1,
+        messageCount: threadMessages.length,
+        elapsedMs: elapsedMs(messagePublishStartedAt),
+        messageId,
+      });
+    } catch (error) {
+      input.logger.error("Discord vocabulary suggestion thread message publish failed", {
+        threadId,
+        messageIndex: index + 1,
+        messageCount: threadMessages.length,
+        elapsedMs: elapsedMs(messagePublishStartedAt),
+        message: errorMessage(error),
+      });
+      throw error;
+    }
+  }
+
+  input.logger.info("Discord vocabulary suggestion publish finished", {
+    elapsedMs: elapsedMs(publishStartedAt),
+    candidateCount: input.candidates.length,
+    threadMessageCount: threadMessages.length,
+    threadId,
+  });
 }
 
 async function postDiscordMessage(input: {
@@ -282,6 +395,10 @@ function requiredEnv(env: Record<string, string | undefined>, key: string): stri
 
 function normalizeDiscordBotToken(value: string): string {
   return value.replace(/^Bot\s+/iu, "").trim();
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 async function formatDiscordApiError(response: Response, prefix: string): Promise<string> {
