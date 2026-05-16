@@ -241,6 +241,41 @@
         "team_collaboration",
         "critique_of_ideas"
       ]
+    },
+    {
+      "articleId": "zenn:d3fc1959e1bd4f7d5e0700a6aa239f6224609c95389879e15f21ef0427413027",
+      "summary": "AlgoliaからセルフホストのElasticsearchへ移行し、アイヌ語コーパスの検索機能を実現するまでの技術的な試行錯誤をまとめた記事です。辞書やプラグインを自作せずに標準機能と設定の組み合わせで検索精度を追求する手法が解説されています。",
+      "whyRecommended": "コスト削減を目的とした移行において、検索の品質を落とさずにどのようにクエリを調整していくべきか、現場の実践的な知見が詰まっているため。特にマイナー言語やコーパス検索など、特殊な要件に対するElasticsearchのチューニング事例として非常に参考になります。",
+      "learningPoints": [
+        "Standard analyzerは単語単位の分割が基本だが、N-gram tokenizerを併用することで複合語や派生語の検索に対応できる。",
+        "N-gram利用時に不要なマッチや順序崩れを防ぐには、Match phrase queryを用いてトークンの順序を担保するのが有効である。",
+        "Multi-fieldsを活用し、単語検索とN-gram検索を併用することで、単語検索の精度と柔軟な曖昧検索を両立できる。",
+        "Disjunction max queryを使用することで、複数の検索対象フィールド間でのスコアリングを調整し、関連度の高い結果を適切に上位表示できる。",
+        "日本語の検索精度を調整する際は、kuromoji analyzerのデフォルト設定に含まれる品詞やストップワードのフィルタを適切にカスタマイズする必要がある。"
+      ],
+      "signalsUsed": [
+        "elasticsearch",
+        "performance",
+        "backend",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
+      "summary": "Nix Flakesの依存解決で発生するGitHub APIのレートリミット超過問題を、アクセストークンを用いて緩和する方法を解説しています。コマンドライン引数、設定ファイル、環境変数という複数の設定手法が紹介されています。",
+      "whyRecommended": "Nixユーザーが開発中に直面する典型的なインフラ制限問題を、具体的かつ実践的な解決策でカバーしており、セキュリティを考慮した設定方法まで網羅されているため。",
+      "learningPoints": [
+        "GitHub APIのレートリミットは、未認証だと1時間あたり60リクエストですが、認証済みであれば最低5000リクエストまで緩和されます。",
+        "NIX_CONFIG変数を使用してGitHub CLIのトークンを渡すことで、プロセス一覧にトークンが露出するリスクを抑えてflakeを更新できます。",
+        "~/.config/nix/nix.confにaccess-tokensを設定することで、永続的に認証済み状態でGitHub APIにアクセス可能です。",
+        "NIX_USER_CONF_FILES環境変数を利用すると、複数の設定ファイルを結合して読み込ませることができるため、local.confなどで秘密情報を分離管理できます。",
+        "GitHubトークンは環境変数GITHUB_TOKENでも設定可能であり、GitHub CLIと併用することで状況に応じた柔軟な認証管理が可能です。"
+      ],
+      "signalsUsed": [
+        "nix_flakes",
+        "github_api_tokens",
+        "security_considerations"
+      ]
     }
   ]
 }

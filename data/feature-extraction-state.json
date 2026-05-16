@@ -150,7 +150,8 @@
             "salience": 0.9
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
@@ -281,7 +282,8 @@
             "salience": 0.7
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:d2296916cd5f1d5b935cdba0c724344e55f30da651c9cf652913d85fe1c5c090",
@@ -424,7 +426,8 @@
             "salience": 0.5
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:143f54e2572bfb08ac4f20642ab4589ee93b08e5c213bc3fe0088a2cbccf01c1",
@@ -547,7 +550,8 @@
             "salience": 0.9
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
@@ -664,7 +668,8 @@
             "salience": 0.9
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
@@ -803,7 +808,8 @@
             "salience": 1
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:448c9d262ca3d9022ff61a377ee48a50b799ff3a439950804327f342d4c9dd64",
@@ -934,7 +940,8 @@
             "salience": 0.7
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:2c915f0eb6143cd1b15e5af2495403d722d3bd70eff9a982fefdff9b53f7ca63",
@@ -1065,7 +1072,8 @@
             "salience": 0.8
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:6424a73ba44d1808f823190358018bdcfe263bd4b13ad4349b0a0ba912adc5b3",
@@ -1199,7 +1207,8 @@
             "salience": 0.6
           }
         ]
-      }
+      },
+      "author": null
     },
     {
       "articleId": "zenn:e57fcc7134fdaa159bd1c60becf53e3c72c2f6376ca25050784f7c99bf812e80",
@@ -1314,6 +1323,423 @@
             "salience": 0.9
           }
         ]
+      },
+      "author": null
+    },
+    {
+      "articleId": "zenn:d3fc1959e1bd4f7d5e0700a6aa239f6224609c95389879e15f21ef0427413027",
+      "extractedAt": "2026-05-16T07:24:09.326Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Clear, well-structured technical case study on search implementation."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "backend",
+            "salience": 0.9
+          },
+          {
+            "key": "performance",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.5
+          },
+          {
+            "key": "nextjs",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.9
+            }
+          ],
+          "content_types": [
+            {
+              "key": "production_case_study",
+              "salience": 0.9
+            },
+            {
+              "key": "implementation_guide",
+              "salience": 0.8
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.9
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.8
+            },
+            {
+              "key": "edge_cases",
+              "salience": 0.7
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.9
+            },
+            {
+              "key": "source_links",
+              "salience": 0.6
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.8
+            },
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "elasticsearch",
+            "salience": 1
+          },
+          {
+            "key": "linguistics_search",
+            "salience": 0.8
+          },
+          {
+            "key": "cost_optimization",
+            "salience": 0.7
+          },
+          {
+            "key": "ainu_language",
+            "salience": 0.6
+          }
+        ]
+      },
+      "author": {
+        "username": "neet",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "zenn:6d121c01533538b34dee1bfb14862be05cf1ea7c9972745e0ead115eafc69710",
+      "extractedAt": "2026-05-16T07:24:12.562Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is a clear, step-by-step technical guide for enabling a specific feature."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "ai_engineering",
+            "salience": 0.9
+          },
+          {
+            "key": "llm",
+            "salience": 0.8
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 1
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "edge_cases",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "real_world_experience",
+              "salience": 0.9
+            },
+            {
+              "key": "source_links",
+              "salience": 0.5
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 1
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "unofficial_workaround",
+            "salience": 0.8
+          },
+          {
+            "key": "configuration_management",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "acntechjp",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
+      "extractedAt": "2026-05-16T07:24:15.374Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article clearly explains how to mitigate GitHub API rate limits in Nix, providing concrete configuration examples."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "devops",
+            "salience": 0.9
+          },
+          {
+            "key": "backend",
+            "salience": 0.5
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "performance",
+            "salience": 0.4
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.9
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "edge_cases",
+              "salience": 0.6
+            },
+            {
+              "key": "constraints_explained",
+              "salience": 0.7
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "source_links",
+              "salience": 0.8
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.9
+            },
+            {
+              "key": "operationally_applicable",
+              "salience": 0.9
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "nix_flakes",
+            "salience": 0.9
+          },
+          {
+            "key": "github_api_tokens",
+            "salience": 0.8
+          },
+          {
+            "key": "security_considerations",
+            "salience": 0.6
+          }
+        ]
+      },
+      "author": {
+        "username": "ril",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "zenn:107ab33b47f9f1a480c7e9c70532ace10d74cf2ce4e3721d512d0e6192325354",
+      "extractedAt": "2026-05-16T07:24:22.614Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article explains the process and results of local experimentation with OpenMythos."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "llm",
+            "salience": 0.9
+          },
+          {
+            "key": "ai_engineering",
+            "salience": 0.8
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "backend",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.7
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.6
+            },
+            {
+              "key": "postmortem",
+              "salience": 0.4
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "edge_cases",
+              "salience": 0.5
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.8
+            },
+            {
+              "key": "failure_example",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.5
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.4
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "docker_environment",
+            "salience": 0.6
+          },
+          {
+            "key": "local_llm_fine_tuning",
+            "salience": 0.8
+          },
+          {
+            "key": "memory_limit_error",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "aiforall",
+        "displayName": null,
+        "publicationName": null
       }
     }
   ],
