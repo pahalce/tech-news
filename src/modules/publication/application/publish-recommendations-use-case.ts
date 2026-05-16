@@ -34,6 +34,7 @@ export type PublishRecommendationsInput = {
   existingPublicationRecords?: readonly PublicationRecord[];
   existingRecommendedArticles?: readonly RecommendedArticle[];
   publisher: RecommendationPublisher;
+  onPublishFailure?(failure: { articleId: string; message: string }): void;
 };
 
 export type PublishRecommendationsResult = {
@@ -77,8 +78,12 @@ export async function publishRecommendations(
           }),
         );
       }
-    } catch {
+    } catch (error) {
       failedArticleIds.push(recommendationContent.articleId);
+      input.onPublishFailure?.({
+        articleId: recommendationContent.articleId,
+        message: errorMessage(error),
+      });
     }
   }
 
@@ -87,4 +92,8 @@ export async function publishRecommendations(
     recommendedArticles,
     failedArticleIds,
   };
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }

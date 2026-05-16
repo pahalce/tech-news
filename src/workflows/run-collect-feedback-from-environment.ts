@@ -51,7 +51,7 @@ export async function runCollectFeedbackFromEnvironment(
   env: Record<string, string | undefined>,
 ): Promise<void> {
   const modelConfig = readLlmModelConfig(env);
-  const discordBotToken = requiredEnv(env, "DISCORD_BOT_TOKEN");
+  const discordBotToken = normalizeDiscordBotToken(requiredEnv(env, "DISCORD_BOT_TOKEN"));
   const llmProviderConfig = readLlmProviderConfig(env);
 
   await runCollectFeedbackJob({
@@ -112,7 +112,7 @@ async function fetchDiscordReactionUserIds(input: {
   }
 
   if (!response.ok) {
-    throw new Error(`Discord reaction fetch failed: ${response.status} ${response.statusText}`);
+    throw new Error(await formatDiscordApiError(response, "Discord reaction fetch failed"));
   }
 
   const users = (await response.json()) as Array<{ id?: string; bot?: boolean }>;
@@ -176,10 +176,50 @@ function stringOrNull(value: unknown): string | null {
 }
 
 function requiredEnv(env: Record<string, string | undefined>, key: string): string {
-  const value = env[key];
+  const value = env[key]?.trim();
   if (!value) {
     throw new Error(`${key} is required.`);
   }
 
   return value;
+}
+
+function normalizeDiscordBotToken(value: string): string {
+  return value.replace(/^Bot\s+/iu, "").trim();
+}
+
+async function formatDiscordApiError(response: Response, prefix: string): Promise<string> {
+  const body = await response.text();
+  const details = formatDiscordErrorBody(body);
+  const tokenHint =
+    response.status === 401
+      ? " Check that DISCORD_BOT_TOKEN is a current bot token, not the client secret or application public key."
+      : "";
+
+  return `${prefix}: ${response.status} ${response.statusText}${details}${tokenHint}`;
+}
+
+function formatDiscordErrorBody(body: string): string {
+  if (!body) {
+    return "";
+  }
+
+  try {
+    const parsed = JSON.parse(body) as {
+      code?: unknown;
+      message?: unknown;
+      errors?: unknown;
+    };
+    const parts = [
+      typeof parsed.code === "number" || typeof parsed.code === "string"
+        ? `Discord code: ${parsed.code}`
+        : null,
+      typeof parsed.message === "string" ? `Discord message: ${parsed.message}` : null,
+      parsed.errors ? `Discord errors: ${JSON.stringify(parsed.errors)}` : null,
+    ].filter((part): part is string => part !== null);
+
+    return parts.length > 0 ? `. ${parts.join(". ")}` : `. Discord response: ${body}`;
+  } catch {
+    return `. Discord response: ${body.slice(0, 500)}`;
+  }
 }
