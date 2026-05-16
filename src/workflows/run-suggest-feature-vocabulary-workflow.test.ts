@@ -25,6 +25,7 @@ describe("Suggest Feature Vocabulary Workflow に関するテスト", () => {
                 featureAxes: {},
                 otherSignals: [{ key: "hands_on_migration", salience: 0.7 }],
               },
+              author: null,
             },
             {
               articleId: articleIdB,
@@ -37,6 +38,7 @@ describe("Suggest Feature Vocabulary Workflow に関するテスト", () => {
                 featureAxes: {},
                 otherSignals: [{ key: "hands_on_migration", salience: 0.6 }],
               },
+              author: null,
             },
           ],
           bodyFetchFailures: [],

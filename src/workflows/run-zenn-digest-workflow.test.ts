@@ -81,7 +81,7 @@ describe("Zenn Digest Workflow に関するテスト", () => {
         },
       ],
       now: () => "2026-05-14T00:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "TypeScript の実装手順を説明する本文" }),
+      fetchArticleBody: async () => ({ body: "TypeScript の実装手順を説明する本文", author: null }),
       extractArticleFeatures: async () => ({
         readability: { is_readable: true, reason: null },
         primary_topics: [{ key: "typescript", salience: 0.9 }],
@@ -205,7 +205,7 @@ describe("Zenn Digest Workflow に関するテスト", () => {
         },
       ],
       now: () => "2026-05-14T00:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "body" }),
+      fetchArticleBody: async () => ({ body: "body", author: null }),
       extractArticleFeatures: async () => ({
         readability: { is_readable: false, reason: "not an article" },
         primary_topics: [],

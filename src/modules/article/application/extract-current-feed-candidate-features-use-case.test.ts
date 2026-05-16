@@ -65,6 +65,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       now: () => "2026-05-13T00:00:00.000Z",
       fetchArticleBody: async () => ({
         body: "TypeScript の production 導入事例。コード例と計測結果を含む。",
+        author: null,
       }),
       extractArticleFeatures: async () => ({
         readability: {
@@ -86,6 +87,76 @@ describe("Feature Extraction use case に関するテスト", () => {
 
     // Assert
     expect(actual.state.extractions).toHaveLength(1);
+  });
+
+  it("本文取得時に著者情報があるとき、Feature Extraction に著者を保存する", async () => {
+    // Arrange
+    const featureVocabulary = parseFeatureVocabularyConfig({
+      version: 1,
+      topics: {
+        typescript: {
+          display_name: "TypeScript",
+          aliases: ["typescript"],
+          description_ja: "JavaScript に静的型付けを加えたプログラミング言語",
+        },
+      },
+      feature_axes: {
+        content_types: {
+          description_ja: "記事の形式や構成",
+          features: {
+            implementation_guide: {
+              description_ja: "実装手順や設計判断を具体的に説明する記事",
+            },
+          },
+        },
+      },
+    });
+    const candidate = createCurrentFeedCandidate(
+      { id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" },
+      {
+        title: "Article with-author",
+        url: "https://zenn.dev/neet/articles/with-author",
+        publishedAt: null,
+      },
+    );
+
+    // Act
+    const actual = await extractCurrentFeedCandidateFeatures({
+      candidates: [candidate],
+      featureExtractionState: {
+        version: 1,
+        extractions: [],
+        bodyFetchFailures: [],
+        failedExtractionAttempts: [],
+      },
+      featureVocabulary,
+      now: () => "2026-05-13T00:00:00.000Z",
+      fetchArticleBody: async () => ({
+        body: "本文",
+        author: {
+          username: "neet",
+          displayName: "Ryō Igarashi",
+          publicationName: "Gemcook Tech Blog",
+        },
+      }),
+      extractArticleFeatures: async () => ({
+        readability: {
+          is_readable: true,
+          reason: null,
+        },
+        primary_topics: [],
+        mentioned_topics: [],
+        feature_axes: {},
+        other_signals: [],
+      }),
+    });
+
+    // Assert
+    expect(actual.state.extractions[0]?.author).toEqual({
+      username: "neet",
+      displayName: "Ryō Igarashi",
+      publicationName: "Gemcook Tech Blog",
+    });
   });
 
   it("Readable Article を抽出したとき、Body Fetch Failure は保存されない", async () => {
@@ -130,7 +201,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       },
       featureVocabulary,
       now: () => "2026-05-13T00:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "本文" }),
+      fetchArticleBody: async () => ({ body: "本文", author: null }),
       extractArticleFeatures: async () => ({
         readability: {
           is_readable: true,
@@ -189,7 +260,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       },
       featureVocabulary,
       now: () => "2026-05-13T00:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "本文" }),
+      fetchArticleBody: async () => ({ body: "本文", author: null }),
       extractArticleFeatures: async () => ({
         readability: {
           is_readable: true,
@@ -248,7 +319,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       },
       featureVocabulary,
       now: () => "2026-05-13T00:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "本文が短い" }),
+      fetchArticleBody: async () => ({ body: "本文が短い", author: null }),
       extractArticleFeatures: async () => ({
         readability: {
           is_readable: false,
@@ -311,6 +382,7 @@ describe("Feature Extraction use case に関するテスト", () => {
               reason: "本文が短すぎて Article Features を信頼できない",
             },
             articleFeatures: null,
+            author: null,
           },
         ],
         bodyFetchFailures: [],
@@ -320,7 +392,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       now: () => "2026-05-13T00:00:00.000Z",
       fetchArticleBody: async () => {
         fetchCount += 1;
-        return { body: "再取得されない本文" };
+        return { body: "再取得されない本文", author: null };
       },
       extractArticleFeatures: async () => {
         throw new Error("should not extract unreadable article again");
@@ -383,6 +455,7 @@ describe("Feature Extraction use case に関するテスト", () => {
               featureAxes: {},
               otherSignals: [],
             },
+            author: null,
           },
         ],
         bodyFetchFailures: [],
@@ -392,7 +465,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       now: () => "2026-05-13T00:00:00.000Z",
       fetchArticleBody: async () => {
         fetchCount += 1;
-        return { body: "再取得されない本文" };
+        return { body: "再取得されない本文", author: null };
       },
       extractArticleFeatures: async () => {
         throw new Error("should not extract existing article again");
@@ -559,7 +632,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       },
       featureVocabulary,
       now: () => "2026-05-13T02:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "本文は取得できた" }),
+      fetchArticleBody: async () => ({ body: "本文は取得できた", author: null }),
       extractArticleFeatures: async () => {
         throw new Error("LLM unavailable");
       },
@@ -623,7 +696,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       },
       featureVocabulary,
       now: () => "2026-05-13T03:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "再試行する本文" }),
+      fetchArticleBody: async () => ({ body: "再試行する本文", author: null }),
       extractArticleFeatures: async () => ({
         readability: {
           is_readable: true,
@@ -708,6 +781,7 @@ describe("Feature Extraction use case に関するテスト", () => {
               featureAxes: {},
               otherSignals: [],
             },
+            author: null,
           },
         ],
         bodyFetchFailures: [],
@@ -715,7 +789,7 @@ describe("Feature Extraction use case に関するテスト", () => {
       },
       featureVocabulary,
       now: () => "2026-05-13T03:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "本文" }),
+      fetchArticleBody: async () => ({ body: "本文", author: null }),
       extractArticleFeatures: async ({ progress }) => {
         progressValues.push(progress);
         return {

@@ -1,5 +1,7 @@
 import * as v from "valibot";
 
+import { ArticleAuthorSchema, type ArticleAuthor } from "./article-author";
+
 const SalienceSchema = v.pipe(
   v.number(),
   v.finite(),
@@ -62,6 +64,7 @@ const FeatureExtractionSchema = v.pipe(
     extractedAt: DateStringSchema,
     readability: ReadabilitySchema,
     articleFeatures: v.nullable(ArticleFeaturesSchema),
+    author: v.optional(v.nullable(ArticleAuthorSchema), null),
   }),
   v.check(
     (extraction) => extraction.readability.isReadable === (extraction.articleFeatures !== null),
@@ -125,6 +128,7 @@ export type FeatureExtraction = {
     reason: string | null;
   };
   articleFeatures: ArticleFeatures | null;
+  author: ArticleAuthor | null;
 };
 
 export type ArticleFeatures = {
@@ -176,10 +180,12 @@ export function createFeatureExtraction(
     articleId: string;
     extractedAt: string;
     llmOutput: unknown;
+    author?: ArticleAuthor | null;
   },
   featureVocabulary: FeatureExtractionVocabulary,
 ): FeatureExtraction {
   const envelope = v.parse(LlmFeatureExtractionEnvelopeSchema, input.llmOutput);
+  const author = input.author ?? null;
 
   if (!envelope.readability.is_readable) {
     return v.parse(FeatureExtractionSchema, {
@@ -190,6 +196,7 @@ export function createFeatureExtraction(
         reason: envelope.readability.reason,
       },
       articleFeatures: null,
+      author,
     });
   }
 
@@ -215,6 +222,7 @@ export function createFeatureExtraction(
       featureAxes,
       otherSignals: llmOutput.other_signals,
     },
+    author,
   });
 }
 

@@ -1,3 +1,4 @@
+import { type ArticleAuthor } from "../../article/application/article-author";
 import {
   createPublicationRecord,
   createRecommendedArticle,
@@ -13,6 +14,7 @@ type RecommendationContent = {
   whyRecommended: string;
   learningPoints: readonly string[];
   signalsUsed: readonly string[];
+  author?: ArticleAuthor | null;
 };
 
 export type PublishRecommendationMessageInput = {

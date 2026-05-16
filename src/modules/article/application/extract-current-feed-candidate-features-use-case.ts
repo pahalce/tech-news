@@ -1,3 +1,4 @@
+import { type ArticleAuthor } from "./article-author";
 import { type FeatureVocabularyConfig } from "../../feature/application/feature-vocabulary-config";
 import { type CurrentFeedCandidate } from "../domain/current-feed-candidate";
 import {
@@ -13,7 +14,9 @@ export type ExtractCurrentFeedCandidateFeaturesInput = {
   featureExtractionState: FeatureExtractionState;
   featureVocabulary: FeatureVocabularyConfig;
   now(): string;
-  fetchArticleBody(candidate: CurrentFeedCandidate): Promise<{ body: string }>;
+  fetchArticleBody(
+    candidate: CurrentFeedCandidate,
+  ): Promise<{ body: string; author: ArticleAuthor | null }>;
   extractArticleFeatures(input: {
     candidate: CurrentFeedCandidate;
     body: string;
@@ -51,9 +54,9 @@ export async function extractCurrentFeedCandidateFeatures(
       index: index + 1,
       total: targetCandidates.length,
     };
-    let body: { body: string };
+    let fetchedArticle: { body: string; author: ArticleAuthor | null };
     try {
-      body = await input.fetchArticleBody(candidate);
+      fetchedArticle = await input.fetchArticleBody(candidate);
     } catch (error) {
       state.bodyFetchFailures.push(
         createBodyFetchFailure({
@@ -69,7 +72,7 @@ export async function extractCurrentFeedCandidateFeatures(
     try {
       llmOutput = await input.extractArticleFeatures({
         candidate,
-        body: body.body,
+        body: fetchedArticle.body,
         progress,
         featureVocabulary: input.featureVocabulary,
       });
@@ -80,6 +83,7 @@ export async function extractCurrentFeedCandidateFeatures(
             articleId: candidate.articleId,
             extractedAt: input.now(),
             llmOutput,
+            author: fetchedArticle.author,
           },
           input.featureVocabulary,
         ),

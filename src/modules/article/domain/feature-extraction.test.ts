@@ -46,6 +46,48 @@ describe("Feature Extraction domain model に関するテスト", () => {
     expect(actual.articleFeatures?.primaryTopics).toEqual([{ key: "typescript", salience: 0.9 }]);
   });
 
+  it("著者情報が渡されたとき、Feature Extraction に保存される", () => {
+    // Arrange
+    const identity = createArticleIdentity("zenn", "https://zenn.dev/neet/articles/sample-article");
+    const featureVocabulary = {
+      feature_axes: {},
+      normalizeTopic(topic: string) {
+        return { kind: "unknown_topic" as const, normalizedTopic: topic.toLowerCase() };
+      },
+    };
+
+    // Act
+    const actual = createFeatureExtraction(
+      {
+        articleId: identity.articleId,
+        extractedAt: "2026-05-13T00:00:00.000Z",
+        author: {
+          username: "neet",
+          displayName: "Ryō Igarashi",
+          publicationName: null,
+        },
+        llmOutput: {
+          readability: {
+            is_readable: true,
+            reason: null,
+          },
+          primary_topics: [],
+          mentioned_topics: [],
+          feature_axes: {},
+          other_signals: [],
+        },
+      },
+      featureVocabulary,
+    );
+
+    // Assert
+    expect(actual.author).toEqual({
+      username: "neet",
+      displayName: "Ryō Igarashi",
+      publicationName: null,
+    });
+  });
+
   it("同じ Primary Topic の alias が複数抽出されたとき、最大 salience で保存される", () => {
     // Arrange
     const identity = createArticleIdentity(

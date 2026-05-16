@@ -171,6 +171,10 @@ function createFeatureExtraction(
   return {
     articleId,
     extractedAt: articleFeatures.extractedAt ?? "2026-05-16T00:00:00.000Z",
+    readability: {
+      isReadable: true,
+      reason: null,
+    },
     articleFeatures: {
       primaryTopics: [],
       mentionedTopics: [],
@@ -178,5 +182,6 @@ function createFeatureExtraction(
       featureAxes: {},
       otherSignals: articleFeatures.otherSignals ?? [],
     },
+    author: null,
   };
 }

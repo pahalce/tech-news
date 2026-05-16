@@ -188,6 +188,12 @@ export async function runZennDigestWorkflow(
   const selectedCandidatesByArticleId = new Map(
     reranked.selectedCandidates.map((candidate) => [candidate.articleId, candidate]),
   );
+  const featureExtractionsByArticleId = new Map(
+    extracted.state.extractions.map((featureExtraction) => [
+      featureExtraction.articleId,
+      featureExtraction,
+    ]),
+  );
   const published = await publishRecommendations({
     recommendationContents: contents.recommendationContents.map((content) => {
       const candidate = selectedCandidatesByArticleId.get(content.articleId);
@@ -199,6 +205,7 @@ export async function runZennDigestWorkflow(
         ...content,
         canonicalUrl: candidate.canonicalUrl,
         title: candidate.title,
+        author: featureExtractionsByArticleId.get(content.articleId)?.author ?? null,
       };
     }),
     existingPublicationRecords: input.agentState.publicationState.publicationRecords,

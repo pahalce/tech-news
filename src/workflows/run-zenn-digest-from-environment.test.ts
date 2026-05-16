@@ -82,4 +82,34 @@ describe("formatDiscordMessage に関するテスト", () => {
     // Assert
     expect(actual).toContain("_Signals:_ comparison_evaluation, configuration_best_practices");
   });
+
+  it("末尾にプレビュー用の素の URL を載せる", () => {
+    // Arrange
+    const content = createDiscordRecommendationContent();
+
+    // Act
+    const actual = formatDiscordMessage(content);
+
+    // Assert
+    expect(actual.endsWith("https://zenn.dev/example/articles/sample")).toBe(true);
+  });
+
+  it("著者情報があるとき、URL の直前に控えめな著者行を載せる", () => {
+    // Arrange
+    const content = createDiscordRecommendationContent({
+      canonicalUrl: "https://zenn.dev/neet/articles/031d5499e68685",
+      author: {
+        username: "neet",
+        displayName: "Ryō Igarashi",
+        publicationName: "Gemcook Tech Blog",
+      },
+    });
+
+    // Act
+    const actual = formatDiscordMessage(content);
+
+    // Assert
+    expect(actual).toContain("_著者:_ Ryō Igarashi · Gemcook Tech Blog (@neet)\n");
+    expect(actual.endsWith("https://zenn.dev/neet/articles/031d5499e68685")).toBe(true);
+  });
 });

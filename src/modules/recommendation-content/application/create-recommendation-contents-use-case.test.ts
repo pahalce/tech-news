@@ -47,6 +47,7 @@ describe("Recommendation Content 作成 use case に関するテスト", () => {
         reason: null,
       },
       articleFeatures: selectedCandidates[0]?.articleFeatures ?? null,
+      author: null,
     };
     const recommendationContentCreator = {
       create: async () => ({

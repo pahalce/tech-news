@@ -2,6 +2,11 @@ import { jsonSchema, type JSONSchema7 } from "ai";
 import * as v from "valibot";
 
 import { defaultZennArticleFeeds } from "../modules/article/infrastructure/zenn-article-feeds";
+import {
+  formatArticleAuthorLine,
+  type ArticleAuthor,
+} from "../modules/article/application/article-author";
+import { resolveZennArticleAuthor } from "../modules/article/infrastructure/zenn-article-author";
 import { readZennRssFeed } from "../modules/article/infrastructure/zenn-rss-feed-reader";
 import {
   loadAgentState,
@@ -25,6 +30,7 @@ export type DiscordRecommendationContent = {
   whyRecommended: string;
   learningPoints: readonly string[];
   signalsUsed: readonly string[];
+  author?: ArticleAuthor | null;
 };
 
 const recommendationContentBodyMaxLength = 20_000;
@@ -158,16 +164,19 @@ export async function runZennDigestFromEnvironment(
         articleId: candidate.articleId,
         url: candidate.canonicalUrl,
       });
-      const body = await fetchReadableText({
+      const html = await fetchArticleHtml({
         url: candidate.canonicalUrl,
         timeoutMs: httpRequestTimeoutMs,
       });
+      const author = resolveZennArticleAuthor(candidate.canonicalUrl, html);
+      const body = htmlToReadableText(html);
       logger.info("article body fetch finished", {
         articleId: candidate.articleId,
         elapsedMs: elapsedMs(startedAt),
         bodyLength: body.length,
+        authorUsername: author?.username ?? null,
       });
-      return { body };
+      return { body, author };
     },
     extractArticleFeatures: async ({ candidate, body, progress, featureVocabulary }) => {
       const startedAt = performance.now();
@@ -260,14 +269,16 @@ export async function runZennDigestFromEnvironment(
           url: candidate.canonicalUrl,
         });
         const bodyFetchStartedAt = performance.now();
-        const articleBody = await fetchReadableText({
+        const articleHtml = await fetchArticleHtml({
           url: candidate.canonicalUrl,
           timeoutMs: httpRequestTimeoutMs,
         });
+        const articleBody = htmlToReadableText(articleHtml);
         logger.info("recommendation content body fetch finished", {
           articleId: candidate.articleId,
           elapsedMs: elapsedMs(bodyFetchStartedAt),
           bodyLength: articleBody.length,
+          authorUsername: featureExtraction?.author?.username ?? null,
         });
         logger.info("recommendation content LLM request started", {
           articleId: candidate.articleId,
@@ -315,7 +326,10 @@ export async function runZennDigestFromEnvironment(
         const startedAt = performance.now();
         logger.info("Discord publish started", { articleId: recommendationContent.articleId });
         const result = await publishDiscordRecommendation({
-          recommendationContent,
+          recommendationContent: {
+            ...recommendationContent,
+            author: recommendationContent.author ?? null,
+          },
           botToken: discordBotToken,
           channelId: discordChannelId,
           timeoutMs: httpRequestTimeoutMs,
@@ -346,12 +360,15 @@ function normalizeDiscordBotToken(value: string): string {
   return value.replace(/^Bot\s+/iu, "").trim();
 }
 
-async function fetchReadableText(input: { url: string; timeoutMs: number }): Promise<string> {
-  const html = await fetchTextWithTimeout({
+async function fetchArticleHtml(input: { url: string; timeoutMs: number }): Promise<string> {
+  return fetchTextWithTimeout({
     url: input.url,
     timeoutMs: input.timeoutMs,
     failurePrefix: "Failed to fetch article body",
   });
+}
+
+function htmlToReadableText(html: string): string {
   return html
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/giu, " ")
     .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/giu, " ")
@@ -404,6 +421,12 @@ async function publishDiscordRecommendation(input: {
 }
 
 export function formatDiscordMessage(content: DiscordRecommendationContent): string {
+  const footerLines: string[] = [];
+  if (content.author) {
+    footerLines.push(formatArticleAuthorLine(content.author));
+  }
+  footerLines.push(content.canonicalUrl);
+
   return [
     `**[${content.title}](${content.canonicalUrl})**`,
     "",
@@ -421,6 +444,8 @@ export function formatDiscordMessage(content: DiscordRecommendationContent): str
     "**フィードバック**",
     "• 👍 気に入った記事なら押してください。今後、類似する記事を推薦しやすくなります。",
     "• 👎 合わなかった記事なら押してください。今後、似た記事を控えます。",
+    "",
+    ...footerLines,
   ].join("\n");
 }
 
