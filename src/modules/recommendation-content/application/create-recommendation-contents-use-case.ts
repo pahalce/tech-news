@@ -1,3 +1,4 @@
+import { type ArticleAuthor } from "../../article/application/article-author";
 import {
   parseRecommendationContent,
   type RecommendationContent,
@@ -35,6 +36,7 @@ type FeatureExtraction = {
     reason: string | null;
   };
   articleFeatures: ArticleFeatures | null;
+  author: ArticleAuthor | null;
 };
 
 export type RecommendationContentCreatorInput = {

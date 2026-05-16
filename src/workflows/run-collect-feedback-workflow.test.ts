@@ -24,6 +24,7 @@ describe("Collect Feedback Workflow に関するテスト", () => {
                 featureAxes: {},
                 otherSignals: [],
               },
+              author: null,
             },
           ],
           bodyFetchFailures: [],

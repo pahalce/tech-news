@@ -84,7 +84,7 @@ describe("Zenn Digest Job に関するテスト", () => {
         },
       ],
       now: () => "2026-05-14T00:00:00.000Z",
-      fetchArticleBody: async () => ({ body: "body" }),
+      fetchArticleBody: async () => ({ body: "body", author: null }),
       extractArticleFeatures: async () => ({
         readability: { is_readable: true, reason: null },
         primary_topics: [{ key: "typescript", salience: 1 }],
