@@ -51,7 +51,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       expect(actual.preferenceSummaryHistory.version).toBe(1);
     });
 
-    it("既定データを読み込んだとき、recent_summary.confidence が insufficient_feedback となる", async () => {
+    it("既定データを読み込んだとき、recent_summary.confidence が low となる", async () => {
       // Arrange
       const repositoryRoot = undefined;
 
@@ -59,9 +59,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const actual = await loadAgentState(repositoryRoot);
 
       // Assert
-      expect(actual.preferenceSummaryHistory.recent_summary.confidence).toBe(
-        "insufficient_feedback",
-      );
+      expect(actual.preferenceSummaryHistory.recent_summary.confidence).toBe("low");
     });
 
     it("既定データを読み込んだとき、Recommendation Content State の version が 1 となる", async () => {
@@ -207,6 +205,33 @@ describe("Agent State 読み込みに関するテスト", () => {
       await expect(actual).rejects.toThrow(
         "Preference Profile seed feature_weights.topics.typescript must be between -1 and 1",
       );
+    });
+
+    it("更新済み Preference Profile の重みが seed range を超えても weight range 内なら読み込める", async () => {
+      // Arrange
+      const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
+      await writeAgentState(repositoryRoot, {
+        version: 1,
+        weight_range: { min: -3, max: 3 },
+        seed_weight_range: { min: -1, max: 1 },
+        feature_weights: {
+          topics: {
+            typescript: 1.2,
+          },
+          feature_axes: {
+            depth_signals: {
+              thin_content: -0.9,
+            },
+          },
+        },
+        updated_at: "2026-05-16T05:16:04.404Z",
+      });
+
+      // Act
+      const actual = await loadAgentState(repositoryRoot);
+
+      // Assert
+      expect(actual.preferenceProfile.feature_weights.topics.typescript).toBe(1.2);
     });
 
     it("Preference Profile に Feature Vocabulary 未定義の Feature Axis があるとき、整合性エラーとなる", async () => {

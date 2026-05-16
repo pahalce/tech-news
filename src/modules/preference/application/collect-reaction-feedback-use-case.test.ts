@@ -108,6 +108,29 @@ describe("Reaction Feedback 収集 use case に関するテスト", () => {
     expect(actual.preferenceProfile.feature_weights.topics.typescript).toBe(0.5);
   });
 
+  it("Reaction Feedback を処理したとき、Preference Profile の更新日時が記録される", async () => {
+    // Arrange
+    const publicationRecords = [createPublicationRecord("2026-05-08T00:00:00.000Z", articleIdA)];
+
+    // Act
+    const actual = await collectReactionFeedback({
+      publicationRecords,
+      featureExtractions: [createFeatureExtraction(articleIdA, 0.5)],
+      preferenceProfile: createPreferenceProfile(),
+      preferenceSummaryHistory: createPreferenceSummaryHistory(),
+      collectedAt: "2026-05-09T00:00:00.000Z",
+      reactionFeedbackReader: {
+        read: async () => ({ positiveUserIds: ["owner"], negativeUserIds: [] }),
+      },
+      preferenceSummaryUpdater: {
+        update: async ({ previousSummaryHistory }) => previousSummaryHistory,
+      },
+    });
+
+    // Assert
+    expect(actual.preferenceProfile.updated_at).toBe("2026-05-09T00:00:00.000Z");
+  });
+
   it("処理済みの Reaction Feedback があるとき、Preference Profile が再更新されない", async () => {
     // Arrange
     const publicationRecords = [createPublicationRecord("2026-05-08T00:00:00.000Z", articleIdA)];

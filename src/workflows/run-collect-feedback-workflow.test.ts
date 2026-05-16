@@ -86,10 +86,12 @@ describe("Collect Feedback Workflow に関するテスト", () => {
     // Assert
     expect({
       topicWeight: actual.agentState.preferenceProfile.feature_weights.topics.typescript,
+      updatedAt: actual.agentState.preferenceProfile.updated_at,
       processedAt:
         actual.agentState.publicationState.publicationRecords[0]?.reactionFeedback[0]?.processedAt,
     }).toEqual({
       topicWeight: 0.8,
+      updatedAt: "2026-05-15T00:00:00.000Z",
       processedAt: "2026-05-15T00:00:00.000Z",
     });
   });

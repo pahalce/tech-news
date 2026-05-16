@@ -127,8 +127,16 @@ export async function collectReactionFeedback(
     publicationRecords.push(nextRecord);
   }
 
+  const nextPreferenceProfile =
+    processedFeedbackCount > 0
+      ? {
+          ...preferenceProfile,
+          updated_at: input.collectedAt,
+        }
+      : preferenceProfile;
+
   const preferenceSummaryHistory = await input.preferenceSummaryUpdater.update({
-    preferenceProfile,
+    preferenceProfile: nextPreferenceProfile,
     previousSummaryHistory: input.preferenceSummaryHistory,
     processedFeedbackCount,
     collectedAt: input.collectedAt,
@@ -136,7 +144,7 @@ export async function collectReactionFeedback(
 
   return {
     publicationRecords,
-    preferenceProfile,
+    preferenceProfile: nextPreferenceProfile,
     preferenceSummaryHistory,
   };
 }
