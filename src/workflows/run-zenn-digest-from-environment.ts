@@ -95,7 +95,7 @@ const RecommendationContentOutputSchema = jsonSchema<
   },
 );
 
-const maxFeedEntriesPerRun = 5;
+const maxFeedEntriesPerFeed = 2;
 
 export async function validateZennDigestDryRun(): Promise<void> {
   await loadAgentState();
@@ -111,7 +111,6 @@ export async function runZennDigestFromEnvironment(
   const httpRequestTimeoutMs = readPositiveIntegerEnv(env, "HTTP_REQUEST_TIMEOUT_MS") ?? 20_000;
   const discordBotToken = normalizeDiscordBotToken(requiredEnv(env, "DISCORD_BOT_TOKEN"));
   const discordChannelId = requiredEnv(env, "DISCORD_CHANNEL_ID");
-  let remainingFeedEntryBudget = maxFeedEntriesPerRun;
 
   logger.info("runtime config loaded", {
     llmProvider: llmProviderConfig.provider,
@@ -119,7 +118,7 @@ export async function runZennDigestFromEnvironment(
     rerankModel: modelConfig.rerankModel,
     recommendationContentModel: modelConfig.recommendationContentModel,
     httpRequestTimeoutMs,
-    maxFeedEntriesPerRun,
+    maxFeedEntriesPerFeed,
     llmRequestTimeoutMs: llmProviderConfig.timeoutMs ?? 90_000,
   });
 
@@ -138,14 +137,13 @@ export async function runZennDigestFromEnvironment(
           failurePrefix: "RSS feed fetch failed",
         }),
       );
-      const selectedEntries = entries.slice(0, remainingFeedEntryBudget);
-      remainingFeedEntryBudget -= selectedEntries.length;
+      const selectedEntries = entries.slice(0, maxFeedEntriesPerFeed);
       logger.info("RSS feed fetch finished", {
         feedId: feed.id,
         elapsedMs: elapsedMs(startedAt),
         entryCount: entries.length,
         selectedEntryCount: selectedEntries.length,
-        remainingFeedEntryBudget,
+        maxFeedEntriesPerFeed,
       });
       return selectedEntries;
     },
