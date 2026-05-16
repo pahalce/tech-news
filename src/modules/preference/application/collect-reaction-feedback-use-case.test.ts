@@ -3,9 +3,9 @@ import { describe, expect, it } from "vite-plus/test";
 import { collectReactionFeedback } from "./collect-reaction-feedback-use-case";
 
 describe("Reaction Feedback 収集 use case に関するテスト", () => {
-  it("Publication Record が7日より古いとき、Reaction Feedback を読まない", async () => {
+  it("Publication Record が3日より古いとき、Reaction Feedback を読まない", async () => {
     // Arrange
-    const publicationRecords = [createPublicationRecord("2026-05-01T00:00:00.000Z", articleIdA)];
+    const publicationRecords = [createPublicationRecord("2026-05-05T23:59:59.999Z", articleIdA)];
     let readCount = 0;
 
     // Act
@@ -14,7 +14,7 @@ describe("Reaction Feedback 収集 use case に関するテスト", () => {
       featureExtractions: [],
       preferenceProfile: createPreferenceProfile(),
       preferenceSummaryHistory: createPreferenceSummaryHistory(),
-      collectedAt: "2026-05-09T00:00:01.000Z",
+      collectedAt: "2026-05-09T00:00:00.000Z",
       reactionFeedbackReader: {
         read: async () => {
           readCount += 1;
@@ -28,6 +28,33 @@ describe("Reaction Feedback 収集 use case に関するテスト", () => {
 
     // Assert
     expect(readCount).toBe(0);
+  });
+
+  it("Publication Record が3日以内のとき、Reaction Feedback を読む", async () => {
+    // Arrange
+    const publicationRecords = [createPublicationRecord("2026-05-06T00:00:00.000Z", articleIdA)];
+    let readCount = 0;
+
+    // Act
+    await collectReactionFeedback({
+      publicationRecords,
+      featureExtractions: [],
+      preferenceProfile: createPreferenceProfile(),
+      preferenceSummaryHistory: createPreferenceSummaryHistory(),
+      collectedAt: "2026-05-09T00:00:00.000Z",
+      reactionFeedbackReader: {
+        read: async () => {
+          readCount += 1;
+          return { positiveUserIds: [], negativeUserIds: [] };
+        },
+      },
+      preferenceSummaryUpdater: {
+        update: async ({ previousSummaryHistory }) => previousSummaryHistory,
+      },
+    });
+
+    // Assert
+    expect(readCount).toBe(1);
   });
 
   it("正負両方の Reaction Feedback があるとき、ignoredReason が記録される", async () => {

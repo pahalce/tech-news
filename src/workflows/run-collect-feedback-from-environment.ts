@@ -75,20 +75,23 @@ export async function runCollectFeedbackFromEnvironment(
 
 function createDiscordReactionFeedbackReader(botToken: string): ReactionFeedbackReader {
   return {
-    read: async (record) => ({
-      positiveUserIds: await fetchDiscordReactionUserIds({
+    read: async (record) => {
+      const positiveUserIds = await fetchDiscordReactionUserIds({
         botToken,
         channelId: record.channelId,
         messageId: record.messageId,
         emoji: "👍",
-      }),
-      negativeUserIds: await fetchDiscordReactionUserIds({
+      });
+      await sleep(250);
+      const negativeUserIds = await fetchDiscordReactionUserIds({
         botToken,
         channelId: record.channelId,
         messageId: record.messageId,
         emoji: "👎",
-      }),
-    }),
+      });
+
+      return { positiveUserIds, negativeUserIds };
+    },
   };
 }
 
@@ -98,25 +101,35 @@ async function fetchDiscordReactionUserIds(input: {
   messageId: string;
   emoji: string;
 }): Promise<string[]> {
-  const response = await fetch(
-    `https://discord.com/api/v10/channels/${input.channelId}/messages/${input.messageId}/reactions/${encodeURIComponent(input.emoji)}?limit=100`,
-    {
-      headers: {
-        Authorization: `Bot ${input.botToken}`,
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const response = await fetch(
+      `https://discord.com/api/v10/channels/${input.channelId}/messages/${input.messageId}/reactions/${encodeURIComponent(input.emoji)}?limit=100`,
+      {
+        headers: {
+          Authorization: `Bot ${input.botToken}`,
+        },
       },
-    },
-  );
+    );
 
-  if (response.status === 404) {
-    return [];
+    if (response.status === 404) {
+      return [];
+    }
+
+    if (response.status === 429 && attempt < maxAttempts) {
+      await sleep(readDiscordRetryAfterMs(response, await response.text()));
+      continue;
+    }
+
+    if (!response.ok) {
+      throw new Error(await formatDiscordApiError(response, "Discord reaction fetch failed"));
+    }
+
+    const users = (await response.json()) as Array<{ id?: string; bot?: boolean }>;
+    return users.filter((user) => user.id && user.bot !== true).map((user) => user.id as string);
   }
 
-  if (!response.ok) {
-    throw new Error(await formatDiscordApiError(response, "Discord reaction fetch failed"));
-  }
-
-  const users = (await response.json()) as Array<{ id?: string; bot?: boolean }>;
-  return users.filter((user) => user.id && user.bot !== true).map((user) => user.id as string);
+  throw new Error("Discord reaction fetch failed after retry attempts.");
 }
 
 async function updatePreferenceSummary(input: {
@@ -186,6 +199,29 @@ function requiredEnv(env: Record<string, string | undefined>, key: string): stri
 
 function normalizeDiscordBotToken(value: string): string {
   return value.replace(/^Bot\s+/iu, "").trim();
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function readDiscordRetryAfterMs(response: Response, body: string): number {
+  const retryAfterHeader = response.headers.get("retry-after");
+  const retryAfterFromHeader = retryAfterHeader ? Number(retryAfterHeader) * 1000 : null;
+  if (retryAfterFromHeader && Number.isFinite(retryAfterFromHeader)) {
+    return Math.ceil(retryAfterFromHeader) + 250;
+  }
+
+  try {
+    const parsed = JSON.parse(body) as { retry_after?: unknown };
+    if (typeof parsed.retry_after === "number" && Number.isFinite(parsed.retry_after)) {
+      return Math.ceil(parsed.retry_after * 1000) + 250;
+    }
+  } catch {
+    // Fall through to a conservative short wait.
+  }
+
+  return 1500;
 }
 
 async function formatDiscordApiError(response: Response, prefix: string): Promise<string> {
