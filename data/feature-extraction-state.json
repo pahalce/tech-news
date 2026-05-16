@@ -1318,5 +1318,26 @@
     }
   ],
   "bodyFetchFailures": [],
-  "failedExtractionAttempts": []
+  "failedExtractionAttempts": [
+    {
+      "articleId": "zenn:d3fc1959e1bd4f7d5e0700a6aa239f6224609c95389879e15f21ef0427413027",
+      "attemptedAt": "2026-05-16T05:39:42.240Z",
+      "message": "Not Found"
+    },
+    {
+      "articleId": "zenn:6d121c01533538b34dee1bfb14862be05cf1ea7c9972745e0ead115eafc69710",
+      "attemptedAt": "2026-05-16T05:39:42.600Z",
+      "message": "Not Found"
+    },
+    {
+      "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
+      "attemptedAt": "2026-05-16T05:39:42.972Z",
+      "message": "Not Found"
+    },
+    {
+      "articleId": "zenn:107ab33b47f9f1a480c7e9c70532ace10d74cf2ce4e3721d512d0e6192325354",
+      "attemptedAt": "2026-05-16T05:39:43.411Z",
+      "message": "Not Found"
+    }
+  ]
 }
