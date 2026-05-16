@@ -150,6 +150,62 @@
         "developer_productivity",
         "tool_configuration"
       ]
+    },
+    {
+      "articleId": "zenn:6424a73ba44d1808f823190358018bdcfe263bd4b13ad4349b0a0ba912adc5b3",
+      "summary": "グロービスがClaude Codeの1000セッションを分析し、開発者生産性を向上させ、リードタイムを1週間で10%短縮した事例を紹介。そのアプローチ、実装、そして測定された結果について解説。",
+      "whyRecommended": "AI/LLM（Claude Code）を開発ワークフローに統合し、具体的なパフォーマンス向上を達成した実用的な事例。データに基づいた洞察と明確な方法論が提供されており、AIエンジニアリングやDevOpsに関心のある中級・上級エンジニアにとって価値が高い。",
+      "learningPoints": [
+        "LLMを用いた開発者生産性向上の具体例",
+        "ツール導入後の効果測定と改善サイクル",
+        "データに基づくLLMワークフロー最適化手法"
+      ],
+      "signalsUsed": [
+        "データ駆動型改善",
+        "開発者生産性向上",
+        "LLM活用事例",
+        "実測に基づく成果"
+      ]
+    },
+    {
+      "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
+      "summary": "一人暮らしのネットワーク環境をOpenWrtとv6プラスで最適化する理論を解説。IPv6、IPoE、MAP-Eなどの基礎から、なぜOpenWrtを使うべきかを深く掘り下げます。",
+      "whyRecommended": "v6プラスの仕組みとOpenWrt導入の理論的背景が非常に詳細に解説されており、自宅ネットワークを高度にコントロールしたいエンジニアや上級者にとって必読の内容です。シリーズ記事の第一弾としても期待が高まります。",
+      "learningPoints": [
+        "IPv6、IPoE、MAP-Eの技術的な仕組みと基礎",
+        "v6プラス環境でOpenWrtを導入するメリットと理由",
+        "自宅ネットワーク構築における理論的知識の重要性",
+        "高性能ルーターとカスタマイズの可能性"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "architecture_explanation",
+        "part_of_series",
+        "personal_experience",
+        "network_configuration",
+        "actionable_steps",
+        "code_examples",
+        "source_links"
+      ]
+    },
+    {
+      "articleId": "zenn:448c9d262ca3d9022ff61a377ee48a50b799ff3a439950804327f342d4c9dd64",
+      "summary": "Terraformの複数人開発におけるdev環境での`terraform apply`競合問題を、ロックや強制上書きなしで安全に回す方法を解説。GitHub Actionsとブランチ戦略を用いた効率的な運用フローを提案しています。",
+      "whyRecommended": "Terraformの複数人開発で直面しがちな`terraform apply`の競合問題を、具体的な解決策と共に示しています。環境を壊さずに安全に開発を進めるための実践的なアプローチが学べ、GitHub Actionsを活用したCI/CDワークフローの参考になります。",
+      "learningPoints": [
+        "Terraformのdev環境における`terraform apply`競合の課題とその背景。",
+        "GitHub Actionsを用いたTerraformの安全なデプロイフローの実装方法。",
+        "Gitブランチ戦略とTerraformの状態管理の連携。",
+        "`terraform plan`と`terraform apply`の分離によるリスク軽減。"
+      ],
+      "signalsUsed": [
+        "github_actions_workflow",
+        "branching_strategy",
+        "iac_workflow",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "implementation_guide"
+      ]
     }
   ]
 }
