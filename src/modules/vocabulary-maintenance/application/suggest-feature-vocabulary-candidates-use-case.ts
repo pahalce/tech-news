@@ -47,7 +47,10 @@ export type VocabularyCandidateDescriber = {
 };
 
 export type VocabularySuggestionNotifier = {
-  notify(input: { candidates: readonly VocabularyPromotionCandidate[] }): Promise<void>;
+  notify(input: {
+    candidates: readonly VocabularyPromotionCandidate[];
+    suggestedAt: string;
+  }): Promise<void>;
 };
 
 export type SuggestFeatureVocabularyCandidatesInput = {
@@ -82,7 +85,7 @@ export async function suggestFeatureVocabularyCandidates(
     suggestionRuns: [...input.vocabularySuggestionState.suggestionRuns, suggestionRun],
   };
 
-  await input.notifier.notify({ candidates });
+  await input.notifier.notify({ candidates, suggestedAt: input.suggestedAt });
 
   return {
     candidates,
