@@ -15,65 +15,65 @@
       "nextjs": 0.7,
       "frontend": 0.5,
       "backend": 0.3,
-      "web_development": 0.5,
+      "web_development": 1.1,
       "ai_engineering": 0.4,
       "llm": 0.3,
       "testing": 0.4,
-      "performance": 0.5,
+      "performance": 1.3,
       "security": 0.3,
-      "devops": 0.3
+      "devops": 1.2
     },
     "feature_axes": {
       "content_types": {
         "production_case_study": 0.9,
-        "implementation_guide": 0.8,
-        "architecture_explanation": 0.7,
+        "implementation_guide": 1.5,
+        "architecture_explanation": 1.6,
         "postmortem": 0.8,
-        "comparative_evaluation": 0.6,
-        "tool_introduction": 0.1,
+        "comparative_evaluation": 1.1,
+        "tool_introduction": 0.7,
         "release_news": -0.6,
         "trend_overview": -0.7,
         "opinion_essay": 0
       },
       "evidence_signals": {
-        "code_examples": 0.8,
-        "measured_results": 0.8,
+        "code_examples": 1.7000000000000002,
+        "measured_results": 1.5,
         "real_world_experience": 0.9,
         "comparison": 0.6,
         "failure_example": 0.7,
-        "source_links": 0.2
+        "source_links": 1
       },
       "practical_signals": {
-        "actionable_steps": 0.9,
-        "architecture_decision_support": 0.9,
+        "actionable_steps": 1.7000000000000002,
+        "architecture_decision_support": 1.6,
         "operationally_applicable": 0.8,
-        "reusable_implementation_pattern": 0.8,
+        "reusable_implementation_pattern": 1.5,
         "developer_productivity": 0.6,
-        "migration_guidance": 0.6,
+        "migration_guidance": 1.2,
         "checklist_or_playbook": 0.5
       },
       "depth_signals": {
-        "tradeoff_analysis": 0.9,
-        "deep_technical_explanation": 0.8,
-        "edge_cases": 0.7,
-        "constraints_explained": 0.7,
+        "tradeoff_analysis": 1.7000000000000002,
+        "deep_technical_explanation": 1.8,
+        "edge_cases": 1.2999999999999998,
+        "constraints_explained": 1.4,
         "surface_level_summary": -0.8,
         "beginner_only": -0.6,
         "thin_content": -0.9,
         "generic_ai_hype": -0.8
       },
       "title_signals": {
-        "specific_problem": 0.4,
-        "concrete_technology_named": 0.3,
-        "production_context_named": 0.5,
+        "specific_problem": 1.1,
+        "concrete_technology_named": 1.3,
+        "production_context_named": 1.2,
         "listicle_summary": -0.4,
         "clickbait": -0.8,
         "vague_title": -0.4
       },
       "audience_levels": {
         "beginner": -0.2,
-        "intermediate": 0.4,
-        "advanced": 0.6
+        "intermediate": 1.1,
+        "advanced": 1.5
       }
     }
   },
