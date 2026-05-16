@@ -64,7 +64,7 @@ function readOptionalEnv(env: Record<string, string | undefined>, key: string): 
 
 function defaultModelForProvider(provider: LlmProvider): string {
   if (provider === "gemini") {
-    return "google/gemini-3.1-flash-lite-preview";
+    return "gemini-3.1-flash-lite-preview";
   }
 
   return "gpt-4.1-mini";
