@@ -41,6 +41,20 @@ describe("LLM JSON client に関するテスト", () => {
     });
   });
 
+  it("LLM_PROVIDER 未指定で OpenAI API key だけがあるとき、OpenAI provider として読む", () => {
+    // Arrange
+    const env = { OPENAI_API_KEY: "openai-key" };
+
+    // Act
+    const actual = readLlmProviderConfig(env);
+
+    // Assert
+    expect(actual).toEqual({
+      provider: "openai",
+      apiKey: "openai-key",
+    });
+  });
+
   it("OpenAI compatible provider を指定したとき、base URL と LLM API key を読む", () => {
     // Arrange
     const env = {

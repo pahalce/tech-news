@@ -15,6 +15,7 @@ describe("Scheduled Agent Workflow に関するテスト", () => {
 
     // Assert
     expect(actual).toContain("chore: persist agent state [skip ci]");
+    expect(actual).toContain("permissions:\n  contents: write");
   });
 
   it("scheduled agent workflow を設定したとき、実装が対応する LLM provider env を渡す", async () => {

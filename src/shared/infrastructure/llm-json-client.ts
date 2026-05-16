@@ -20,7 +20,7 @@ export type LlmJsonRequest<OutputSchema> = {
 };
 
 export function readLlmProviderConfig(env: Record<string, string | undefined>): LlmProviderConfig {
-  const provider = readLlmProvider(env.LLM_PROVIDER);
+  const provider = readLlmProvider(env);
 
   if (provider === "gemini") {
     return {
@@ -71,8 +71,9 @@ export async function requestJsonFromLlm<OutputSchema>(
   return output;
 }
 
-function readLlmProvider(value: string | undefined): LlmProvider {
-  if (!value || value === "gemini") {
+export function readLlmProvider(env: Record<string, string | undefined>): LlmProvider {
+  const value = env.LLM_PROVIDER;
+  if (value === "gemini") {
     return "gemini";
   }
 
@@ -82,6 +83,22 @@ function readLlmProvider(value: string | undefined): LlmProvider {
 
   if (value === "openai-compatible") {
     return value;
+  }
+
+  if (!value) {
+    if (env.GEMINI_API_KEY || env.GOOGLE_GENERATIVE_AI_API_KEY) {
+      return "gemini";
+    }
+
+    if (env.OPENAI_API_KEY) {
+      return "openai";
+    }
+
+    if (env.LLM_API_KEY && env.LLM_BASE_URL) {
+      return "openai-compatible";
+    }
+
+    return "gemini";
   }
 
   throw new Error(`Unsupported LLM_PROVIDER: ${value}`);
