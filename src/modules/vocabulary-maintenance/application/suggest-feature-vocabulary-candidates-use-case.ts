@@ -178,7 +178,10 @@ async function appendCandidates(
   }
 }
 
-function isInsideSuggestionLookbackWindow(extractedAt: string, suggestedAt: string): boolean {
+export function isInsideSuggestionLookbackWindow(
+  extractedAt: string,
+  suggestedAt: string,
+): boolean {
   const elapsedMs = Date.parse(suggestedAt) - Date.parse(extractedAt);
   return elapsedMs >= 0 && elapsedMs <= suggestionLookbackDays * 24 * 60 * 60 * 1000;
 }
