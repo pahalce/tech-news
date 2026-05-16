@@ -67,7 +67,7 @@ export type CollectReactionFeedbackResult = {
   preferenceSummaryHistory: PreferenceSummaryHistory;
 };
 
-const feedbackWindowDays = 7;
+const feedbackWindowDays = 3;
 const positiveEmoji = "👍";
 const negativeEmoji = "👎";
 const positiveWeight = 1;
