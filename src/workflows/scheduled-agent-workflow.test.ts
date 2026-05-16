@@ -38,4 +38,23 @@ describe("Scheduled Agent Workflow に関するテスト", () => {
     expect(actual).toContain("LLM_API_KEY: ${{ secrets.LLM_API_KEY }}");
     expect(actual).toContain("LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}");
   });
+
+  it("workflow_dispatch で実行対象 job を選べる", async () => {
+    // Arrange
+    const workflowPath = join(
+      import.meta.dirname,
+      "../../.github/workflows/scheduled-agent-jobs.yml",
+    );
+
+    // Act
+    const actual = await readFile(workflowPath, "utf8");
+
+    // Assert
+    expect(actual).toContain('description: "Job to run"');
+    expect(actual).toContain('default: "zenn-digest"');
+    expect(actual).toContain("inputs.job == 'collect-feedback'");
+    expect(actual).toContain("inputs.job == 'zenn-digest'");
+    expect(actual).toContain("inputs.job == 'suggest-feature-vocabulary'");
+    expect(actual).toContain("inputs.job == 'all'");
+  });
 });
