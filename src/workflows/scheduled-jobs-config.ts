@@ -1,4 +1,8 @@
-import { assertRequiredLlmEnvironment } from "../shared/infrastructure/llm-json-client";
+import {
+  assertRequiredLlmEnvironment,
+  readLlmProvider,
+  type LlmProvider,
+} from "../shared/infrastructure/llm-json-client";
 
 export type ScheduledJobName = "collect-feedback" | "zenn-digest" | "suggest-feature-vocabulary";
 
@@ -40,15 +44,30 @@ export function readLlmModelConfig(env: Record<string, string | undefined>): {
   preferenceSummaryModel: string;
   vocabularySuggestionModel: string;
 } {
-  const defaultModel = env.LLM_MODEL ?? "gemini-2.5-flash";
+  const defaultModel =
+    readOptionalEnv(env, "LLM_MODEL") ?? defaultModelForProvider(readLlmProvider(env));
 
   return {
-    featureExtractionModel: env.FEATURE_EXTRACTION_MODEL ?? defaultModel,
-    recommendationContentModel: env.RECOMMENDATION_CONTENT_MODEL ?? defaultModel,
-    rerankModel: env.RERANK_MODEL ?? defaultModel,
-    preferenceSummaryModel: env.PREFERENCE_SUMMARY_MODEL ?? defaultModel,
-    vocabularySuggestionModel: env.VOCABULARY_SUGGESTION_MODEL ?? defaultModel,
+    featureExtractionModel: readOptionalEnv(env, "FEATURE_EXTRACTION_MODEL") ?? defaultModel,
+    recommendationContentModel:
+      readOptionalEnv(env, "RECOMMENDATION_CONTENT_MODEL") ?? defaultModel,
+    rerankModel: readOptionalEnv(env, "RERANK_MODEL") ?? defaultModel,
+    preferenceSummaryModel: readOptionalEnv(env, "PREFERENCE_SUMMARY_MODEL") ?? defaultModel,
+    vocabularySuggestionModel: readOptionalEnv(env, "VOCABULARY_SUGGESTION_MODEL") ?? defaultModel,
   };
+}
+
+function readOptionalEnv(env: Record<string, string | undefined>, key: string): string | undefined {
+  const value = env[key]?.trim();
+  return value ? value : undefined;
+}
+
+function defaultModelForProvider(provider: LlmProvider): string {
+  if (provider === "gemini") {
+    return "gemini-2.5-flash";
+  }
+
+  return "gpt-4.1-mini";
 }
 
 export function assertRequiredEnvironment(
