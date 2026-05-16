@@ -204,6 +204,9 @@ export async function runZennDigestWorkflow(
     existingPublicationRecords: input.agentState.publicationState.publicationRecords,
     existingRecommendedArticles: input.agentState.publicationState.recommendedArticles,
     publisher: input.publisher,
+    onPublishFailure: ({ articleId, message }) => {
+      logger.error("recommendation publish failed", { articleId, message });
+    },
   });
   logger.info("published recommendations", {
     elapsedMs: elapsedMs(publishStartedAt),

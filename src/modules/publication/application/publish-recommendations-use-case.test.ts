@@ -82,6 +82,50 @@ describe("Recommendation Publication use case に関するテスト", () => {
     expect(actual.publicationRecords.map((record) => record.articleId)).toEqual([articleIdA]);
   });
 
+  it("publish が失敗したとき、失敗理由を通知する", async () => {
+    // Arrange
+    const failures: Array<{ articleId: string; message: string }> = [];
+    const recommendationContents = [createRecommendationContent(articleIdA)];
+    const publisher = {
+      publish: async () => {
+        throw new Error("Discord publish failed: 403 Forbidden");
+      },
+    };
+
+    // Act
+    await publishRecommendations({
+      recommendationContents,
+      publisher,
+      onPublishFailure: (failure) => failures.push(failure),
+    });
+
+    // Assert
+    expect(failures).toEqual([
+      { articleId: articleIdA, message: "Discord publish failed: 403 Forbidden" },
+    ]);
+  });
+
+  it("publish が Error 以外で失敗したとき、失敗理由を文字列化して通知する", async () => {
+    // Arrange
+    const failures: Array<{ articleId: string; message: string }> = [];
+    const recommendationContents = [createRecommendationContent(articleIdA)];
+    const publisher = {
+      publish: async () => {
+        throw "discord unavailable";
+      },
+    };
+
+    // Act
+    await publishRecommendations({
+      recommendationContents,
+      publisher,
+      onPublishFailure: (failure) => failures.push(failure),
+    });
+
+    // Assert
+    expect(failures).toEqual([{ articleId: articleIdA, message: "discord unavailable" }]);
+  });
+
   it("すべての publish が失敗したとき、Recommended Article が作成されない", async () => {
     // Arrange
     const recommendationContents = [createRecommendationContent(articleIdA)];
