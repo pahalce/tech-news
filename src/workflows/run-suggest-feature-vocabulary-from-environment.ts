@@ -88,7 +88,8 @@ export async function runSuggestFeatureVocabularyFromEnvironment(
   });
 }
 
-export const DISCORD_MESSAGE_CONTENT_MAX_LENGTH = 4000;
+/** Discord thread messages allow at most 2000 characters in `content`. */
+export const DISCORD_MESSAGE_CONTENT_MAX_LENGTH = 2000;
 
 const DISCORD_THREAD_AUTO_ARCHIVE_MINUTES = 10080;
 
