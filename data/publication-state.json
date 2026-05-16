@@ -89,7 +89,9 @@
       "reactionFeedback": [
         {
           "emoji": "👍",
-          "userIds": ["632575596701941795"],
+          "userIds": [
+            "632575596701941795"
+          ],
           "processedAt": "2026-05-16T05:16:04.404Z",
           "ignoredReason": null
         },
@@ -140,6 +142,26 @@
           "ignoredReason": null
         }
       ]
+    },
+    {
+      "articleId": "zenn:e57fcc7134fdaa159bd1c60becf53e3c72c2f6376ca25050784f7c99bf812e80",
+      "messageId": "1505100480580157460",
+      "channelId": "1504276981490122833",
+      "postedAt": "2026-05-16T06:51:57.985000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
     }
   ],
   "recommendedArticles": [
@@ -170,6 +192,10 @@
     {
       "articleId": "zenn:2c915f0eb6143cd1b15e5af2495403d722d3bd70eff9a982fefdff9b53f7ca63",
       "firstRecommendedAt": "2026-05-16T05:43:21.625000+00:00"
+    },
+    {
+      "articleId": "zenn:e57fcc7134fdaa159bd1c60becf53e3c72c2f6376ca25050784f7c99bf812e80",
+      "firstRecommendedAt": "2026-05-16T06:51:57.985000+00:00"
     }
   ]
 }
