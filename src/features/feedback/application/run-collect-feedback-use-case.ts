@@ -5,14 +5,16 @@ import type {
 } from "src/features/feedback/application/collect-reaction-feedback-use-case";
 import { runCollectFeedbackWorkflow } from "src/features/feedback/application/run-collect-feedback-workflow";
 
-export type RunCollectFeedbackJobInput = {
+export type RunCollectFeedbackUseCaseInput = {
   stateRepositories: FeedbackStateRepositories;
   collectedAt(): string;
   reactionFeedbackReader: ReactionFeedbackReader;
   preferenceSummaryUpdater: PreferenceSummaryUpdater;
 };
 
-export async function runCollectFeedbackJob(input: RunCollectFeedbackJobInput): Promise<void> {
+export async function runCollectFeedbackUseCase(
+  input: RunCollectFeedbackUseCaseInput,
+): Promise<void> {
   const [
     articleExtractionRegistry,
     publishedDigestRegistry,
