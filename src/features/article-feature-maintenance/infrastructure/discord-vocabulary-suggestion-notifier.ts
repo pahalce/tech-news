@@ -1,119 +1,5 @@
-import { jsonSchema } from "ai";
-import * as v from "valibot";
-
-import { createFileArticleFeatureMaintenanceStateRepositories } from "src/features/article-feature-maintenance/infrastructure/file-article-feature-maintenance-state-repositories";
-import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
 import type { VocabularyPromotionCandidate } from "src/features/article-feature-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
-import { env } from "src/shared/infrastructure/env";
-import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
-import { resolveLlmModel, runtimeConfig } from "src/shared/infrastructure/runtime-config";
-import { runSuggestFeatureVocabularyJob } from "src/features/article-feature-maintenance/application/suggest-feature-vocabulary-job";
-import {
-  createConsoleWorkflowLogger,
-  elapsedMs,
-  type WorkflowLogger,
-} from "src/shared/infrastructure/workflow-logger";
-
-const VocabularyCandidateDescriptionSchema = v.strictObject({
-  description_ja: v.pipe(v.string(), v.nonEmpty()),
-});
-const VocabularyCandidateDescriptionOutputSchema = jsonSchema<
-  v.InferOutput<typeof VocabularyCandidateDescriptionSchema>
->(
-  {
-    type: "object",
-    properties: {
-      description_ja: { type: "string", minLength: 1 },
-    },
-    required: ["description_ja"],
-    additionalProperties: false,
-  },
-  {
-    validate: (value) => {
-      const result = v.safeParse(VocabularyCandidateDescriptionSchema, value);
-      return result.success
-        ? { success: true, value: result.output }
-        : { success: false, error: new Error(v.summarize(result.issues)) };
-    },
-  },
-);
-
-export async function runSuggestFeatureVocabulary(): Promise<void> {
-  const vocabularySuggestionModel = resolveLlmModel(runtimeConfig.llm, "vocabularySuggestion");
-  const logger = createConsoleWorkflowLogger("suggest-feature-vocabulary");
-  const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
-  const discordChannelId = env.DISCORD_CHANNEL_ID;
-
-  logger.info("runtime config loaded", {
-    llmProvider: runtimeConfig.llm.provider,
-    vocabularySuggestionModel,
-    llmRequestTimeoutMs: runtimeConfig.llm.requestTimeoutMs,
-    discordChannelId,
-  });
-
-  await runSuggestFeatureVocabularyJob({
-    stateRepositories: createFileArticleFeatureMaintenanceStateRepositories(),
-    articleFeatureVocabularyReader: { read: loadFeatureVocabularyConfig },
-    suggestedAt: () => new Date().toISOString(),
-    logger,
-    describer: {
-      describe: async (input) => {
-        const startedAt = performance.now();
-        logger.info("vocabulary candidate description LLM request started", {
-          key: input.key,
-          kind: input.kind,
-          occurrenceCount: input.occurrenceCount,
-        });
-
-        try {
-          const described = await generateLlmText({
-            model: vocabularySuggestionModel,
-            system:
-              "You write concise Japanese descriptions for feature vocabulary promotion candidates.",
-            schema: VocabularyCandidateDescriptionOutputSchema,
-            prompt: [
-              "Write the description using the provided structured output schema.",
-              `Candidate key: ${input.key}`,
-              `Kind: ${input.kind}`,
-              `Occurrence count: ${input.occurrenceCount}`,
-            ].join("\n\n"),
-          });
-
-          const descriptionJa =
-            typeof described.description_ja === "string" && described.description_ja.length > 0
-              ? described.description_ja
-              : `${input.key} に関する昇格候補`;
-
-          logger.info("vocabulary candidate description LLM request finished", {
-            key: input.key,
-            elapsedMs: elapsedMs(startedAt),
-            descriptionLength: descriptionJa.length,
-          });
-
-          return descriptionJa;
-        } catch (error) {
-          logger.error("vocabulary candidate description LLM request failed", {
-            key: input.key,
-            kind: input.kind,
-            elapsedMs: elapsedMs(startedAt),
-            message: errorMessage(error),
-          });
-          throw error;
-        }
-      },
-    },
-    notifier: {
-      notify: async ({ candidates, suggestedAt }) =>
-        publishDiscordVocabularySuggestions({
-          candidates,
-          suggestedAt,
-          botToken: discordBotToken,
-          channelId: discordChannelId,
-          logger,
-        }),
-    },
-  });
-}
+import { elapsedMs, type WorkflowLogger } from "src/shared/infrastructure/workflow-logger";
 
 /** Discord thread messages allow at most 2000 characters in `content`. */
 export const DISCORD_MESSAGE_CONTENT_MAX_LENGTH = 2000;
@@ -122,6 +8,10 @@ const DISCORD_THREAD_AUTO_ARCHIVE_MINUTES = 10080;
 
 const VOCABULARY_SUGGESTION_HEADER = "**Feature Vocabulary 昇格候補**";
 const VOCABULARY_SUGGESTION_CONTINUATION_HEADER = "**Feature Vocabulary 昇格候補 (続き)**";
+
+export function normalizeDiscordBotToken(value: string): string {
+  return value.replace(/^Bot\s+/iu, "").trim();
+}
 
 export function formatDiscordVocabularySuggestionMessages(
   candidates: readonly VocabularyPromotionCandidate[],
@@ -182,32 +72,7 @@ export function formatDiscordVocabularyThreadStarterContent(
   return `**Feature Vocabulary 昇格候補** — ${candidates.length} 件（詳細はスレッド）`;
 }
 
-function formatVocabularyPromotionCandidateBlock(candidate: VocabularyPromotionCandidate): string {
-  return [
-    `- ${candidate.key}: ${candidate.descriptionJa}`,
-    `  occurrence: ${candidate.occurrenceCount}, feedback: ${candidate.relatedFeedbackCount}`,
-    `  representative articles: ${candidate.representativeArticleIds.join(", ")}`,
-    `  action: ${candidate.recommendedAction}`,
-  ].join("\n");
-}
-
-function assembleDiscordVocabularySuggestionMessage(
-  header: string,
-  blocks: readonly string[],
-): string {
-  return [header, "", ...blocks].join("\n");
-}
-
-function truncateVocabularyPromotionCandidateBlock(header: string, block: string): string {
-  const maxBlockLength = DISCORD_MESSAGE_CONTENT_MAX_LENGTH - header.length - 2;
-  if (block.length <= maxBlockLength) {
-    return block;
-  }
-
-  return `${block.slice(0, Math.max(0, maxBlockLength - 1))}…`;
-}
-
-async function publishDiscordVocabularySuggestions(input: {
+export async function publishDiscordVocabularySuggestions(input: {
   candidates: readonly VocabularyPromotionCandidate[];
   suggestedAt: string;
   botToken: string;
@@ -313,6 +178,31 @@ async function publishDiscordVocabularySuggestions(input: {
   });
 }
 
+function formatVocabularyPromotionCandidateBlock(candidate: VocabularyPromotionCandidate): string {
+  return [
+    `- ${candidate.key}: ${candidate.descriptionJa}`,
+    `  occurrence: ${candidate.occurrenceCount}, feedback: ${candidate.relatedFeedbackCount}`,
+    `  representative articles: ${candidate.representativeArticleIds.join(", ")}`,
+    `  action: ${candidate.recommendedAction}`,
+  ].join("\n");
+}
+
+function assembleDiscordVocabularySuggestionMessage(
+  header: string,
+  blocks: readonly string[],
+): string {
+  return [header, "", ...blocks].join("\n");
+}
+
+function truncateVocabularyPromotionCandidateBlock(header: string, block: string): string {
+  const maxBlockLength = DISCORD_MESSAGE_CONTENT_MAX_LENGTH - header.length - 2;
+  if (block.length <= maxBlockLength) {
+    return block;
+  }
+
+  return `${block.slice(0, Math.max(0, maxBlockLength - 1))}…`;
+}
+
 async function postDiscordMessage(input: {
   channelId: string;
   botToken: string;
@@ -372,10 +262,6 @@ async function createDiscordPublicThreadFromMessage(input: {
   }
 
   return payload.id;
-}
-
-function normalizeDiscordBotToken(value: string): string {
-  return value.replace(/^Bot\s+/iu, "").trim();
 }
 
 function errorMessage(error: unknown): string {

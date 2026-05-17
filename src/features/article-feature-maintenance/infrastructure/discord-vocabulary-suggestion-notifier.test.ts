@@ -6,7 +6,7 @@ import {
   formatDiscordVocabularySuggestionMessages,
   formatDiscordVocabularyThreadName,
   formatDiscordVocabularyThreadStarterContent,
-} from "src/features/article-feature-maintenance/presentation/run-suggest-feature-vocabulary";
+} from "src/features/article-feature-maintenance/infrastructure/discord-vocabulary-suggestion-notifier";
 
 function createCandidate(
   overrides: Partial<VocabularyPromotionCandidate> = {},

@@ -11,7 +11,7 @@ import {
   type WorkflowLogger,
 } from "src/shared/application/workflow-logger";
 
-export type RunSuggestFeatureVocabularyJobInput = {
+export type RunSuggestFeatureVocabularyUseCaseInput = {
   stateRepositories: ArticleFeatureMaintenanceStateRepositories;
   articleFeatureVocabularyReader: ArticleFeatureVocabularyReader;
   suggestedAt(): string;
@@ -20,13 +20,14 @@ export type RunSuggestFeatureVocabularyJobInput = {
   logger?: WorkflowLogger;
 };
 
-export async function runSuggestFeatureVocabularyJob(
-  input: RunSuggestFeatureVocabularyJobInput,
+export async function runSuggestFeatureVocabularyUseCase(
+  input: RunSuggestFeatureVocabularyUseCaseInput,
 ): Promise<void> {
   const logger = input.logger ?? silentWorkflowLogger;
   const startedAt = performance.now();
-  logger.info("job started");
+  logger.info("suggest feature vocabulary use case started");
   logger.info("loading article feature maintenance state and Feature Vocabulary");
+
   const [
     articleExtractionRegistry,
     publishedDigestRegistry,
@@ -38,13 +39,16 @@ export async function runSuggestFeatureVocabularyJob(
     input.stateRepositories.articleFeatureSuggestionHistory.load(),
     input.articleFeatureVocabularyReader.read(),
   ]);
+
   logger.info("loaded article feature maintenance state and Feature Vocabulary", {
     featureExtractionCount: articleExtractionRegistry.extractions.length,
     publicationRecordCount: publishedDigestRegistry.publicationRecords.length,
     vocabularySuggestionRunCount: articleFeatureSuggestionHistory.suggestionRuns.length,
   });
+
   const suggestedAt = input.suggestedAt();
   logger.info("running vocabulary suggestion workflow", { suggestedAt });
+
   const result = await runSuggestFeatureVocabularyWorkflow({
     articleExtractionRegistry,
     publishedDigestRegistry,
@@ -60,7 +64,8 @@ export async function runSuggestFeatureVocabularyJob(
   await input.stateRepositories.articleFeatureSuggestionHistory.save(
     result.articleFeatureSuggestionHistory,
   );
-  logger.info("job finished", {
+
+  logger.info("suggest feature vocabulary use case finished", {
     elapsedMs: elapsedMs(startedAt),
     vocabularySuggestionRunCount: result.articleFeatureSuggestionHistory.suggestionRuns.length,
   });
