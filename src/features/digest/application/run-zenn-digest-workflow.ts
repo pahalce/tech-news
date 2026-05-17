@@ -7,8 +7,8 @@ import {
   type ExtractCurrentFeedCandidateFeaturesInput,
 } from "src/features/digest/application/extract-current-feed-candidate-features-use-case";
 import { selectReadableCurrentFeedCandidates } from "src/features/digest/application/select-readable-current-feed-candidates-use-case";
-import type { FeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
-import type { AgentState } from "src/shared/infrastructure/file-agent-state";
+import type { FeatureVocabularyConfig } from "src/domains/article";
+import type { AgentState } from "src/shared/application/agent-state";
 import {
   publishRecommendations,
   type RecommendationPublisher,
@@ -26,7 +26,7 @@ import {
   elapsedMs,
   silentWorkflowLogger,
   type WorkflowLogger,
-} from "src/shared/infrastructure/workflow-logger";
+} from "src/shared/application/workflow-logger";
 
 export type PublishDigestAuditInput = {
   message: string;

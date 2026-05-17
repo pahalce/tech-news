@@ -1,10 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import {
-  parseFeatureVocabularyConfig,
-  type FeatureVocabularyConfig,
-} from "src/domains/article/article-feature-vocabulary";
+import { parseFeatureVocabularyConfig, type FeatureVocabularyConfig } from "src/domains/article";
 
 const defaultRepositoryRoot = join(import.meta.dirname, "../../..");
 

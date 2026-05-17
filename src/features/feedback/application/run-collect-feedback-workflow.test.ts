@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { runCollectFeedbackWorkflow } from "src/features/feedback/presentation/run-collect-feedback-workflow";
+import { runCollectFeedbackWorkflow } from "src/features/feedback/application/run-collect-feedback-workflow";
 
 describe("Collect Feedback Workflow に関するテスト", () => {
   it("Publication Record に正の Reaction Feedback があるとき、Preference Profile と Publication State が更新される", async () => {

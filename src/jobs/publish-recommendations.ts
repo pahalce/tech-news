@@ -1,7 +1,4 @@
-import {
-  runZennDigest,
-  validateZennDigestDryRun,
-} from "src/features/digest/presentation/run-zenn-digest";
+import { runZennDigest, validateZennDigestDryRun } from "src/jobs/runtime/run-zenn-digest";
 
 const isDryRun = process.argv.includes("--dry-run");
 

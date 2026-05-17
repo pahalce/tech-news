@@ -1,7 +1,7 @@
 import { jsonSchema } from "ai";
 import * as v from "valibot";
 
-import { loadAgentState, saveAgentState } from "src/shared/infrastructure/file-agent-state";
+import { createFileAgentStateRepository } from "src/shared/infrastructure/file-agent-state";
 import type { ReactionFeedbackReader } from "src/features/feedback/application/collect-reaction-feedback-use-case";
 import { env } from "src/shared/infrastructure/env";
 import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
@@ -10,7 +10,7 @@ import {
   runtimeConfig,
   type LlmRuntimeModelId,
 } from "src/shared/infrastructure/runtime-config";
-import { runCollectFeedbackJob } from "src/features/feedback/presentation/collect-feedback-job";
+import { runCollectFeedbackJob } from "src/features/feedback/application/collect-feedback-job";
 
 const PreferenceSummarySchema = v.strictObject({
   long_term_summary: v.nullable(v.string()),
@@ -42,7 +42,7 @@ const PreferenceSummaryOutputSchema = jsonSchema<v.InferOutput<typeof Preference
 );
 
 export async function validateCollectFeedbackDryRun(): Promise<void> {
-  await loadAgentState();
+  await createFileAgentStateRepository().load();
 }
 
 export async function runCollectFeedback(): Promise<void> {
@@ -50,8 +50,7 @@ export async function runCollectFeedback(): Promise<void> {
   const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
 
   await runCollectFeedbackJob({
-    loadAgentState,
-    saveAgentState,
+    agentStateRepository: createFileAgentStateRepository(),
     collectedAt: () => new Date().toISOString(),
     reactionFeedbackReader: createDiscordReactionFeedbackReader(discordBotToken),
     preferenceSummaryUpdater: {

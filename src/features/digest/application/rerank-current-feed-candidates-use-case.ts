@@ -1,4 +1,4 @@
-import type { ArticleFeatures } from "src/domains/article/article-features";
+import type { ArticleFeatures } from "src/domains/article";
 
 type RerankCurrentFeedCandidate = {
   articleId: string;

@@ -4,7 +4,7 @@ import {
   createRecommendedArticle,
   type PublicationRecord,
   type RecommendedArticle,
-} from "src/domains/digest/publication-record";
+} from "src/domains/digest";
 
 type RecommendationContent = {
   articleId: string;

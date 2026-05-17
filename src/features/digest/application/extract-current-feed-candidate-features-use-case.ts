@@ -1,5 +1,5 @@
 import { type ArticleAuthor } from "src/features/digest/application/article-author";
-import { type FeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
+import { type FeatureVocabularyConfig } from "src/domains/article";
 import { type CurrentFeedCandidate } from "src/features/digest/application/current-feed-candidate";
 import {
   createBodyFetchFailure,
@@ -7,7 +7,7 @@ import {
   createFeatureExtraction,
   parseFeatureExtractionState,
   type FeatureExtractionState,
-} from "src/domains/article/feature-extraction";
+} from "src/domains/article";
 
 export type ExtractCurrentFeedCandidateFeaturesInput = {
   candidates: readonly CurrentFeedCandidate[];

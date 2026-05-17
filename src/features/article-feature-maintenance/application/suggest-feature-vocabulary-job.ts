@@ -1,20 +1,19 @@
-import type { AgentState } from "src/shared/infrastructure/file-agent-state";
-import type { FeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
+import type { ArticleFeatureMaintenanceAgentStateRepository } from "src/features/article-feature-maintenance/application/ports/agent-state-repository";
+import type { ArticleFeatureVocabularyReader } from "src/features/article-feature-maintenance/application/ports/article-feature-vocabulary-reader";
 import type {
   VocabularyCandidateDescriber,
   VocabularySuggestionNotifier,
 } from "src/features/article-feature-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
-import { runSuggestFeatureVocabularyWorkflow } from "src/features/article-feature-maintenance/presentation/run-suggest-feature-vocabulary-workflow";
+import { runSuggestFeatureVocabularyWorkflow } from "src/features/article-feature-maintenance/application/run-suggest-feature-vocabulary-workflow";
 import {
   elapsedMs,
   silentWorkflowLogger,
   type WorkflowLogger,
-} from "src/shared/infrastructure/workflow-logger";
+} from "src/shared/application/workflow-logger";
 
 export type RunSuggestFeatureVocabularyJobInput = {
-  loadAgentState(): Promise<AgentState>;
-  saveAgentState(state: AgentState): Promise<void>;
-  loadFeatureVocabulary(): Promise<FeatureVocabularyConfig>;
+  agentStateRepository: ArticleFeatureMaintenanceAgentStateRepository;
+  articleFeatureVocabularyReader: ArticleFeatureVocabularyReader;
   suggestedAt(): string;
   describer: VocabularyCandidateDescriber;
   notifier: VocabularySuggestionNotifier;
@@ -29,8 +28,8 @@ export async function runSuggestFeatureVocabularyJob(
   logger.info("job started");
   logger.info("loading Agent State and Feature Vocabulary");
   const [agentState, featureVocabulary] = await Promise.all([
-    input.loadAgentState(),
-    input.loadFeatureVocabulary(),
+    input.agentStateRepository.load(),
+    input.articleFeatureVocabularyReader.read(),
   ]);
   logger.info("loaded Agent State and Feature Vocabulary", {
     featureExtractionCount: agentState.featureExtractionState.extractions.length,
@@ -49,7 +48,7 @@ export async function runSuggestFeatureVocabularyJob(
   });
 
   logger.info("saving Agent State");
-  await input.saveAgentState(result.agentState);
+  await input.agentStateRepository.save(result.agentState);
   logger.info("job finished", {
     elapsedMs: elapsedMs(startedAt),
     vocabularySuggestionRunCount: result.agentState.vocabularySuggestionState.suggestionRuns.length,

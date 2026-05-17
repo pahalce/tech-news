@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { parseFeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
-import { runZennDigestWorkflow } from "src/features/digest/presentation/run-zenn-digest-workflow";
+import { parseFeatureVocabularyConfig } from "src/domains/article";
+import { runZennDigestWorkflow } from "src/features/digest/application/run-zenn-digest-workflow";
 
 describe("Zenn Digest Workflow に関するテスト", () => {
   it("Readable Article が選ばれて Discord 投稿に成功したとき、Recommended Article として保存対象になる", async () => {

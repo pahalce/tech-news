@@ -4,7 +4,7 @@ import {
   createArticleFeedEntry,
   type ArticleFeed,
   type ArticleFeedEntry,
-} from "src/domains/article/article-feed";
+} from "src/domains/article";
 
 type FetchText = (url: string) => Promise<string>;
 

@@ -1,9 +1,6 @@
 import { type ArticleAuthor } from "src/features/digest/application/article-author";
-import type { ArticleFeatures } from "src/domains/article/article-features";
-import {
-  parseRecommendationContent,
-  type RecommendationContent,
-} from "src/domains/digest/recommendation-content";
+import type { ArticleFeatures } from "src/domains/article";
+import { parseRecommendationContent, type RecommendationContent } from "src/domains/digest";
 
 type SelectedRecommendationCandidate = {
   articleId: string;

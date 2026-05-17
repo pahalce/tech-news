@@ -1,9 +1,6 @@
-import { applyArticleFeatureFeedback } from "src/domains/article/article-feature-weighting";
-import type { ArticleFeatures } from "src/domains/article/article-features";
-import type {
-  PreferenceProfile,
-  PreferenceSummaryHistory,
-} from "src/domains/preference/preference-state";
+import { applyArticleFeatureFeedback } from "src/domains/article";
+import type { ArticleFeatures } from "src/domains/article";
+import type { PreferenceProfile, PreferenceSummaryHistory } from "src/domains/preference";
 
 type ReactionFeedback = {
   emoji: string;

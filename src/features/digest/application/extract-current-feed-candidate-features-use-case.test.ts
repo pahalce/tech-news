@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { parseFeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
+import { parseFeatureVocabularyConfig } from "src/domains/article";
 import { createCurrentFeedCandidate } from "src/features/digest/application/current-feed-candidate";
 import { extractCurrentFeedCandidateFeatures } from "src/features/digest/application/extract-current-feed-candidate-features-use-case";
 

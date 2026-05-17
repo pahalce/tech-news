@@ -1,7 +1,7 @@
 import {
   runCollectFeedback,
   validateCollectFeedbackDryRun,
-} from "src/features/feedback/presentation/run-collect-feedback";
+} from "src/jobs/runtime/run-collect-feedback";
 
 const isDryRun = process.argv.includes("--dry-run");
 

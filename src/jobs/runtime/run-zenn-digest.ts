@@ -8,14 +8,14 @@ import {
 } from "src/features/digest/application/article-author";
 import { resolveZennArticleAuthor } from "src/features/digest/infrastructure/zenn-article-author";
 import { readZennRssFeed } from "src/features/digest/infrastructure/zenn-rss-feed-reader";
-import { loadAgentState, saveAgentState } from "src/shared/infrastructure/file-agent-state";
-import type { FeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
+import { createFileAgentStateRepository } from "src/shared/infrastructure/file-agent-state";
+import type { FeatureVocabularyConfig } from "src/domains/article";
 import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
 import { env } from "src/shared/infrastructure/env";
 import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
 import { resolveLlmModel, runtimeConfig } from "src/shared/infrastructure/runtime-config";
 import { createConsoleWorkflowLogger, elapsedMs } from "src/shared/infrastructure/workflow-logger";
-import { runZennDigestJob } from "src/features/digest/presentation/zenn-digest-job";
+import { runZennDigestJob } from "src/features/digest/application/zenn-digest-job";
 
 export type DiscordRecommendationContent = {
   articleId: string;
@@ -102,7 +102,7 @@ const RecommendationContentOutputSchema = jsonSchema<
 const maxFeedEntriesPerFeed = 3;
 
 export async function validateZennDigestDryRun(): Promise<void> {
-  await loadAgentState();
+  await createFileAgentStateRepository().load();
   await loadFeatureVocabularyConfig();
 }
 
@@ -126,9 +126,8 @@ export async function runZennDigest(): Promise<void> {
   });
 
   await runZennDigestJob({
-    loadAgentState,
-    saveAgentState,
-    loadFeatureVocabulary: loadFeatureVocabularyConfig,
+    agentStateRepository: createFileAgentStateRepository(),
+    articleFeatureVocabularyReader: { read: loadFeatureVocabularyConfig },
     feeds: defaultZennArticleFeeds,
     feedReader: async (feed) => {
       const startedAt = performance.now();

@@ -1,8 +1,5 @@
-import {
-  calculateArticleFeatureWeight,
-  type ArticleFeatureWeights,
-} from "src/domains/article/article-feature-weighting";
-import type { ArticleFeatures } from "src/domains/article/article-features";
+import { calculateArticleFeatureWeight, type ArticleFeatureWeights } from "src/domains/article";
+import type { ArticleFeatures } from "src/domains/article";
 
 export type RuleScorePreferenceProfile = {
   feature_weights: ArticleFeatureWeights;

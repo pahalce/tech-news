@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-import { ArticleIdSchema } from "src/domains/article/article-id";
+import { ArticleIdSchema } from "src/domains/article";
 
 const NonEmptyStringSchema = v.pipe(v.string(), v.nonEmpty("value must not be empty."));
 

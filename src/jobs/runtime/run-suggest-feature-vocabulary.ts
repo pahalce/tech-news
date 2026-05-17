@@ -1,13 +1,13 @@
 import { jsonSchema } from "ai";
 import * as v from "valibot";
 
-import { loadAgentState, saveAgentState } from "src/shared/infrastructure/file-agent-state";
+import { createFileAgentStateRepository } from "src/shared/infrastructure/file-agent-state";
 import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
 import type { VocabularyPromotionCandidate } from "src/features/article-feature-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
 import { env } from "src/shared/infrastructure/env";
 import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
 import { resolveLlmModel, runtimeConfig } from "src/shared/infrastructure/runtime-config";
-import { runSuggestFeatureVocabularyJob } from "src/features/article-feature-maintenance/presentation/suggest-feature-vocabulary-job";
+import { runSuggestFeatureVocabularyJob } from "src/features/article-feature-maintenance/application/suggest-feature-vocabulary-job";
 import {
   createConsoleWorkflowLogger,
   elapsedMs,
@@ -39,7 +39,7 @@ const VocabularyCandidateDescriptionOutputSchema = jsonSchema<
 );
 
 export async function validateSuggestFeatureVocabularyDryRun(): Promise<void> {
-  await loadAgentState();
+  await createFileAgentStateRepository().load();
   await loadFeatureVocabularyConfig();
 }
 
@@ -57,9 +57,8 @@ export async function runSuggestFeatureVocabulary(): Promise<void> {
   });
 
   await runSuggestFeatureVocabularyJob({
-    loadAgentState,
-    saveAgentState,
-    loadFeatureVocabulary: loadFeatureVocabularyConfig,
+    agentStateRepository: createFileAgentStateRepository(),
+    articleFeatureVocabularyReader: { read: loadFeatureVocabularyConfig },
     suggestedAt: () => new Date().toISOString(),
     logger,
     describer: {

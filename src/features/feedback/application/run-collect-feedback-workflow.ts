@@ -3,7 +3,7 @@ import {
   type PreferenceSummaryUpdater,
   type ReactionFeedbackReader,
 } from "src/features/feedback/application/collect-reaction-feedback-use-case";
-import type { AgentState } from "src/shared/infrastructure/file-agent-state";
+import type { AgentState } from "src/shared/application/agent-state";
 
 export type RunCollectFeedbackWorkflowInput = {
   agentState: AgentState;

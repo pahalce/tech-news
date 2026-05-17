@@ -8,10 +8,24 @@ module.exports = {
       to: { path: "^src/(modules|workflows)/" },
     },
     {
-      name: "no-internal-barrel-imports",
+      name: "external-code-uses-domain-public-api",
+      severity: "error",
+      from: { path: "^src/(features|jobs|shared)/" },
+      to: { path: "^src/domains/[^/]+/(?!index[.][cm]?[jt]sx?$)" },
+    },
+    {
+      name: "cross-domain-uses-domain-public-api",
+      severity: "error",
+      from: { path: "^src/domains/([^/]+)/" },
+      to: {
+        path: "^src/domains/(?!$1/)[^/]+/(?!index[.][cm]?[jt]sx?$)",
+      },
+    },
+    {
+      name: "no-feature-or-shared-barrel-imports",
       severity: "error",
       from: { path: "^src/" },
-      to: { path: "^src/.+/index[.][cm]?[jt]sx?$" },
+      to: { path: "^src/(features|shared)/.+/index[.][cm]?[jt]sx?$" },
     },
     {
       name: "domain-no-runtime-layer",
@@ -24,6 +38,12 @@ module.exports = {
       severity: "error",
       from: { path: "^src/domains/" },
       to: { path: "^src/shared/(application|infrastructure)/" },
+    },
+    {
+      name: "domain-no-node-builtins",
+      severity: "error",
+      from: { path: "^src/domains/" },
+      to: { dependencyTypes: ["core"] },
     },
     {
       name: "feature-no-other-features",
@@ -56,10 +76,10 @@ module.exports = {
       },
     },
     {
-      name: "jobs-call-feature-entrypoints",
+      name: "feature-presentation-application-only",
       severity: "error",
-      from: { path: "^src/jobs/" },
-      to: { path: "^src/(domains|shared|features/[^/]+/(domain|infrastructure))/" },
+      from: { path: "^src/features/[^/]+/presentation/" },
+      to: { path: "^src/(domains|shared|features/[^/]+/(infrastructure|presentation))/" },
     },
     {
       name: "no-relative-internal-imports",

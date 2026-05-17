@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { formatArticleAuthorLine } from "src/domains/article/article-author";
+import { formatArticleAuthorLine } from "src/domains/article";
 import {
   extractZennArticleAuthorFromCanonicalUrl,
   extractZennArticleAuthorFromHtml,

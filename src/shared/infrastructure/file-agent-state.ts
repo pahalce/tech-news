@@ -1,38 +1,12 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import {
-  parseFeatureExtractionState,
-  type FeatureExtractionState,
-} from "src/domains/article/feature-extraction";
+import { parseFeatureExtractionState } from "src/domains/article";
 import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
-import {
-  parsePreferenceProfile,
-  parsePreferenceSummaryHistory,
-  type PreferenceProfile,
-  type PreferenceSummaryHistory,
-} from "src/domains/preference/preference-state";
-import {
-  parsePublicationState,
-  type PublicationState,
-} from "src/domains/digest/publication-record";
-import {
-  parseRecommendationContentState,
-  type RecommendationContentState,
-} from "src/domains/digest/recommendation-content";
-import {
-  parseVocabularySuggestionState,
-  type VocabularySuggestionState,
-} from "src/domains/article/vocabulary-suggestion";
-
-export type AgentState = {
-  featureExtractionState: FeatureExtractionState;
-  preferenceProfile: PreferenceProfile;
-  preferenceSummaryHistory: PreferenceSummaryHistory;
-  publicationState: PublicationState;
-  recommendationContentState: RecommendationContentState;
-  vocabularySuggestionState: VocabularySuggestionState;
-};
+import { parsePreferenceProfile, parsePreferenceSummaryHistory } from "src/domains/preference";
+import { parsePublicationState, parseRecommendationContentState } from "src/domains/digest";
+import { parseVocabularySuggestionState } from "src/domains/article";
+import type { AgentState, AgentStateRepository } from "src/shared/application/agent-state";
 
 const defaultRepositoryRoot = join(import.meta.dirname, "../../..");
 
@@ -89,6 +63,13 @@ export async function saveAgentState(
       state.vocabularySuggestionState,
     ),
   ]);
+}
+
+export function createFileAgentStateRepository(repositoryRoot?: string): AgentStateRepository {
+  return {
+    load: () => loadAgentState(repositoryRoot),
+    save: (state) => saveAgentState(state, repositoryRoot),
+  };
 }
 
 async function readJson(path: string): Promise<unknown> {

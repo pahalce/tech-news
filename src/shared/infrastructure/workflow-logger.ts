@@ -1,16 +1,10 @@
-export type WorkflowLogFields = Record<string, unknown>;
-
-export type WorkflowLogger = {
-  info(message: string, fields?: WorkflowLogFields): void;
-  warn(message: string, fields?: WorkflowLogFields): void;
-  error(message: string, fields?: WorkflowLogFields): void;
-};
-
-export const silentWorkflowLogger: WorkflowLogger = {
-  info: () => undefined,
-  warn: () => undefined,
-  error: () => undefined,
-};
+import type { WorkflowLogFields, WorkflowLogger } from "src/shared/application/workflow-logger";
+export {
+  elapsedMs,
+  silentWorkflowLogger,
+  type WorkflowLogFields,
+  type WorkflowLogger,
+} from "src/shared/application/workflow-logger";
 
 export function createConsoleWorkflowLogger(scope: string): WorkflowLogger {
   return {
@@ -18,10 +12,6 @@ export function createConsoleWorkflowLogger(scope: string): WorkflowLogger {
     warn: (message, fields) => console.warn(formatLogLine("warn", scope, message, fields)),
     error: (message, fields) => console.error(formatLogLine("error", scope, message, fields)),
   };
-}
-
-export function elapsedMs(startedAt: number): number {
-  return Math.round(performance.now() - startedAt);
 }
 
 function formatLogLine(

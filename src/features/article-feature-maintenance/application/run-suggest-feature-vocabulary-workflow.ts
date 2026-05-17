@@ -1,5 +1,5 @@
-import type { AgentState } from "src/shared/infrastructure/file-agent-state";
-import type { FeatureVocabularyConfig } from "src/domains/article/article-feature-vocabulary-config";
+import type { AgentState } from "src/shared/application/agent-state";
+import type { FeatureVocabularyConfig } from "src/domains/article";
 import {
   isInsideSuggestionLookbackWindow,
   suggestFeatureVocabularyCandidates,
@@ -11,7 +11,7 @@ import {
   elapsedMs,
   silentWorkflowLogger,
   type WorkflowLogger,
-} from "src/shared/infrastructure/workflow-logger";
+} from "src/shared/application/workflow-logger";
 
 export type RunSuggestFeatureVocabularyWorkflowInput = {
   agentState: AgentState;
