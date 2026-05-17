@@ -4,7 +4,7 @@ import { join } from "node:path";
 import {
   parseFeatureExtractionState,
   type FeatureExtractionState,
-} from "../../article/domain/feature-extraction";
+} from "../../feature-extraction/domain/feature-extraction";
 import { loadFeatureVocabularyConfig } from "../../feature/infrastructure/file-feature-vocabulary-config";
 import {
   parsePreferenceProfile,

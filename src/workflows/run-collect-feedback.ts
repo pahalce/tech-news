@@ -6,12 +6,13 @@ import {
   saveAgentState,
 } from "../modules/agent-state/infrastructure/file-agent-state";
 import type { ReactionFeedbackReader } from "../modules/preference/application/collect-reaction-feedback-use-case";
+import { env } from "../shared/infrastructure/env";
+import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
 import {
-  readLlmProviderConfig,
-  requestJsonFromLlm,
-  type LlmProviderConfig,
-} from "../shared/infrastructure/llm-json-client";
-import { readLlmModelConfig } from "./scheduled-jobs-config";
+  resolveLlmModel,
+  runtimeConfig,
+  type LlmRuntimeModelId,
+} from "../shared/infrastructure/runtime-config";
 import { runCollectFeedbackJob } from "./collect-feedback-job";
 
 const PreferenceSummarySchema = v.strictObject({
@@ -47,12 +48,9 @@ export async function validateCollectFeedbackDryRun(): Promise<void> {
   await loadAgentState();
 }
 
-export async function runCollectFeedbackFromEnvironment(
-  env: Record<string, string | undefined>,
-): Promise<void> {
-  const modelConfig = readLlmModelConfig(env);
-  const discordBotToken = normalizeDiscordBotToken(requiredEnv(env, "DISCORD_BOT_TOKEN"));
-  const llmProviderConfig = readLlmProviderConfig(env);
+export async function runCollectFeedback(): Promise<void> {
+  const preferenceSummaryModel = resolveLlmModel(runtimeConfig.llm, "preferenceSummary");
+  const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
 
   await runCollectFeedbackJob({
     loadAgentState,
@@ -62,8 +60,7 @@ export async function runCollectFeedbackFromEnvironment(
     preferenceSummaryUpdater: {
       update: async (input) =>
         updatePreferenceSummary({
-          llmProviderConfig,
-          model: modelConfig.preferenceSummaryModel,
+          model: preferenceSummaryModel,
           preferenceProfile: input.preferenceProfile,
           previousSummaryHistory: input.previousSummaryHistory,
           processedFeedbackCount: input.processedFeedbackCount,
@@ -133,8 +130,7 @@ async function fetchDiscordReactionUserIds(input: {
 }
 
 async function updatePreferenceSummary(input: {
-  llmProviderConfig: LlmProviderConfig;
-  model: string;
+  model: LlmRuntimeModelId;
   preferenceProfile: Parameters<
     Parameters<typeof runCollectFeedbackJob>[0]["preferenceSummaryUpdater"]["update"]
   >[0]["preferenceProfile"];
@@ -148,11 +144,11 @@ async function updatePreferenceSummary(input: {
     return input.previousSummaryHistory;
   }
 
-  const summary = await requestJsonFromLlm(input.llmProviderConfig, {
+  const summary = await generateLlmText({
     model: input.model,
     system: "You summarize a single owner's technical article preferences in Japanese.",
     schema: PreferenceSummaryOutputSchema,
-    user: [
+    prompt: [
       "Summarize preferences using the provided structured output schema.",
       `Collected at: ${input.collectedAt}`,
       `Processed feedback count: ${input.processedFeedbackCount}`,
@@ -186,15 +182,6 @@ async function updatePreferenceSummary(input: {
 
 function stringOrNull(value: unknown): string | null {
   return typeof value === "string" && value.length > 0 ? value : null;
-}
-
-function requiredEnv(env: Record<string, string | undefined>, key: string): string {
-  const value = env[key]?.trim();
-  if (!value) {
-    throw new Error(`${key} is required.`);
-  }
-
-  return value;
 }
 
 function normalizeDiscordBotToken(value: string): string {

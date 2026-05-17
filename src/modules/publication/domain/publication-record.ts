@@ -1,11 +1,8 @@
 import * as v from "valibot";
 
-const NonEmptyStringSchema = v.pipe(v.string(), v.nonEmpty("value must not be empty."));
+import { ArticleIdSchema } from "../../article/domain/article-id";
 
-const ArticleIdSchema = v.pipe(
-  v.string(),
-  v.regex(/^zenn:[\da-f]{64}$/u, "Article ID must be source plus Canonical URL hash."),
-);
+const NonEmptyStringSchema = v.pipe(v.string(), v.nonEmpty("value must not be empty."));
 
 const DateStringSchema = v.pipe(
   NonEmptyStringSchema,

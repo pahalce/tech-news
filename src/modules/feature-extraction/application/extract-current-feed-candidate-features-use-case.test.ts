@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 
 import { parseFeatureVocabularyConfig } from "../../feature/application/feature-vocabulary-config";
-import { createCurrentFeedCandidate } from "../domain/current-feed-candidate";
+import { createCurrentFeedCandidate } from "../../article/application/current-feed-candidate";
 import { extractCurrentFeedCandidateFeatures } from "./extract-current-feed-candidate-features-use-case";
 
 describe("Feature Extraction use case に関するテスト", () => {

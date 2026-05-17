@@ -1,7 +1,7 @@
-import { type CurrentFeedCandidate } from "../domain/current-feed-candidate";
+import { type CurrentFeedCandidate } from "../../article/application/current-feed-candidate";
+import type { ArticleFeatures } from "../domain/article-features";
 import {
   parseFeatureExtractionState,
-  type ArticleFeatures,
   type FeatureExtractionState,
 } from "../domain/feature-extraction";
 

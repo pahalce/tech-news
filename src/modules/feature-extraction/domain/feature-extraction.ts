@@ -1,6 +1,8 @@
 import * as v from "valibot";
 
-import { ArticleAuthorSchema, type ArticleAuthor } from "./article-author";
+import { ArticleAuthorSchema, type ArticleAuthor } from "../../article/domain/article-author";
+import type { ArticleFeatures, FeatureSignal, OtherSignal } from "./article-features";
+import { ArticleIdSchema } from "../../article/domain/article-id";
 
 const SalienceSchema = v.pipe(
   v.number(),
@@ -23,11 +25,6 @@ const LlmOtherSignalSchema = v.object({
   key: v.pipe(v.string(), v.nonEmpty("Other Signal key must not be empty.")),
   salience: SalienceSchema,
 });
-
-const ArticleIdSchema = v.pipe(
-  v.string(),
-  v.regex(/^zenn:[\da-f]{64}$/u, "Article ID must be source plus Canonical URL hash."),
-);
 
 const DateStringSchema = v.pipe(
   v.string(),
@@ -131,23 +128,7 @@ export type FeatureExtraction = {
   author: ArticleAuthor | null;
 };
 
-export type ArticleFeatures = {
-  primaryTopics: FeatureSignal[];
-  mentionedTopics: FeatureSignal[];
-  unknownTopics: string[];
-  featureAxes: Record<string, FeatureSignal[]>;
-  otherSignals: OtherSignal[];
-};
-
-export type FeatureSignal = {
-  key: string;
-  salience: number;
-};
-
-export type OtherSignal = {
-  key: string;
-  salience: number;
-};
+export type { ArticleFeatures, FeatureSignal, OtherSignal };
 
 export type BodyFetchFailure = {
   articleId: string;

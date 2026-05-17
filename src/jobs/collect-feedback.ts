@@ -1,19 +1,19 @@
 import { assertRequiredEnvironment } from "../workflows/scheduled-jobs-config";
 import {
-  runCollectFeedbackFromEnvironment,
+  runCollectFeedback,
   validateCollectFeedbackDryRun,
-} from "../workflows/run-collect-feedback-from-environment";
+} from "../workflows/run-collect-feedback";
 
 const isDryRun = process.argv.includes("--dry-run");
 
 if (!isDryRun) {
-  assertRequiredEnvironment("collect-feedback", process.env);
+  assertRequiredEnvironment("collect-feedback");
 }
 
 if (isDryRun) {
   await validateCollectFeedbackDryRun();
   console.log("collect-feedback dry-run ok");
 } else {
-  await runCollectFeedbackFromEnvironment(process.env);
+  await runCollectFeedback();
   console.log("collect-feedback completed");
 }

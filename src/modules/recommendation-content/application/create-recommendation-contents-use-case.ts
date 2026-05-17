@@ -1,21 +1,9 @@
 import { type ArticleAuthor } from "../../article/application/article-author";
+import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
 import {
   parseRecommendationContent,
   type RecommendationContent,
 } from "../domain/recommendation-content";
-
-type FeatureSignal = {
-  key: string;
-  salience: number;
-};
-
-type ArticleFeatures = {
-  primaryTopics: FeatureSignal[];
-  mentionedTopics: FeatureSignal[];
-  unknownTopics: string[];
-  featureAxes: Record<string, FeatureSignal[]>;
-  otherSignals: FeatureSignal[];
-};
 
 type SelectedRecommendationCandidate = {
   articleId: string;

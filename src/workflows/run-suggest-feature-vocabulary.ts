@@ -7,11 +7,9 @@ import {
 } from "../modules/agent-state/infrastructure/file-agent-state";
 import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
 import type { VocabularyPromotionCandidate } from "../modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
-import {
-  readLlmProviderConfig,
-  requestJsonFromLlm,
-} from "../shared/infrastructure/llm-json-client";
-import { readLlmModelConfig } from "./scheduled-jobs-config";
+import { env } from "../shared/infrastructure/env";
+import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
+import { resolveLlmModel, runtimeConfig } from "../shared/infrastructure/runtime-config";
 import { runSuggestFeatureVocabularyJob } from "./suggest-feature-vocabulary-job";
 import { createConsoleWorkflowLogger, elapsedMs, type WorkflowLogger } from "./workflow-logger";
 
@@ -44,19 +42,16 @@ export async function validateSuggestFeatureVocabularyDryRun(): Promise<void> {
   await loadFeatureVocabularyConfig();
 }
 
-export async function runSuggestFeatureVocabularyFromEnvironment(
-  env: Record<string, string | undefined>,
-): Promise<void> {
-  const modelConfig = readLlmModelConfig(env);
-  const llmProviderConfig = readLlmProviderConfig(env);
+export async function runSuggestFeatureVocabulary(): Promise<void> {
+  const vocabularySuggestionModel = resolveLlmModel(runtimeConfig.llm, "vocabularySuggestion");
   const logger = createConsoleWorkflowLogger("suggest-feature-vocabulary");
-  const discordBotToken = normalizeDiscordBotToken(requiredEnv(env, "DISCORD_BOT_TOKEN"));
-  const discordChannelId = requiredEnv(env, "DISCORD_CHANNEL_ID");
+  const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
+  const discordChannelId = env.DISCORD_CHANNEL_ID;
 
   logger.info("runtime config loaded", {
-    llmProvider: llmProviderConfig.provider,
-    vocabularySuggestionModel: modelConfig.vocabularySuggestionModel,
-    llmRequestTimeoutMs: llmProviderConfig.timeoutMs ?? 90_000,
+    llmProvider: runtimeConfig.llm.provider,
+    vocabularySuggestionModel,
+    llmRequestTimeoutMs: runtimeConfig.llm.requestTimeoutMs,
     discordChannelId,
   });
 
@@ -76,12 +71,12 @@ export async function runSuggestFeatureVocabularyFromEnvironment(
         });
 
         try {
-          const described = await requestJsonFromLlm(llmProviderConfig, {
-            model: modelConfig.vocabularySuggestionModel,
+          const described = await generateLlmText({
+            model: vocabularySuggestionModel,
             system:
               "You write concise Japanese descriptions for feature vocabulary promotion candidates.",
             schema: VocabularyCandidateDescriptionOutputSchema,
-            user: [
+            prompt: [
               "Write the description using the provided structured output schema.",
               `Candidate key: ${input.key}`,
               `Kind: ${input.kind}`,
@@ -382,15 +377,6 @@ async function createDiscordPublicThreadFromMessage(input: {
   }
 
   return payload.id;
-}
-
-function requiredEnv(env: Record<string, string | undefined>, key: string): string {
-  const value = env[key]?.trim();
-  if (!value) {
-    throw new Error(`${key} is required.`);
-  }
-
-  return value;
 }
 
 function normalizeDiscordBotToken(value: string): string {

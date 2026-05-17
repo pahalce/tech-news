@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import {
-  formatDiscordMessage,
-  type DiscordRecommendationContent,
-} from "./run-zenn-digest-from-environment";
+import { formatDiscordMessage, type DiscordRecommendationContent } from "./run-zenn-digest";
 
 function createDiscordRecommendationContent(
   overrides: Partial<DiscordRecommendationContent> = {},

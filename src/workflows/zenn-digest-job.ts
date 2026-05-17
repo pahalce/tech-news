@@ -1,4 +1,4 @@
-import type { ExtractCurrentFeedCandidateFeaturesInput } from "../modules/article/application/extract-current-feed-candidate-features-use-case";
+import type { ExtractCurrentFeedCandidateFeaturesInput } from "../modules/feature-extraction/application/extract-current-feed-candidate-features-use-case";
 import type { CollectCurrentFeedCandidatesInput } from "../modules/article/application/collect-current-feed-candidates-use-case";
 import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
 import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";

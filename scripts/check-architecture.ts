@@ -216,6 +216,10 @@ function checkImport(
       return;
     }
 
+    if (isDomainVocabularyImport(to)) {
+      return;
+    }
+
     if (to.layer !== "application") {
       report(
         paths,
@@ -324,6 +328,19 @@ function isAgentStateSliceImport(from: ClassifiedSourceFile, to: ClassifiedSourc
     from.layer === "infrastructure" &&
     to.area === "modules" &&
     (to.layer === "domain" || to.layer === "infrastructure")
+  );
+}
+
+function isDomainVocabularyImport(to: ClassifiedSourceFile): boolean {
+  return (
+    to.area === "modules" &&
+    to.layer === "domain" &&
+    [
+      "article/domain/article-author.ts",
+      "article/domain/article-id.ts",
+      "feature-extraction/domain/article-feature-weighting.ts",
+      "feature-extraction/domain/article-features.ts",
+    ].includes(to.relativePath)
   );
 }
 

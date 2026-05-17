@@ -94,6 +94,27 @@ describe("Architecture check に関するテスト", () => {
     );
   });
 
+  it("別 module の domain vocabulary を import したとき、違反なしとなる", async () => {
+    // Arrange
+    const repositoryRoot = await mkdtemp(join(tmpdir(), "architecture-check-"));
+    await writeProjectFile(
+      repositoryRoot,
+      "src/modules/publication/domain/publication-record.ts",
+      'import { ArticleIdSchema } from "../../article/domain/article-id";\n\nvoid ArticleIdSchema;\n',
+    );
+    await writeProjectFile(
+      repositoryRoot,
+      "src/modules/article/domain/article-id.ts",
+      'export const ArticleIdSchema = "article-id";\n',
+    );
+
+    // Act
+    const actual = await checkArchitecture({ repositoryRoot });
+
+    // Assert
+    expect(actual).toHaveLength(0);
+  });
+
   it("domain が同一 module の application を import したとき、domain 依存違反となる", async () => {
     // Arrange
     const repositoryRoot = await mkdtemp(join(tmpdir(), "architecture-check-"));
