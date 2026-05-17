@@ -265,8 +265,11 @@ function createPublicationRecord(
   articleId: string,
 ): {
   articleId: string;
-  messageId: string;
-  channelId: string;
+  deliveryReference: {
+    externalSystem: "discord";
+    destination: string;
+    id: string;
+  };
   postedAt: string;
   reactionFeedback: Array<{
     emoji: string;
@@ -277,8 +280,11 @@ function createPublicationRecord(
 } {
   return {
     articleId,
-    messageId: "message-1",
-    channelId: "channel-1",
+    deliveryReference: {
+      externalSystem: "discord",
+      destination: "channel-1",
+      id: "message-1",
+    },
     postedAt,
     reactionFeedback: [
       { emoji: "👍", userIds: [], processedAt: null, ignoredReason: null },

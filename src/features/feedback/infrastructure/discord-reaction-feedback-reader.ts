@@ -7,17 +7,23 @@ export function normalizeDiscordBotToken(value: string): string {
 export function createDiscordReactionFeedbackReader(botToken: string): ReactionFeedbackReader {
   return {
     read: async (record) => {
+      if (record.deliveryReference.externalSystem !== "discord") {
+        throw new Error(
+          `Unsupported Delivery Reference external system: ${record.deliveryReference.externalSystem}.`,
+        );
+      }
+
       const positiveUserIds = await fetchDiscordReactionUserIds({
         botToken,
-        channelId: record.channelId,
-        messageId: record.messageId,
+        channelId: record.deliveryReference.destination,
+        messageId: record.deliveryReference.id,
         emoji: "👍",
       });
       await sleep(250);
       const negativeUserIds = await fetchDiscordReactionUserIds({
         botToken,
-        channelId: record.channelId,
-        messageId: record.messageId,
+        channelId: record.deliveryReference.destination,
+        messageId: record.deliveryReference.id,
         emoji: "👎",
       });
 

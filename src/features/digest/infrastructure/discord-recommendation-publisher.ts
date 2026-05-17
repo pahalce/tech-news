@@ -43,8 +43,8 @@ export function createDiscordRecommendationPublisher(input: {
       input.logger.info("Discord publish finished", {
         articleId: recommendationContent.articleId,
         elapsedMs: elapsedMs(startedAt),
-        messageId: result.messageId,
-        channelId: result.channelId,
+        messageId: result.deliveryReference.id,
+        channelId: result.deliveryReference.destination,
       });
       return result;
     },
@@ -110,7 +110,14 @@ async function publishDiscordRecommendation(input: {
   botToken: string;
   channelId: string;
   timeoutMs: number;
-}): Promise<{ messageId: string; channelId: string; postedAt: string }> {
+}): Promise<{
+  deliveryReference: {
+    externalSystem: "discord";
+    destination: string;
+    id: string;
+  };
+  postedAt: string;
+}> {
   const response = await fetchWithTimeout(
     `https://discord.com/api/v10/channels/${input.channelId}/messages`,
     {
@@ -142,8 +149,11 @@ async function publishDiscordRecommendation(input: {
   }
 
   return {
-    messageId: payload.id,
-    channelId: payload.channel_id,
+    deliveryReference: {
+      externalSystem: "discord",
+      destination: payload.channel_id,
+      id: payload.id,
+    },
     postedAt: payload.timestamp,
   };
 }

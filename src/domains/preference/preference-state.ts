@@ -1,5 +1,6 @@
 import * as v from "valibot";
 
+import type { ArticleFeatureVocabularyKeys } from "src/domains/article";
 import type { ReadonlyDeep } from "src/shared/domain/readonly-deep";
 
 const FiniteNumberSchema = v.pipe(v.number(), v.finite());
@@ -42,11 +43,6 @@ export type PreferenceSummaryHistory = ReadonlyDeep<
   v.InferOutput<typeof PreferenceSummaryHistorySchema>
 >;
 
-type PreferenceFeatureVocabulary = {
-  topics: Record<string, unknown>;
-  feature_axes: Record<string, { features: Record<string, unknown> }>;
-};
-
 type WeightRange = {
   min: number;
   max: number;
@@ -54,7 +50,7 @@ type WeightRange = {
 
 export function parsePreferenceProfile(
   value: unknown,
-  featureVocabulary: PreferenceFeatureVocabulary,
+  featureVocabulary: ArticleFeatureVocabularyKeys,
 ): PreferenceProfile {
   const profile = v.parse(PreferenceProfileSchema, value);
   assertWeightsInRange(
@@ -109,16 +105,16 @@ function assertWeightsInRange(
 
 function assertPreferenceProfileMatchesFeatureVocabulary(
   profile: PreferenceProfile,
-  featureVocabulary: PreferenceFeatureVocabulary,
+  featureVocabulary: ArticleFeatureVocabularyKeys,
 ): void {
   assertKnownKeys(
     profile.feature_weights.topics,
-    featureVocabulary.topics,
+    featureVocabulary.topicKeys,
     "Preference Profile feature_weights.topics",
     "Feature Vocabulary",
   );
 
-  for (const [axis, vocabularyAxis] of Object.entries(featureVocabulary.feature_axes)) {
+  for (const [axis, featureKeys] of Object.entries(featureVocabulary.featureAxisKeys)) {
     const profileAxis = profile.feature_weights.feature_axes[axis];
     if (!profileAxis) {
       throw new Error(
@@ -128,14 +124,14 @@ function assertPreferenceProfileMatchesFeatureVocabulary(
 
     assertKnownKeys(
       profileAxis,
-      vocabularyAxis.features,
+      featureKeys,
       `Preference Profile feature_weights.feature_axes.${axis}`,
       "Feature Vocabulary",
     );
   }
 
   for (const axis of Object.keys(profile.feature_weights.feature_axes)) {
-    if (!Object.hasOwn(featureVocabulary.feature_axes, axis)) {
+    if (!Object.hasOwn(featureVocabulary.featureAxisKeys, axis)) {
       throw new Error(
         `Preference Profile feature_weights.feature_axes.${axis} is not defined in Feature Vocabulary.`,
       );
@@ -145,18 +141,20 @@ function assertPreferenceProfileMatchesFeatureVocabulary(
 
 function assertKnownKeys(
   profileWeights: Record<string, number>,
-  vocabularyEntries: Record<string, unknown>,
+  vocabularyKeys: readonly string[],
   profilePath: string,
   vocabularyLabel: string,
 ): void {
-  for (const key of Object.keys(vocabularyEntries)) {
+  const vocabularyKeySet = new Set(vocabularyKeys);
+
+  for (const key of vocabularyKeys) {
     if (!Object.hasOwn(profileWeights, key)) {
       throw new Error(`${profilePath}.${key} is required by ${vocabularyLabel}.`);
     }
   }
 
   for (const key of Object.keys(profileWeights)) {
-    if (!Object.hasOwn(vocabularyEntries, key)) {
+    if (!vocabularyKeySet.has(key)) {
       throw new Error(`${profilePath}.${key} is not defined in ${vocabularyLabel}.`);
     }
   }

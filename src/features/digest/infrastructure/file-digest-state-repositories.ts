@@ -2,6 +2,7 @@ import { join } from "node:path";
 
 import {
   parseArticleExtractionRegistry,
+  readArticleFeatureVocabularyKeys,
   type ArticleExtractionRegistry,
 } from "src/domains/article";
 import {
@@ -38,7 +39,7 @@ export function createFileDigestStateRepositories(
       load: async () =>
         parsePreferenceProfile(
           await readJsonFile(join(repositoryRoot, "data", "preference-profile.json")),
-          await loadFeatureVocabularyConfig(repositoryRoot),
+          readArticleFeatureVocabularyKeys(await loadFeatureVocabularyConfig(repositoryRoot)),
         ),
       save: async (profile: PreferenceProfile) =>
         writeJsonFile(join(repositoryRoot, "data", "preference-profile.json"), profile),

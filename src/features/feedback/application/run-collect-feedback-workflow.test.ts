@@ -54,8 +54,11 @@ describe("Collect Feedback Workflow に関するテスト", () => {
         publicationRecords: [
           {
             articleId,
-            messageId: "message-1",
-            channelId: "channel-1",
+            deliveryReference: {
+              externalSystem: "discord",
+              destination: "channel-1",
+              id: "message-1",
+            },
             postedAt: "2026-05-14T00:00:00.000Z",
             reactionFeedback: [
               { emoji: "👍", userIds: [], processedAt: null, ignoredReason: null },

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { calculateRuleScore } from "src/domains/digest";
+import { createRecommendationCandidate, selectDigestItems } from "src/domains/digest";
 
-describe("Rule Score に関するテスト", () => {
+describe("Digest Selection Policy に関するテスト", () => {
   it("Feature Axis の Article Feature を渡したとき、weight と salience の積の合計となる", () => {
     // Arrange
     const articleFeatures = {
@@ -26,7 +26,11 @@ describe("Rule Score に関するテスト", () => {
     };
 
     // Act
-    const actual = calculateRuleScore(articleFeatures, preferenceProfile);
+    const actual = createRecommendationCandidate({
+      articleId,
+      articleFeatures,
+      preferenceProfile,
+    }).ruleScore;
 
     // Assert
     expect(actual).toBeCloseTo(0.94);
@@ -53,7 +57,11 @@ describe("Rule Score に関するテスト", () => {
     };
 
     // Act
-    const actual = calculateRuleScore(articleFeatures, preferenceProfile);
+    const actual = createRecommendationCandidate({
+      articleId,
+      articleFeatures,
+      preferenceProfile,
+    }).ruleScore;
 
     // Assert
     expect(actual).toBe(0);
@@ -80,7 +88,11 @@ describe("Rule Score に関するテスト", () => {
     };
 
     // Act
-    const actual = calculateRuleScore(articleFeatures, preferenceProfile);
+    const actual = createRecommendationCandidate({
+      articleId,
+      articleFeatures,
+      preferenceProfile,
+    }).ruleScore;
 
     // Assert
     expect(actual).toBe(0);
@@ -103,7 +115,11 @@ describe("Rule Score に関するテスト", () => {
     };
 
     // Act
-    const actual = calculateRuleScore(articleFeatures, preferenceProfile);
+    const actual = createRecommendationCandidate({
+      articleId,
+      articleFeatures,
+      preferenceProfile,
+    }).ruleScore;
 
     // Assert
     expect(actual).toBeCloseTo(0.48);
@@ -126,7 +142,11 @@ describe("Rule Score に関するテスト", () => {
     };
 
     // Act
-    const actual = calculateRuleScore(articleFeatures, preferenceProfile);
+    const actual = createRecommendationCandidate({
+      articleId,
+      articleFeatures,
+      preferenceProfile,
+    }).ruleScore;
 
     // Assert
     expect(actual).toBeCloseTo(0.126);
@@ -149,9 +169,80 @@ describe("Rule Score に関するテスト", () => {
     };
 
     // Act
-    const actual = calculateRuleScore(articleFeatures, preferenceProfile);
+    const actual = createRecommendationCandidate({
+      articleId,
+      articleFeatures,
+      preferenceProfile,
+    }).ruleScore;
 
     // Assert
     expect(actual).toBe(0);
   });
+
+  it("Recommendation Candidate から score 降順で Digest Item を選ぶ", () => {
+    // Arrange
+    const candidates = [
+      createRecommendationCandidate({
+        articleId: articleIdA,
+        articleFeatures: createArticleFeatures("typescript", 0.5),
+        preferenceProfile: createPreferenceProfile(1),
+      }),
+      createRecommendationCandidate({
+        articleId: articleIdB,
+        articleFeatures: createArticleFeatures("typescript", 0.9),
+        preferenceProfile: createPreferenceProfile(1),
+      }),
+    ];
+
+    // Act
+    const actual = selectDigestItems({ candidates, maxItems: 1 });
+
+    // Assert
+    expect(actual).toEqual([{ articleId: articleIdB, score: 0.9 }]);
+  });
+
+  it("同じ Article Identity の Recommendation Candidate は最初の Digest Item だけ選ぶ", () => {
+    // Arrange
+    const candidates = [
+      createRecommendationCandidate({
+        articleId: articleIdA,
+        articleFeatures: createArticleFeatures("typescript", 0.9),
+        preferenceProfile: createPreferenceProfile(1),
+      }),
+      createRecommendationCandidate({
+        articleId: articleIdA,
+        articleFeatures: createArticleFeatures("typescript", 0.5),
+        preferenceProfile: createPreferenceProfile(1),
+      }),
+    ];
+
+    // Act
+    const actual = selectDigestItems({ candidates, maxItems: 10 });
+
+    // Assert
+    expect(actual).toEqual([{ articleId: articleIdA, score: 0.9 }]);
+  });
 });
+
+const articleId = `zenn:${"0".repeat(64)}`;
+const articleIdA = `zenn:${"a".repeat(64)}`;
+const articleIdB = `zenn:${"b".repeat(64)}`;
+
+function createArticleFeatures(topic: string, salience: number) {
+  return {
+    primaryTopics: [{ key: topic, salience }],
+    mentionedTopics: [],
+    unknownTopics: [],
+    featureAxes: {},
+    otherSignals: [],
+  };
+}
+
+function createPreferenceProfile(weight: number) {
+  return {
+    feature_weights: {
+      topics: { typescript: weight },
+      feature_axes: {},
+    },
+  };
+}

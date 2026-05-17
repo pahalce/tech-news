@@ -100,8 +100,11 @@ describe("Zenn Digest Workflow に関するテスト", () => {
       },
       publisher: {
         publish: async () => ({
-          messageId: "message-1",
-          channelId: "channel-1",
+          deliveryReference: {
+            externalSystem: "discord",
+            destination: "channel-1",
+            id: "message-1",
+          },
           postedAt: "2026-05-14T00:01:00.000Z",
         }),
       },
@@ -339,8 +342,11 @@ describe("Zenn Digest Workflow に関するテスト", () => {
       },
       publisher: {
         publish: async () => ({
-          messageId: "message-1",
-          channelId: "channel-1",
+          deliveryReference: {
+            externalSystem: "discord",
+            destination: "channel-1",
+            id: "message-1",
+          },
           postedAt: "2026-05-14T00:01:00.000Z",
         }),
       },

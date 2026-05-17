@@ -17,10 +17,15 @@ const ReactionFeedbackPlaceholderSchema = v.strictObject({
   ignoredReason: v.nullable(NonEmptyStringSchema),
 });
 
+const DeliveryReferenceSchema = v.strictObject({
+  externalSystem: NonEmptyStringSchema,
+  destination: NonEmptyStringSchema,
+  id: NonEmptyStringSchema,
+});
+
 const PublicationRecordSchema = v.strictObject({
   articleId: ArticleIdSchema,
-  messageId: NonEmptyStringSchema,
-  channelId: NonEmptyStringSchema,
+  deliveryReference: DeliveryReferenceSchema,
   postedAt: DateStringSchema,
   reactionFeedback: v.array(ReactionFeedbackPlaceholderSchema),
 });
@@ -40,6 +45,8 @@ export type ReactionFeedbackPlaceholder = ReadonlyDeep<
   v.InferOutput<typeof ReactionFeedbackPlaceholderSchema>
 >;
 
+export type DeliveryReference = ReadonlyDeep<v.InferOutput<typeof DeliveryReferenceSchema>>;
+
 export type PublicationRecord = ReadonlyDeep<v.InferOutput<typeof PublicationRecordSchema>>;
 
 export type RecommendedArticle = ReadonlyDeep<v.InferOutput<typeof RecommendedArticleSchema>>;
@@ -50,8 +57,7 @@ export type PublishedDigestRegistry = ReadonlyDeep<
 
 export function createPublicationRecord(input: {
   articleId: string;
-  messageId: string;
-  channelId: string;
+  deliveryReference: DeliveryReference;
   postedAt: string;
 }): PublicationRecord {
   return v.parse(PublicationRecordSchema, {
@@ -68,11 +74,57 @@ export function createRecommendedArticle(input: RecommendedArticle): Recommended
 }
 
 export function parsePublishedDigestRegistry(input: unknown): PublishedDigestRegistry {
-  const state = v.parse(PublishedDigestRegistrySchema, input);
+  const state = v.parse(PublishedDigestRegistrySchema, restoreLegacyPublishedDigestRegistry(input));
 
   return {
     version: state.version,
     publicationRecords: [...state.publicationRecords],
     recommendedArticles: [...state.recommendedArticles],
+  };
+}
+
+function restoreLegacyPublishedDigestRegistry(input: unknown): unknown {
+  if (!input || typeof input !== "object") {
+    return input;
+  }
+
+  const registry = input as {
+    publicationRecords?: unknown;
+  };
+
+  if (!Array.isArray(registry.publicationRecords)) {
+    return input;
+  }
+
+  return {
+    ...input,
+    publicationRecords: registry.publicationRecords.map((record) => {
+      if (!record || typeof record !== "object" || "deliveryReference" in record) {
+        return record;
+      }
+
+      const legacyRecord = record as {
+        messageId?: unknown;
+        channelId?: unknown;
+      };
+
+      if (
+        typeof legacyRecord.messageId !== "string" ||
+        typeof legacyRecord.channelId !== "string"
+      ) {
+        return record;
+      }
+
+      const { messageId, channelId, ...rest } = legacyRecord;
+
+      return {
+        ...rest,
+        deliveryReference: {
+          externalSystem: "discord",
+          destination: channelId,
+          id: messageId,
+        },
+      };
+    }),
   };
 }

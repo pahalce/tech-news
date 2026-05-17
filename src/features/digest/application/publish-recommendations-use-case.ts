@@ -1,8 +1,9 @@
 import { type ArticleAuthor } from "src/domains/article";
 import {
-  createPublicationRecord,
-  createRecommendedArticle,
+  recordPublishedDigestItem,
+  type DeliveryReference,
   type PublicationRecord,
+  type PublishedDigestRegistry,
   type RecommendedArticle,
 } from "src/domains/digest";
 
@@ -22,8 +23,7 @@ export type PublishRecommendationMessageInput = {
 };
 
 export type PublishRecommendationMessageResult = {
-  messageId: string;
-  channelId: string;
+  deliveryReference: DeliveryReference;
   postedAt: string;
 };
 
@@ -48,10 +48,12 @@ export type PublishRecommendationsResult = {
 export async function publishRecommendations(
   input: PublishRecommendationsInput,
 ): Promise<PublishRecommendationsResult> {
-  const publicationRecords = [...(input.existingPublicationRecords ?? [])];
-  const recommendedArticles = [...(input.existingRecommendedArticles ?? [])];
+  let registry: PublishedDigestRegistry = {
+    version: 1,
+    publicationRecords: [...(input.existingPublicationRecords ?? [])],
+    recommendedArticles: [...(input.existingRecommendedArticles ?? [])],
+  };
   const failedArticleIds: string[] = [];
-  const recommendedArticleIds = new Set(recommendedArticles.map((article) => article.articleId));
 
   for (const recommendationContent of input.recommendationContents) {
     try {
@@ -62,24 +64,11 @@ export async function publishRecommendations(
           signalsUsed: [...recommendationContent.signalsUsed],
         },
       });
-      publicationRecords.push(
-        createPublicationRecord({
-          articleId: recommendationContent.articleId,
-          messageId: published.messageId,
-          channelId: published.channelId,
-          postedAt: published.postedAt,
-        }),
-      );
-
-      if (!recommendedArticleIds.has(recommendationContent.articleId)) {
-        recommendedArticleIds.add(recommendationContent.articleId);
-        recommendedArticles.push(
-          createRecommendedArticle({
-            articleId: recommendationContent.articleId,
-            firstRecommendedAt: published.postedAt,
-          }),
-        );
-      }
+      registry = recordPublishedDigestItem(registry, {
+        articleId: recommendationContent.articleId,
+        deliveryReference: published.deliveryReference,
+        publishedAt: published.postedAt,
+      });
     } catch (error) {
       failedArticleIds.push(recommendationContent.articleId);
       input.onPublishFailure?.({
@@ -90,8 +79,8 @@ export async function publishRecommendations(
   }
 
   return {
-    publicationRecords,
-    recommendedArticles,
+    publicationRecords: [...registry.publicationRecords],
+    recommendedArticles: [...registry.recommendedArticles],
     failedArticleIds,
   };
 }

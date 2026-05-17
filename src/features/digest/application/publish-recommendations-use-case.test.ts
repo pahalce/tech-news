@@ -8,8 +8,11 @@ describe("Recommendation Publication use case に関するテスト", () => {
     const recommendationContents = [createRecommendationContent(articleIdA)];
     const publisher = {
       publish: async () => ({
-        messageId: "message-1",
-        channelId: "channel-1",
+        deliveryReference: {
+          externalSystem: "discord",
+          destination: "channel-1",
+          id: "message-1",
+        },
         postedAt: "2026-05-13T00:00:00.000Z",
       }),
     };
@@ -20,8 +23,11 @@ describe("Recommendation Publication use case に関するテスト", () => {
     // Assert
     expect(actual.publicationRecords[0]).toEqual({
       articleId: articleIdA,
-      messageId: "message-1",
-      channelId: "channel-1",
+      deliveryReference: {
+        externalSystem: "discord",
+        destination: "channel-1",
+        id: "message-1",
+      },
       postedAt: "2026-05-13T00:00:00.000Z",
       reactionFeedback: [
         { emoji: "👍", userIds: [], processedAt: null, ignoredReason: null },
@@ -35,8 +41,11 @@ describe("Recommendation Publication use case に関するテスト", () => {
     const recommendationContents = [createRecommendationContent(articleIdA)];
     const publisher = {
       publish: async () => ({
-        messageId: "message-1",
-        channelId: "channel-1",
+        deliveryReference: {
+          externalSystem: "discord",
+          destination: "channel-1",
+          id: "message-1",
+        },
         postedAt: "2026-05-13T00:00:00.000Z",
       }),
     };
@@ -68,8 +77,11 @@ describe("Recommendation Publication use case に関するテスト", () => {
         }
 
         return {
-          messageId: "message-1",
-          channelId: "channel-1",
+          deliveryReference: {
+            externalSystem: "discord",
+            destination: "channel-1",
+            id: "message-1",
+          },
           postedAt: "2026-05-13T00:00:00.000Z",
         };
       },

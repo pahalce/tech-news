@@ -62,6 +62,11 @@ export type FeatureVocabularyConfig = FeatureVocabularyConfigData & {
   normalizeTopic(topic: string): TopicNormalizationResult;
 };
 
+export type ArticleFeatureVocabularyKeys = Readonly<{
+  topicKeys: readonly string[];
+  featureAxisKeys: Readonly<Record<string, readonly string[]>>;
+}>;
+
 const supportedFeatureAxes = new Set([
   "content_types",
   "evidence_signals",
@@ -102,6 +107,20 @@ export function parseFeatureVocabularyConfig(value: unknown): FeatureVocabularyC
         normalizedTopic,
       };
     },
+  };
+}
+
+export function readArticleFeatureVocabularyKeys(
+  config: FeatureVocabularyConfig,
+): ArticleFeatureVocabularyKeys {
+  return {
+    topicKeys: Object.keys(config.topics),
+    featureAxisKeys: Object.fromEntries(
+      Object.entries(config.feature_axes).map(([axis, featureAxis]) => [
+        axis,
+        Object.keys(featureAxis.features),
+      ]),
+    ),
   };
 }
 

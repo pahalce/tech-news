@@ -1,5 +1,6 @@
 import { applyArticleFeatureFeedbackToNewWeights } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
+import type { DeliveryReference } from "src/domains/digest";
 import {
   isInsideFeedbackCollectionWindow,
   readReactionFeedbackWeight,
@@ -21,8 +22,7 @@ type ReactionFeedback = {
 
 type PublicationRecord = {
   articleId: string;
-  messageId: string;
-  channelId: string;
+  deliveryReference: DeliveryReference;
   postedAt: string;
   reactionFeedback: readonly ReactionFeedback[];
 };
