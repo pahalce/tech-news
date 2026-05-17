@@ -1,17 +1,17 @@
-export type FeatureSignal = {
+export type FeatureSignal = Readonly<{
   key: string;
   salience: number;
-};
+}>;
 
-export type OtherSignal = {
+export type OtherSignal = Readonly<{
   key: string;
   salience: number;
-};
+}>;
 
-export type ArticleFeatures = {
-  primaryTopics: FeatureSignal[];
-  mentionedTopics: FeatureSignal[];
-  unknownTopics: string[];
-  featureAxes: Record<string, FeatureSignal[]>;
-  otherSignals: OtherSignal[];
-};
+export type ArticleFeatures = Readonly<{
+  primaryTopics: readonly FeatureSignal[];
+  mentionedTopics: readonly FeatureSignal[];
+  unknownTopics: readonly string[];
+  featureAxes: Readonly<Record<string, readonly FeatureSignal[]>>;
+  otherSignals: readonly OtherSignal[];
+}>;

@@ -44,6 +44,9 @@ export async function extractCurrentFeedCandidateFeatures(
   input: ExtractCurrentFeedCandidateFeaturesInput,
 ): Promise<ExtractCurrentFeedCandidateFeaturesResult> {
   const state = parseFeatureExtractionState(input.featureExtractionState);
+  const bodyFetchFailures = [...state.bodyFetchFailures];
+  const extractions = [...state.extractions];
+  const failedExtractionAttempts = [...state.failedExtractionAttempts];
   const extractedArticleIds = new Set(state.extractions.map((extraction) => extraction.articleId));
   const targetCandidates = input.candidates.filter(
     (candidate) => !extractedArticleIds.has(candidate.articleId),
@@ -58,7 +61,7 @@ export async function extractCurrentFeedCandidateFeatures(
     try {
       fetchedArticle = await input.fetchArticleBody(candidate);
     } catch (error) {
-      state.bodyFetchFailures.push(
+      bodyFetchFailures.push(
         createBodyFetchFailure({
           articleId: candidate.articleId,
           failedAt: input.now(),
@@ -77,7 +80,7 @@ export async function extractCurrentFeedCandidateFeatures(
         featureVocabulary: input.featureVocabulary,
       });
 
-      state.extractions.push(
+      extractions.push(
         createFeatureExtraction(
           {
             articleId: candidate.articleId,
@@ -89,7 +92,7 @@ export async function extractCurrentFeedCandidateFeatures(
         ),
       );
     } catch (error) {
-      state.failedExtractionAttempts.push(
+      failedExtractionAttempts.push(
         createFailedExtractionAttempt({
           articleId: candidate.articleId,
           attemptedAt: input.now(),
@@ -105,7 +108,14 @@ export async function extractCurrentFeedCandidateFeatures(
     }
   }
 
-  return { state: parseFeatureExtractionState(state) };
+  return {
+    state: parseFeatureExtractionState({
+      version: state.version,
+      extractions,
+      bodyFetchFailures,
+      failedExtractionAttempts,
+    }),
+  };
 }
 
 function errorMessage(error: unknown): string {

@@ -22,11 +22,11 @@ type FeatureVocabularyConfig = {
 
 type PublicationRecord = {
   articleId: string;
-  reactionFeedback: Array<{
+  reactionFeedback: readonly {
     userIds: readonly string[];
     processedAt: string | null;
     ignoredReason: string | null;
-  }>;
+  }[];
 };
 
 export type VocabularyCandidateDescriber = {

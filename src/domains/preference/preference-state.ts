@@ -1,5 +1,7 @@
 import * as v from "valibot";
 
+import type { ReadonlyDeep } from "src/shared/domain/readonly-deep";
+
 const FiniteNumberSchema = v.pipe(v.number(), v.finite());
 
 const WeightRangeSchema = v.pipe(
@@ -34,9 +36,11 @@ const PreferenceSummaryHistorySchema = v.object({
   history: v.array(v.unknown()),
 });
 
-export type PreferenceProfile = v.InferOutput<typeof PreferenceProfileSchema>;
+export type PreferenceProfile = ReadonlyDeep<v.InferOutput<typeof PreferenceProfileSchema>>;
 
-export type PreferenceSummaryHistory = v.InferOutput<typeof PreferenceSummaryHistorySchema>;
+export type PreferenceSummaryHistory = ReadonlyDeep<
+  v.InferOutput<typeof PreferenceSummaryHistorySchema>
+>;
 
 type PreferenceFeatureVocabulary = {
   topics: Record<string, unknown>;

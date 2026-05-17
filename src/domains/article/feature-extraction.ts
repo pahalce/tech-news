@@ -114,37 +114,37 @@ const LlmFeatureExtractionEnvelopeSchema = v.strictObject({
   other_signals: v.array(v.unknown()),
 });
 
-export type FeatureExtractionState = {
+export type FeatureExtractionState = Readonly<{
   version: 1;
-  extractions: FeatureExtraction[];
-  bodyFetchFailures: BodyFetchFailure[];
-  failedExtractionAttempts: FailedExtractionAttempt[];
-};
+  extractions: readonly FeatureExtraction[];
+  bodyFetchFailures: readonly BodyFetchFailure[];
+  failedExtractionAttempts: readonly FailedExtractionAttempt[];
+}>;
 
-export type FeatureExtraction = {
+export type FeatureExtraction = Readonly<{
   articleId: string;
   extractedAt: string;
-  readability: {
+  readability: Readonly<{
     isReadable: boolean;
     reason: string | null;
-  };
+  }>;
   articleFeatures: ArticleFeatures | null;
   author: ArticleAuthor | null;
-};
+}>;
 
 export type { ArticleFeatures, FeatureSignal, OtherSignal };
 
-export type BodyFetchFailure = {
+export type BodyFetchFailure = Readonly<{
   articleId: string;
   failedAt: string;
   message: string;
-};
+}>;
 
-export type FailedExtractionAttempt = {
+export type FailedExtractionAttempt = Readonly<{
   articleId: string;
   attemptedAt: string;
   message: string;
-};
+}>;
 
 type FeatureExtractionVocabulary = {
   feature_axes: Record<string, { features: Record<string, unknown> }>;
@@ -283,7 +283,7 @@ function normalizeFeatureAxes(
   featureAxesInput: Record<string, FeatureSignal[]>,
   featureVocabulary: FeatureExtractionVocabulary,
 ) {
-  const featureAxes: Record<string, FeatureSignal[]> = {};
+  const featureAxes: Record<string, readonly FeatureSignal[]> = {};
 
   for (const [axis, features] of Object.entries(featureAxesInput)) {
     const vocabularyAxis = featureVocabulary.feature_axes[axis];

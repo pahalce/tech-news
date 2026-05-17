@@ -1,4 +1,4 @@
-import { applyArticleFeatureFeedback } from "src/domains/article";
+import { applyArticleFeatureFeedbackToNewWeights } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
 import {
   isInsideFeedbackCollectionWindow,
@@ -12,7 +12,7 @@ import {
 
 type ReactionFeedback = {
   emoji: string;
-  userIds: string[];
+  userIds: readonly string[];
   processedAt: string | null;
   ignoredReason: string | null;
 };
@@ -22,7 +22,7 @@ type PublicationRecord = {
   messageId: string;
   channelId: string;
   postedAt: string;
-  reactionFeedback: ReactionFeedback[];
+  reactionFeedback: readonly ReactionFeedback[];
 };
 
 type FeatureExtraction = {
@@ -70,7 +70,7 @@ export async function collectReactionFeedback(
   const featureExtractionsByArticleId = new Map(
     input.featureExtractions.map((extraction) => [extraction.articleId, extraction]),
   );
-  const preferenceProfile = clonePreferenceProfile(input.preferenceProfile);
+  let preferenceProfile = input.preferenceProfile;
   const publicationRecords: PublicationRecord[] = [];
   let processedFeedbackCount = 0;
 
@@ -80,7 +80,7 @@ export async function collectReactionFeedback(
       continue;
     }
 
-    const nextRecord = clonePublicationRecord(record);
+    let nextRecord = clonePublicationRecord(record);
     if (hasProcessedTargetFeedback(nextRecord)) {
       publicationRecords.push(nextRecord);
       continue;
@@ -96,18 +96,16 @@ export async function collectReactionFeedback(
         negativeCount: snapshot.negativeUserIds.length,
       })
     ) {
-      markIgnored(
-        nextRecord,
-        positiveReactionEmoji,
-        snapshot.positiveUserIds,
-        "contradictory_feedback",
-      );
-      markIgnored(
-        nextRecord,
-        negativeReactionEmoji,
-        snapshot.negativeUserIds,
-        "contradictory_feedback",
-      );
+      nextRecord = updateReactionFeedback(nextRecord, positiveReactionEmoji, {
+        userIds: [...snapshot.positiveUserIds],
+        processedAt: null,
+        ignoredReason: "contradictory_feedback",
+      });
+      nextRecord = updateReactionFeedback(nextRecord, negativeReactionEmoji, {
+        userIds: [...snapshot.negativeUserIds],
+        processedAt: null,
+        ignoredReason: "contradictory_feedback",
+      });
       publicationRecords.push(nextRecord);
       continue;
     }
@@ -116,14 +114,22 @@ export async function collectReactionFeedback(
     const articleFeatures = featureExtraction?.articleFeatures ?? null;
 
     if (hasPositive) {
-      markProcessed(nextRecord, positiveReactionEmoji, snapshot.positiveUserIds, input.collectedAt);
-      applyFeedback(preferenceProfile, articleFeatures, positiveReactionEmoji);
+      nextRecord = updateReactionFeedback(nextRecord, positiveReactionEmoji, {
+        userIds: [...snapshot.positiveUserIds],
+        processedAt: input.collectedAt,
+        ignoredReason: null,
+      });
+      preferenceProfile = applyFeedback(preferenceProfile, articleFeatures, positiveReactionEmoji);
       processedFeedbackCount += snapshot.positiveUserIds.length;
     }
 
     if (hasNegative) {
-      markProcessed(nextRecord, negativeReactionEmoji, snapshot.negativeUserIds, input.collectedAt);
-      applyFeedback(preferenceProfile, articleFeatures, negativeReactionEmoji);
+      nextRecord = updateReactionFeedback(nextRecord, negativeReactionEmoji, {
+        userIds: [...snapshot.negativeUserIds],
+        processedAt: input.collectedAt,
+        ignoredReason: null,
+      });
+      preferenceProfile = applyFeedback(preferenceProfile, articleFeatures, negativeReactionEmoji);
       processedFeedbackCount += snapshot.negativeUserIds.length;
     }
 
@@ -160,64 +166,48 @@ function hasProcessedTargetFeedback(record: PublicationRecord): boolean {
   );
 }
 
-function markProcessed(
-  record: PublicationRecord,
-  emoji: string,
-  userIds: readonly string[],
-  processedAt: string,
-): void {
-  updateReactionFeedback(record, emoji, {
-    userIds: [...userIds],
-    processedAt,
-    ignoredReason: null,
-  });
-}
-
-function markIgnored(
-  record: PublicationRecord,
-  emoji: string,
-  userIds: readonly string[],
-  ignoredReason: string,
-): void {
-  updateReactionFeedback(record, emoji, {
-    userIds: [...userIds],
-    processedAt: null,
-    ignoredReason,
-  });
-}
-
 function updateReactionFeedback(
   record: PublicationRecord,
   emoji: string,
   feedback: Omit<ReactionFeedback, "emoji">,
-): void {
+): PublicationRecord {
   const index = record.reactionFeedback.findIndex((item) => item.emoji === emoji);
   const nextFeedback = { emoji, ...feedback };
 
   if (index === -1) {
-    record.reactionFeedback.push(nextFeedback);
-    return;
+    return {
+      ...record,
+      reactionFeedback: [...record.reactionFeedback, nextFeedback],
+    };
   }
 
-  record.reactionFeedback[index] = nextFeedback;
+  return {
+    ...record,
+    reactionFeedback: record.reactionFeedback.map((item, itemIndex) =>
+      itemIndex === index ? nextFeedback : item,
+    ),
+  };
 }
 
 function applyFeedback(
   preferenceProfile: PreferenceProfile,
   articleFeatures: ArticleFeatures | null,
   emoji: string,
-): void {
+): PreferenceProfile {
   const feedbackWeight = readReactionFeedbackWeight(emoji);
   if (feedbackWeight === null) {
-    return;
+    return preferenceProfile;
   }
 
-  applyArticleFeatureFeedback(
-    preferenceProfile.feature_weights,
-    articleFeatures,
-    feedbackWeight,
-    preferenceProfile.weight_range,
-  );
+  return {
+    ...preferenceProfile,
+    feature_weights: applyArticleFeatureFeedbackToNewWeights(
+      preferenceProfile.feature_weights,
+      articleFeatures,
+      feedbackWeight,
+      preferenceProfile.weight_range,
+    ),
+  };
 }
 
 function clonePublicationRecord(record: PublicationRecord): PublicationRecord {
@@ -227,22 +217,5 @@ function clonePublicationRecord(record: PublicationRecord): PublicationRecord {
       ...feedback,
       userIds: [...feedback.userIds],
     })),
-  };
-}
-
-function clonePreferenceProfile(profile: PreferenceProfile): PreferenceProfile {
-  return {
-    ...profile,
-    weight_range: { ...profile.weight_range },
-    seed_weight_range: { ...profile.seed_weight_range },
-    feature_weights: {
-      topics: { ...profile.feature_weights.topics },
-      feature_axes: Object.fromEntries(
-        Object.entries(profile.feature_weights.feature_axes).map(([axis, weights]) => [
-          axis,
-          { ...weights },
-        ]),
-      ),
-    },
   };
 }

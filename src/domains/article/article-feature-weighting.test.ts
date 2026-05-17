@@ -3,9 +3,9 @@ import { describe, expect, it } from "vite-plus/test";
 import {
   applyArticleFeatureFeedback,
   calculateArticleFeatureWeight,
+  type ArticleFeatures,
   type ArticleFeatureWeights,
-} from "src/domains/article/article-feature-weighting";
-import type { ArticleFeatures } from "src/domains/article/article-features";
+} from "src/domains/article";
 
 describe("Article Feature Weighting に関するテスト", () => {
   it("Article Features を渡したとき、Feature Salience を掛けた重みの合計になる", () => {

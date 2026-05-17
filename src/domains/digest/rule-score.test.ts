@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { calculateRuleScore } from "src/domains/digest/rule-score";
+import { calculateRuleScore } from "src/domains/digest";
 
 describe("Rule Score に関するテスト", () => {
   it("Feature Axis の Article Feature を渡したとき、weight と salience の積の合計となる", () => {

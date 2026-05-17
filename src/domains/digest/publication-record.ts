@@ -1,6 +1,7 @@
 import * as v from "valibot";
 
 import { ArticleIdSchema } from "src/domains/article";
+import type { ReadonlyDeep } from "src/shared/domain/readonly-deep";
 
 const NonEmptyStringSchema = v.pipe(v.string(), v.nonEmpty("value must not be empty."));
 
@@ -35,13 +36,15 @@ const PublicationStateSchema = v.strictObject({
   recommendedArticles: v.array(RecommendedArticleSchema),
 });
 
-export type ReactionFeedbackPlaceholder = v.InferOutput<typeof ReactionFeedbackPlaceholderSchema>;
+export type ReactionFeedbackPlaceholder = ReadonlyDeep<
+  v.InferOutput<typeof ReactionFeedbackPlaceholderSchema>
+>;
 
-export type PublicationRecord = v.InferOutput<typeof PublicationRecordSchema>;
+export type PublicationRecord = ReadonlyDeep<v.InferOutput<typeof PublicationRecordSchema>>;
 
-export type RecommendedArticle = v.InferOutput<typeof RecommendedArticleSchema>;
+export type RecommendedArticle = ReadonlyDeep<v.InferOutput<typeof RecommendedArticleSchema>>;
 
-export type PublicationState = v.InferOutput<typeof PublicationStateSchema>;
+export type PublicationState = ReadonlyDeep<v.InferOutput<typeof PublicationStateSchema>>;
 
 export function createPublicationRecord(input: {
   articleId: string;

@@ -4,7 +4,7 @@ import {
   createBodyFetchFailure,
   createFailedExtractionAttempt,
   createFeatureExtraction,
-} from "src/domains/article/feature-extraction";
+} from "src/domains/article";
 
 const articleId = `zenn:${"a".repeat(64)}`;
 

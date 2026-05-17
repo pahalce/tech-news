@@ -82,6 +82,17 @@ export function applyArticleFeatureFeedback(
   }
 }
 
+export function applyArticleFeatureFeedbackToNewWeights(
+  featureWeights: ArticleFeatureWeights,
+  articleFeatures: ArticleFeatures | null,
+  feedbackWeight: number,
+  weightRange: WeightRange,
+): ArticleFeatureWeights {
+  const nextWeights = cloneArticleFeatureWeights(featureWeights);
+  applyArticleFeatureFeedback(nextWeights, articleFeatures, feedbackWeight, weightRange);
+  return nextWeights;
+}
+
 function calculateSignalWeight(feature: FeatureSignal, weights: Record<string, number>): number {
   if (feature.salience < salienceThreshold) {
     return 0;
@@ -118,4 +129,13 @@ function applySignalFeedback(
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
+}
+
+function cloneArticleFeatureWeights(featureWeights: ArticleFeatureWeights): ArticleFeatureWeights {
+  return {
+    topics: { ...featureWeights.topics },
+    feature_axes: Object.fromEntries(
+      Object.entries(featureWeights.feature_axes).map(([axis, weights]) => [axis, { ...weights }]),
+    ),
+  };
 }
