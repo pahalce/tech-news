@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { formatArticleAuthorLine } from "../domain/article-author";
+import { formatArticleAuthorLine } from "src/modules/article/domain/article-author";
 import {
   extractZennArticleAuthorFromCanonicalUrl,
   extractZennArticleAuthorFromHtml,
   resolveZennArticleAuthor,
-} from "./zenn-article-author";
+} from "src/modules/article/infrastructure/zenn-article-author";
 
 describe("extractZennArticleAuthorFromCanonicalUrl に関するテスト", () => {
   it("Zenn 記事 URL から username を取り出す", () => {

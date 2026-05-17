@@ -1,8 +1,15 @@
+import { resolve } from "node:path";
+
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      src: resolve(import.meta.dirname, "src"),
+    },
+  },
   staged: {
-    "*": "vp check --fix && node scripts/check-architecture.ts",
+    "*": "vp check --fix && pnpm check:architecture",
   },
   pack: {
     dts: {
@@ -14,24 +21,7 @@ export default defineConfig({
     plugins: ["unicorn", "typescript", "oxc", "import"],
     rules: {
       "import/no-cycle": "error",
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: [
-                "src/modules/*/domain/*",
-                "src/modules/*/application/*",
-                "src/modules/*/infrastructure/*",
-                "@/modules/*/domain/*",
-                "@/modules/*/application/*",
-                "@/modules/*/infrastructure/*",
-              ],
-              message: "Import other modules through their public index.ts API.",
-            },
-          ],
-        },
-      ],
+      "no-restricted-imports": "off",
     },
     options: {
       typeAware: true,

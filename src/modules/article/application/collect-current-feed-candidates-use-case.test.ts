@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { collectCurrentFeedCandidates } from "./collect-current-feed-candidates-use-case";
+import { collectCurrentFeedCandidates } from "src/modules/article/application/collect-current-feed-candidates-use-case";
 
 describe("Current Feed Candidate 収集 use case に関するテスト", () => {
   it("同じ記事が複数 feed に出たとき、Article ID で1件にまとめて feed 情報を残す", async () => {

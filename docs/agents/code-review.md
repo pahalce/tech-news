@@ -144,7 +144,7 @@ canonical flow から外れる変更は、理由がコードや ADR に残って
 
 Vite+ の推奨に従い、lint 設定は `vite.config.ts` の `lint` block に直接定義する。`.oxlintrc.json` や `oxlint.config.ts` を追加して lint 設定を分散している場合は指摘する。
 
-oxlint で表現しづらい source-dependent な layer 依存は `scripts/check-architecture.ts` で補う。境界違反を「レビューで気をつける」だけにしている変更は、lint または check で検出できる形にできないか確認する。
+source-dependent な layer 依存は `dependency-cruiser` で補う。境界違反を「レビューで気をつける」だけにしている変更は、dependency-cruiser または oxlint で検出できる形にできないか確認する。
 
 ## レビュー時の指摘例
 

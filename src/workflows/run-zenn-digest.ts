@@ -1,24 +1,24 @@
 import { jsonSchema, type JSONSchema7 } from "ai";
 import * as v from "valibot";
 
-import { defaultZennArticleFeeds } from "../modules/article/infrastructure/zenn-article-feeds";
+import { defaultZennArticleFeeds } from "src/modules/article/infrastructure/zenn-article-feeds";
 import {
   formatArticleAuthorLine,
   type ArticleAuthor,
-} from "../modules/article/application/article-author";
-import { resolveZennArticleAuthor } from "../modules/article/infrastructure/zenn-article-author";
-import { readZennRssFeed } from "../modules/article/infrastructure/zenn-rss-feed-reader";
+} from "src/modules/article/application/article-author";
+import { resolveZennArticleAuthor } from "src/modules/article/infrastructure/zenn-article-author";
+import { readZennRssFeed } from "src/modules/article/infrastructure/zenn-rss-feed-reader";
 import {
   loadAgentState,
   saveAgentState,
-} from "../modules/agent-state/infrastructure/file-agent-state";
-import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
-import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
-import { env } from "../shared/infrastructure/env";
-import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
-import { resolveLlmModel, runtimeConfig } from "../shared/infrastructure/runtime-config";
-import { createConsoleWorkflowLogger, elapsedMs } from "./workflow-logger";
-import { runZennDigestJob } from "./zenn-digest-job";
+} from "src/modules/agent-state/infrastructure/file-agent-state";
+import type { FeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
+import { loadFeatureVocabularyConfig } from "src/modules/feature/infrastructure/file-feature-vocabulary-config";
+import { env } from "src/shared/infrastructure/env";
+import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
+import { resolveLlmModel, runtimeConfig } from "src/shared/infrastructure/runtime-config";
+import { createConsoleWorkflowLogger, elapsedMs } from "src/workflows/workflow-logger";
+import { runZennDigestJob } from "src/workflows/zenn-digest-job";
 
 export type DiscordRecommendationContent = {
   articleId: string;

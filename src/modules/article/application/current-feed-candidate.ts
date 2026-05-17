@@ -2,4 +2,4 @@ export {
   createCurrentFeedCandidate,
   recordFeedAppearance,
   type CurrentFeedCandidate,
-} from "../domain/current-feed-candidate";
+} from "src/modules/article/domain/current-feed-candidate";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { collectReactionFeedback } from "./collect-reaction-feedback-use-case";
+import { collectReactionFeedback } from "src/modules/preference/application/collect-reaction-feedback-use-case";
 
 describe("Reaction Feedback 収集 use case に関するテスト", () => {
   it("Publication Record が3日より古いとき、Reaction Feedback を読まない", async () => {

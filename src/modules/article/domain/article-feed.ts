@@ -1,7 +1,7 @@
 import * as v from "valibot";
 
-import { ArticleSourceSchema } from "./article-source";
-import { normalizeCanonicalUrl, UrlStringSchema } from "./canonical-url";
+import { ArticleSourceSchema } from "src/modules/article/domain/article-source";
+import { normalizeCanonicalUrl, UrlStringSchema } from "src/modules/article/domain/canonical-url";
 
 const PublishedAtSchema = v.nullable(
   v.pipe(

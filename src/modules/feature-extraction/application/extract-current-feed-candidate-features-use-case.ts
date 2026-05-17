@@ -1,13 +1,13 @@
-import { type ArticleAuthor } from "../../article/application/article-author";
-import { type FeatureVocabularyConfig } from "../../feature/application/feature-vocabulary-config";
-import { type CurrentFeedCandidate } from "../../article/application/current-feed-candidate";
+import { type ArticleAuthor } from "src/modules/article/application/article-author";
+import { type FeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
+import { type CurrentFeedCandidate } from "src/modules/article/application/current-feed-candidate";
 import {
   createBodyFetchFailure,
   createFailedExtractionAttempt,
   createFeatureExtraction,
   parseFeatureExtractionState,
   type FeatureExtractionState,
-} from "../domain/feature-extraction";
+} from "src/modules/feature-extraction/domain/feature-extraction";
 
 export type ExtractCurrentFeedCandidateFeaturesInput = {
   candidates: readonly CurrentFeedCandidate[];

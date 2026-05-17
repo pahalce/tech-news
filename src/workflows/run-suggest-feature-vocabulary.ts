@@ -4,14 +4,18 @@ import * as v from "valibot";
 import {
   loadAgentState,
   saveAgentState,
-} from "../modules/agent-state/infrastructure/file-agent-state";
-import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
-import type { VocabularyPromotionCandidate } from "../modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
-import { env } from "../shared/infrastructure/env";
-import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
-import { resolveLlmModel, runtimeConfig } from "../shared/infrastructure/runtime-config";
-import { runSuggestFeatureVocabularyJob } from "./suggest-feature-vocabulary-job";
-import { createConsoleWorkflowLogger, elapsedMs, type WorkflowLogger } from "./workflow-logger";
+} from "src/modules/agent-state/infrastructure/file-agent-state";
+import { loadFeatureVocabularyConfig } from "src/modules/feature/infrastructure/file-feature-vocabulary-config";
+import type { VocabularyPromotionCandidate } from "src/modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
+import { env } from "src/shared/infrastructure/env";
+import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
+import { resolveLlmModel, runtimeConfig } from "src/shared/infrastructure/runtime-config";
+import { runSuggestFeatureVocabularyJob } from "src/workflows/suggest-feature-vocabulary-job";
+import {
+  createConsoleWorkflowLogger,
+  elapsedMs,
+  type WorkflowLogger,
+} from "src/workflows/workflow-logger";
 
 const VocabularyCandidateDescriptionSchema = v.strictObject({
   description_ja: v.pipe(v.string(), v.nonEmpty()),

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import type { VocabularyPromotionCandidate } from "../modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
+import type { VocabularyPromotionCandidate } from "src/modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
 import {
   DISCORD_MESSAGE_CONTENT_MAX_LENGTH,
   formatDiscordVocabularySuggestionMessages,
   formatDiscordVocabularyThreadName,
   formatDiscordVocabularyThreadStarterContent,
-} from "./run-suggest-feature-vocabulary";
+} from "src/workflows/run-suggest-feature-vocabulary";
 
 function createCandidate(
   overrides: Partial<VocabularyPromotionCandidate> = {},

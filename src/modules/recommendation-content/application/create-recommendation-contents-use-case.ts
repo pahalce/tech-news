@@ -1,9 +1,9 @@
-import { type ArticleAuthor } from "../../article/application/article-author";
-import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
+import { type ArticleAuthor } from "src/modules/article/application/article-author";
+import type { ArticleFeatures } from "src/modules/feature-extraction/domain/article-features";
 import {
   parseRecommendationContent,
   type RecommendationContent,
-} from "../domain/recommendation-content";
+} from "src/modules/recommendation-content/domain/recommendation-content";
 
 type SelectedRecommendationCandidate = {
   articleId: string;

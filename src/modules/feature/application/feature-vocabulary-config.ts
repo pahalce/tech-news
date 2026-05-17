@@ -1,4 +1,4 @@
 export {
   parseFeatureVocabularyConfig,
   type FeatureVocabularyConfig,
-} from "../domain/feature-vocabulary";
+} from "src/modules/feature/domain/feature-vocabulary";

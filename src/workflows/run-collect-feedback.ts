@@ -4,16 +4,16 @@ import * as v from "valibot";
 import {
   loadAgentState,
   saveAgentState,
-} from "../modules/agent-state/infrastructure/file-agent-state";
-import type { ReactionFeedbackReader } from "../modules/preference/application/collect-reaction-feedback-use-case";
-import { env } from "../shared/infrastructure/env";
-import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
+} from "src/modules/agent-state/infrastructure/file-agent-state";
+import type { ReactionFeedbackReader } from "src/modules/preference/application/collect-reaction-feedback-use-case";
+import { env } from "src/shared/infrastructure/env";
+import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
 import {
   resolveLlmModel,
   runtimeConfig,
   type LlmRuntimeModelId,
-} from "../shared/infrastructure/runtime-config";
-import { runCollectFeedbackJob } from "./collect-feedback-job";
+} from "src/shared/infrastructure/runtime-config";
+import { runCollectFeedbackJob } from "src/workflows/collect-feedback-job";
 
 const PreferenceSummarySchema = v.strictObject({
   long_term_summary: v.nullable(v.string()),

@@ -1,8 +1,8 @@
-import { assertRequiredEnvironment } from "../workflows/scheduled-jobs-config";
+import { assertRequiredEnvironment } from "src/workflows/scheduled-jobs-config";
 import {
   runCollectFeedback,
   validateCollectFeedbackDryRun,
-} from "../workflows/run-collect-feedback";
+} from "src/workflows/run-collect-feedback";
 
 const isDryRun = process.argv.includes("--dry-run");
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { suggestFeatureVocabularyCandidates } from "./suggest-feature-vocabulary-candidates-use-case";
+import { suggestFeatureVocabularyCandidates } from "src/modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
 
 describe("Feature Vocabulary maintenance suggestion use case に関するテスト", () => {
   it("Other Signals が繰り返し出現したとき、Vocabulary Promotion Candidate になる", async () => {

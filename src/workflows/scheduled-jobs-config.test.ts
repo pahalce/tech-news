@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { assertRequiredEnvironment, scheduledJobs } from "./scheduled-jobs-config";
+import { assertRequiredEnvironment, scheduledJobs } from "src/workflows/scheduled-jobs-config";
 
 describe("scheduled jobs config に関するテスト", () => {
   it("collect-feedback を設定したとき、08:00 JST daily の cron になる", () => {

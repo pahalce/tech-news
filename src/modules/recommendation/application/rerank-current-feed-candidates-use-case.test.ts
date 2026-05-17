@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { rerankCurrentFeedCandidates } from "./rerank-current-feed-candidates-use-case";
+import { rerankCurrentFeedCandidates } from "src/modules/recommendation/application/rerank-current-feed-candidates-use-case";
 
 describe("LLM Rerank use case に関するテスト", () => {
   it("品質が十分な候補だけ返されたとき、10件未満の選択結果となる", async () => {

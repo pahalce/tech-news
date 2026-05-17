@@ -1,5 +1,8 @@
-import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
-import { calculateRuleScore, type RuleScorePreferenceProfile } from "../domain/rule-score";
+import type { ArticleFeatures } from "src/modules/feature-extraction/domain/article-features";
+import {
+  calculateRuleScore,
+  type RuleScorePreferenceProfile,
+} from "src/modules/recommendation/domain/rule-score";
 
 type CurrentFeedCandidate = {
   articleId: string;

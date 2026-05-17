@@ -1,8 +1,12 @@
 import * as v from "valibot";
 
-import { ArticleAuthorSchema, type ArticleAuthor } from "../../article/domain/article-author";
-import type { ArticleFeatures, FeatureSignal, OtherSignal } from "./article-features";
-import { ArticleIdSchema } from "../../article/domain/article-id";
+import { ArticleAuthorSchema, type ArticleAuthor } from "src/modules/article/domain/article-author";
+import type {
+  ArticleFeatures,
+  FeatureSignal,
+  OtherSignal,
+} from "src/modules/feature-extraction/domain/article-features";
+import { ArticleIdSchema } from "src/modules/article/domain/article-id";
 
 const SalienceSchema = v.pipe(
   v.number(),

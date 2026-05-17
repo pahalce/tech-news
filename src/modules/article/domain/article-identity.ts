@@ -2,9 +2,9 @@ import { createHash } from "node:crypto";
 
 import * as v from "valibot";
 
-import { ArticleIdSchema } from "./article-id";
-import { ArticleSourceSchema, type ArticleSource } from "./article-source";
-import { normalizeCanonicalUrl, UrlStringSchema } from "./canonical-url";
+import { ArticleIdSchema } from "src/modules/article/domain/article-id";
+import { ArticleSourceSchema, type ArticleSource } from "src/modules/article/domain/article-source";
+import { normalizeCanonicalUrl, UrlStringSchema } from "src/modules/article/domain/canonical-url";
 
 const ArticleIdentitySchema = v.pipe(
   v.object({

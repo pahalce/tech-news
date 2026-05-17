@@ -1,6 +1,9 @@
-import { applyArticleFeatureFeedback } from "../../feature-extraction/domain/article-feature-weighting";
-import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
-import type { PreferenceProfile, PreferenceSummaryHistory } from "../domain/preference-state";
+import { applyArticleFeatureFeedback } from "src/modules/feature-extraction/domain/article-feature-weighting";
+import type { ArticleFeatures } from "src/modules/feature-extraction/domain/article-features";
+import type {
+  PreferenceProfile,
+  PreferenceSummaryHistory,
+} from "src/modules/preference/domain/preference-state";
 
 type ReactionFeedback = {
   emoji: string;

@@ -2,8 +2,8 @@ import {
   collectReactionFeedback,
   type PreferenceSummaryUpdater,
   type ReactionFeedbackReader,
-} from "../modules/preference/application/collect-reaction-feedback-use-case";
-import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";
+} from "src/modules/preference/application/collect-reaction-feedback-use-case";
+import type { AgentState } from "src/modules/agent-state/infrastructure/file-agent-state";
 
 export type RunCollectFeedbackWorkflowInput = {
   agentState: AgentState;

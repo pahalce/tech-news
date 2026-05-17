@@ -2,8 +2,8 @@ import {
   createVocabularySuggestionRun,
   type VocabularyPromotionCandidate as DomainVocabularyPromotionCandidate,
   type VocabularySuggestionState,
-} from "../domain/vocabulary-suggestion";
-import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
+} from "src/modules/vocabulary-maintenance/domain/vocabulary-suggestion";
+import type { ArticleFeatures } from "src/modules/feature-extraction/domain/article-features";
 
 export type VocabularyPromotionCandidate = DomainVocabularyPromotionCandidate;
 

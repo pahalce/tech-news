@@ -1,9 +1,9 @@
-import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";
+import type { AgentState } from "src/modules/agent-state/infrastructure/file-agent-state";
 import type {
   PreferenceSummaryUpdater,
   ReactionFeedbackReader,
-} from "../modules/preference/application/collect-reaction-feedback-use-case";
-import { runCollectFeedbackWorkflow } from "./run-collect-feedback-workflow";
+} from "src/modules/preference/application/collect-reaction-feedback-use-case";
+import { runCollectFeedbackWorkflow } from "src/workflows/run-collect-feedback-workflow";
 
 export type RunCollectFeedbackJobInput = {
   loadAgentState(): Promise<AgentState>;

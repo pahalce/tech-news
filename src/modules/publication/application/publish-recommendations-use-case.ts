@@ -1,10 +1,10 @@
-import { type ArticleAuthor } from "../../article/application/article-author";
+import { type ArticleAuthor } from "src/modules/article/application/article-author";
 import {
   createPublicationRecord,
   createRecommendedArticle,
   type PublicationRecord,
   type RecommendedArticle,
-} from "../domain/publication-record";
+} from "src/modules/publication/domain/publication-record";
 
 type RecommendationContent = {
   articleId: string;

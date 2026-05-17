@@ -1,8 +1,8 @@
 import { jsonSchema } from "ai";
 import { afterEach, describe, expect, it } from "vite-plus/test";
 
-import { createLlmLanguageModel } from "./llm-text-generation";
-import type { LlmRuntimeConfig } from "./runtime-config";
+import { createLlmLanguageModel } from "src/shared/infrastructure/llm-text-generation";
+import type { LlmRuntimeConfig } from "src/shared/infrastructure/runtime-config";
 
 const TestSchema = jsonSchema<{ ok: boolean }>({
   type: "object",

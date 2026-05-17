@@ -1,15 +1,15 @@
 import * as v from "valibot";
 
-import { ArticleIdSchema } from "./article-id";
-import { ArticleSourceSchema } from "./article-source";
+import { ArticleIdSchema } from "src/modules/article/domain/article-id";
+import { ArticleSourceSchema } from "src/modules/article/domain/article-source";
 import {
   createArticleFeed,
   createArticleFeedEntry,
   type ArticleFeed,
   type ArticleFeedEntry,
-} from "./article-feed";
-import { createArticleIdentity } from "./article-identity";
-import { UrlStringSchema } from "./canonical-url";
+} from "src/modules/article/domain/article-feed";
+import { createArticleIdentity } from "src/modules/article/domain/article-identity";
+import { UrlStringSchema } from "src/modules/article/domain/canonical-url";
 
 const CurrentFeedCandidateSchema = v.pipe(
   v.object({

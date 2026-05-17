@@ -1,13 +1,17 @@
-import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";
-import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
+import type { AgentState } from "src/modules/agent-state/infrastructure/file-agent-state";
+import type { FeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
 import {
   isInsideSuggestionLookbackWindow,
   suggestFeatureVocabularyCandidates,
   type VocabularyCandidateDescriber,
   type VocabularyPromotionCandidate,
   type VocabularySuggestionNotifier,
-} from "../modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
-import { elapsedMs, silentWorkflowLogger, type WorkflowLogger } from "./workflow-logger";
+} from "src/modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
+import {
+  elapsedMs,
+  silentWorkflowLogger,
+  type WorkflowLogger,
+} from "src/workflows/workflow-logger";
 
 export type RunSuggestFeatureVocabularyWorkflowInput = {
   agentState: AgentState;

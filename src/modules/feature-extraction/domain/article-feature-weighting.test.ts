@@ -4,8 +4,8 @@ import {
   applyArticleFeatureFeedback,
   calculateArticleFeatureWeight,
   type ArticleFeatureWeights,
-} from "./article-feature-weighting";
-import type { ArticleFeatures } from "./article-features";
+} from "src/modules/feature-extraction/domain/article-feature-weighting";
+import type { ArticleFeatures } from "src/modules/feature-extraction/domain/article-features";
 
 describe("Article Feature Weighting に関するテスト", () => {
   it("Article Features を渡したとき、Feature Salience を掛けた重みの合計になる", () => {

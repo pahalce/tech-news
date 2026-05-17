@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { scoreCurrentFeedCandidates } from "./score-current-feed-candidates-use-case";
+import { scoreCurrentFeedCandidates } from "src/modules/recommendation/application/score-current-feed-candidates-use-case";
 
 describe("Rule Score use case に関するテスト", () => {
   it("Readable Current Feed Candidate を渡したとき、Rule Score 順の候補となる", () => {

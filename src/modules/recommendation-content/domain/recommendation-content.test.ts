@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { parseRecommendationContent } from "./recommendation-content";
+import { parseRecommendationContent } from "src/modules/recommendation-content/domain/recommendation-content";
 
 describe("Recommendation Content に関するテスト", () => {
   it("不正な Article ID を渡したとき、バリデーションエラーとなる", () => {

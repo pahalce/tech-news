@@ -1,5 +1,5 @@
-import { assertRequiredEnvironment } from "../workflows/scheduled-jobs-config";
-import { runZennDigest, validateZennDigestDryRun } from "../workflows/run-zenn-digest";
+import { assertRequiredEnvironment } from "src/workflows/scheduled-jobs-config";
+import { runZennDigest, validateZennDigestDryRun } from "src/workflows/run-zenn-digest";
 
 const isDryRun = process.argv.includes("--dry-run");
 

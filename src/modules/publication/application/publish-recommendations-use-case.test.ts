@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { publishRecommendations } from "./publish-recommendations-use-case";
+import { publishRecommendations } from "src/modules/publication/application/publish-recommendations-use-case";
 
 describe("Recommendation Publication use case に関するテスト", () => {
   it("選択記事をすべて publish できたとき、Publication Record と Recommended Article が作成される", async () => {

@@ -1,28 +1,32 @@
 import {
   collectCurrentFeedCandidates,
   type CollectCurrentFeedCandidatesInput,
-} from "../modules/article/application/collect-current-feed-candidates-use-case";
+} from "src/modules/article/application/collect-current-feed-candidates-use-case";
 import {
   extractCurrentFeedCandidateFeatures,
   type ExtractCurrentFeedCandidateFeaturesInput,
-} from "../modules/feature-extraction/application/extract-current-feed-candidate-features-use-case";
-import { selectReadableCurrentFeedCandidates } from "../modules/feature-extraction/application/select-readable-current-feed-candidates-use-case";
-import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
-import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";
+} from "src/modules/feature-extraction/application/extract-current-feed-candidate-features-use-case";
+import { selectReadableCurrentFeedCandidates } from "src/modules/feature-extraction/application/select-readable-current-feed-candidates-use-case";
+import type { FeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
+import type { AgentState } from "src/modules/agent-state/infrastructure/file-agent-state";
 import {
   publishRecommendations,
   type RecommendationPublisher,
-} from "../modules/publication/application/publish-recommendations-use-case";
+} from "src/modules/publication/application/publish-recommendations-use-case";
 import {
   createRecommendationContents,
   type RecommendationContentCreator,
-} from "../modules/recommendation-content/application/create-recommendation-contents-use-case";
+} from "src/modules/recommendation-content/application/create-recommendation-contents-use-case";
 import {
   rerankCurrentFeedCandidates,
   type LlmReranker,
-} from "../modules/recommendation/application/rerank-current-feed-candidates-use-case";
-import { scoreCurrentFeedCandidates } from "../modules/recommendation/application/score-current-feed-candidates-use-case";
-import { elapsedMs, silentWorkflowLogger, type WorkflowLogger } from "./workflow-logger";
+} from "src/modules/recommendation/application/rerank-current-feed-candidates-use-case";
+import { scoreCurrentFeedCandidates } from "src/modules/recommendation/application/score-current-feed-candidates-use-case";
+import {
+  elapsedMs,
+  silentWorkflowLogger,
+  type WorkflowLogger,
+} from "src/workflows/workflow-logger";
 
 export type PublishDigestAuditInput = {
   message: string;

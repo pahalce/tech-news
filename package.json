@@ -7,9 +7,9 @@
   "scripts": {
     "sync:subagents": "node scripts/sync-subagents.ts",
     "lint": "vp lint",
-    "check:architecture": "node scripts/check-architecture.ts",
+    "check:architecture": "depcruise src --config .dependency-cruiser.cjs",
     "test": "vp test",
-    "check": "vp check --fix && node scripts/check-architecture.ts",
+    "check": "vp check --fix && pnpm check:architecture",
     "collect-feedback": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts",
     "collect-feedback:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts --dry-run",
     "publish-recommendations": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
@@ -31,6 +31,7 @@
     "@flue/cli": "^0.3.11",
     "@types/node": "^25.6.2",
     "@typescript/native-preview": "7.0.0-dev.20260509.2",
+    "dependency-cruiser": "^17.4.0",
     "typescript": "^6.0.3",
     "vite-plus": "^0.1.20"
   },

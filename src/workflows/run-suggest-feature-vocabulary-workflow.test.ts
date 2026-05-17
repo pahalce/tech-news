@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { runSuggestFeatureVocabularyWorkflow } from "./run-suggest-feature-vocabulary-workflow";
+import { runSuggestFeatureVocabularyWorkflow } from "src/workflows/run-suggest-feature-vocabulary-workflow";
 
 describe("Suggest Feature Vocabulary Workflow に関するテスト", () => {
   it("Other Signals が候補条件を満たすとき、Vocabulary Suggestion State が更新される", async () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { createRecommendationContents } from "./create-recommendation-contents-use-case";
+import { createRecommendationContents } from "src/modules/recommendation-content/application/create-recommendation-contents-use-case";
 
 describe("Recommendation Content 作成 use case に関するテスト", () => {
   it("選択済み候補を渡したとき、選択済み候補だけ Recommendation Content が作成される", async () => {

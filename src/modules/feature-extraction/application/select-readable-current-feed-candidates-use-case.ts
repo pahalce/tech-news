@@ -1,9 +1,9 @@
-import { type CurrentFeedCandidate } from "../../article/application/current-feed-candidate";
-import type { ArticleFeatures } from "../domain/article-features";
+import { type CurrentFeedCandidate } from "src/modules/article/application/current-feed-candidate";
+import type { ArticleFeatures } from "src/modules/feature-extraction/domain/article-features";
 import {
   parseFeatureExtractionState,
   type FeatureExtractionState,
-} from "../domain/feature-extraction";
+} from "src/modules/feature-extraction/domain/feature-extraction";
 
 export type SelectReadableCurrentFeedCandidatesInput = {
   currentFeedCandidates: readonly CurrentFeedCandidate[];

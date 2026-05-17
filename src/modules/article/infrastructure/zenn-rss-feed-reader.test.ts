@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { readZennRssFeed } from "./zenn-rss-feed-reader";
+import { readZennRssFeed } from "src/modules/article/infrastructure/zenn-rss-feed-reader";
 
 describe("Zenn RSS Feed Reader に関するテスト", () => {
   it("Zenn RSS XML を Article Feed Entry に変換する", async () => {

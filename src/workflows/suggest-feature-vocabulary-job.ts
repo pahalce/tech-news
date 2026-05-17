@@ -1,11 +1,15 @@
-import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";
-import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
+import type { AgentState } from "src/modules/agent-state/infrastructure/file-agent-state";
+import type { FeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
 import type {
   VocabularyCandidateDescriber,
   VocabularySuggestionNotifier,
-} from "../modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
-import { runSuggestFeatureVocabularyWorkflow } from "./run-suggest-feature-vocabulary-workflow";
-import { elapsedMs, silentWorkflowLogger, type WorkflowLogger } from "./workflow-logger";
+} from "src/modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
+import { runSuggestFeatureVocabularyWorkflow } from "src/workflows/run-suggest-feature-vocabulary-workflow";
+import {
+  elapsedMs,
+  silentWorkflowLogger,
+  type WorkflowLogger,
+} from "src/workflows/workflow-logger";
 
 export type RunSuggestFeatureVocabularyJobInput = {
   loadAgentState(): Promise<AgentState>;

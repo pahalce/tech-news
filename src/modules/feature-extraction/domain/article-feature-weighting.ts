@@ -1,4 +1,7 @@
-import type { ArticleFeatures, FeatureSignal } from "./article-features";
+import type {
+  ArticleFeatures,
+  FeatureSignal,
+} from "src/modules/feature-extraction/domain/article-features";
 
 export type ArticleFeatureWeights = {
   topics: Record<string, number>;

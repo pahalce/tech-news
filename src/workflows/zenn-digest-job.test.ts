@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { parseFeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
-import { runZennDigestJob } from "./zenn-digest-job";
+import { parseFeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
+import { runZennDigestJob } from "src/workflows/zenn-digest-job";
 
 describe("Zenn Digest Job に関するテスト", () => {
   it("Digest Workflow が成功したとき、Agent State が保存される", async () => {

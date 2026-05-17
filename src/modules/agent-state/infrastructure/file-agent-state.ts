@@ -4,26 +4,26 @@ import { join } from "node:path";
 import {
   parseFeatureExtractionState,
   type FeatureExtractionState,
-} from "../../feature-extraction/domain/feature-extraction";
-import { loadFeatureVocabularyConfig } from "../../feature/infrastructure/file-feature-vocabulary-config";
+} from "src/modules/feature-extraction/domain/feature-extraction";
+import { loadFeatureVocabularyConfig } from "src/modules/feature/infrastructure/file-feature-vocabulary-config";
 import {
   parsePreferenceProfile,
   parsePreferenceSummaryHistory,
   type PreferenceProfile,
   type PreferenceSummaryHistory,
-} from "../../preference/domain/preference-state";
+} from "src/modules/preference/domain/preference-state";
 import {
   parsePublicationState,
   type PublicationState,
-} from "../../publication/domain/publication-record";
+} from "src/modules/publication/domain/publication-record";
 import {
   parseRecommendationContentState,
   type RecommendationContentState,
-} from "../../recommendation-content/domain/recommendation-content";
+} from "src/modules/recommendation-content/domain/recommendation-content";
 import {
   parseVocabularySuggestionState,
   type VocabularySuggestionState,
-} from "../../vocabulary-maintenance/domain/vocabulary-suggestion";
+} from "src/modules/vocabulary-maintenance/domain/vocabulary-suggestion";
 
 export type AgentState = {
   featureExtractionState: FeatureExtractionState;

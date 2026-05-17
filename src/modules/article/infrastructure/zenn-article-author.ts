@@ -1,4 +1,4 @@
-import { parseArticleAuthor, type ArticleAuthor } from "../domain/article-author";
+import { parseArticleAuthor, type ArticleAuthor } from "src/modules/article/domain/article-author";
 
 export type { ArticleAuthor };
 

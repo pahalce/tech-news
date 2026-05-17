@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { parseArticleId } from "./article-id";
+import { parseArticleId } from "src/modules/article/domain/article-id";
 
 describe("Article ID に関するテスト", () => {
   it("source と Canonical URL hash からなる Article ID を受け付ける", () => {

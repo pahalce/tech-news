@@ -4,7 +4,7 @@ import { join } from "node:path";
 import {
   parseFeatureVocabularyConfig,
   type FeatureVocabularyConfig,
-} from "../domain/feature-vocabulary";
+} from "src/modules/feature/domain/feature-vocabulary";
 
 const defaultRepositoryRoot = join(import.meta.dirname, "../../../..");
 

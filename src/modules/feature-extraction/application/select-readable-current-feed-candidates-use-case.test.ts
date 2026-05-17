@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { createCurrentFeedCandidate } from "../../article/application/current-feed-candidate";
-import { selectReadableCurrentFeedCandidates } from "./select-readable-current-feed-candidates-use-case";
+import { createCurrentFeedCandidate } from "src/modules/article/application/current-feed-candidate";
+import { selectReadableCurrentFeedCandidates } from "src/modules/feature-extraction/application/select-readable-current-feed-candidates-use-case";
 
 describe("Readable Current Feed Candidate selection use case に関するテスト", () => {
   it("Current Feed Candidate に Readable Feature Extraction があるとき、Readable Current Feed Candidate となる", () => {

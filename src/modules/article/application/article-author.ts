@@ -2,4 +2,4 @@ export {
   formatArticleAuthorLine,
   parseArticleAuthor,
   type ArticleAuthor,
-} from "../domain/article-author";
+} from "src/modules/article/domain/article-author";

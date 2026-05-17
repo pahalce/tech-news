@@ -1,8 +1,8 @@
 import * as v from "valibot";
 import { describe, expect, it } from "vite-plus/test";
 
-import { createEnv, llmApiKeyForConfig } from "./env";
-import type { LlmRuntimeConfig } from "./runtime-config";
+import { createEnv, llmApiKeyForConfig } from "src/shared/infrastructure/env";
+import type { LlmRuntimeConfig } from "src/shared/infrastructure/runtime-config";
 
 describe("runtime environment に関するテスト", () => {
   it("createEnv は server schema のキーを source から読み、trim した値を返す", () => {

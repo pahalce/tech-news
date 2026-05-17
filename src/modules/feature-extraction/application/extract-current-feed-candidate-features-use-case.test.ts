@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { parseFeatureVocabularyConfig } from "../../feature/application/feature-vocabulary-config";
-import { createCurrentFeedCandidate } from "../../article/application/current-feed-candidate";
-import { extractCurrentFeedCandidateFeatures } from "./extract-current-feed-candidate-features-use-case";
+import { parseFeatureVocabularyConfig } from "src/modules/feature/application/feature-vocabulary-config";
+import { createCurrentFeedCandidate } from "src/modules/article/application/current-feed-candidate";
+import { extractCurrentFeedCandidateFeatures } from "src/modules/feature-extraction/application/extract-current-feed-candidate-features-use-case";
 
 describe("Feature Extraction use case に関するテスト", () => {
   it("Readable Article を抽出したとき、Feature Extraction が1件保存される", async () => {

@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { createArticleFeedEntry } from "./article-feed";
-import { parseArticleIdentity } from "./article-identity";
-import { normalizeCanonicalUrl } from "./canonical-url";
+import { createArticleFeedEntry } from "src/modules/article/domain/article-feed";
+import { parseArticleIdentity } from "src/modules/article/domain/article-identity";
+import { normalizeCanonicalUrl } from "src/modules/article/domain/canonical-url";
 import {
   createCurrentFeedCandidate,
   parseCurrentFeedCandidate,
   recordFeedAppearance,
-} from "./current-feed-candidate";
+} from "src/modules/article/domain/current-feed-candidate";
 
 describe("Article domain model に関するテスト", () => {
   it("URL 表記揺れ、fragment、tracking query が違っても同じ Canonical URL になる", () => {
