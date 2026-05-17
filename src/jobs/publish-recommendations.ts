@@ -4,7 +4,7 @@ import { runZennDigest, validateZennDigestDryRun } from "../workflows/run-zenn-d
 const isDryRun = process.argv.includes("--dry-run");
 
 if (!isDryRun) {
-  assertRequiredEnvironment("zenn-digest", process.env);
+  assertRequiredEnvironment("zenn-digest");
 }
 
 if (isDryRun) {

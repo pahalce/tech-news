@@ -7,6 +7,7 @@ import {
 } from "../modules/agent-state/infrastructure/file-agent-state";
 import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
 import type { VocabularyPromotionCandidate } from "../modules/vocabulary-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
+import { env } from "../shared/infrastructure/env";
 import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
 import { resolveLlmModel, runtimeConfig } from "../shared/infrastructure/runtime-config";
 import { runSuggestFeatureVocabularyJob } from "./suggest-feature-vocabulary-job";
@@ -44,8 +45,8 @@ export async function validateSuggestFeatureVocabularyDryRun(): Promise<void> {
 export async function runSuggestFeatureVocabulary(): Promise<void> {
   const vocabularySuggestionModel = resolveLlmModel(runtimeConfig.llm, "vocabularySuggestion");
   const logger = createConsoleWorkflowLogger("suggest-feature-vocabulary");
-  const discordBotToken = normalizeDiscordBotToken(requiredEnv("DISCORD_BOT_TOKEN"));
-  const discordChannelId = requiredEnv("DISCORD_CHANNEL_ID");
+  const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
+  const discordChannelId = env.DISCORD_CHANNEL_ID;
 
   logger.info("runtime config loaded", {
     llmProvider: runtimeConfig.llm.provider,
@@ -376,15 +377,6 @@ async function createDiscordPublicThreadFromMessage(input: {
   }
 
   return payload.id;
-}
-
-function requiredEnv(key: string): string {
-  const value = process.env[key]?.trim();
-  if (!value) {
-    throw new Error(`${key} is required.`);
-  }
-
-  return value;
 }
 
 function normalizeDiscordBotToken(value: string): string {

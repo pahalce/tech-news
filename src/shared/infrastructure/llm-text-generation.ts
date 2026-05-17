@@ -2,6 +2,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText, Output, type FlexibleSchema, type LanguageModel } from "ai";
 
+import { llmApiKeyForConfig, type RuntimeEnvironment } from "./env";
 import {
   runtimeConfig,
   type LlmOpenAiChatModelId,
@@ -19,10 +20,6 @@ export type LlmStructuredTextGenerationInput<OutputSchema> = LlmTextGenerationIn
   schema: FlexibleSchema<OutputSchema>;
 };
 
-export function assertRequiredLlmEnvironment(env: NodeJS.ProcessEnv = process.env): void {
-  readLlmApiKey(runtimeConfig.llm, env);
-}
-
 export async function generateLlmText(input: LlmTextGenerationInput): Promise<string>;
 export async function generateLlmText<OutputSchema>(
   input: LlmStructuredTextGenerationInput<OutputSchema>,
@@ -32,7 +29,6 @@ export async function generateLlmText<OutputSchema>(
 ): Promise<string | OutputSchema> {
   const model = createLlmLanguageModel({
     runtimeConfig: runtimeConfig.llm,
-    env: process.env,
     model: input.model,
   });
 
@@ -62,19 +58,25 @@ export async function generateLlmText<OutputSchema>(
 
 export function createLlmLanguageModel(input: {
   runtimeConfig: LlmRuntimeConfig;
-  env: NodeJS.ProcessEnv;
   model: LlmRuntimeModelId;
+  env?: RuntimeEnvironment;
   fetch?: typeof fetch;
 }): LanguageModel {
   if (input.runtimeConfig.provider === "gemini") {
     return createGoogleGenerativeAI({
-      apiKey: readLlmApiKey(input.runtimeConfig, input.env),
+      apiKey: llmApiKeyForConfig({
+        llmConfig: input.runtimeConfig,
+        source: input.env,
+      }),
       fetch: input.fetch,
     }).languageModel(input.model);
   }
 
   const openAi = createOpenAI({
-    apiKey: readLlmApiKey(input.runtimeConfig, input.env),
+    apiKey: llmApiKeyForConfig({
+      llmConfig: input.runtimeConfig,
+      source: input.env,
+    }),
     baseURL:
       input.runtimeConfig.provider === "openai-compatible"
         ? input.runtimeConfig.baseUrl
@@ -84,34 +86,4 @@ export function createLlmLanguageModel(input: {
   });
 
   return openAi.chat(input.model as LlmOpenAiChatModelId);
-}
-
-function readLlmApiKey(config: LlmRuntimeConfig, env: NodeJS.ProcessEnv): string {
-  if (config.provider === "gemini") {
-    return requiredFirstEnv(env, ["GEMINI_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"]);
-  }
-
-  if (config.provider === "openai") {
-    return requiredEnv(env, "OPENAI_API_KEY");
-  }
-
-  return requiredEnv(env, "LLM_API_KEY");
-}
-
-function requiredFirstEnv(env: NodeJS.ProcessEnv, keys: readonly string[]): string {
-  const key = keys.find((candidate) => env[candidate]);
-  if (!key) {
-    throw new Error(`${keys.join(" or ")} is required.`);
-  }
-
-  return env[key] as string;
-}
-
-function requiredEnv(env: NodeJS.ProcessEnv, key: string): string {
-  const value = env[key];
-  if (!value) {
-    throw new Error(`${key} is required.`);
-  }
-
-  return value;
 }

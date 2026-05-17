@@ -1,5 +1,3 @@
-import { assertRequiredLlmEnvironment } from "../shared/infrastructure/llm-text-generation";
-
 export type ScheduledJobName = "collect-feedback" | "zenn-digest" | "suggest-feature-vocabulary";
 
 export type ScheduledJobConfig = {
@@ -33,20 +31,10 @@ export const scheduledJobs: ScheduledJobConfig[] = [
   },
 ];
 
-export function assertRequiredEnvironment(
-  jobName: ScheduledJobName,
-  env: NodeJS.ProcessEnv = process.env,
-): void {
+export function assertRequiredEnvironment(jobName: ScheduledJobName): void {
   const job = scheduledJobs.find((item) => item.name === jobName);
 
   if (!job) {
     throw new Error(`${jobName} is not a configured scheduled job.`);
   }
-
-  const missing = job.requiredEnvironmentVariables.filter((key) => !env[key]);
-  if (missing.length > 0) {
-    throw new Error(`${jobName} is missing required environment variables: ${missing.join(", ")}`);
-  }
-
-  assertRequiredLlmEnvironment(env);
 }

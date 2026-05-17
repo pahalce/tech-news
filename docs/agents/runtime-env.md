@@ -11,7 +11,7 @@ variables.
 
 Provider secrets depend on `runtimeConfig.llm.provider`:
 
-- `gemini`: `GEMINI_API_KEY` or `GOOGLE_GENERATIVE_AI_API_KEY`
+- `gemini`: `GEMINI_API_KEY`
 - `openai`: `OPENAI_API_KEY`
 - `openai-compatible`: `LLM_API_KEY`
 

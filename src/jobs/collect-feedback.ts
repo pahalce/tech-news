@@ -7,7 +7,7 @@ import {
 const isDryRun = process.argv.includes("--dry-run");
 
 if (!isDryRun) {
-  assertRequiredEnvironment("collect-feedback", process.env);
+  assertRequiredEnvironment("collect-feedback");
 }
 
 if (isDryRun) {

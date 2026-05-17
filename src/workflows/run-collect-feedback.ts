@@ -6,6 +6,7 @@ import {
   saveAgentState,
 } from "../modules/agent-state/infrastructure/file-agent-state";
 import type { ReactionFeedbackReader } from "../modules/preference/application/collect-reaction-feedback-use-case";
+import { env } from "../shared/infrastructure/env";
 import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
 import {
   resolveLlmModel,
@@ -49,7 +50,7 @@ export async function validateCollectFeedbackDryRun(): Promise<void> {
 
 export async function runCollectFeedback(): Promise<void> {
   const preferenceSummaryModel = resolveLlmModel(runtimeConfig.llm, "preferenceSummary");
-  const discordBotToken = normalizeDiscordBotToken(requiredEnv("DISCORD_BOT_TOKEN"));
+  const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
 
   await runCollectFeedbackJob({
     loadAgentState,
@@ -181,15 +182,6 @@ async function updatePreferenceSummary(input: {
 
 function stringOrNull(value: unknown): string | null {
   return typeof value === "string" && value.length > 0 ? value : null;
-}
-
-function requiredEnv(key: string): string {
-  const value = process.env[key]?.trim();
-  if (!value) {
-    throw new Error(`${key} is required.`);
-  }
-
-  return value;
 }
 
 function normalizeDiscordBotToken(value: string): string {

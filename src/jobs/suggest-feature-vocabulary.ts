@@ -7,7 +7,7 @@ import {
 const isDryRun = process.argv.includes("--dry-run");
 
 if (!isDryRun) {
-  assertRequiredEnvironment("suggest-feature-vocabulary", process.env);
+  assertRequiredEnvironment("suggest-feature-vocabulary");
 }
 
 if (isDryRun) {

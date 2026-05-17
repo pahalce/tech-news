@@ -30,9 +30,6 @@ describe("Scheduled Agent Workflow に関するテスト", () => {
 
     // Assert
     expect(actual).toContain("GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}");
-    expect(actual).toContain(
-      "GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}",
-    );
     expect(actual).toContain("OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}");
     expect(actual).toContain("LLM_API_KEY: ${{ secrets.LLM_API_KEY }}");
     expect(actual).not.toContain("LLM_PROVIDER:");

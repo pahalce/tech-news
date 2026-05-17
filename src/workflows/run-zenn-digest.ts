@@ -14,6 +14,7 @@ import {
 } from "../modules/agent-state/infrastructure/file-agent-state";
 import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
 import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
+import { env } from "../shared/infrastructure/env";
 import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
 import { resolveLlmModel, runtimeConfig } from "../shared/infrastructure/runtime-config";
 import { createConsoleWorkflowLogger, elapsedMs } from "./workflow-logger";
@@ -113,8 +114,8 @@ export async function runZennDigest(): Promise<void> {
   const recommendationContentModel = resolveLlmModel(runtimeConfig.llm, "recommendationContent");
   const logger = createConsoleWorkflowLogger("zenn-digest");
   const httpRequestTimeoutMs = runtimeConfig.http.requestTimeoutMs;
-  const discordBotToken = normalizeDiscordBotToken(requiredEnv("DISCORD_BOT_TOKEN"));
-  const discordChannelId = requiredEnv("DISCORD_CHANNEL_ID");
+  const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
+  const discordChannelId = env.DISCORD_CHANNEL_ID;
 
   logger.info("runtime config loaded", {
     llmProvider: runtimeConfig.llm.provider,
@@ -339,15 +340,6 @@ export async function runZennDigest(): Promise<void> {
     },
     logger,
   });
-}
-
-function requiredEnv(key: string): string {
-  const value = process.env[key]?.trim();
-  if (!value) {
-    throw new Error(`${key} is required.`);
-  }
-
-  return value;
 }
 
 function normalizeDiscordBotToken(value: string): string {
