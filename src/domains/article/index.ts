@@ -1,6 +1,7 @@
 export * from "src/domains/article/article-author";
 export * from "src/domains/article/article-feature-vocabulary-config";
 export * from "src/domains/article/article-feature-vocabulary";
+export * from "src/domains/article/article-extraction-registry.service";
 export * from "src/domains/article/article-feature-weighting";
 export * from "src/domains/article/article-features";
 export * from "src/domains/article/article-feed";

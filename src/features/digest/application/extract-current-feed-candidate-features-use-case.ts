@@ -2,16 +2,18 @@ import { type ArticleAuthor } from "src/domains/article";
 import { type FeatureVocabularyConfig } from "src/domains/article";
 import { type CurrentFeedCandidate } from "src/domains/article";
 import {
+  addBodyFetchFailureToRegistry,
+  addFailedExtractionAttemptToRegistry,
+  addFeatureExtractionToRegistry,
   createBodyFetchFailure,
   createFailedExtractionAttempt,
   createFeatureExtraction,
-  parseFeatureExtractionState,
-  type FeatureExtractionState,
+  type ArticleExtractionRegistry,
 } from "src/domains/article";
 
 export type ExtractCurrentFeedCandidateFeaturesInput = {
   candidates: readonly CurrentFeedCandidate[];
-  featureExtractionState: FeatureExtractionState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
   featureVocabulary: FeatureVocabularyConfig;
   now(): string;
   fetchArticleBody(
@@ -37,17 +39,16 @@ export type FeatureExtractionProgress = {
 };
 
 export type ExtractCurrentFeedCandidateFeaturesResult = {
-  state: FeatureExtractionState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
 };
 
 export async function extractCurrentFeedCandidateFeatures(
   input: ExtractCurrentFeedCandidateFeaturesInput,
 ): Promise<ExtractCurrentFeedCandidateFeaturesResult> {
-  const state = parseFeatureExtractionState(input.featureExtractionState);
-  const bodyFetchFailures = [...state.bodyFetchFailures];
-  const extractions = [...state.extractions];
-  const failedExtractionAttempts = [...state.failedExtractionAttempts];
-  const extractedArticleIds = new Set(state.extractions.map((extraction) => extraction.articleId));
+  let articleExtractionRegistry = input.articleExtractionRegistry;
+  const extractedArticleIds = new Set(
+    articleExtractionRegistry.extractions.map((extraction) => extraction.articleId),
+  );
   const targetCandidates = input.candidates.filter(
     (candidate) => !extractedArticleIds.has(candidate.articleId),
   );
@@ -61,7 +62,8 @@ export async function extractCurrentFeedCandidateFeatures(
     try {
       fetchedArticle = await input.fetchArticleBody(candidate);
     } catch (error) {
-      bodyFetchFailures.push(
+      articleExtractionRegistry = addBodyFetchFailureToRegistry(
+        articleExtractionRegistry,
         createBodyFetchFailure({
           articleId: candidate.articleId,
           failedAt: input.now(),
@@ -80,7 +82,8 @@ export async function extractCurrentFeedCandidateFeatures(
         featureVocabulary: input.featureVocabulary,
       });
 
-      extractions.push(
+      articleExtractionRegistry = addFeatureExtractionToRegistry(
+        articleExtractionRegistry,
         createFeatureExtraction(
           {
             articleId: candidate.articleId,
@@ -92,7 +95,8 @@ export async function extractCurrentFeedCandidateFeatures(
         ),
       );
     } catch (error) {
-      failedExtractionAttempts.push(
+      articleExtractionRegistry = addFailedExtractionAttemptToRegistry(
+        articleExtractionRegistry,
         createFailedExtractionAttempt({
           articleId: candidate.articleId,
           attemptedAt: input.now(),
@@ -109,12 +113,7 @@ export async function extractCurrentFeedCandidateFeatures(
   }
 
   return {
-    state: parseFeatureExtractionState({
-      version: state.version,
-      extractions,
-      bodyFetchFailures,
-      failedExtractionAttempts,
-    }),
+    articleExtractionRegistry,
   };
 }
 

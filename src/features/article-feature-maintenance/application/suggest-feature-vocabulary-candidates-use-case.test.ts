@@ -81,7 +81,7 @@ describe("Feature Vocabulary maintenance suggestion use case に関するテス�
     const actual = await suggestFeatureVocabularyCandidates(createInput({ featureExtractions }));
 
     // Assert
-    expect(actual.vocabularySuggestionState.suggestionRuns).toHaveLength(1);
+    expect(actual.articleFeatureSuggestionHistory.suggestionRuns).toHaveLength(1);
   });
 
   it("抽出が suggestion lookback より古いとき、候補に含めない", async () => {
@@ -146,7 +146,7 @@ function createInput(input: {
       },
     },
     publicationRecords: [],
-    vocabularySuggestionState: {
+    articleFeatureSuggestionHistory: {
       version: 1 as const,
       suggestionRuns: [],
     },

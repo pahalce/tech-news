@@ -3,7 +3,7 @@ import {
   isInsideArticleFeatureSuggestionLookbackWindow,
   meetsArticleFeaturePromotionThreshold,
   type VocabularyPromotionCandidate as DomainVocabularyPromotionCandidate,
-  type VocabularySuggestionState,
+  type ArticleFeatureSuggestionHistory,
 } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
 
@@ -48,7 +48,7 @@ export type SuggestFeatureVocabularyCandidatesInput = {
   featureExtractions: readonly FeatureExtraction[];
   featureVocabulary: FeatureVocabularyConfig;
   publicationRecords?: readonly PublicationRecord[];
-  vocabularySuggestionState: VocabularySuggestionState;
+  articleFeatureSuggestionHistory: ArticleFeatureSuggestionHistory;
   suggestedAt: string;
   describer: VocabularyCandidateDescriber;
   notifier: VocabularySuggestionNotifier;
@@ -56,7 +56,7 @@ export type SuggestFeatureVocabularyCandidatesInput = {
 
 export type SuggestFeatureVocabularyCandidatesResult = {
   candidates: VocabularyPromotionCandidate[];
-  vocabularySuggestionState: VocabularySuggestionState;
+  articleFeatureSuggestionHistory: ArticleFeatureSuggestionHistory;
   featureVocabulary: FeatureVocabularyConfig;
 };
 
@@ -69,16 +69,16 @@ export async function suggestFeatureVocabularyCandidates(
     suggestedAt: input.suggestedAt,
     candidates,
   });
-  const vocabularySuggestionState = {
-    version: input.vocabularySuggestionState.version,
-    suggestionRuns: [...input.vocabularySuggestionState.suggestionRuns, suggestionRun],
+  const articleFeatureSuggestionHistory = {
+    version: input.articleFeatureSuggestionHistory.version,
+    suggestionRuns: [...input.articleFeatureSuggestionHistory.suggestionRuns, suggestionRun],
   };
 
   await input.notifier.notify({ candidates, suggestedAt: input.suggestedAt });
 
   return {
     candidates,
-    vocabularySuggestionState,
+    articleFeatureSuggestionHistory,
     featureVocabulary: input.featureVocabulary,
   };
 }

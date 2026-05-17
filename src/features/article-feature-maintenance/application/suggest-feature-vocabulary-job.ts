@@ -1,4 +1,4 @@
-import type { ArticleFeatureMaintenanceStateRepositories } from "src/features/article-feature-maintenance/application/ports/agent-state-repository";
+import type { ArticleFeatureMaintenanceStateRepositories } from "src/features/article-feature-maintenance/application/ports/article-feature-maintenance-state-repositories";
 import type { ArticleFeatureVocabularyReader } from "src/features/article-feature-maintenance/application/ports/article-feature-vocabulary-reader";
 import type {
   VocabularyCandidateDescriber,

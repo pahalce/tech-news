@@ -3,13 +3,13 @@ import {
   type PreferenceSummaryUpdater,
   type ReactionFeedbackReader,
 } from "src/features/feedback/application/collect-reaction-feedback-use-case";
-import type { FeatureExtractionState } from "src/domains/article";
-import type { PublicationState } from "src/domains/digest";
+import type { ArticleExtractionRegistry } from "src/domains/article";
+import type { PublishedDigestRegistry } from "src/domains/digest";
 import type { PreferenceProfile, PreferenceSummaryHistory } from "src/domains/preference";
 
 export type RunCollectFeedbackWorkflowInput = {
-  articleExtractionRegistry: FeatureExtractionState;
-  publishedDigestRegistry: PublicationState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
+  publishedDigestRegistry: PublishedDigestRegistry;
   preferenceProfile: PreferenceProfile;
   preferenceSummaryHistory: PreferenceSummaryHistory;
   collectedAt: string;
@@ -18,7 +18,7 @@ export type RunCollectFeedbackWorkflowInput = {
 };
 
 export type RunCollectFeedbackWorkflowResult = {
-  publishedDigestRegistry: PublicationState;
+  publishedDigestRegistry: PublishedDigestRegistry;
   preferenceProfile: PreferenceProfile;
   preferenceSummaryHistory: PreferenceSummaryHistory;
 };

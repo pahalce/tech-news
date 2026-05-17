@@ -50,6 +50,8 @@ Feature は他 feature を import しない。同じ domain 型が必要なら `
 
 `domain/` は `features/`, `jobs/`, `shared/application`, `shared/infrastructure` に依存しない。filesystem、HTTP、Discord、LLM client、repository 実装を import している場合は違反である。
 
+同一 domain 内の private module import は許可する。外部 layer から domain へ入る import と cross-domain import は `src/domains/*/index.ts` 経由に限定する。
+
 `features/*/application` は domain と port orchestration を担当し、infrastructure adapter を直接 import しない。`features/*/presentation` は CLI/GitHub Actions entrypoint と runtime wiring を担当する。
 
 `jobs/` は薄い process entrypoint として feature presentation を呼ぶだけにする。

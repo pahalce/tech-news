@@ -1,4 +1,4 @@
-import type { FeedbackStateRepositories } from "src/features/feedback/application/ports/agent-state-repository";
+import type { FeedbackStateRepositories } from "src/features/feedback/application/ports/feedback-state-repositories";
 import type {
   PreferenceSummaryUpdater,
   ReactionFeedbackReader,

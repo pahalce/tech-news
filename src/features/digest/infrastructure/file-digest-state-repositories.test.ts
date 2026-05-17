@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vite-plus/test";
 
-import { createFileStateRepositories } from "src/shared/infrastructure/file-agent-state";
+import { createFileDigestStateRepositories } from "src/features/digest/infrastructure/file-digest-state-repositories";
 
 describe("State Repositories 読み込みに関するテスト", () => {
   describe("有効データの読み込みに関するテスト", () => {
@@ -18,7 +18,7 @@ describe("State Repositories 読み込みに関するテスト", () => {
       expect(actual.preferenceProfile.version).toBe(1);
     });
 
-    it("既定データを読み込んだとき、Feature Extraction State の version が 1 となる", async () => {
+    it("既定データを読み込んだとき、Article Extraction Registry の version が 1 となる", async () => {
       // Arrange
       const repositoryRoot = undefined;
 
@@ -26,7 +26,7 @@ describe("State Repositories 読み込みに関するテスト", () => {
       const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
-      expect(actual.featureExtractionState.version).toBe(1);
+      expect(actual.articleExtractionRegistry.version).toBe(1);
     });
 
     it("既定データを読み込んだとき、topics.typescript の重みが 0.6 となる", async () => {
@@ -62,7 +62,7 @@ describe("State Repositories 読み込みに関するテスト", () => {
       expect(actual.preferenceSummaryHistory.recent_summary.confidence).toBe("low");
     });
 
-    it("既定データを読み込んだとき、Recommendation Content State の version が 1 となる", async () => {
+    it("既定データを読み込んだとき、Recommendation Content History の version が 1 となる", async () => {
       // Arrange
       const repositoryRoot = undefined;
 
@@ -70,10 +70,10 @@ describe("State Repositories 読み込みに関するテスト", () => {
       const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
-      expect(actual.recommendationContentState.version).toBe(1);
+      expect(actual.recommendationContentHistory.version).toBe(1);
     });
 
-    it("既定データを読み込んだとき、Publication State の version が 1 となる", async () => {
+    it("既定データを読み込んだとき、Published Digest Registry の version が 1 となる", async () => {
       // Arrange
       const repositoryRoot = undefined;
 
@@ -81,18 +81,7 @@ describe("State Repositories 読み込みに関するテスト", () => {
       const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
-      expect(actual.publicationState.version).toBe(1);
-    });
-
-    it("既定データを読み込んだとき、Vocabulary Suggestion State の version が 1 となる", async () => {
-      // Arrange
-      const repositoryRoot = undefined;
-
-      // Act
-      const actual = await loadStateForTest(repositoryRoot);
-
-      // Assert
-      expect(actual.vocabularySuggestionState.version).toBe(1);
+      expect(actual.publishedDigestRegistry.version).toBe(1);
     });
   });
 
@@ -366,31 +355,28 @@ async function writeStateFiles(repositoryRoot: string, preferenceProfile: unknow
 }
 
 async function loadStateForTest(repositoryRoot?: string) {
-  const repositories = createFileStateRepositories(repositoryRoot);
+  const repositories = createFileDigestStateRepositories(repositoryRoot);
 
   const [
-    featureExtractionState,
+    articleExtractionRegistry,
     preferenceProfile,
     preferenceSummaryHistory,
-    publicationState,
-    recommendationContentState,
-    vocabularySuggestionState,
+    publishedDigestRegistry,
+    recommendationContentHistory,
   ] = await Promise.all([
     repositories.articleExtractionRegistry.load(),
     repositories.preferenceProfile.load(),
     repositories.preferenceSummaryHistory.load(),
     repositories.publishedDigestRegistry.load(),
     repositories.recommendationContentHistory.load(),
-    repositories.articleFeatureSuggestionHistory.load(),
   ]);
 
   return {
-    featureExtractionState,
+    articleExtractionRegistry,
     preferenceProfile,
     preferenceSummaryHistory,
-    publicationState,
-    recommendationContentState,
-    vocabularySuggestionState,
+    publishedDigestRegistry,
+    recommendationContentHistory,
   };
 }
 
@@ -398,7 +384,7 @@ async function saveStateForTest(
   repositoryRoot: string,
   preferenceProfile: Awaited<ReturnType<typeof loadStateForTest>>["preferenceProfile"],
 ) {
-  await createFileStateRepositories(repositoryRoot).preferenceProfile.save(preferenceProfile);
+  await createFileDigestStateRepositories(repositoryRoot).preferenceProfile.save(preferenceProfile);
 }
 
 async function writeJson(path: string, value: unknown) {

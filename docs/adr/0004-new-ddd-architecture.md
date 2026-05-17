@@ -379,6 +379,8 @@ import { TeamId } from "src/domains/team";
 import { TeamId } from "src/domains/team/team";
 ```
 
+同一 domain 内では、private module 同士の import を許可する。外部 layer からの import と cross-domain import は `src/domains/*/index.ts` 経由に限定する。
+
 ---
 
 ## 5.3 Cross-Domain Dependency Policy

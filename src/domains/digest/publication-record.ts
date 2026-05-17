@@ -30,7 +30,7 @@ const RecommendedArticleSchema = v.strictObject({
   firstRecommendedAt: DateStringSchema,
 });
 
-const PublicationStateSchema = v.strictObject({
+const PublishedDigestRegistrySchema = v.strictObject({
   version: v.literal(1),
   publicationRecords: v.array(PublicationRecordSchema),
   recommendedArticles: v.array(RecommendedArticleSchema),
@@ -44,7 +44,9 @@ export type PublicationRecord = ReadonlyDeep<v.InferOutput<typeof PublicationRec
 
 export type RecommendedArticle = ReadonlyDeep<v.InferOutput<typeof RecommendedArticleSchema>>;
 
-export type PublicationState = ReadonlyDeep<v.InferOutput<typeof PublicationStateSchema>>;
+export type PublishedDigestRegistry = ReadonlyDeep<
+  v.InferOutput<typeof PublishedDigestRegistrySchema>
+>;
 
 export function createPublicationRecord(input: {
   articleId: string;
@@ -65,8 +67,8 @@ export function createRecommendedArticle(input: RecommendedArticle): Recommended
   return v.parse(RecommendedArticleSchema, input);
 }
 
-export function parsePublicationState(input: unknown): PublicationState {
-  const state = v.parse(PublicationStateSchema, input);
+export function parsePublishedDigestRegistry(input: unknown): PublishedDigestRegistry {
+  const state = v.parse(PublishedDigestRegistrySchema, input);
 
   return {
     version: state.version,

@@ -85,7 +85,7 @@ const FailedExtractionAttemptSchema = v.strictObject({
   message: v.pipe(v.string(), v.nonEmpty("failed extraction message must not be empty.")),
 });
 
-const FeatureExtractionStateSchema = v.strictObject({
+const ArticleExtractionRegistrySchema = v.strictObject({
   version: v.literal(1),
   extractions: v.array(FeatureExtractionSchema),
   bodyFetchFailures: v.array(BodyFetchFailureSchema),
@@ -114,7 +114,7 @@ const LlmFeatureExtractionEnvelopeSchema = v.strictObject({
   other_signals: v.array(v.unknown()),
 });
 
-export type FeatureExtractionState = Readonly<{
+export type ArticleExtractionRegistry = Readonly<{
   version: 1;
   extractions: readonly FeatureExtraction[];
   bodyFetchFailures: readonly BodyFetchFailure[];
@@ -221,8 +221,8 @@ export function createFailedExtractionAttempt(
   return v.parse(FailedExtractionAttemptSchema, input);
 }
 
-export function parseFeatureExtractionState(input: unknown): FeatureExtractionState {
-  const state = v.parse(FeatureExtractionStateSchema, input);
+export function parseArticleExtractionRegistry(input: unknown): ArticleExtractionRegistry {
+  const state = v.parse(ArticleExtractionRegistrySchema, input);
 
   return {
     version: state.version,

@@ -1,6 +1,6 @@
 import type { ExtractCurrentFeedCandidateFeaturesInput } from "src/features/digest/application/extract-current-feed-candidate-features-use-case";
 import type { CollectCurrentFeedCandidatesInput } from "src/features/digest/application/collect-current-feed-candidates-use-case";
-import type { DigestStateRepositories } from "src/features/digest/application/ports/agent-state-repository";
+import type { DigestStateRepositories } from "src/features/digest/application/ports/digest-state-repositories";
 import type { ArticleFeatureVocabularyReader } from "src/features/digest/application/ports/article-feature-vocabulary-reader";
 import type { RecommendationPublisher } from "src/features/digest/application/publish-recommendations-use-case";
 import type { RecommendationContentCreator } from "src/features/digest/application/create-recommendation-contents-use-case";

@@ -23,7 +23,7 @@ const VocabularySuggestionRunSchema = v.strictObject({
   candidates: v.array(VocabularyPromotionCandidateSchema),
 });
 
-const VocabularySuggestionStateSchema = v.strictObject({
+const ArticleFeatureSuggestionHistorySchema = v.strictObject({
   version: v.literal(1),
   suggestionRuns: v.array(VocabularySuggestionRunSchema),
 });
@@ -32,10 +32,14 @@ export type VocabularyPromotionCandidate = v.InferOutput<typeof VocabularyPromot
 
 export type VocabularySuggestionRun = v.InferOutput<typeof VocabularySuggestionRunSchema>;
 
-export type VocabularySuggestionState = v.InferOutput<typeof VocabularySuggestionStateSchema>;
+export type ArticleFeatureSuggestionHistory = v.InferOutput<
+  typeof ArticleFeatureSuggestionHistorySchema
+>;
 
-export function parseVocabularySuggestionState(input: unknown): VocabularySuggestionState {
-  const state = v.parse(VocabularySuggestionStateSchema, input);
+export function parseArticleFeatureSuggestionHistory(
+  input: unknown,
+): ArticleFeatureSuggestionHistory {
+  const state = v.parse(ArticleFeatureSuggestionHistorySchema, input);
 
   return {
     version: state.version,

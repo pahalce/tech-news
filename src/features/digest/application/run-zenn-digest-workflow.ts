@@ -7,8 +7,13 @@ import {
   type ExtractCurrentFeedCandidateFeaturesInput,
 } from "src/features/digest/application/extract-current-feed-candidate-features-use-case";
 import { selectReadableCurrentFeedCandidates } from "src/features/digest/application/select-readable-current-feed-candidates-use-case";
-import type { FeatureExtractionState, FeatureVocabularyConfig } from "src/domains/article";
-import type { PublicationState, RecommendationContentState } from "src/domains/digest";
+import type { ArticleExtractionRegistry, FeatureVocabularyConfig } from "src/domains/article";
+import {
+  appendRecommendationContentsToHistory,
+  replacePublishedDigestRegistryEntries,
+  type PublishedDigestRegistry,
+  type RecommendationContentHistory,
+} from "src/domains/digest";
 import type { PreferenceProfile, PreferenceSummaryHistory } from "src/domains/preference";
 import {
   publishRecommendations,
@@ -38,11 +43,11 @@ export type DigestAuditPublisher = {
 };
 
 export type RunZennDigestWorkflowInput = {
-  articleExtractionRegistry: FeatureExtractionState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
   preferenceProfile: PreferenceProfile;
   preferenceSummaryHistory: PreferenceSummaryHistory;
-  publishedDigestRegistry: PublicationState;
-  recommendationContentHistory: RecommendationContentState;
+  publishedDigestRegistry: PublishedDigestRegistry;
+  recommendationContentHistory: RecommendationContentHistory;
   featureVocabulary: FeatureVocabularyConfig;
   feeds: CollectCurrentFeedCandidatesInput["feeds"];
   feedReader: CollectCurrentFeedCandidatesInput["feedReader"];
@@ -57,9 +62,9 @@ export type RunZennDigestWorkflowInput = {
 };
 
 export type RunZennDigestWorkflowResult = {
-  articleExtractionRegistry: FeatureExtractionState;
-  publishedDigestRegistry: PublicationState;
-  recommendationContentHistory: RecommendationContentState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
+  publishedDigestRegistry: PublishedDigestRegistry;
+  recommendationContentHistory: RecommendationContentHistory;
 };
 
 const qualityCriteria = [
@@ -106,7 +111,7 @@ export async function runZennDigestWorkflow(
   });
   const extracted = await extractCurrentFeedCandidateFeatures({
     candidates: collected.candidates,
-    featureExtractionState: input.articleExtractionRegistry,
+    articleExtractionRegistry: input.articleExtractionRegistry,
     featureVocabulary: input.featureVocabulary,
     now: input.now,
     fetchArticleBody: input.fetchArticleBody,
@@ -124,16 +129,18 @@ export async function runZennDigestWorkflow(
   });
   logger.info("extracted candidate features", {
     elapsedMs: elapsedMs(extractionStartedAt),
-    newExtractionCount: extracted.state.extractions.length - previousExtractionCount,
+    newExtractionCount:
+      extracted.articleExtractionRegistry.extractions.length - previousExtractionCount,
     newBodyFetchFailureCount:
-      extracted.state.bodyFetchFailures.length - previousBodyFetchFailureCount,
+      extracted.articleExtractionRegistry.bodyFetchFailures.length - previousBodyFetchFailureCount,
     newFailedExtractionAttemptCount:
-      extracted.state.failedExtractionAttempts.length - previousFailedExtractionAttemptCount,
+      extracted.articleExtractionRegistry.failedExtractionAttempts.length -
+      previousFailedExtractionAttemptCount,
   });
 
   const readable = selectReadableCurrentFeedCandidates({
     currentFeedCandidates: collected.candidates,
-    featureExtractionState: extracted.state,
+    articleExtractionRegistry: extracted.articleExtractionRegistry,
   });
   logger.info("selected readable candidates", {
     readableCandidateCount: readable.readableCandidates.length,
@@ -164,7 +171,7 @@ export async function runZennDigestWorkflow(
         selectedCandidates: [],
         publishedArticleIds: [],
         failedPublishedArticleIds: [],
-        featureExtractionState: extracted.state,
+        articleExtractionRegistry: extracted.articleExtractionRegistry,
         previousRecommendedArticleIds: input.publishedDigestRegistry.recommendedArticles.map(
           (article) => article.articleId,
         ),
@@ -172,7 +179,7 @@ export async function runZennDigestWorkflow(
     });
     logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
     return {
-      articleExtractionRegistry: extracted.state,
+      articleExtractionRegistry: extracted.articleExtractionRegistry,
       publishedDigestRegistry: input.publishedDigestRegistry,
       recommendationContentHistory: input.recommendationContentHistory,
     };
@@ -209,7 +216,7 @@ export async function runZennDigestWorkflow(
   });
   const contents = await createRecommendationContents({
     selectedCandidates: reranked.selectedCandidates,
-    featureExtractions: extracted.state.extractions,
+    featureExtractions: extracted.articleExtractionRegistry.extractions,
     recommendationContentCreator: input.recommendationContentCreator,
   });
   logger.info("created recommendation contents", {
@@ -225,7 +232,7 @@ export async function runZennDigestWorkflow(
     reranked.selectedCandidates.map((candidate) => [candidate.articleId, candidate]),
   );
   const featureExtractionsByArticleId = new Map(
-    extracted.state.extractions.map((featureExtraction) => [
+    extracted.articleExtractionRegistry.extractions.map((featureExtraction) => [
       featureExtraction.articleId,
       featureExtraction,
     ]),
@@ -269,7 +276,7 @@ export async function runZennDigestWorkflow(
         .slice(input.publishedDigestRegistry.publicationRecords.length)
         .map((record) => record.articleId),
       failedPublishedArticleIds: published.failedArticleIds,
-      featureExtractionState: extracted.state,
+      articleExtractionRegistry: extracted.articleExtractionRegistry,
       previousRecommendedArticleIds: input.publishedDigestRegistry.recommendedArticles.map(
         (article) => article.articleId,
       ),
@@ -278,19 +285,16 @@ export async function runZennDigestWorkflow(
   logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
 
   return {
-    articleExtractionRegistry: extracted.state,
-    recommendationContentHistory: {
-      version: input.recommendationContentHistory.version,
-      recommendationContents: [
-        ...input.recommendationContentHistory.recommendationContents,
-        ...contents.recommendationContents,
-      ],
-    },
-    publishedDigestRegistry: {
+    articleExtractionRegistry: extracted.articleExtractionRegistry,
+    recommendationContentHistory: appendRecommendationContentsToHistory(
+      input.recommendationContentHistory,
+      contents.recommendationContents,
+    ),
+    publishedDigestRegistry: replacePublishedDigestRegistryEntries({
       version: input.publishedDigestRegistry.version,
       publicationRecords: published.publicationRecords,
       recommendedArticles: published.recommendedArticles,
-    },
+    }),
   };
 }
 
@@ -301,7 +305,7 @@ type DigestAuditMessageInput = {
   selectedCandidates: Awaited<ReturnType<typeof rerankCurrentFeedCandidates>>["selectedCandidates"];
   publishedArticleIds: readonly string[];
   failedPublishedArticleIds: readonly string[];
-  featureExtractionState: FeatureExtractionState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
   previousRecommendedArticleIds: readonly string[];
 };
 
@@ -318,16 +322,16 @@ function formatDigestAuditMessage(input: DigestAuditMessageInput): string {
   const failedPublishedArticleIds = new Set(input.failedPublishedArticleIds);
   const previousRecommendedArticleIds = new Set(input.previousRecommendedArticleIds);
   const extractionsByArticleId = new Map(
-    input.featureExtractionState.extractions.map((extraction) => [
+    input.articleExtractionRegistry.extractions.map((extraction) => [
       extraction.articleId,
       extraction,
     ]),
   );
   const bodyFetchFailuresByArticleId = latestByArticleId(
-    input.featureExtractionState.bodyFetchFailures,
+    input.articleExtractionRegistry.bodyFetchFailures,
   );
   const extractionFailuresByArticleId = latestByArticleId(
-    input.featureExtractionState.failedExtractionAttempts,
+    input.articleExtractionRegistry.failedExtractionAttempts,
   );
   const scoredCandidatesByArticleId = new Map(
     input.scoredCandidates.map((candidate) => [candidate.articleId, candidate]),
@@ -412,7 +416,7 @@ function explainUnrecommendedCandidate(input: {
   selectedArticleIds: ReadonlySet<string>;
   failedPublishedArticleIds: ReadonlySet<string>;
   previousRecommendedArticleIds: ReadonlySet<string>;
-  extractionsByArticleId: ReadonlyMap<string, FeatureExtractionState["extractions"][number]>;
+  extractionsByArticleId: ReadonlyMap<string, ArticleExtractionRegistry["extractions"][number]>;
   bodyFetchFailuresByArticleId: ReadonlyMap<string, { message: string }>;
   extractionFailuresByArticleId: ReadonlyMap<string, { message: string }>;
 }): string {

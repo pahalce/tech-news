@@ -18,7 +18,7 @@ describe("Readable Current Feed Candidate selection use case に関するテス�
     // Act
     const actual = selectReadableCurrentFeedCandidates({
       currentFeedCandidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [
           {
@@ -60,7 +60,7 @@ describe("Readable Current Feed Candidate selection use case に関するテス�
     // Act
     const actual = selectReadableCurrentFeedCandidates({
       currentFeedCandidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -86,7 +86,7 @@ describe("Readable Current Feed Candidate selection use case に関するテス�
     // Act
     const actual = selectReadableCurrentFeedCandidates({
       currentFeedCandidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [
           {
@@ -120,7 +120,7 @@ describe("Readable Current Feed Candidate selection use case に関するテス�
     // Act
     const actual = selectReadableCurrentFeedCandidates({
       currentFeedCandidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [
           {

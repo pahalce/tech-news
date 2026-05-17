@@ -55,7 +55,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -86,7 +86,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.extractions).toHaveLength(1);
+    expect(actual.articleExtractionRegistry.extractions).toHaveLength(1);
   });
 
   it("本文取得時に著者情報があるとき、Feature Extraction に著者を保存する", async () => {
@@ -123,7 +123,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -152,7 +152,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.extractions[0]?.author).toEqual({
+    expect(actual.articleExtractionRegistry.extractions[0]?.author).toEqual({
       username: "neet",
       displayName: "Ryō Igarashi",
       publicationName: "Gemcook Tech Blog",
@@ -193,7 +193,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -215,7 +215,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.bodyFetchFailures).toEqual([]);
+    expect(actual.articleExtractionRegistry.bodyFetchFailures).toEqual([]);
   });
 
   it("Readable Article を抽出したとき、Failed Extraction Attempt は保存されない", async () => {
@@ -252,7 +252,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -274,7 +274,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.failedExtractionAttempts).toEqual([]);
+    expect(actual.articleExtractionRegistry.failedExtractionAttempts).toEqual([]);
   });
 
   it("Unreadable Article を抽出したとき、Feature Extraction の Article Features が null として保存される", async () => {
@@ -311,7 +311,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -333,7 +333,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.extractions[0]?.articleFeatures).toBeNull();
+    expect(actual.articleExtractionRegistry.extractions[0]?.articleFeatures).toBeNull();
   });
 
   it("Unreadable Article が既に抽出済みのとき、再抽出されない", async () => {
@@ -371,7 +371,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [
           {
@@ -438,7 +438,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [
           {
@@ -510,7 +510,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -527,7 +527,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.bodyFetchFailures).toEqual([
+    expect(actual.articleExtractionRegistry.bodyFetchFailures).toEqual([
       {
         articleId: candidate.articleId,
         failedAt: "2026-05-13T01:00:00.000Z",
@@ -570,7 +570,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -624,7 +624,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -639,7 +639,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.failedExtractionAttempts).toEqual([
+    expect(actual.articleExtractionRegistry.failedExtractionAttempts).toEqual([
       {
         articleId: candidate.articleId,
         attemptedAt: "2026-05-13T02:00:00.000Z",
@@ -682,7 +682,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     const actual = await extractCurrentFeedCandidateFeatures({
       candidates: [candidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [],
         bodyFetchFailures: [],
@@ -710,7 +710,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     });
 
     // Assert
-    expect(actual.state.extractions).toHaveLength(1);
+    expect(actual.articleExtractionRegistry.extractions).toHaveLength(1);
   });
 
   it("Feature Extraction 対象内の進捗を LLM 抽出に渡す", async () => {
@@ -764,7 +764,7 @@ describe("Feature Extraction use case に関するテスト", () => {
     // Act
     await extractCurrentFeedCandidateFeatures({
       candidates: [existingCandidate, firstTargetCandidate, secondTargetCandidate],
-      featureExtractionState: {
+      articleExtractionRegistry: {
         version: 1,
         extractions: [
           {

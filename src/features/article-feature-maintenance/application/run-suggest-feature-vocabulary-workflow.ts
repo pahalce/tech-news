@@ -1,9 +1,9 @@
 import type {
-  FeatureExtractionState,
+  ArticleExtractionRegistry,
   FeatureVocabularyConfig,
-  VocabularySuggestionState,
+  ArticleFeatureSuggestionHistory,
 } from "src/domains/article";
-import type { PublicationState } from "src/domains/digest";
+import type { PublishedDigestRegistry } from "src/domains/digest";
 import {
   isInsideSuggestionLookbackWindow,
   suggestFeatureVocabularyCandidates,
@@ -18,9 +18,9 @@ import {
 } from "src/shared/application/workflow-logger";
 
 export type RunSuggestFeatureVocabularyWorkflowInput = {
-  articleExtractionRegistry: FeatureExtractionState;
-  publishedDigestRegistry: PublicationState;
-  articleFeatureSuggestionHistory: VocabularySuggestionState;
+  articleExtractionRegistry: ArticleExtractionRegistry;
+  publishedDigestRegistry: PublishedDigestRegistry;
+  articleFeatureSuggestionHistory: ArticleFeatureSuggestionHistory;
   featureVocabulary: FeatureVocabularyConfig;
   suggestedAt: string;
   describer: VocabularyCandidateDescriber;
@@ -29,7 +29,7 @@ export type RunSuggestFeatureVocabularyWorkflowInput = {
 };
 
 export type RunSuggestFeatureVocabularyWorkflowResult = {
-  articleFeatureSuggestionHistory: VocabularySuggestionState;
+  articleFeatureSuggestionHistory: ArticleFeatureSuggestionHistory;
 };
 
 export async function runSuggestFeatureVocabularyWorkflow(
@@ -53,7 +53,7 @@ export async function runSuggestFeatureVocabularyWorkflow(
     featureExtractions: input.articleExtractionRegistry.extractions,
     featureVocabulary: input.featureVocabulary,
     publicationRecords: input.publishedDigestRegistry.publicationRecords,
-    vocabularySuggestionState: input.articleFeatureSuggestionHistory,
+    articleFeatureSuggestionHistory: input.articleFeatureSuggestionHistory,
     suggestedAt: input.suggestedAt,
     describer: input.describer,
     notifier: input.notifier,
@@ -67,7 +67,7 @@ export async function runSuggestFeatureVocabularyWorkflow(
   logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
 
   return {
-    articleFeatureSuggestionHistory: suggested.vocabularySuggestionState,
+    articleFeatureSuggestionHistory: suggested.articleFeatureSuggestionHistory,
   };
 }
 

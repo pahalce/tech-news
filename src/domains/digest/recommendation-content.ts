@@ -18,21 +18,21 @@ const RecommendationContentSchema = v.strictObject({
   ),
 });
 
-const RecommendationContentStateSchema = v.strictObject({
+const RecommendationContentHistorySchema = v.strictObject({
   version: v.literal(1),
   recommendationContents: v.array(RecommendationContentSchema),
 });
 
 export type RecommendationContent = v.InferOutput<typeof RecommendationContentSchema>;
 
-export type RecommendationContentState = v.InferOutput<typeof RecommendationContentStateSchema>;
+export type RecommendationContentHistory = v.InferOutput<typeof RecommendationContentHistorySchema>;
 
 export function parseRecommendationContent(input: unknown): RecommendationContent {
   return v.parse(RecommendationContentSchema, input);
 }
 
-export function parseRecommendationContentState(input: unknown): RecommendationContentState {
-  const state = v.parse(RecommendationContentStateSchema, input);
+export function parseRecommendationContentHistory(input: unknown): RecommendationContentHistory {
+  const state = v.parse(RecommendationContentHistorySchema, input);
 
   return {
     version: state.version,
