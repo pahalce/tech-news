@@ -37,6 +37,23 @@ describe("runtime config に関するテスト", () => {
     expect(actual).toBe("gpt-4.1");
   });
 
+  it("OpenAI compatible provider でも用途別 model 未指定時は base model を使う", () => {
+    // Arrange
+    const config: LlmRuntimeConfig = {
+      provider: "openai-compatible",
+      baseUrl: "https://gateway.example/v1",
+      baseModel: "provider/base-model",
+      models: {},
+      requestTimeoutMs: 90_000,
+    };
+
+    // Act
+    const actual = resolveLlmModel(config, "recommendationContent");
+
+    // Assert
+    expect(actual).toBe("provider/base-model");
+  });
+
   it("runtime config は LLM と HTTP timeout を TS で保持する", () => {
     // Act
     const actual = runtimeConfig;

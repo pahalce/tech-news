@@ -80,4 +80,19 @@ describe("scheduled jobs config に関するテスト", () => {
       "zenn-digest is missing required environment variables: DISCORD_CHANNEL_ID",
     );
   });
+
+  it("未設定の scheduled job 名を渡したとき、entrypoint 設定エラーにする", () => {
+    // Arrange
+    const env = {
+      DISCORD_BOT_TOKEN: "token",
+      DISCORD_CHANNEL_ID: "channel",
+      GEMINI_API_KEY: "key",
+    };
+
+    // Act
+    const actual = () => assertRequiredEnvironment("unknown-job" as never, env);
+
+    // Assert
+    expect(actual).toThrow("unknown-job is not a configured scheduled job.");
+  });
 });
