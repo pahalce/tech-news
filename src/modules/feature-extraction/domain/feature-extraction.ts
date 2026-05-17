@@ -1,6 +1,11 @@
 import * as v from "valibot";
 
-import { ArticleAuthorSchema, type ArticleAuthor } from "./article-author";
+import { ArticleAuthorSchema, type ArticleAuthor } from "../../../shared/domain/article-author";
+import type {
+  ArticleFeatures,
+  FeatureSignal,
+  OtherSignal,
+} from "../../../shared/domain/article-features";
 
 const SalienceSchema = v.pipe(
   v.number(),
@@ -131,23 +136,7 @@ export type FeatureExtraction = {
   author: ArticleAuthor | null;
 };
 
-export type ArticleFeatures = {
-  primaryTopics: FeatureSignal[];
-  mentionedTopics: FeatureSignal[];
-  unknownTopics: string[];
-  featureAxes: Record<string, FeatureSignal[]>;
-  otherSignals: OtherSignal[];
-};
-
-export type FeatureSignal = {
-  key: string;
-  salience: number;
-};
-
-export type OtherSignal = {
-  key: string;
-  salience: number;
-};
+export type { ArticleFeatures, FeatureSignal, OtherSignal };
 
 export type BodyFetchFailure = {
   articleId: string;

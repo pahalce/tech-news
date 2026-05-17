@@ -1,19 +1,16 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { createArticleIdentity } from "./article-identity";
 import {
   createBodyFetchFailure,
   createFailedExtractionAttempt,
   createFeatureExtraction,
 } from "./feature-extraction";
 
+const articleId = `zenn:${"a".repeat(64)}`;
+
 describe("Feature Extraction domain model に関するテスト", () => {
   it("Readable Article を抽出したとき、Primary Topic が正規化されて保存される", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/readable-article",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -26,7 +23,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         llmOutput: {
           readability: {
@@ -48,7 +45,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("著者情報が渡されたとき、Feature Extraction に保存される", () => {
     // Arrange
-    const identity = createArticleIdentity("zenn", "https://zenn.dev/neet/articles/sample-article");
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -59,7 +55,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         author: {
           username: "neet",
@@ -90,10 +86,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("同じ Primary Topic の alias が複数抽出されたとき、最大 salience で保存される", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/primary-topic-aliases",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -106,7 +98,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         llmOutput: {
           readability: {
@@ -131,10 +123,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("同じ Topic が Primary Topic と Mentioned Topic に抽出されたとき、Primary Topic だけに保存される", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/primary-mentioned-overlap",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -147,7 +135,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         llmOutput: {
           readability: {
@@ -169,10 +157,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("Unknown Topic が抽出されたとき、unknownTopics に保存される", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/unknown-topic",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -185,7 +169,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         llmOutput: {
           readability: {
@@ -207,10 +191,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("Other Signal が抽出されたとき、otherSignals に保存される", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/other-signal",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -221,7 +201,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         llmOutput: {
           readability: {
@@ -245,10 +225,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("LLM が summary を返したとき、検証エラーとなる", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/digest-text",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -260,7 +236,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     const actual = () =>
       createFeatureExtraction(
         {
-          articleId: identity.articleId,
+          articleId: articleId,
           extractedAt: "2026-05-13T00:00:00.000Z",
           llmOutput: {
             readability: {
@@ -283,10 +259,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("Unreadable Article に未定義 Feature Axis が含まれるとき、Article Features は保存されない", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/unreadable-article",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -297,7 +269,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     // Act
     const actual = createFeatureExtraction(
       {
-        articleId: identity.articleId,
+        articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
         llmOutput: {
           readability: {
@@ -321,10 +293,6 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("Feature Extraction の日時が不正なとき、検証エラーとなる", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/invalid-date",
-    );
     const featureVocabulary = {
       feature_axes: {},
       normalizeTopic(topic: string) {
@@ -336,7 +304,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     const actual = () =>
       createFeatureExtraction(
         {
-          articleId: identity.articleId,
+          articleId: articleId,
           extractedAt: "not a date",
           llmOutput: {
             readability: {
@@ -358,15 +326,11 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("Body Fetch Failure の message が空のとき、検証エラーとなる", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/fetch-failure",
-    );
 
     // Act
     const actual = () =>
       createBodyFetchFailure({
-        articleId: identity.articleId,
+        articleId: articleId,
         failedAt: "2026-05-13T00:00:00.000Z",
         message: "",
       });
@@ -377,15 +341,11 @@ describe("Feature Extraction domain model に関するテスト", () => {
 
   it("Failed Extraction Attempt の message が空のとき、検証エラーとなる", () => {
     // Arrange
-    const identity = createArticleIdentity(
-      "zenn",
-      "https://zenn.dev/kazuyataira/articles/extraction-failure",
-    );
 
     // Act
     const actual = () =>
       createFailedExtractionAttempt({
-        articleId: identity.articleId,
+        articleId: articleId,
         attemptedAt: "2026-05-13T00:00:00.000Z",
         message: "",
       });

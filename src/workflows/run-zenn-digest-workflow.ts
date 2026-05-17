@@ -5,8 +5,8 @@ import {
 import {
   extractCurrentFeedCandidateFeatures,
   type ExtractCurrentFeedCandidateFeaturesInput,
-} from "../modules/article/application/extract-current-feed-candidate-features-use-case";
-import { selectReadableCurrentFeedCandidates } from "../modules/article/application/select-readable-current-feed-candidates-use-case";
+} from "../modules/feature-extraction/application/extract-current-feed-candidate-features-use-case";
+import { selectReadableCurrentFeedCandidates } from "../modules/feature-extraction/application/select-readable-current-feed-candidates-use-case";
 import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
 import type { AgentState } from "../modules/agent-state/infrastructure/file-agent-state";
 import {

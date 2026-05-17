@@ -160,12 +160,7 @@
         "ツール導入後の効果測定と改善サイクル",
         "データに基づくLLMワークフロー最適化手法"
       ],
-      "signalsUsed": [
-        "データ駆動型改善",
-        "開発者生産性向上",
-        "LLM活用事例",
-        "実測に基づく成果"
-      ]
+      "signalsUsed": ["データ駆動型改善", "開発者生産性向上", "LLM活用事例", "実測に基づく成果"]
     },
     {
       "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
@@ -253,12 +248,7 @@
         "Disjunction max queryを使用することで、複数の検索対象フィールド間でのスコアリングを調整し、関連度の高い結果を適切に上位表示できる。",
         "日本語の検索精度を調整する際は、kuromoji analyzerのデフォルト設定に含まれる品詞やストップワードのフィルタを適切にカスタマイズする必要がある。"
       ],
-      "signalsUsed": [
-        "elasticsearch",
-        "performance",
-        "backend",
-        "production_case_study"
-      ]
+      "signalsUsed": ["elasticsearch", "performance", "backend", "production_case_study"]
     },
     {
       "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",

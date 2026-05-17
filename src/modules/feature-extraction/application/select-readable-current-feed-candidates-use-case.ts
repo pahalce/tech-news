@@ -1,4 +1,4 @@
-import { type CurrentFeedCandidate } from "../domain/current-feed-candidate";
+import { type CurrentFeedCandidate } from "../../article/application/current-feed-candidate";
 import {
   parseFeatureExtractionState,
   type ArticleFeatures,

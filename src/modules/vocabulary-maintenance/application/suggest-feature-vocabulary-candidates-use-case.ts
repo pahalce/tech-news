@@ -3,21 +3,9 @@ import {
   type VocabularyPromotionCandidate as DomainVocabularyPromotionCandidate,
   type VocabularySuggestionState,
 } from "../domain/vocabulary-suggestion";
+import type { ArticleFeatures } from "../../../shared/domain/article-features";
 
 export type VocabularyPromotionCandidate = DomainVocabularyPromotionCandidate;
-
-type FeatureSignal = {
-  key: string;
-  salience: number;
-};
-
-type ArticleFeatures = {
-  primaryTopics: FeatureSignal[];
-  mentionedTopics: FeatureSignal[];
-  unknownTopics: string[];
-  featureAxes: Record<string, FeatureSignal[]>;
-  otherSignals: FeatureSignal[];
-};
 
 type FeatureExtraction = {
   articleId: string;
