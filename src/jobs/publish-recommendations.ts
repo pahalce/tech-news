@@ -1,8 +1,5 @@
 import { assertRequiredEnvironment } from "../workflows/scheduled-jobs-config";
-import {
-  runZennDigestFromEnvironment,
-  validateZennDigestDryRun,
-} from "../workflows/run-zenn-digest-from-environment";
+import { runZennDigest, validateZennDigestDryRun } from "../workflows/run-zenn-digest";
 
 const isDryRun = process.argv.includes("--dry-run");
 
@@ -14,6 +11,6 @@ if (isDryRun) {
   await validateZennDigestDryRun();
   console.log("zenn-digest dry-run ok");
 } else {
-  await runZennDigestFromEnvironment(process.env);
+  await runZennDigest();
   console.log("zenn-digest completed");
 }

@@ -1,7 +1,8 @@
 import { jsonSchema } from "ai";
 import { describe, expect, it } from "vite-plus/test";
 
-import { readLlmProviderConfig, requestJsonFromLlm } from "./llm-json-client";
+import { assertRequiredLlmEnvironment, createLlmLanguageModel } from "./llm-text-generation";
+import type { LlmRuntimeConfig } from "./runtime-config";
 
 const TestSchema = jsonSchema<{ ok: boolean }>({
   type: "object",
@@ -12,69 +13,30 @@ const TestSchema = jsonSchema<{ ok: boolean }>({
   additionalProperties: false,
 });
 
-describe("LLM JSON client に関するテスト", () => {
-  it("LLM_PROVIDER 未指定のとき、Gemini API key を読む", () => {
+describe("LLM text generation に関するテスト", () => {
+  it("Gemini provider のとき、Gemini API key を必須にする", () => {
     // Arrange
     const env = { GEMINI_API_KEY: "gemini-key" };
 
     // Act
-    const actual = readLlmProviderConfig(env);
+    const actual = () => assertRequiredLlmEnvironment(env);
 
     // Assert
-    expect(actual).toEqual({
-      provider: "gemini",
-      apiKey: "gemini-key",
-    });
+    expect(actual).not.toThrow();
   });
 
-  it("Gemini provider を指定したとき、Gemini API key を読む", () => {
+  it("Gemini provider の API key がないとき、設定エラーにする", () => {
     // Arrange
-    const env = { LLM_PROVIDER: "gemini", GEMINI_API_KEY: "gemini-key" };
+    const env = {};
 
     // Act
-    const actual = readLlmProviderConfig(env);
+    const actual = () => assertRequiredLlmEnvironment(env);
 
     // Assert
-    expect(actual).toEqual({
-      provider: "gemini",
-      apiKey: "gemini-key",
-    });
+    expect(actual).toThrow("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
   });
 
-  it("LLM_PROVIDER 未指定で OpenAI API key だけがあるとき、OpenAI provider として読む", () => {
-    // Arrange
-    const env = { OPENAI_API_KEY: "openai-key" };
-
-    // Act
-    const actual = readLlmProviderConfig(env);
-
-    // Assert
-    expect(actual).toEqual({
-      provider: "openai",
-      apiKey: "openai-key",
-    });
-  });
-
-  it("OpenAI compatible provider を指定したとき、base URL と LLM API key を読む", () => {
-    // Arrange
-    const env = {
-      LLM_PROVIDER: "openai-compatible",
-      LLM_API_KEY: "gateway-key",
-      LLM_BASE_URL: "https://example.com/v1/",
-    };
-
-    // Act
-    const actual = readLlmProviderConfig(env);
-
-    // Assert
-    expect(actual).toEqual({
-      provider: "openai-compatible",
-      apiKey: "gateway-key",
-      baseUrl: "https://example.com/v1",
-    });
-  });
-
-  it("OpenAI compatible response から JSON を読む", async () => {
+  it("OpenAI compatible provider で chat completions を呼び出す", async () => {
     // Arrange
     const calls: Array<{ url: string; init?: RequestInit }> = [];
     const fetchImpl = async (url: string | URL | Request, init?: RequestInit) => {
@@ -96,24 +58,33 @@ describe("LLM JSON client に関するテスト", () => {
         { status: 200 },
       );
     };
+    const model = createLlmLanguageModel({
+      runtimeConfig: {
+        provider: "openai-compatible",
+        baseUrl: "https://gateway.example/v1",
+        baseModel: "provider/model",
+        requestTimeoutMs: 90_000,
+      },
+      env: { LLM_API_KEY: "key" },
+      model: "provider/model",
+      fetch: fetchImpl,
+    });
 
     // Act
-    const actual = await requestJsonFromLlm(
-      {
-        provider: "openai-compatible",
-        apiKey: "key",
-        baseUrl: "https://gateway.example/v1",
-        fetch: fetchImpl,
-      },
-      { model: "provider/model", system: "system", user: "user", schema: TestSchema },
-    );
+    const { generateText, Output } = await import("ai");
+    const { output } = await generateText({
+      model,
+      output: Output.object({ schema: TestSchema }),
+      system: "system",
+      prompt: "user",
+    });
 
     // Assert
-    expect(actual).toEqual({ ok: true });
+    expect(output).toEqual({ ok: true });
     expect(calls[0]?.url).toBe("https://gateway.example/v1/chat/completions");
   });
 
-  it("Gemini response から JSON を読む", async () => {
+  it("Gemini provider で generateContent を呼び出す", async () => {
     // Arrange
     let requestedUrl = "";
     let requestedBody: unknown;
@@ -132,15 +103,28 @@ describe("LLM JSON client に関するテスト", () => {
         { status: 200 },
       );
     };
+    const model = createLlmLanguageModel({
+      runtimeConfig: {
+        provider: "gemini",
+        baseModel: "gemini-2.5-flash",
+        requestTimeoutMs: 90_000,
+      },
+      env: { GEMINI_API_KEY: "gemini-key" },
+      model: "gemini-2.5-flash",
+      fetch: fetchImpl,
+    });
 
     // Act
-    const actual = await requestJsonFromLlm(
-      { provider: "gemini", apiKey: "gemini-key", fetch: fetchImpl },
-      { model: "gemini-2.5-flash", system: "system", user: "user", schema: TestSchema },
-    );
+    const { generateText, Output } = await import("ai");
+    const { output } = await generateText({
+      model,
+      output: Output.object({ schema: TestSchema }),
+      system: "system",
+      prompt: "user",
+    });
 
     // Assert
-    expect(actual).toEqual({ ok: true });
+    expect(output).toEqual({ ok: true });
     expect(requestedUrl).toBe(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
     );
@@ -154,15 +138,24 @@ describe("LLM JSON client に関するテスト", () => {
     });
   });
 
-  it("provider が未対応のとき、設定エラーにする", () => {
+  it("OpenAI provider の API key がないとき、設定エラーにする", () => {
     // Arrange
-    const env = { LLM_PROVIDER: "cursor" };
+    const runtimeConfig: LlmRuntimeConfig = {
+      provider: "openai",
+      baseModel: "gpt-4.1-mini",
+      requestTimeoutMs: 90_000,
+    };
 
     // Act
-    const actual = () => readLlmProviderConfig(env);
+    const actual = () =>
+      createLlmLanguageModel({
+        runtimeConfig,
+        env: {},
+        model: "gpt-4.1-mini",
+      });
 
     // Assert
-    expect(actual).toThrow("Unsupported LLM_PROVIDER: cursor");
+    expect(actual).toThrow("OPENAI_API_KEY is required.");
   });
 });
 

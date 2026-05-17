@@ -40,15 +40,10 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
-          LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
-          LLM_MODEL: ${{ vars.LLM_MODEL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
-          LLM_REQUEST_TIMEOUT_MS: ${{ vars.LLM_REQUEST_TIMEOUT_MS }}
-          PREFERENCE_SUMMARY_MODEL: ${{ vars.PREFERENCE_SUMMARY_MODEL }}
       - name: Data Commit
         run: |
           git config user.name "github-actions[bot]"
@@ -74,18 +69,10 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
-          LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
-          LLM_MODEL: ${{ vars.LLM_MODEL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
-          LLM_REQUEST_TIMEOUT_MS: ${{ vars.LLM_REQUEST_TIMEOUT_MS }}
-          HTTP_REQUEST_TIMEOUT_MS: ${{ vars.HTTP_REQUEST_TIMEOUT_MS }}
-          FEATURE_EXTRACTION_MODEL: ${{ vars.FEATURE_EXTRACTION_MODEL }}
-          RECOMMENDATION_CONTENT_MODEL: ${{ vars.RECOMMENDATION_CONTENT_MODEL }}
-          RERANK_MODEL: ${{ vars.RERANK_MODEL }}
       - name: Data Commit
         run: |
           git config user.name "github-actions[bot]"
@@ -111,15 +98,10 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
-          LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
-          LLM_MODEL: ${{ vars.LLM_MODEL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
-          LLM_REQUEST_TIMEOUT_MS: ${{ vars.LLM_REQUEST_TIMEOUT_MS }}
-          VOCABULARY_SUGGESTION_MODEL: ${{ vars.VOCABULARY_SUGGESTION_MODEL }}
       - name: Data Commit
         run: |
           git config user.name "github-actions[bot]"

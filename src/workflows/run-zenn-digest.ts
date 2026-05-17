@@ -14,11 +14,8 @@ import {
 } from "../modules/agent-state/infrastructure/file-agent-state";
 import type { FeatureVocabularyConfig } from "../modules/feature/application/feature-vocabulary-config";
 import { loadFeatureVocabularyConfig } from "../modules/feature/infrastructure/file-feature-vocabulary-config";
-import {
-  readLlmProviderConfig,
-  requestJsonFromLlm,
-} from "../shared/infrastructure/llm-json-client";
-import { readLlmModelConfig } from "./scheduled-jobs-config";
+import { generateLlmText } from "../shared/infrastructure/llm-text-generation";
+import { resolveLlmModel, runtimeConfig } from "../shared/infrastructure/runtime-config";
 import { createConsoleWorkflowLogger, elapsedMs } from "./workflow-logger";
 import { runZennDigestJob } from "./zenn-digest-job";
 
@@ -110,24 +107,23 @@ export async function validateZennDigestDryRun(): Promise<void> {
   await loadFeatureVocabularyConfig();
 }
 
-export async function runZennDigestFromEnvironment(
-  env: Record<string, string | undefined>,
-): Promise<void> {
-  const modelConfig = readLlmModelConfig(env);
-  const llmProviderConfig = readLlmProviderConfig(env);
+export async function runZennDigest(): Promise<void> {
+  const featureExtractionModel = resolveLlmModel(runtimeConfig.llm, "featureExtraction");
+  const rerankModel = resolveLlmModel(runtimeConfig.llm, "rerank");
+  const recommendationContentModel = resolveLlmModel(runtimeConfig.llm, "recommendationContent");
   const logger = createConsoleWorkflowLogger("zenn-digest");
-  const httpRequestTimeoutMs = readPositiveIntegerEnv(env, "HTTP_REQUEST_TIMEOUT_MS") ?? 20_000;
-  const discordBotToken = normalizeDiscordBotToken(requiredEnv(env, "DISCORD_BOT_TOKEN"));
-  const discordChannelId = requiredEnv(env, "DISCORD_CHANNEL_ID");
+  const httpRequestTimeoutMs = runtimeConfig.http.requestTimeoutMs;
+  const discordBotToken = normalizeDiscordBotToken(requiredEnv("DISCORD_BOT_TOKEN"));
+  const discordChannelId = requiredEnv("DISCORD_CHANNEL_ID");
 
   logger.info("runtime config loaded", {
-    llmProvider: llmProviderConfig.provider,
-    featureExtractionModel: modelConfig.featureExtractionModel,
-    rerankModel: modelConfig.rerankModel,
-    recommendationContentModel: modelConfig.recommendationContentModel,
+    llmProvider: runtimeConfig.llm.provider,
+    featureExtractionModel,
+    rerankModel,
+    recommendationContentModel,
     httpRequestTimeoutMs,
     maxFeedEntriesPerFeed,
-    llmRequestTimeoutMs: llmProviderConfig.timeoutMs ?? 90_000,
+    llmRequestTimeoutMs: runtimeConfig.llm.requestTimeoutMs,
   });
 
   await runZennDigestJob({
@@ -181,18 +177,18 @@ export async function runZennDigestFromEnvironment(
       const featureVocabularyPrompt = formatFeatureVocabularyPrompt(featureVocabulary);
       logger.info("feature extraction LLM request started", {
         articleId: candidate.articleId,
-        model: modelConfig.featureExtractionModel,
+        model: featureExtractionModel,
         featureExtractionIndex: progress.index,
         featureExtractionTotal: progress.total,
         featureExtractionProgress: `${progress.index}/${progress.total}`,
       });
       let result: any;
       try {
-        result = await requestJsonFromLlm(llmProviderConfig, {
-          model: modelConfig.featureExtractionModel,
+        result = await generateLlmText({
+          model: featureExtractionModel,
           system: "You extract structured article features for a personal Zenn digest agent.",
           schema: createFeatureExtractionOutputSchema(featureVocabulary),
-          user: [
+          prompt: [
             "Extract article features using the provided structured output schema.",
             "Every signal must use key and salience.",
             "feature_axes must be an object keyed by allowed axis keys, not an array.",
@@ -224,17 +220,17 @@ export async function runZennDigestFromEnvironment(
       rerank: async (input) => {
         const startedAt = performance.now();
         logger.info("rerank LLM request started", {
-          model: modelConfig.rerankModel,
+          model: rerankModel,
           candidateCount: input.topScoredCandidates.length,
           maxRecommendations: input.maxRecommendations,
         });
         let result: any;
         try {
-          result = await requestJsonFromLlm(llmProviderConfig, {
-            model: modelConfig.rerankModel,
+          result = await generateLlmText({
+            model: rerankModel,
             system: "You select the best Zenn articles for a concise personal technical digest.",
             schema: LlmRerankResultOutputSchema,
-            user: [
+            prompt: [
               "Select article IDs using the provided structured output schema.",
               `Max recommendations: ${input.maxRecommendations}`,
               `Long-term preference summary: ${input.longTermPreferenceSummary ?? "none"}`,
@@ -280,16 +276,16 @@ export async function runZennDigestFromEnvironment(
         });
         logger.info("recommendation content LLM request started", {
           articleId: candidate.articleId,
-          model: modelConfig.recommendationContentModel,
+          model: recommendationContentModel,
         });
         let result: any;
         try {
-          result = await requestJsonFromLlm(llmProviderConfig, {
-            model: modelConfig.recommendationContentModel,
+          result = await generateLlmText({
+            model: recommendationContentModel,
             system:
               "You write concise Japanese Discord recommendation content for one technical article. learningPoints must be concrete takeaways from the article body that remain useful without opening the article.",
             schema: RecommendationContentOutputSchema,
-            user: [
+            prompt: [
               "Write recommendation content using the provided structured output schema.",
               "summary: 2-3 sentences summarizing the article.",
               "whyRecommended: why this article fits the owner's preferences and quality bar.",
@@ -345,8 +341,8 @@ export async function runZennDigestFromEnvironment(
   });
 }
 
-function requiredEnv(env: Record<string, string | undefined>, key: string): string {
-  const value = env[key]?.trim();
+function requiredEnv(key: string): string {
+  const value = process.env[key]?.trim();
   if (!value) {
     throw new Error(`${key} is required.`);
   }
@@ -517,23 +513,6 @@ async function fetchWithTimeout(
   } finally {
     clearTimeout(timeout);
   }
-}
-
-function readPositiveIntegerEnv(
-  env: Record<string, string | undefined>,
-  key: string,
-): number | undefined {
-  const value = env[key];
-  if (!value) {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new Error(`${key} must be a positive integer.`);
-  }
-
-  return parsed;
 }
 
 function selectedArticleCount(result: unknown): number | null {

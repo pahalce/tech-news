@@ -18,7 +18,7 @@ describe("Scheduled Agent Workflow に関するテスト", () => {
     expect(actual).toContain("permissions:\n  contents: write");
   });
 
-  it("scheduled agent workflow を設定したとき、実装が対応する LLM provider env を渡す", async () => {
+  it("scheduled agent workflow を設定したとき、LLM secret だけを渡す", async () => {
     // Arrange
     const workflowPath = join(
       import.meta.dirname,
@@ -29,14 +29,17 @@ describe("Scheduled Agent Workflow に関するテスト", () => {
     const actual = await readFile(workflowPath, "utf8");
 
     // Assert
-    expect(actual).toContain("LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}");
     expect(actual).toContain("GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}");
     expect(actual).toContain(
       "GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}",
     );
     expect(actual).toContain("OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}");
     expect(actual).toContain("LLM_API_KEY: ${{ secrets.LLM_API_KEY }}");
-    expect(actual).toContain("LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}");
+    expect(actual).not.toContain("LLM_PROVIDER:");
+    expect(actual).not.toContain("LLM_BASE_URL:");
+    expect(actual).not.toContain("LLM_MODEL:");
+    expect(actual).not.toContain("LLM_REQUEST_TIMEOUT_MS:");
+    expect(actual).not.toContain("HTTP_REQUEST_TIMEOUT_MS:");
   });
 
   it("workflow_dispatch で実行対象 job を選べる", async () => {
