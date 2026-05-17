@@ -15,17 +15,17 @@ const SalienceSchema = v.pipe(
   v.maxValue(1, "Feature Salience must be at most 1."),
 );
 
-const LlmFeatureSchema = v.object({
+const FeatureExtractionSignalSchema = v.object({
   key: v.pipe(v.string(), v.nonEmpty("Article Feature key must not be empty.")),
   salience: SalienceSchema,
 });
 
-const LlmTopicSchema = v.union([
+const FeatureExtractionTopicSchema = v.union([
   v.pipe(v.string(), v.nonEmpty("Article Topic key must not be empty.")),
-  LlmFeatureSchema,
+  FeatureExtractionSignalSchema,
 ]);
 
-const LlmOtherSignalSchema = v.object({
+const FeatureExtractionOtherSignalSchema = v.object({
   key: v.pipe(v.string(), v.nonEmpty("Other Signal key must not be empty.")),
   salience: SalienceSchema,
 });
@@ -92,26 +92,15 @@ const ArticleExtractionRegistrySchema = v.strictObject({
   failedExtractionAttempts: v.array(FailedExtractionAttemptSchema),
 });
 
-const LlmFeatureExtractionSchema = v.strictObject({
+const ExtractedArticleFeatureAnalysisSchema = v.strictObject({
   readability: v.strictObject({
-    is_readable: v.boolean(),
+    isReadable: v.boolean(),
     reason: v.nullable(v.string()),
   }),
-  primary_topics: v.array(LlmTopicSchema),
-  mentioned_topics: v.array(LlmTopicSchema),
-  feature_axes: v.record(v.string(), v.array(LlmFeatureSchema)),
-  other_signals: v.array(LlmOtherSignalSchema),
-});
-
-const LlmFeatureExtractionEnvelopeSchema = v.strictObject({
-  readability: v.strictObject({
-    is_readable: v.boolean(),
-    reason: v.nullable(v.string()),
-  }),
-  primary_topics: v.array(v.unknown()),
-  mentioned_topics: v.array(v.unknown()),
-  feature_axes: v.record(v.string(), v.array(v.unknown())),
-  other_signals: v.array(v.unknown()),
+  primaryTopics: v.array(FeatureExtractionTopicSchema),
+  mentionedTopics: v.array(FeatureExtractionTopicSchema),
+  featureAxes: v.record(v.string(), v.array(FeatureExtractionSignalSchema)),
+  otherSignals: v.array(FeatureExtractionOtherSignalSchema),
 });
 
 export type ArticleExtractionRegistry = Readonly<{
@@ -146,6 +135,10 @@ export type FailedExtractionAttempt = Readonly<{
   message: string;
 }>;
 
+export type ExtractedArticleFeatureAnalysis = v.InferOutput<
+  typeof ExtractedArticleFeatureAnalysisSchema
+>;
+
 type FeatureExtractionVocabulary = {
   feature_axes: Record<string, { features: Record<string, unknown> }>;
   normalizeTopic(topic: string):
@@ -164,48 +157,47 @@ export function createFeatureExtraction(
   input: {
     articleId: string;
     extractedAt: string;
-    llmOutput: unknown;
+    analysis: unknown;
     author?: ArticleAuthor | null;
   },
   featureVocabulary: FeatureExtractionVocabulary,
 ): FeatureExtraction {
-  const envelope = v.parse(LlmFeatureExtractionEnvelopeSchema, input.llmOutput);
+  const analysis = v.parse(ExtractedArticleFeatureAnalysisSchema, input.analysis);
   const author = input.author ?? null;
 
-  if (!envelope.readability.is_readable) {
+  if (!analysis.readability.isReadable) {
     return v.parse(FeatureExtractionSchema, {
       articleId: input.articleId,
       extractedAt: input.extractedAt,
       readability: {
         isReadable: false,
-        reason: envelope.readability.reason,
+        reason: analysis.readability.reason,
       },
       articleFeatures: null,
       author,
     });
   }
 
-  const llmOutput = v.parse(LlmFeatureExtractionSchema, input.llmOutput);
   const topics = normalizeTopics(
-    llmOutput.primary_topics,
-    llmOutput.mentioned_topics,
+    analysis.primaryTopics,
+    analysis.mentionedTopics,
     featureVocabulary,
   );
-  const featureAxes = normalizeFeatureAxes(llmOutput.feature_axes, featureVocabulary);
+  const featureAxes = normalizeFeatureAxes(analysis.featureAxes, featureVocabulary);
 
   return v.parse(FeatureExtractionSchema, {
     articleId: input.articleId,
     extractedAt: input.extractedAt,
     readability: {
-      isReadable: llmOutput.readability.is_readable,
-      reason: llmOutput.readability.reason,
+      isReadable: analysis.readability.isReadable,
+      reason: analysis.readability.reason,
     },
     articleFeatures: {
       primaryTopics: topics.primaryTopics,
       mentionedTopics: topics.mentionedTopics,
       unknownTopics: topics.unknownTopics,
       featureAxes,
-      otherSignals: llmOutput.other_signals,
+      otherSignals: analysis.otherSignals,
     },
     author,
   });

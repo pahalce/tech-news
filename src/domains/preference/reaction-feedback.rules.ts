@@ -1,7 +1,6 @@
-export const positiveReactionEmoji = "👍";
-export const negativeReactionEmoji = "👎";
-
 const feedbackWindowDays = 3;
+
+export type ReactionFeedbackKind = "positive" | "negative";
 
 export function isInsideFeedbackCollectionWindow(postedAt: string, collectedAt: string): boolean {
   const elapsedMs = Date.parse(collectedAt) - Date.parse(postedAt);
@@ -15,14 +14,6 @@ export function shouldIgnoreContradictoryReactionFeedback(input: {
   return input.positiveCount > 0 && input.negativeCount > 0;
 }
 
-export function readReactionFeedbackWeight(emoji: string): 1 | -1 | null {
-  if (emoji === positiveReactionEmoji) {
-    return 1;
-  }
-
-  if (emoji === negativeReactionEmoji) {
-    return -1;
-  }
-
-  return null;
+export function readReactionFeedbackWeight(kind: ReactionFeedbackKind): 1 | -1 {
+  return kind === "positive" ? 1 : -1;
 }

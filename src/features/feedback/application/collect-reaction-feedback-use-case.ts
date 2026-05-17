@@ -2,13 +2,15 @@ import { applyArticleFeatureFeedbackToNewWeights } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
 import {
   isInsideFeedbackCollectionWindow,
-  negativeReactionEmoji,
-  positiveReactionEmoji,
   readReactionFeedbackWeight,
   shouldIgnoreContradictoryReactionFeedback,
   type PreferenceProfile,
   type PreferenceSummaryHistory,
+  type ReactionFeedbackKind,
 } from "src/domains/preference";
+
+const positiveReactionEmoji = "👍";
+const negativeReactionEmoji = "👎";
 
 type ReactionFeedback = {
   emoji: string;
@@ -119,7 +121,7 @@ export async function collectReactionFeedback(
         processedAt: input.collectedAt,
         ignoredReason: null,
       });
-      preferenceProfile = applyFeedback(preferenceProfile, articleFeatures, positiveReactionEmoji);
+      preferenceProfile = applyFeedback(preferenceProfile, articleFeatures, "positive");
       processedFeedbackCount += snapshot.positiveUserIds.length;
     }
 
@@ -129,7 +131,7 @@ export async function collectReactionFeedback(
         processedAt: input.collectedAt,
         ignoredReason: null,
       });
-      preferenceProfile = applyFeedback(preferenceProfile, articleFeatures, negativeReactionEmoji);
+      preferenceProfile = applyFeedback(preferenceProfile, articleFeatures, "negative");
       processedFeedbackCount += snapshot.negativeUserIds.length;
     }
 
@@ -192,12 +194,9 @@ function updateReactionFeedback(
 function applyFeedback(
   preferenceProfile: PreferenceProfile,
   articleFeatures: ArticleFeatures | null,
-  emoji: string,
+  kind: ReactionFeedbackKind,
 ): PreferenceProfile {
-  const feedbackWeight = readReactionFeedbackWeight(emoji);
-  if (feedbackWeight === null) {
-    return preferenceProfile;
-  }
+  const feedbackWeight = readReactionFeedbackWeight(kind);
 
   return {
     ...preferenceProfile,

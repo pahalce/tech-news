@@ -29,12 +29,12 @@ describe("Reaction Feedback Rules に関するテスト", () => {
     expect(actual).toBe(true);
   });
 
-  it("正の Reaction Emoji を渡したとき、正の重みとなる", () => {
+  it("正の Reaction Feedback kind を渡したとき、正の重みとなる", () => {
     // Arrange
-    const emoji = "👍";
+    const kind = "positive";
 
     // Act
-    const actual = readReactionFeedbackWeight(emoji);
+    const actual = readReactionFeedbackWeight(kind);
 
     // Assert
     expect(actual).toBe(1);

@@ -25,15 +25,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
       {
         articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: true,
+            isReadable: true,
             reason: null,
           },
-          primary_topics: [{ key: "TypeScript", salience: 0.9 }],
-          mentioned_topics: [],
-          feature_axes: {},
-          other_signals: [],
+          primaryTopics: [{ key: "TypeScript", salience: 0.9 }],
+          mentionedTopics: [],
+          featureAxes: {},
+          otherSignals: [],
         },
       },
       featureVocabulary,
@@ -62,15 +62,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
           displayName: "Ryō Igarashi",
           publicationName: null,
         },
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: true,
+            isReadable: true,
             reason: null,
           },
-          primary_topics: [],
-          mentioned_topics: [],
-          feature_axes: {},
-          other_signals: [],
+          primaryTopics: [],
+          mentionedTopics: [],
+          featureAxes: {},
+          otherSignals: [],
         },
       },
       featureVocabulary,
@@ -100,18 +100,18 @@ describe("Feature Extraction domain model に関するテスト", () => {
       {
         articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: true,
+            isReadable: true,
             reason: null,
           },
-          primary_topics: [
+          primaryTopics: [
             { key: "TypeScript", salience: 0.4 },
             { key: "ts", salience: 0.9 },
           ],
-          mentioned_topics: [],
-          feature_axes: {},
-          other_signals: [],
+          mentionedTopics: [],
+          featureAxes: {},
+          otherSignals: [],
         },
       },
       featureVocabulary,
@@ -137,15 +137,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
       {
         articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: true,
+            isReadable: true,
             reason: null,
           },
-          primary_topics: [{ key: "TypeScript", salience: 0.8 }],
-          mentioned_topics: [{ key: "ts", salience: 1 }],
-          feature_axes: {},
-          other_signals: [],
+          primaryTopics: [{ key: "TypeScript", salience: 0.8 }],
+          mentionedTopics: [{ key: "ts", salience: 1 }],
+          featureAxes: {},
+          otherSignals: [],
         },
       },
       featureVocabulary,
@@ -171,15 +171,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
       {
         articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: true,
+            isReadable: true,
             reason: null,
           },
-          primary_topics: ["TypeScript"],
-          mentioned_topics: ["Rust"],
-          feature_axes: {},
-          other_signals: [],
+          primaryTopics: ["TypeScript"],
+          mentionedTopics: ["Rust"],
+          featureAxes: {},
+          otherSignals: [],
         },
       },
       featureVocabulary,
@@ -203,15 +203,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
       {
         articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: true,
+            isReadable: true,
             reason: null,
           },
-          primary_topics: [],
-          mentioned_topics: [],
-          feature_axes: {},
-          other_signals: [{ key: "ownership_model", salience: 0.7 }],
+          primaryTopics: [],
+          mentionedTopics: [],
+          featureAxes: {},
+          otherSignals: [{ key: "ownership_model", salience: 0.7 }],
         },
       },
       featureVocabulary,
@@ -223,7 +223,7 @@ describe("Feature Extraction domain model に関するテスト", () => {
     ]);
   });
 
-  it("LLM が summary を返したとき、検証エラーとなる", () => {
+  it("Article Feature Analysis が summary を返したとき、検証エラーとなる", () => {
     // Arrange
     const featureVocabulary = {
       feature_axes: {},
@@ -238,15 +238,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
         {
           articleId: articleId,
           extractedAt: "2026-05-13T00:00:00.000Z",
-          llmOutput: {
+          analysis: {
             readability: {
-              is_readable: true,
+              isReadable: true,
               reason: null,
             },
-            primary_topics: [],
-            mentioned_topics: [],
-            feature_axes: {},
-            other_signals: [],
+            primaryTopics: [],
+            mentionedTopics: [],
+            featureAxes: {},
+            otherSignals: [],
             summary: "digest text must not be produced here",
           },
         },
@@ -271,17 +271,17 @@ describe("Feature Extraction domain model に関するテスト", () => {
       {
         articleId: articleId,
         extractedAt: "2026-05-13T00:00:00.000Z",
-        llmOutput: {
+        analysis: {
           readability: {
-            is_readable: false,
+            isReadable: false,
             reason: "本文が短すぎて Article Features を信頼できない",
           },
-          primary_topics: ["HallucinatedTopic"],
-          mentioned_topics: [],
-          feature_axes: {
+          primaryTopics: ["HallucinatedTopic"],
+          mentionedTopics: [],
+          featureAxes: {
             hallucinated_axis: [{ key: "not_in_vocabulary", salience: 0.9 }],
           },
-          other_signals: [{ key: "ignored_signal", salience: 0.9 }],
+          otherSignals: [{ key: "ignored_signal", salience: 0.9 }],
         },
       },
       featureVocabulary,
@@ -306,15 +306,15 @@ describe("Feature Extraction domain model に関するテスト", () => {
         {
           articleId: articleId,
           extractedAt: "not a date",
-          llmOutput: {
+          analysis: {
             readability: {
-              is_readable: false,
+              isReadable: false,
               reason: "本文が短い",
             },
-            primary_topics: [],
-            mentioned_topics: [],
-            feature_axes: {},
-            other_signals: [],
+            primaryTopics: [],
+            mentionedTopics: [],
+            featureAxes: {},
+            otherSignals: [],
           },
         },
         featureVocabulary,

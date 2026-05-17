@@ -10,6 +10,7 @@ import {
   createFeatureExtraction,
   type ArticleExtractionRegistry,
 } from "src/domains/article";
+import { parseLlmFeatureExtractionOutput } from "src/features/digest/application/llm-feature-extraction-output";
 
 export type ExtractCurrentFeedCandidateFeaturesInput = {
   candidates: readonly CurrentFeedCandidate[];
@@ -88,7 +89,7 @@ export async function extractCurrentFeedCandidateFeatures(
           {
             articleId: candidate.articleId,
             extractedAt: input.now(),
-            llmOutput,
+            analysis: parseLlmFeatureExtractionOutput(llmOutput),
             author: fetchedArticle.author,
           },
           input.featureVocabulary,
