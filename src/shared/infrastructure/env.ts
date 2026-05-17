@@ -1,6 +1,10 @@
 import * as v from "valibot";
 
-import { runtimeConfig, type LlmRuntimeConfig, type RuntimeConfig } from "./runtime-config";
+import {
+  runtimeConfig,
+  type LlmRuntimeConfig,
+  type RuntimeConfig,
+} from "src/shared/infrastructure/runtime-config";
 
 export type RuntimeEnvironment = Record<string, string | undefined>;
 

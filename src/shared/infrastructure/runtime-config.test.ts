@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { resolveLlmModel, runtimeConfig, type LlmRuntimeConfig } from "./runtime-config";
+import {
+  resolveLlmModel,
+  runtimeConfig,
+  type LlmRuntimeConfig,
+} from "src/shared/infrastructure/runtime-config";
 
 describe("runtime config に関するテスト", () => {
   it("用途別 model が未指定のとき、base model を使う", () => {

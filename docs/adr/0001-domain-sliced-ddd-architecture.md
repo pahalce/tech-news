@@ -1,5 +1,7 @@
 # Domain-Sliced DDD Architecture
 
+Superseded by ADR-0005 for the rebuilt `domains/` and `features/` architecture.
+
 We will organize the agent around domain modules under `src/modules/*/{domain,application,infrastructure}` rather than top-level technical layers or job-shaped modules. This keeps the ubiquitous language visible in the code, colocates each capability's rules with its use cases and adapters, and prevents scheduled jobs from owning domain decisions.
 
 ## Considered Options
@@ -76,4 +78,4 @@ The `publish-recommendations-workflow` is source-agnostic. Zenn is an article fe
 
 `Agent State` owns persistence shape, schema versioning, JSON file mapping, and the final data commit. Each domain module owns its state slice types, invariants, update rules, and parse/serialize boundary for that slice. `agent-state` may import those concrete slice codecs and loaders directly from the owning module's layer files to assemble versioned persisted state, but it must not duplicate slice invariants or update rules. Workflows compose validated slices and persist the resulting state, but they do not embed domain rules or compose raw JSON.
 
-Boundary enforcement is implemented through the Vite+ `lint` block in `vite.config.ts`, the `vp lint` package script, and `scripts/check-architecture.ts`. Oxlint handles broad import restrictions and cycle checks; the architecture check handles source-dependent layer rules that `no-restricted-imports` cannot express cleanly.
+Boundary enforcement was originally implemented through the Vite+ `lint` block in `vite.config.ts`, the `vp lint` package script, and `scripts/check-architecture.ts`. ADR-0005 supersedes this enforcement approach for the rebuilt architecture: dependency-cruiser owns dependency graph boundaries, and oxlint through Vite+ owns general lint rules.

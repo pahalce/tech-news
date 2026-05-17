@@ -4,6 +4,9 @@
     "moduleDetection": "force",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "src/*": ["./src/*"]
+    },
     "resolveJsonModule": true,
     "strict": true,
     "noUnusedLocals": true,

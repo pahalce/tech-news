@@ -2,13 +2,13 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText, Output, type FlexibleSchema, type LanguageModel } from "ai";
 
-import { llmApiKeyForConfig, type RuntimeEnvironment } from "./env";
+import { llmApiKeyForConfig, type RuntimeEnvironment } from "src/shared/infrastructure/env";
 import {
   runtimeConfig,
   type LlmOpenAiChatModelId,
   type LlmRuntimeConfig,
   type LlmRuntimeModelId,
-} from "./runtime-config";
+} from "src/shared/infrastructure/runtime-config";
 
 export type LlmTextGenerationInput = {
   model: LlmRuntimeModelId;
