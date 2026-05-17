@@ -10,6 +10,14 @@ export type FeedCollectionFailure = {
   message: string;
 };
 
+export type DuplicateFeedEntry = {
+  articleId: string;
+  canonicalUrl: string;
+  title: string;
+  feedId: string;
+  keptTitle: string;
+};
+
 export type CollectCurrentFeedCandidatesInput = {
   feeds: readonly ArticleFeed[];
   feedReader(feed: ArticleFeed): Promise<readonly ArticleFeedEntry[]>;
@@ -18,6 +26,11 @@ export type CollectCurrentFeedCandidatesInput = {
 export type CollectCurrentFeedCandidatesResult = {
   candidates: CurrentFeedCandidate[];
   failures: FeedCollectionFailure[];
+  stats: {
+    fetchedEntryCount: number;
+    duplicateEntryCount: number;
+    duplicateEntries: DuplicateFeedEntry[];
+  };
 };
 
 export async function collectCurrentFeedCandidates(
@@ -26,16 +39,28 @@ export async function collectCurrentFeedCandidates(
   const candidatesByArticleId = new Map<string, CurrentFeedCandidate>();
   const failures: FeedCollectionFailure[] = [];
   let successfulFeedCount = 0;
+  let fetchedEntryCount = 0;
+  let duplicateEntryCount = 0;
+  const duplicateEntries: DuplicateFeedEntry[] = [];
 
   for (const feed of input.feeds) {
     try {
       const entries = await input.feedReader(feed);
+      fetchedEntryCount += entries.length;
 
       for (const entry of entries) {
         const candidate = createCurrentFeedCandidate(feed, entry);
         const existingCandidate = candidatesByArticleId.get(candidate.articleId);
 
         if (existingCandidate) {
+          duplicateEntryCount += 1;
+          duplicateEntries.push({
+            articleId: candidate.articleId,
+            canonicalUrl: candidate.canonicalUrl,
+            title: candidate.title,
+            feedId: feed.id,
+            keptTitle: existingCandidate.title,
+          });
           candidatesByArticleId.set(
             candidate.articleId,
             recordFeedAppearance(existingCandidate, feed),
@@ -62,5 +87,10 @@ export async function collectCurrentFeedCandidates(
   return {
     candidates: [...candidatesByArticleId.values()],
     failures,
+    stats: {
+      fetchedEntryCount,
+      duplicateEntryCount,
+      duplicateEntries,
+    },
   };
 }

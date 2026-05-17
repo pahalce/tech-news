@@ -261,11 +261,7 @@
         "NIX_USER_CONF_FILES環境変数を利用すると、複数の設定ファイルを結合して読み込ませることができるため、local.confなどで秘密情報を分離管理できます。",
         "GitHubトークンは環境変数GITHUB_TOKENでも設定可能であり、GitHub CLIと併用することで状況に応じた柔軟な認証管理が可能です。"
       ],
-      "signalsUsed": [
-        "nix_flakes",
-        "github_api_tokens",
-        "security_considerations"
-      ]
+      "signalsUsed": ["nix_flakes", "github_api_tokens", "security_considerations"]
     },
     {
       "articleId": "zenn:049908866a1b9e6d27f116c92891dc72ec72106f3f5d39844e61e5ddd7f4fad6",
@@ -298,13 +294,7 @@
         "PNG変換に用いるresvg-jsはRustバインディングを使用しており、1リクエストあたり最大300MB程度のメモリを消費するため、サーバー環境のメモリ設定に注意する。",
         "同一画像生成の無駄を省くため、クエリパラメータをSHA-256でハッシュ化してキャッシュキーを生成するアプローチが効率的である。"
       ],
-      "signalsUsed": [
-        "satori",
-        "resvg_js",
-        "react",
-        "ogp_generation",
-        "implementation_guide"
-      ]
+      "signalsUsed": ["satori", "resvg_js", "react", "ogp_generation", "implementation_guide"]
     },
     {
       "articleId": "zenn:6e7510bfe9d6c687d07d0f039a89fdb5afbdd50c1ee89d6bba204a24545d0ea7",

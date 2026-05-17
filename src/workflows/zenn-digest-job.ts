@@ -5,7 +5,10 @@ import type { AgentState } from "../modules/agent-state/infrastructure/file-agen
 import type { RecommendationPublisher } from "../modules/publication/application/publish-recommendations-use-case";
 import type { RecommendationContentCreator } from "../modules/recommendation-content/application/create-recommendation-contents-use-case";
 import type { LlmReranker } from "../modules/recommendation/application/rerank-current-feed-candidates-use-case";
-import { runZennDigestWorkflow } from "../workflows/run-zenn-digest-workflow";
+import {
+  runZennDigestWorkflow,
+  type DigestAuditPublisher,
+} from "../workflows/run-zenn-digest-workflow";
 import { elapsedMs, silentWorkflowLogger, type WorkflowLogger } from "../workflows/workflow-logger";
 
 export type RunZennDigestJobInput = {
@@ -20,6 +23,7 @@ export type RunZennDigestJobInput = {
   llmReranker: LlmReranker;
   recommendationContentCreator: RecommendationContentCreator;
   publisher: RecommendationPublisher;
+  auditPublisher?: DigestAuditPublisher;
   logger?: WorkflowLogger;
 };
 
@@ -47,6 +51,7 @@ export async function runZennDigestJob(input: RunZennDigestJobInput): Promise<vo
     llmReranker: input.llmReranker,
     recommendationContentCreator: input.recommendationContentCreator,
     publisher: input.publisher,
+    auditPublisher: input.auditPublisher,
     logger,
   });
 

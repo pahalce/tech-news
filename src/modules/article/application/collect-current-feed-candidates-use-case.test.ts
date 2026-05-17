@@ -35,6 +35,19 @@ describe("Current Feed Candidate 収集 use case に関するテスト", () => {
       },
     ]);
     expect(actual.failures).toEqual([]);
+    expect(actual.stats).toEqual({
+      fetchedEntryCount: 2,
+      duplicateEntryCount: 1,
+      duplicateEntries: [
+        {
+          articleId: "zenn:da3d8034d616ae652906cc0d8570382bc2b1d91309a1b3364bae8a6233867763",
+          canonicalUrl: "https://zenn.dev/kazuyataira/articles/testing-flue",
+          title: "Article from zenn-topic-typescript",
+          feedId: "zenn-topic-typescript",
+          keptTitle: "Article from zenn-trend",
+        },
+      ],
+    });
   });
 
   it("一部 feed が失敗しても、成功した feed の Current Feed Candidate と失敗情報を返す", async () => {
@@ -115,6 +128,11 @@ describe("Current Feed Candidate 収集 use case に関するテスト", () => {
     expect(actual).toEqual({
       candidates: [],
       failures: [],
+      stats: {
+        fetchedEntryCount: 0,
+        duplicateEntryCount: 0,
+        duplicateEntries: [],
+      },
     });
   });
 });

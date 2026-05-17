@@ -24,6 +24,14 @@ import {
 import { scoreCurrentFeedCandidates } from "../modules/recommendation/application/score-current-feed-candidates-use-case";
 import { elapsedMs, silentWorkflowLogger, type WorkflowLogger } from "./workflow-logger";
 
+export type PublishDigestAuditInput = {
+  message: string;
+};
+
+export type DigestAuditPublisher = {
+  publishDigestAudit(input: PublishDigestAuditInput): Promise<void>;
+};
+
 export type RunZennDigestWorkflowInput = {
   agentState: AgentState;
   featureVocabulary: FeatureVocabularyConfig;
@@ -35,6 +43,7 @@ export type RunZennDigestWorkflowInput = {
   llmReranker: LlmReranker;
   recommendationContentCreator: RecommendationContentCreator;
   publisher: RecommendationPublisher;
+  auditPublisher?: DigestAuditPublisher;
   logger?: WorkflowLogger;
 };
 
@@ -64,6 +73,8 @@ export async function runZennDigestWorkflow(
   logger.info("collected feed candidates", {
     elapsedMs: elapsedMs(collectStartedAt),
     candidateCount: collected.candidates.length,
+    fetchedEntryCount: collected.stats.fetchedEntryCount,
+    duplicateEntryCount: collected.stats.duplicateEntryCount,
     failureCount: collected.failures.length,
   });
   for (const failure of collected.failures) {
@@ -133,6 +144,22 @@ export async function runZennDigestWorkflow(
 
   if (scored.scoredCandidates.length === 0) {
     logger.warn("skipping rerank because there are no scored candidates");
+    await publishDigestAuditIfConfigured({
+      auditPublisher: input.auditPublisher,
+      logger,
+      message: formatDigestAuditMessage({
+        collected,
+        readableCandidates: readable.readableCandidates,
+        scoredCandidates: [],
+        selectedCandidates: [],
+        publishedArticleIds: [],
+        failedPublishedArticleIds: [],
+        featureExtractionState: extracted.state,
+        previousRecommendedArticleIds: input.agentState.publicationState.recommendedArticles.map(
+          (article) => article.articleId,
+        ),
+      }),
+    });
     logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
     return {
       agentState: {
@@ -221,6 +248,24 @@ export async function runZennDigestWorkflow(
     recommendedArticleCount: published.recommendedArticles.length,
     failedArticleCount: published.failedArticleIds.length,
   });
+  await publishDigestAuditIfConfigured({
+    auditPublisher: input.auditPublisher,
+    logger,
+    message: formatDigestAuditMessage({
+      collected,
+      readableCandidates: readable.readableCandidates,
+      scoredCandidates: scored.scoredCandidates,
+      selectedCandidates: reranked.selectedCandidates,
+      publishedArticleIds: published.publicationRecords
+        .slice(input.agentState.publicationState.publicationRecords.length)
+        .map((record) => record.articleId),
+      failedPublishedArticleIds: published.failedArticleIds,
+      featureExtractionState: extracted.state,
+      previousRecommendedArticleIds: input.agentState.publicationState.recommendedArticles.map(
+        (article) => article.articleId,
+      ),
+    }),
+  });
   logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
 
   return {
@@ -241,4 +286,182 @@ export async function runZennDigestWorkflow(
       },
     },
   };
+}
+
+type DigestAuditMessageInput = {
+  collected: Awaited<ReturnType<typeof collectCurrentFeedCandidates>>;
+  readableCandidates: ReturnType<typeof selectReadableCurrentFeedCandidates>["readableCandidates"];
+  scoredCandidates: ReturnType<typeof scoreCurrentFeedCandidates>["scoredCandidates"];
+  selectedCandidates: Awaited<ReturnType<typeof rerankCurrentFeedCandidates>>["selectedCandidates"];
+  publishedArticleIds: readonly string[];
+  failedPublishedArticleIds: readonly string[];
+  featureExtractionState: AgentState["featureExtractionState"];
+  previousRecommendedArticleIds: readonly string[];
+};
+
+function formatDigestAuditMessage(input: DigestAuditMessageInput): string {
+  const candidates = input.collected.candidates;
+  const readableArticleIds = new Set(
+    input.readableCandidates.map((candidate) => candidate.candidate.articleId),
+  );
+  const scoredArticleIds = new Set(input.scoredCandidates.map((candidate) => candidate.articleId));
+  const selectedArticleIds = new Set(
+    input.selectedCandidates.map((candidate) => candidate.articleId),
+  );
+  const publishedArticleIds = new Set(input.publishedArticleIds);
+  const failedPublishedArticleIds = new Set(input.failedPublishedArticleIds);
+  const previousRecommendedArticleIds = new Set(input.previousRecommendedArticleIds);
+  const extractionsByArticleId = new Map(
+    input.featureExtractionState.extractions.map((extraction) => [
+      extraction.articleId,
+      extraction,
+    ]),
+  );
+  const bodyFetchFailuresByArticleId = latestByArticleId(
+    input.featureExtractionState.bodyFetchFailures,
+  );
+  const extractionFailuresByArticleId = latestByArticleId(
+    input.featureExtractionState.failedExtractionAttempts,
+  );
+  const scoredCandidatesByArticleId = new Map(
+    input.scoredCandidates.map((candidate) => [candidate.articleId, candidate]),
+  );
+  const selectedCandidatesByArticleId = new Map(
+    input.selectedCandidates.map((candidate) => [candidate.articleId, candidate]),
+  );
+  const dropped = candidates
+    .filter((candidate) => !publishedArticleIds.has(candidate.articleId))
+    .map((candidate) => {
+      const reason = explainUnrecommendedCandidate({
+        articleId: candidate.articleId,
+        readableArticleIds,
+        scoredArticleIds,
+        selectedArticleIds,
+        failedPublishedArticleIds,
+        previousRecommendedArticleIds,
+        extractionsByArticleId,
+        bodyFetchFailuresByArticleId,
+        extractionFailuresByArticleId,
+      });
+      const score = scoredCandidatesByArticleId.get(candidate.articleId)?.ruleScore;
+      return `• ${candidate.title} - ${reason}${typeof score === "number" ? ` / score ${score.toFixed(2)}` : ""}\n  ${candidate.canonicalUrl}`;
+    });
+
+  const selectedLines = input.selectedCandidates.map((candidate, index) => {
+    const status = publishedArticleIds.has(candidate.articleId)
+      ? "投稿済み"
+      : failedPublishedArticleIds.has(candidate.articleId)
+        ? "投稿失敗"
+        : "推薦文未作成";
+    const score = selectedCandidatesByArticleId.get(candidate.articleId)?.ruleScore;
+    return `${index + 1}. ${candidate.title} - ${status}${typeof score === "number" ? ` / score ${score.toFixed(2)}` : ""}`;
+  });
+
+  const lines = [
+    "**Zenn Digest 推薦監査**",
+    "",
+    "**集計**",
+    `• RSS取得 entry: ${input.collected.stats.fetchedEntryCount}`,
+    `• 重複統合: ${input.collected.stats.duplicateEntryCount}`,
+    `• 候補: ${candidates.length}`,
+    `• 読める記事: ${input.readableCandidates.length}`,
+    `• スコア対象: ${input.scoredCandidates.length}`,
+    `• Rerank選出: ${input.selectedCandidates.length}`,
+    `• Discord投稿成功: ${publishedArticleIds.size}`,
+    `• Discord投稿失敗: ${failedPublishedArticleIds.size}`,
+  ];
+
+  if (input.collected.failures.length > 0) {
+    lines.push(
+      "",
+      "**Feed失敗**",
+      ...input.collected.failures.map((failure) => `• ${failure.feedId}: ${failure.message}`),
+    );
+  }
+
+  if (input.collected.stats.duplicateEntries.length > 0) {
+    lines.push(
+      "",
+      "**重複があった記事**",
+      ...input.collected.stats.duplicateEntries.map(
+        (entry) => `• ${entry.keptTitle} - ${entry.feedId} でも取得\n  ${entry.canonicalUrl}`,
+      ),
+    );
+  }
+
+  if (selectedLines.length > 0) {
+    lines.push("", "**推薦された記事**", ...selectedLines);
+  }
+
+  lines.push("", "**推薦されなかった記事と理由**");
+  lines.push(...(dropped.length > 0 ? dropped : ["• なし"]));
+
+  return lines.join("\n");
+}
+
+function explainUnrecommendedCandidate(input: {
+  articleId: string;
+  readableArticleIds: ReadonlySet<string>;
+  scoredArticleIds: ReadonlySet<string>;
+  selectedArticleIds: ReadonlySet<string>;
+  failedPublishedArticleIds: ReadonlySet<string>;
+  previousRecommendedArticleIds: ReadonlySet<string>;
+  extractionsByArticleId: ReadonlyMap<
+    string,
+    AgentState["featureExtractionState"]["extractions"][number]
+  >;
+  bodyFetchFailuresByArticleId: ReadonlyMap<string, { message: string }>;
+  extractionFailuresByArticleId: ReadonlyMap<string, { message: string }>;
+}): string {
+  if (input.failedPublishedArticleIds.has(input.articleId)) {
+    return "Discord投稿に失敗した";
+  }
+  if (input.previousRecommendedArticleIds.has(input.articleId)) {
+    return "過去に推薦済み";
+  }
+  const bodyFetchFailure = input.bodyFetchFailuresByArticleId.get(input.articleId);
+  if (bodyFetchFailure) {
+    return `本文取得に失敗した (${bodyFetchFailure.message})`;
+  }
+  const extractionFailure = input.extractionFailuresByArticleId.get(input.articleId);
+  if (extractionFailure) {
+    return `特徴抽出に失敗した (${extractionFailure.message})`;
+  }
+  const extraction = input.extractionsByArticleId.get(input.articleId);
+  if (extraction && !extraction.readability.isReadable) {
+    return `読める記事ではない (${extraction.readability.reason ?? "理由なし"})`;
+  }
+  if (!input.readableArticleIds.has(input.articleId)) {
+    return "特徴抽出結果がなく、読める記事として扱えなかった";
+  }
+  if (!input.scoredArticleIds.has(input.articleId)) {
+    return "スコア対象から除外された";
+  }
+  if (!input.selectedArticleIds.has(input.articleId)) {
+    return "Rerankで落ちた";
+  }
+
+  return "推薦文作成または投稿前に除外された";
+}
+
+function latestByArticleId<T extends { articleId: string }>(items: readonly T[]): Map<string, T> {
+  return new Map(items.map((item) => [item.articleId, item]));
+}
+
+async function publishDigestAuditIfConfigured(input: {
+  auditPublisher: DigestAuditPublisher | undefined;
+  logger: WorkflowLogger;
+  message: string;
+}): Promise<void> {
+  if (!input.auditPublisher) {
+    return;
+  }
+
+  try {
+    await input.auditPublisher.publishDigestAudit({ message: input.message });
+  } catch (error) {
+    input.logger.error("digest audit publish failed", {
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 }
