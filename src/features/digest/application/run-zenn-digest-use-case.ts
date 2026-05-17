@@ -15,7 +15,7 @@ import {
   type WorkflowLogger,
 } from "src/shared/application/workflow-logger";
 
-export type RunZennDigestJobInput = {
+export type RunZennDigestUseCaseInput = {
   stateRepositories: DigestStateRepositories;
   articleFeatureVocabularyReader: ArticleFeatureVocabularyReader;
   feeds: CollectCurrentFeedCandidatesInput["feeds"];
@@ -30,10 +30,10 @@ export type RunZennDigestJobInput = {
   logger?: WorkflowLogger;
 };
 
-export async function runZennDigestJob(input: RunZennDigestJobInput): Promise<void> {
+export async function runZennDigestUseCase(input: RunZennDigestUseCaseInput): Promise<void> {
   const logger = input.logger ?? silentWorkflowLogger;
   const startedAt = performance.now();
-  logger.info("job started");
+  logger.info("zenn digest use case started");
   logger.info("loading digest state and Feature Vocabulary");
   const [
     articleExtractionRegistry,
@@ -79,7 +79,7 @@ export async function runZennDigestJob(input: RunZennDigestJobInput): Promise<vo
     input.stateRepositories.publishedDigestRegistry.save(result.publishedDigestRegistry),
     input.stateRepositories.recommendationContentHistory.save(result.recommendationContentHistory),
   ]);
-  logger.info("job finished", {
+  logger.info("zenn digest use case finished", {
     elapsedMs: elapsedMs(startedAt),
     featureExtractionCount: result.articleExtractionRegistry.extractions.length,
     recommendedArticleCount: result.publishedDigestRegistry.recommendedArticles.length,

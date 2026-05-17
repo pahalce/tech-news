@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vite-plus/test";
 
 import { parseFeatureVocabularyConfig } from "src/domains/article";
-import { runZennDigestJob } from "src/features/digest/application/zenn-digest-job";
+import { runZennDigestUseCase } from "src/features/digest/application/run-zenn-digest-use-case";
 
-describe("Zenn Digest Job に関するテスト", () => {
+describe("Zenn Digest Use Case に関するテスト", () => {
   it("Digest Workflow が成功したとき、更新対象の Registry と History が保存される", async () => {
     // Arrange
     let articleExtractionRegistrySaveCount = 0;
@@ -11,7 +11,7 @@ describe("Zenn Digest Job に関するテスト", () => {
     let recommendationContentHistorySaveCount = 0;
 
     // Act
-    await runZennDigestJob({
+    await runZennDigestUseCase({
       stateRepositories: {
         articleExtractionRegistry: {
           load: async () => ({
