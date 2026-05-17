@@ -56,11 +56,17 @@ Feature は他 feature を import しない。同じ domain 型が必要なら `
 
 `jobs/` は薄い process entrypoint として feature presentation を呼ぶだけにする。
 
+`features/*/presentation` は composition root であり、file repository、Discord adapter、LLM adapter、HTTP/RSS adapter などを use case に注入するだけにする。Discord message formatting、reaction fetch、LLM prompt/schema、HTML/RSS fetch、JSON persistence の実装が presentation にある場合は違反として指摘する。
+
+`features/*/application/*-job.ts` と `features/*/infrastructure/run-*-runtime.ts` は追加しない。job は `src/jobs` の process entrypoint、application は `run-*-use-case.ts`、infrastructure は目的別 adapter ファイルに分ける。`presentation` が `infrastructure/run-*-runtime` を re-export している場合は、見かけ上の境界だけで実質 `job -> infrastructure` になっているため指摘する。
+
 ## Domain Service
 
 Domain service は `domains/*/*.service.ts` に置き、pure domain logic のみを担当する。Rule predicate は `*.rules.ts`、domain error union は `*.errors.ts` を使う。
 
 Application service は `features/*/application/*-use-case.ts` を優先する。I/O、port 呼び出し、処理順序、transaction-like な state composition は application/presentation 側に置き、domain に漏らさない。
+
+Use case は呼び出し元の巨大な inline object に実装を押し込ませない。外部能力は application port として型を定義し、実装は `features/*/infrastructure/*` の adapter factory に置く。presentation で許可される inline 実装は `now: () => new Date().toISOString()` のような小さな値提供に限る。
 
 ## 永続化
 
@@ -90,3 +96,5 @@ Repository は domain object ではなく application port である。JSON や�
 `vp lint` が lint entrypoint である。`oxlint` を直接呼ぶ前提の script やドキュメントを追加している場合は指摘する。
 
 source-dependent な layer 依存は `dependency-cruiser` で補う。境界違反を「レビューで気をつける」だけにしている変更は、dependency-cruiser または oxlint で検出できる形にできないか確認する。
+
+dependency-cruiser では少なくとも `features/*/application/*-job.ts` と `features/*/infrastructure/run-*-runtime.ts` の復活を落とす。新しい崩れ方を見つけた場合は、レビューコメントだけで終わらせず、まず機械的に検出できる import/path rule を追加できないか検討する。
