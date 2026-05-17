@@ -32,6 +32,7 @@ export type DiscordRecommendationContent = {
 };
 
 const recommendationContentBodyMaxLength = 20_000;
+const discordMessageMaxLength = 2_000;
 
 type LlmFeatureSignal = {
   key: string;
@@ -338,6 +339,23 @@ export async function runZennDigest(): Promise<void> {
         return result;
       },
     },
+    auditPublisher: {
+      publishDigestAudit: async ({ message }) => {
+        const startedAt = performance.now();
+        logger.info("Discord digest audit publish started", { messageLength: message.length });
+        const result = await publishDiscordPlainMessage({
+          message,
+          botToken: discordBotToken,
+          channelId: discordChannelId,
+          timeoutMs: httpRequestTimeoutMs,
+        });
+        logger.info("Discord digest audit publish finished", {
+          elapsedMs: elapsedMs(startedAt),
+          messageId: result.messageId,
+          channelId: result.channelId,
+        });
+      },
+    },
     logger,
   });
 }
@@ -404,6 +422,57 @@ async function publishDiscordRecommendation(input: {
     channelId: payload.channel_id,
     postedAt: payload.timestamp,
   };
+}
+
+async function publishDiscordPlainMessage(input: {
+  message: string;
+  botToken: string;
+  channelId: string;
+  timeoutMs: number;
+}): Promise<{ messageId: string; channelId: string; postedAt: string }> {
+  const response = await fetchWithTimeout(
+    `https://discord.com/api/v10/channels/${input.channelId}/messages`,
+    {
+      timeoutMs: input.timeoutMs,
+      init: {
+        method: "POST",
+        headers: {
+          Authorization: `Bot ${input.botToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: truncateDiscordMessage(input.message),
+        }),
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(await formatDiscordApiError(response, "Discord audit publish failed"));
+  }
+
+  const payload = (await response.json()) as {
+    id?: string;
+    channel_id?: string;
+    timestamp?: string;
+  };
+  if (!payload.id || !payload.channel_id || !payload.timestamp) {
+    throw new Error("Discord response did not include message identity.");
+  }
+
+  return {
+    messageId: payload.id,
+    channelId: payload.channel_id,
+    postedAt: payload.timestamp,
+  };
+}
+
+function truncateDiscordMessage(message: string): string {
+  if (message.length <= discordMessageMaxLength) {
+    return message;
+  }
+
+  return `${message.slice(0, discordMessageMaxLength - 30)}\n\n...(監査ログを省略しました)`;
 }
 
 export function formatDiscordMessage(content: DiscordRecommendationContent): string {
