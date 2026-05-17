@@ -1,5 +1,7 @@
 # Domain-Sliced DDD Architecture
 
+Superseded by ADR-0005 for the rebuilt `domains/` and `features/` architecture.
+
 We will organize the agent around domain modules under `src/modules/*/{domain,application,infrastructure}` rather than top-level technical layers or job-shaped modules. This keeps the ubiquitous language visible in the code, colocates each capability's rules with its use cases and adapters, and prevents scheduled jobs from owning domain decisions.
 
 ## Considered Options

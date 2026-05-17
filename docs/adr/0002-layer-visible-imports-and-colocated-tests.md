@@ -1,5 +1,7 @@
 # Layer-Visible Imports And Colocated Tests
 
+Superseded by ADR-0005 for the rebuilt `domains/` and `features/` architecture.
+
 Module barrel `index.ts` files hide whether a dependency is on `domain`, `application`, or `infrastructure`, so this codebase does not use module barrels. Imports must name the concrete layer file, cross-module imports target `application/` use cases by default, and tests live beside the layer they specify so architecture review can see both the dependency direction and the behavioral contract being protected.
 
 ## Considered Options

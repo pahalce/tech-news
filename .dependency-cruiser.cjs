@@ -2,6 +2,18 @@
 module.exports = {
   forbidden: [
     {
+      name: "no-legacy-architecture-imports",
+      severity: "error",
+      from: { path: "^src/" },
+      to: { path: "^src/(modules|workflows)/" },
+    },
+    {
+      name: "no-internal-barrel-imports",
+      severity: "error",
+      from: { path: "^src/" },
+      to: { path: "^src/.+/index[.][cm]?[jt]sx?$" },
+    },
+    {
       name: "domain-no-runtime-layer",
       severity: "error",
       from: { path: "^src/domains/" },
@@ -35,12 +47,12 @@ module.exports = {
       to: { path: "^src/shared/infrastructure/" },
     },
     {
-      name: "feature-presentation-application-only",
+      name: "feature-presentation-no-other-features",
       severity: "error",
       from: { path: "^src/features/([^/]+)/presentation/" },
       to: {
-        path: "^src/(domains|shared|features/)",
-        pathNot: "^src/features/$1/application/",
+        path: "^src/features/",
+        pathNot: "^src/features/$1/",
       },
     },
     {
