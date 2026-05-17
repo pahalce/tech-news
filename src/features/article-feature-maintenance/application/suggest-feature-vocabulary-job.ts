@@ -1,4 +1,4 @@
-import type { ArticleFeatureMaintenanceAgentStateRepository } from "src/features/article-feature-maintenance/application/ports/agent-state-repository";
+import type { ArticleFeatureMaintenanceStateRepositories } from "src/features/article-feature-maintenance/application/ports/agent-state-repository";
 import type { ArticleFeatureVocabularyReader } from "src/features/article-feature-maintenance/application/ports/article-feature-vocabulary-reader";
 import type {
   VocabularyCandidateDescriber,
@@ -12,7 +12,7 @@ import {
 } from "src/shared/application/workflow-logger";
 
 export type RunSuggestFeatureVocabularyJobInput = {
-  agentStateRepository: ArticleFeatureMaintenanceAgentStateRepository;
+  stateRepositories: ArticleFeatureMaintenanceStateRepositories;
   articleFeatureVocabularyReader: ArticleFeatureVocabularyReader;
   suggestedAt(): string;
   describer: VocabularyCandidateDescriber;
@@ -26,20 +26,29 @@ export async function runSuggestFeatureVocabularyJob(
   const logger = input.logger ?? silentWorkflowLogger;
   const startedAt = performance.now();
   logger.info("job started");
-  logger.info("loading Agent State and Feature Vocabulary");
-  const [agentState, featureVocabulary] = await Promise.all([
-    input.agentStateRepository.load(),
+  logger.info("loading article feature maintenance state and Feature Vocabulary");
+  const [
+    articleExtractionRegistry,
+    publishedDigestRegistry,
+    articleFeatureSuggestionHistory,
+    featureVocabulary,
+  ] = await Promise.all([
+    input.stateRepositories.articleExtractionRegistry.load(),
+    input.stateRepositories.publishedDigestRegistry.load(),
+    input.stateRepositories.articleFeatureSuggestionHistory.load(),
     input.articleFeatureVocabularyReader.read(),
   ]);
-  logger.info("loaded Agent State and Feature Vocabulary", {
-    featureExtractionCount: agentState.featureExtractionState.extractions.length,
-    publicationRecordCount: agentState.publicationState.publicationRecords.length,
-    vocabularySuggestionRunCount: agentState.vocabularySuggestionState.suggestionRuns.length,
+  logger.info("loaded article feature maintenance state and Feature Vocabulary", {
+    featureExtractionCount: articleExtractionRegistry.extractions.length,
+    publicationRecordCount: publishedDigestRegistry.publicationRecords.length,
+    vocabularySuggestionRunCount: articleFeatureSuggestionHistory.suggestionRuns.length,
   });
   const suggestedAt = input.suggestedAt();
   logger.info("running vocabulary suggestion workflow", { suggestedAt });
   const result = await runSuggestFeatureVocabularyWorkflow({
-    agentState,
+    articleExtractionRegistry,
+    publishedDigestRegistry,
+    articleFeatureSuggestionHistory,
     featureVocabulary,
     suggestedAt,
     describer: input.describer,
@@ -47,10 +56,12 @@ export async function runSuggestFeatureVocabularyJob(
     logger,
   });
 
-  logger.info("saving Agent State");
-  await input.agentStateRepository.save(result.agentState);
+  logger.info("saving article feature suggestion history");
+  await input.stateRepositories.articleFeatureSuggestionHistory.save(
+    result.articleFeatureSuggestionHistory,
+  );
   logger.info("job finished", {
     elapsedMs: elapsedMs(startedAt),
-    vocabularySuggestionRunCount: result.agentState.vocabularySuggestionState.suggestionRuns.length,
+    vocabularySuggestionRunCount: result.articleFeatureSuggestionHistory.suggestionRuns.length,
   });
 }

@@ -7,8 +7,9 @@ import {
   type ExtractCurrentFeedCandidateFeaturesInput,
 } from "src/features/digest/application/extract-current-feed-candidate-features-use-case";
 import { selectReadableCurrentFeedCandidates } from "src/features/digest/application/select-readable-current-feed-candidates-use-case";
-import type { FeatureVocabularyConfig } from "src/domains/article";
-import type { AgentState } from "src/shared/application/agent-state";
+import type { FeatureExtractionState, FeatureVocabularyConfig } from "src/domains/article";
+import type { PublicationState, RecommendationContentState } from "src/domains/digest";
+import type { PreferenceProfile, PreferenceSummaryHistory } from "src/domains/preference";
 import {
   publishRecommendations,
   type RecommendationPublisher,
@@ -37,7 +38,11 @@ export type DigestAuditPublisher = {
 };
 
 export type RunZennDigestWorkflowInput = {
-  agentState: AgentState;
+  articleExtractionRegistry: FeatureExtractionState;
+  preferenceProfile: PreferenceProfile;
+  preferenceSummaryHistory: PreferenceSummaryHistory;
+  publishedDigestRegistry: PublicationState;
+  recommendationContentHistory: RecommendationContentState;
   featureVocabulary: FeatureVocabularyConfig;
   feeds: CollectCurrentFeedCandidatesInput["feeds"];
   feedReader: CollectCurrentFeedCandidatesInput["feedReader"];
@@ -52,7 +57,9 @@ export type RunZennDigestWorkflowInput = {
 };
 
 export type RunZennDigestWorkflowResult = {
-  agentState: AgentState;
+  articleExtractionRegistry: FeatureExtractionState;
+  publishedDigestRegistry: PublicationState;
+  recommendationContentHistory: RecommendationContentState;
 };
 
 const qualityCriteria = [
@@ -89,18 +96,17 @@ export async function runZennDigestWorkflow(
   }
 
   const extractionStartedAt = performance.now();
-  const previousExtractionCount = input.agentState.featureExtractionState.extractions.length;
-  const previousBodyFetchFailureCount =
-    input.agentState.featureExtractionState.bodyFetchFailures.length;
+  const previousExtractionCount = input.articleExtractionRegistry.extractions.length;
+  const previousBodyFetchFailureCount = input.articleExtractionRegistry.bodyFetchFailures.length;
   const previousFailedExtractionAttemptCount =
-    input.agentState.featureExtractionState.failedExtractionAttempts.length;
+    input.articleExtractionRegistry.failedExtractionAttempts.length;
   logger.info("extracting candidate features", {
     candidateCount: collected.candidates.length,
     existingExtractionCount: previousExtractionCount,
   });
   const extracted = await extractCurrentFeedCandidateFeatures({
     candidates: collected.candidates,
-    featureExtractionState: input.agentState.featureExtractionState,
+    featureExtractionState: input.articleExtractionRegistry,
     featureVocabulary: input.featureVocabulary,
     now: input.now,
     fetchArticleBody: input.fetchArticleBody,
@@ -136,8 +142,8 @@ export async function runZennDigestWorkflow(
   const scoreStartedAt = performance.now();
   const scored = scoreCurrentFeedCandidates({
     currentFeedCandidateFeatures: readable.readableCandidates,
-    preferenceProfile: input.agentState.preferenceProfile,
-    recommendedArticleIds: input.agentState.publicationState.recommendedArticles.map(
+    preferenceProfile: input.preferenceProfile,
+    recommendedArticleIds: input.publishedDigestRegistry.recommendedArticles.map(
       (article) => article.articleId,
     ),
   });
@@ -159,17 +165,16 @@ export async function runZennDigestWorkflow(
         publishedArticleIds: [],
         failedPublishedArticleIds: [],
         featureExtractionState: extracted.state,
-        previousRecommendedArticleIds: input.agentState.publicationState.recommendedArticles.map(
+        previousRecommendedArticleIds: input.publishedDigestRegistry.recommendedArticles.map(
           (article) => article.articleId,
         ),
       }),
     });
     logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
     return {
-      agentState: {
-        ...input.agentState,
-        featureExtractionState: extracted.state,
-      },
+      articleExtractionRegistry: extracted.state,
+      publishedDigestRegistry: input.publishedDigestRegistry,
+      recommendationContentHistory: input.recommendationContentHistory,
     };
   }
 
@@ -188,8 +193,8 @@ export async function runZennDigestWorkflow(
       ...candidate,
       articleFeatures: featuresByArticleId.get(candidate.articleId)!,
     })),
-    longTermPreferenceSummary: input.agentState.preferenceSummaryHistory.long_term_summary,
-    recentPreferenceSummary: input.agentState.preferenceSummaryHistory.recent_summary.summary,
+    longTermPreferenceSummary: input.preferenceSummaryHistory.long_term_summary,
+    recentPreferenceSummary: input.preferenceSummaryHistory.recent_summary.summary,
     qualityCriteria,
     llmReranker: input.llmReranker,
   });
@@ -239,8 +244,8 @@ export async function runZennDigestWorkflow(
         author: featureExtractionsByArticleId.get(content.articleId)?.author ?? null,
       };
     }),
-    existingPublicationRecords: input.agentState.publicationState.publicationRecords,
-    existingRecommendedArticles: input.agentState.publicationState.recommendedArticles,
+    existingPublicationRecords: input.publishedDigestRegistry.publicationRecords,
+    existingRecommendedArticles: input.publishedDigestRegistry.recommendedArticles,
     publisher: input.publisher,
     onPublishFailure: ({ articleId, message }) => {
       logger.error("recommendation publish failed", { articleId, message });
@@ -261,11 +266,11 @@ export async function runZennDigestWorkflow(
       scoredCandidates: scored.scoredCandidates,
       selectedCandidates: reranked.selectedCandidates,
       publishedArticleIds: published.publicationRecords
-        .slice(input.agentState.publicationState.publicationRecords.length)
+        .slice(input.publishedDigestRegistry.publicationRecords.length)
         .map((record) => record.articleId),
       failedPublishedArticleIds: published.failedArticleIds,
       featureExtractionState: extracted.state,
-      previousRecommendedArticleIds: input.agentState.publicationState.recommendedArticles.map(
+      previousRecommendedArticleIds: input.publishedDigestRegistry.recommendedArticles.map(
         (article) => article.articleId,
       ),
     }),
@@ -273,21 +278,18 @@ export async function runZennDigestWorkflow(
   logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
 
   return {
-    agentState: {
-      ...input.agentState,
-      featureExtractionState: extracted.state,
-      recommendationContentState: {
-        version: input.agentState.recommendationContentState.version,
-        recommendationContents: [
-          ...input.agentState.recommendationContentState.recommendationContents,
-          ...contents.recommendationContents,
-        ],
-      },
-      publicationState: {
-        version: input.agentState.publicationState.version,
-        publicationRecords: published.publicationRecords,
-        recommendedArticles: published.recommendedArticles,
-      },
+    articleExtractionRegistry: extracted.state,
+    recommendationContentHistory: {
+      version: input.recommendationContentHistory.version,
+      recommendationContents: [
+        ...input.recommendationContentHistory.recommendationContents,
+        ...contents.recommendationContents,
+      ],
+    },
+    publishedDigestRegistry: {
+      version: input.publishedDigestRegistry.version,
+      publicationRecords: published.publicationRecords,
+      recommendedArticles: published.recommendedArticles,
     },
   };
 }
@@ -299,7 +301,7 @@ type DigestAuditMessageInput = {
   selectedCandidates: Awaited<ReturnType<typeof rerankCurrentFeedCandidates>>["selectedCandidates"];
   publishedArticleIds: readonly string[];
   failedPublishedArticleIds: readonly string[];
-  featureExtractionState: AgentState["featureExtractionState"];
+  featureExtractionState: FeatureExtractionState;
   previousRecommendedArticleIds: readonly string[];
 };
 
@@ -410,10 +412,7 @@ function explainUnrecommendedCandidate(input: {
   selectedArticleIds: ReadonlySet<string>;
   failedPublishedArticleIds: ReadonlySet<string>;
   previousRecommendedArticleIds: ReadonlySet<string>;
-  extractionsByArticleId: ReadonlyMap<
-    string,
-    AgentState["featureExtractionState"]["extractions"][number]
-  >;
+  extractionsByArticleId: ReadonlyMap<string, FeatureExtractionState["extractions"][number]>;
   bodyFetchFailuresByArticleId: ReadonlyMap<string, { message: string }>;
   extractionFailuresByArticleId: ReadonlyMap<string, { message: string }>;
 }): string {

@@ -1,7 +1,7 @@
 import { jsonSchema } from "ai";
 import * as v from "valibot";
 
-import { createFileAgentStateRepository } from "src/shared/infrastructure/file-agent-state";
+import { createFileStateRepositories } from "src/shared/infrastructure/file-agent-state";
 import type { ReactionFeedbackReader } from "src/features/feedback/application/collect-reaction-feedback-use-case";
 import { env } from "src/shared/infrastructure/env";
 import { generateLlmText } from "src/shared/infrastructure/llm-text-generation";
@@ -42,7 +42,13 @@ const PreferenceSummaryOutputSchema = jsonSchema<v.InferOutput<typeof Preference
 );
 
 export async function validateCollectFeedbackDryRun(): Promise<void> {
-  await createFileAgentStateRepository().load();
+  const stateRepositories = createFileStateRepositories();
+  await Promise.all([
+    stateRepositories.articleExtractionRegistry.load(),
+    stateRepositories.publishedDigestRegistry.load(),
+    stateRepositories.preferenceProfile.load(),
+    stateRepositories.preferenceSummaryHistory.load(),
+  ]);
 }
 
 export async function runCollectFeedback(): Promise<void> {
@@ -50,7 +56,7 @@ export async function runCollectFeedback(): Promise<void> {
   const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
 
   await runCollectFeedbackJob({
-    agentStateRepository: createFileAgentStateRepository(),
+    stateRepositories: createFileStateRepositories(),
     collectedAt: () => new Date().toISOString(),
     reactionFeedbackReader: createDiscordReactionFeedbackReader(discordBotToken),
     preferenceSummaryUpdater: {

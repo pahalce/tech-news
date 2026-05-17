@@ -3,42 +3,46 @@ import {
   type PreferenceSummaryUpdater,
   type ReactionFeedbackReader,
 } from "src/features/feedback/application/collect-reaction-feedback-use-case";
-import type { AgentState } from "src/shared/application/agent-state";
+import type { FeatureExtractionState } from "src/domains/article";
+import type { PublicationState } from "src/domains/digest";
+import type { PreferenceProfile, PreferenceSummaryHistory } from "src/domains/preference";
 
 export type RunCollectFeedbackWorkflowInput = {
-  agentState: AgentState;
+  articleExtractionRegistry: FeatureExtractionState;
+  publishedDigestRegistry: PublicationState;
+  preferenceProfile: PreferenceProfile;
+  preferenceSummaryHistory: PreferenceSummaryHistory;
   collectedAt: string;
   reactionFeedbackReader: ReactionFeedbackReader;
   preferenceSummaryUpdater: PreferenceSummaryUpdater;
 };
 
 export type RunCollectFeedbackWorkflowResult = {
-  agentState: AgentState;
+  publishedDigestRegistry: PublicationState;
+  preferenceProfile: PreferenceProfile;
+  preferenceSummaryHistory: PreferenceSummaryHistory;
 };
 
 export async function runCollectFeedbackWorkflow(
   input: RunCollectFeedbackWorkflowInput,
 ): Promise<RunCollectFeedbackWorkflowResult> {
   const collected = await collectReactionFeedback({
-    publicationRecords: input.agentState.publicationState.publicationRecords,
-    featureExtractions: input.agentState.featureExtractionState.extractions,
-    preferenceProfile: input.agentState.preferenceProfile,
-    preferenceSummaryHistory: input.agentState.preferenceSummaryHistory,
+    publicationRecords: input.publishedDigestRegistry.publicationRecords,
+    featureExtractions: input.articleExtractionRegistry.extractions,
+    preferenceProfile: input.preferenceProfile,
+    preferenceSummaryHistory: input.preferenceSummaryHistory,
     collectedAt: input.collectedAt,
     reactionFeedbackReader: input.reactionFeedbackReader,
     preferenceSummaryUpdater: input.preferenceSummaryUpdater,
   });
 
   return {
-    agentState: {
-      ...input.agentState,
-      preferenceProfile: collected.preferenceProfile,
-      preferenceSummaryHistory: collected.preferenceSummaryHistory,
-      publicationState: {
-        version: input.agentState.publicationState.version,
-        publicationRecords: collected.publicationRecords,
-        recommendedArticles: input.agentState.publicationState.recommendedArticles,
-      },
+    preferenceProfile: collected.preferenceProfile,
+    preferenceSummaryHistory: collected.preferenceSummaryHistory,
+    publishedDigestRegistry: {
+      version: input.publishedDigestRegistry.version,
+      publicationRecords: collected.publicationRecords,
+      recommendedArticles: input.publishedDigestRegistry.recommendedArticles,
     },
   };
 }

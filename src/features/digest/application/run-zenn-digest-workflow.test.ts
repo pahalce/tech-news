@@ -26,15 +26,17 @@ describe("Zenn Digest Workflow に関するテスト", () => {
         },
       },
     });
-    const agentState = {
-      featureExtractionState: {
-        version: 1 as const,
+
+    // Act
+    const actual = await runZennDigestWorkflow({
+      articleExtractionRegistry: {
+        version: 1,
         extractions: [],
         bodyFetchFailures: [],
         failedExtractionAttempts: [],
       },
       preferenceProfile: {
-        version: 1 as const,
+        version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
         feature_weights: {
@@ -44,7 +46,7 @@ describe("Zenn Digest Workflow に関するテスト", () => {
         updated_at: null,
       },
       preferenceSummaryHistory: {
-        version: 1 as const,
+        version: 1,
         long_term_summary: "TypeScript の実装記事を好む",
         recent_summary: {
           window_days: 7,
@@ -53,24 +55,15 @@ describe("Zenn Digest Workflow に関するテスト", () => {
         },
         history: [],
       },
-      publicationState: {
-        version: 1 as const,
+      publishedDigestRegistry: {
+        version: 1,
         publicationRecords: [],
         recommendedArticles: [],
       },
-      recommendationContentState: {
-        version: 1 as const,
+      recommendationContentHistory: {
+        version: 1,
         recommendationContents: [],
       },
-      vocabularySuggestionState: {
-        version: 1 as const,
-        suggestionRuns: [],
-      },
-    };
-
-    // Act
-    const actual = await runZennDigestWorkflow({
-      agentState,
       featureVocabulary,
       feeds: [{ id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" }],
       feedReader: async () => [
@@ -116,10 +109,10 @@ describe("Zenn Digest Workflow に関するテスト", () => {
 
     // Assert
     expect({
-      extractionCount: actual.agentState.featureExtractionState.extractions.length,
-      contentCount: actual.agentState.recommendationContentState.recommendationContents.length,
-      publicationCount: actual.agentState.publicationState.publicationRecords.length,
-      recommendedCount: actual.agentState.publicationState.recommendedArticles.length,
+      extractionCount: actual.articleExtractionRegistry.extractions.length,
+      contentCount: actual.recommendationContentHistory.recommendationContents.length,
+      publicationCount: actual.publishedDigestRegistry.publicationRecords.length,
+      recommendedCount: actual.publishedDigestRegistry.recommendedArticles.length,
     }).toEqual({
       extractionCount: 1,
       contentCount: 1,
@@ -154,46 +147,40 @@ describe("Zenn Digest Workflow に関するテスト", () => {
 
     // Act
     const actual = await runZennDigestWorkflow({
-      agentState: {
-        featureExtractionState: {
-          version: 1,
-          extractions: [],
-          bodyFetchFailures: [],
-          failedExtractionAttempts: [],
+      articleExtractionRegistry: {
+        version: 1,
+        extractions: [],
+        bodyFetchFailures: [],
+        failedExtractionAttempts: [],
+      },
+      preferenceProfile: {
+        version: 1,
+        weight_range: { min: -3, max: 3 },
+        seed_weight_range: { min: -1, max: 1 },
+        feature_weights: {
+          topics: { typescript: 0.6 },
+          feature_axes: { content_types: { implementation_guide: 0.8 } },
         },
-        preferenceProfile: {
-          version: 1,
-          weight_range: { min: -3, max: 3 },
-          seed_weight_range: { min: -1, max: 1 },
-          feature_weights: {
-            topics: { typescript: 0.6 },
-            feature_axes: { content_types: { implementation_guide: 0.8 } },
-          },
-          updated_at: null,
+        updated_at: null,
+      },
+      preferenceSummaryHistory: {
+        version: 1,
+        long_term_summary: null,
+        recent_summary: {
+          window_days: 7,
+          summary: null,
+          confidence: "insufficient_feedback",
         },
-        preferenceSummaryHistory: {
-          version: 1,
-          long_term_summary: null,
-          recent_summary: {
-            window_days: 7,
-            summary: null,
-            confidence: "insufficient_feedback",
-          },
-          history: [],
-        },
-        publicationState: {
-          version: 1,
-          publicationRecords: [],
-          recommendedArticles: [],
-        },
-        recommendationContentState: {
-          version: 1,
-          recommendationContents: [],
-        },
-        vocabularySuggestionState: {
-          version: 1,
-          suggestionRuns: [],
-        },
+        history: [],
+      },
+      publishedDigestRegistry: {
+        version: 1,
+        publicationRecords: [],
+        recommendedArticles: [],
+      },
+      recommendationContentHistory: {
+        version: 1,
+        recommendationContents: [],
       },
       featureVocabulary,
       feeds: [{ id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" }],
@@ -233,8 +220,8 @@ describe("Zenn Digest Workflow に関するテスト", () => {
 
     // Assert
     expect(rerankCount).toBe(0);
-    expect(actual.agentState.featureExtractionState.extractions).toHaveLength(1);
-    expect(actual.agentState.publicationState.recommendedArticles).toHaveLength(0);
+    expect(actual.articleExtractionRegistry.extractions).toHaveLength(1);
+    expect(actual.publishedDigestRegistry.recommendedArticles).toHaveLength(0);
   });
 
   it("推薦監査を通常の推薦とは別メッセージとして送れる", async () => {
@@ -261,51 +248,45 @@ describe("Zenn Digest Workflow に関するテスト", () => {
     const auditMessages: string[] = [];
 
     await runZennDigestWorkflow({
-      agentState: {
-        featureExtractionState: {
-          version: 1,
-          extractions: [],
-          bodyFetchFailures: [],
-          failedExtractionAttempts: [],
+      articleExtractionRegistry: {
+        version: 1,
+        extractions: [],
+        bodyFetchFailures: [],
+        failedExtractionAttempts: [],
+      },
+      preferenceProfile: {
+        version: 1,
+        weight_range: { min: -3, max: 3 },
+        seed_weight_range: { min: -1, max: 1 },
+        feature_weights: {
+          topics: { typescript: 0.6 },
+          feature_axes: { content_types: { implementation_guide: 0.8 } },
         },
-        preferenceProfile: {
-          version: 1,
-          weight_range: { min: -3, max: 3 },
-          seed_weight_range: { min: -1, max: 1 },
-          feature_weights: {
-            topics: { typescript: 0.6 },
-            feature_axes: { content_types: { implementation_guide: 0.8 } },
+        updated_at: null,
+      },
+      preferenceSummaryHistory: {
+        version: 1,
+        long_term_summary: null,
+        recent_summary: {
+          window_days: 7,
+          summary: null,
+          confidence: "insufficient_feedback",
+        },
+        history: [],
+      },
+      publishedDigestRegistry: {
+        version: 1,
+        publicationRecords: [],
+        recommendedArticles: [
+          {
+            articleId: "zenn:171f05ee8bb9e85d98d8af68741e2fbd61a6bc6b17e127b01026383834ebd83b",
+            firstRecommendedAt: "2026-05-13T00:00:00.000Z",
           },
-          updated_at: null,
-        },
-        preferenceSummaryHistory: {
-          version: 1,
-          long_term_summary: null,
-          recent_summary: {
-            window_days: 7,
-            summary: null,
-            confidence: "insufficient_feedback",
-          },
-          history: [],
-        },
-        publicationState: {
-          version: 1,
-          publicationRecords: [],
-          recommendedArticles: [
-            {
-              articleId: "zenn:171f05ee8bb9e85d98d8af68741e2fbd61a6bc6b17e127b01026383834ebd83b",
-              firstRecommendedAt: "2026-05-13T00:00:00.000Z",
-            },
-          ],
-        },
-        recommendationContentState: {
-          version: 1,
-          recommendationContents: [],
-        },
-        vocabularySuggestionState: {
-          version: 1,
-          suggestionRuns: [],
-        },
+        ],
+      },
+      recommendationContentHistory: {
+        version: 1,
+        recommendationContents: [],
       },
       featureVocabulary,
       feeds: [{ id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" }],

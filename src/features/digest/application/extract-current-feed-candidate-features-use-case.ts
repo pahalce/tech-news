@@ -1,6 +1,6 @@
-import { type ArticleAuthor } from "src/features/digest/application/article-author";
+import { type ArticleAuthor } from "src/domains/article";
 import { type FeatureVocabularyConfig } from "src/domains/article";
-import { type CurrentFeedCandidate } from "src/features/digest/application/current-feed-candidate";
+import { type CurrentFeedCandidate } from "src/domains/article";
 import {
   createBodyFetchFailure,
   createFailedExtractionAttempt,

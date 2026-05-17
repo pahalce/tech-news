@@ -76,10 +76,18 @@ module.exports = {
       },
     },
     {
-      name: "feature-presentation-application-only",
+      name: "jobs-call-feature-presentation-only",
       severity: "error",
-      from: { path: "^src/features/[^/]+/presentation/" },
-      to: { path: "^src/(domains|shared|features/[^/]+/(infrastructure|presentation))/" },
+      from: { path: "^src/jobs/" },
+      to: {
+        path: "^src/(domains|shared|features/[^/]+/(application|infrastructure))/",
+      },
+    },
+    {
+      name: "no-jobs-runtime-transition-area",
+      severity: "error",
+      from: { path: "^src/" },
+      to: { path: "^src/jobs/runtime/" },
     },
     {
       name: "no-relative-internal-imports",

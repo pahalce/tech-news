@@ -11,3 +11,4 @@ export * from "src/domains/article/canonical-url";
 export * from "src/domains/article/current-feed-candidate";
 export * from "src/domains/article/feature-extraction";
 export * from "src/domains/article/vocabulary-suggestion";
+export * from "src/domains/article/vocabulary-suggestion.rules";

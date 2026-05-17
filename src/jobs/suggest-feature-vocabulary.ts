@@ -1,7 +1,7 @@
 import {
   runSuggestFeatureVocabulary,
   validateSuggestFeatureVocabularyDryRun,
-} from "src/jobs/runtime/run-suggest-feature-vocabulary";
+} from "src/features/article-feature-maintenance/presentation/run-suggest-feature-vocabulary";
 
 const isDryRun = process.argv.includes("--dry-run");
 

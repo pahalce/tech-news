@@ -3,16 +3,16 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vite-plus/test";
 
-import { loadAgentState, saveAgentState } from "src/shared/infrastructure/file-agent-state";
+import { createFileStateRepositories } from "src/shared/infrastructure/file-agent-state";
 
-describe("Agent State 読み込みに関するテスト", () => {
+describe("State Repositories 読み込みに関するテスト", () => {
   describe("有効データの読み込みに関するテスト", () => {
     it("既定データを読み込んだとき、Preference Profile の version が 1 となる", async () => {
       // Arrange
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.preferenceProfile.version).toBe(1);
@@ -23,7 +23,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.featureExtractionState.version).toBe(1);
@@ -34,7 +34,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.preferenceProfile.feature_weights.topics.typescript).toBe(0.6);
@@ -45,7 +45,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.preferenceSummaryHistory.version).toBe(1);
@@ -56,7 +56,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.preferenceSummaryHistory.recent_summary.confidence).toBe("low");
@@ -67,7 +67,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.recommendationContentState.version).toBe(1);
@@ -78,7 +78,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.publicationState.version).toBe(1);
@@ -89,7 +89,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       const repositoryRoot = undefined;
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.vocabularySuggestionState.version).toBe(1);
@@ -100,7 +100,7 @@ describe("Agent State 読み込みに関するテスト", () => {
     it("topics の重みが範囲外のとき、範囲エラーとなる", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -114,7 +114,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       });
 
       // Act
-      const actual = loadAgentState(repositoryRoot);
+      const actual = loadStateForTest(repositoryRoot);
 
       // Assert
       await expect(actual).rejects.toThrow(
@@ -125,7 +125,7 @@ describe("Agent State 読み込みに関するテスト", () => {
     it("feature_axes の重みが範囲外のとき、範囲エラーとなる", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -143,7 +143,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       });
 
       // Act
-      const actual = loadAgentState(repositoryRoot);
+      const actual = loadStateForTest(repositoryRoot);
 
       // Assert
       await expect(actual).rejects.toThrow(
@@ -154,7 +154,7 @@ describe("Agent State 読み込みに関するテスト", () => {
     it("Feature Vocabulary にある Topic Key の重みが欠けているとき、整合性エラーとなる", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -170,7 +170,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       });
 
       // Act
-      const actual = loadAgentState(repositoryRoot);
+      const actual = loadStateForTest(repositoryRoot);
 
       // Assert
       await expect(actual).rejects.toThrow(
@@ -181,7 +181,7 @@ describe("Agent State 読み込みに関するテスト", () => {
     it("初期 Preference Profile の seed weight が seed range を超えるとき、範囲エラーとなる", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -199,7 +199,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       });
 
       // Act
-      const actual = loadAgentState(repositoryRoot);
+      const actual = loadStateForTest(repositoryRoot);
 
       // Assert
       await expect(actual).rejects.toThrow(
@@ -210,7 +210,7 @@ describe("Agent State 読み込みに関するテスト", () => {
     it("更新済み Preference Profile の重みが seed range を超えても weight range 内なら読み込める", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -228,7 +228,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       });
 
       // Act
-      const actual = await loadAgentState(repositoryRoot);
+      const actual = await loadStateForTest(repositoryRoot);
 
       // Assert
       expect(actual.preferenceProfile.feature_weights.topics.typescript).toBe(1.2);
@@ -237,7 +237,7 @@ describe("Agent State 読み込みに関するテスト", () => {
     it("Preference Profile に Feature Vocabulary 未定義の Feature Axis があるとき、整合性エラーとなる", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -258,7 +258,7 @@ describe("Agent State 読み込みに関するテスト", () => {
       });
 
       // Act
-      const actual = loadAgentState(repositoryRoot);
+      const actual = loadStateForTest(repositoryRoot);
 
       // Assert
       await expect(actual).rejects.toThrow(
@@ -268,10 +268,10 @@ describe("Agent State 読み込みに関するテスト", () => {
   });
 
   describe("保存に関するテスト", () => {
-    it("Agent State を保存したとき、保存後の JSON を再読み込みできる", async () => {
+    it("State Repositories を保存したとき、保存後の JSON を再読み込みできる", async () => {
       // Arrange
       const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
-      await writeAgentState(repositoryRoot, {
+      await writeStateFiles(repositoryRoot, {
         version: 1,
         weight_range: { min: -3, max: 3 },
         seed_weight_range: { min: -1, max: 1 },
@@ -287,25 +287,19 @@ describe("Agent State 読み込みに関するテスト", () => {
         },
         updated_at: null,
       });
-      const state = await loadAgentState(repositoryRoot);
+      const state = await loadStateForTest(repositoryRoot);
 
       // Act
-      await saveAgentState(
-        {
-          ...state,
-          preferenceProfile: {
-            ...state.preferenceProfile,
-            feature_weights: {
-              ...state.preferenceProfile.feature_weights,
-              topics: {
-                ...state.preferenceProfile.feature_weights.topics,
-                typescript: 0.8,
-              },
-            },
+      await saveStateForTest(repositoryRoot, {
+        ...state.preferenceProfile,
+        feature_weights: {
+          ...state.preferenceProfile.feature_weights,
+          topics: {
+            ...state.preferenceProfile.feature_weights.topics,
+            typescript: 0.8,
           },
         },
-        repositoryRoot,
-      );
+      });
       const actual = JSON.parse(
         await readFile(join(repositoryRoot, "data", "preference-profile.json"), "utf8"),
       ) as { feature_weights: { topics: { typescript: number } } };
@@ -316,7 +310,7 @@ describe("Agent State 読み込みに関するテスト", () => {
   });
 });
 
-async function writeAgentState(repositoryRoot: string, preferenceProfile: unknown) {
+async function writeStateFiles(repositoryRoot: string, preferenceProfile: unknown) {
   await mkdir(join(repositoryRoot, "config"), { recursive: true });
   await mkdir(join(repositoryRoot, "data"), { recursive: true });
   await writeJson(join(repositoryRoot, "config", "feature-vocabulary.json"), {
@@ -369,6 +363,42 @@ async function writeAgentState(repositoryRoot: string, preferenceProfile: unknow
     version: 1,
     suggestionRuns: [],
   });
+}
+
+async function loadStateForTest(repositoryRoot?: string) {
+  const repositories = createFileStateRepositories(repositoryRoot);
+
+  const [
+    featureExtractionState,
+    preferenceProfile,
+    preferenceSummaryHistory,
+    publicationState,
+    recommendationContentState,
+    vocabularySuggestionState,
+  ] = await Promise.all([
+    repositories.articleExtractionRegistry.load(),
+    repositories.preferenceProfile.load(),
+    repositories.preferenceSummaryHistory.load(),
+    repositories.publishedDigestRegistry.load(),
+    repositories.recommendationContentHistory.load(),
+    repositories.articleFeatureSuggestionHistory.load(),
+  ]);
+
+  return {
+    featureExtractionState,
+    preferenceProfile,
+    preferenceSummaryHistory,
+    publicationState,
+    recommendationContentState,
+    vocabularySuggestionState,
+  };
+}
+
+async function saveStateForTest(
+  repositoryRoot: string,
+  preferenceProfile: Awaited<ReturnType<typeof loadStateForTest>>["preferenceProfile"],
+) {
+  await createFileStateRepositories(repositoryRoot).preferenceProfile.save(preferenceProfile);
 }
 
 async function writeJson(path: string, value: unknown) {

@@ -1,3 +1,15 @@
-import type { AgentStateRepository } from "src/shared/application/agent-state";
+import type {
+  ArticleExtractionRegistryRepository,
+  PreferenceProfileRepository,
+  PreferenceSummaryHistoryRepository,
+  PublishedDigestRegistryRepository,
+  RecommendationContentHistoryRepository,
+} from "src/shared/application/state-repositories";
 
-export type DigestAgentStateRepository = AgentStateRepository;
+export type DigestStateRepositories = {
+  articleExtractionRegistry: ArticleExtractionRegistryRepository;
+  preferenceProfile: PreferenceProfileRepository;
+  preferenceSummaryHistory: PreferenceSummaryHistoryRepository;
+  publishedDigestRegistry: PublishedDigestRegistryRepository;
+  recommendationContentHistory: RecommendationContentHistoryRepository;
+};

@@ -1,6 +1,14 @@
 import { applyArticleFeatureFeedback } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
-import type { PreferenceProfile, PreferenceSummaryHistory } from "src/domains/preference";
+import {
+  isInsideFeedbackCollectionWindow,
+  negativeReactionEmoji,
+  positiveReactionEmoji,
+  readReactionFeedbackWeight,
+  shouldIgnoreContradictoryReactionFeedback,
+  type PreferenceProfile,
+  type PreferenceSummaryHistory,
+} from "src/domains/preference";
 
 type ReactionFeedback = {
   emoji: string;
@@ -56,12 +64,6 @@ export type CollectReactionFeedbackResult = {
   preferenceSummaryHistory: PreferenceSummaryHistory;
 };
 
-const feedbackWindowDays = 3;
-const positiveEmoji = "👍";
-const negativeEmoji = "👎";
-const positiveWeight = 1;
-const negativeWeight = -1;
-
 export async function collectReactionFeedback(
   input: CollectReactionFeedbackInput,
 ): Promise<CollectReactionFeedbackResult> {
@@ -88,9 +90,24 @@ export async function collectReactionFeedback(
     const hasPositive = snapshot.positiveUserIds.length > 0;
     const hasNegative = snapshot.negativeUserIds.length > 0;
 
-    if (hasPositive && hasNegative) {
-      markIgnored(nextRecord, positiveEmoji, snapshot.positiveUserIds, "contradictory_feedback");
-      markIgnored(nextRecord, negativeEmoji, snapshot.negativeUserIds, "contradictory_feedback");
+    if (
+      shouldIgnoreContradictoryReactionFeedback({
+        positiveCount: snapshot.positiveUserIds.length,
+        negativeCount: snapshot.negativeUserIds.length,
+      })
+    ) {
+      markIgnored(
+        nextRecord,
+        positiveReactionEmoji,
+        snapshot.positiveUserIds,
+        "contradictory_feedback",
+      );
+      markIgnored(
+        nextRecord,
+        negativeReactionEmoji,
+        snapshot.negativeUserIds,
+        "contradictory_feedback",
+      );
       publicationRecords.push(nextRecord);
       continue;
     }
@@ -99,14 +116,14 @@ export async function collectReactionFeedback(
     const articleFeatures = featureExtraction?.articleFeatures ?? null;
 
     if (hasPositive) {
-      markProcessed(nextRecord, positiveEmoji, snapshot.positiveUserIds, input.collectedAt);
-      applyFeedback(preferenceProfile, articleFeatures, positiveWeight);
+      markProcessed(nextRecord, positiveReactionEmoji, snapshot.positiveUserIds, input.collectedAt);
+      applyFeedback(preferenceProfile, articleFeatures, positiveReactionEmoji);
       processedFeedbackCount += snapshot.positiveUserIds.length;
     }
 
     if (hasNegative) {
-      markProcessed(nextRecord, negativeEmoji, snapshot.negativeUserIds, input.collectedAt);
-      applyFeedback(preferenceProfile, articleFeatures, negativeWeight);
+      markProcessed(nextRecord, negativeReactionEmoji, snapshot.negativeUserIds, input.collectedAt);
+      applyFeedback(preferenceProfile, articleFeatures, negativeReactionEmoji);
       processedFeedbackCount += snapshot.negativeUserIds.length;
     }
 
@@ -138,14 +155,9 @@ export async function collectReactionFeedback(
 function hasProcessedTargetFeedback(record: PublicationRecord): boolean {
   return record.reactionFeedback.some(
     (feedback) =>
-      (feedback.emoji === positiveEmoji || feedback.emoji === negativeEmoji) &&
+      (feedback.emoji === positiveReactionEmoji || feedback.emoji === negativeReactionEmoji) &&
       (feedback.processedAt !== null || feedback.ignoredReason !== null),
   );
-}
-
-function isInsideFeedbackCollectionWindow(postedAt: string, collectedAt: string): boolean {
-  const elapsedMs = Date.parse(collectedAt) - Date.parse(postedAt);
-  return elapsedMs >= 0 && elapsedMs <= feedbackWindowDays * 24 * 60 * 60 * 1000;
 }
 
 function markProcessed(
@@ -193,8 +205,13 @@ function updateReactionFeedback(
 function applyFeedback(
   preferenceProfile: PreferenceProfile,
   articleFeatures: ArticleFeatures | null,
-  feedbackWeight: number,
+  emoji: string,
 ): void {
+  const feedbackWeight = readReactionFeedbackWeight(emoji);
+  if (feedbackWeight === null) {
+    return;
+  }
+
   applyArticleFeatureFeedback(
     preferenceProfile.feature_weights,
     articleFeatures,

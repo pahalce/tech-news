@@ -4,21 +4,28 @@ import { parseFeatureVocabularyConfig } from "src/domains/article";
 import { runZennDigestJob } from "src/features/digest/application/zenn-digest-job";
 
 describe("Zenn Digest Job に関するテスト", () => {
-  it("Digest Workflow が成功したとき、Agent State が保存される", async () => {
+  it("Digest Workflow が成功したとき、更新対象の Registry と History が保存される", async () => {
     // Arrange
-    let saveCount = 0;
+    let articleExtractionRegistrySaveCount = 0;
+    let publishedDigestRegistrySaveCount = 0;
+    let recommendationContentHistorySaveCount = 0;
 
     // Act
     await runZennDigestJob({
-      agentStateRepository: {
-        load: async () => ({
-          featureExtractionState: {
+      stateRepositories: {
+        articleExtractionRegistry: {
+          load: async () => ({
             version: 1,
             extractions: [],
             bodyFetchFailures: [],
             failedExtractionAttempts: [],
+          }),
+          save: async () => {
+            articleExtractionRegistrySaveCount += 1;
           },
-          preferenceProfile: {
+        },
+        preferenceProfile: {
+          load: async () => ({
             version: 1,
             weight_range: { min: -3, max: 3 },
             seed_weight_range: { min: -1, max: 1 },
@@ -27,8 +34,11 @@ describe("Zenn Digest Job に関するテスト", () => {
               feature_axes: { content_types: { implementation_guide: 0.8 } },
             },
             updated_at: null,
-          },
-          preferenceSummaryHistory: {
+          }),
+          save: async () => undefined,
+        },
+        preferenceSummaryHistory: {
+          load: async () => ({
             version: 1,
             long_term_summary: null,
             recent_summary: {
@@ -37,23 +47,27 @@ describe("Zenn Digest Job に関するテスト", () => {
               confidence: "insufficient_feedback",
             },
             history: [],
-          },
-          publicationState: {
+          }),
+          save: async () => undefined,
+        },
+        publishedDigestRegistry: {
+          load: async () => ({
             version: 1,
             publicationRecords: [],
             recommendedArticles: [],
+          }),
+          save: async () => {
+            publishedDigestRegistrySaveCount += 1;
           },
-          recommendationContentState: {
+        },
+        recommendationContentHistory: {
+          load: async () => ({
             version: 1,
             recommendationContents: [],
+          }),
+          save: async () => {
+            recommendationContentHistorySaveCount += 1;
           },
-          vocabularySuggestionState: {
-            version: 1,
-            suggestionRuns: [],
-          },
-        }),
-        save: async () => {
-          saveCount += 1;
         },
       },
       articleFeatureVocabularyReader: {
@@ -122,6 +136,14 @@ describe("Zenn Digest Job に関するテスト", () => {
     });
 
     // Assert
-    expect(saveCount).toBe(1);
+    expect({
+      articleExtractionRegistrySaveCount,
+      publishedDigestRegistrySaveCount,
+      recommendationContentHistorySaveCount,
+    }).toEqual({
+      articleExtractionRegistrySaveCount: 1,
+      publishedDigestRegistrySaveCount: 1,
+      recommendationContentHistorySaveCount: 1,
+    });
   });
 });

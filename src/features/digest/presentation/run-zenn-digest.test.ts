@@ -3,7 +3,7 @@ import { describe, expect, it } from "vite-plus/test";
 import {
   formatDiscordMessage,
   type DiscordRecommendationContent,
-} from "src/jobs/runtime/run-zenn-digest";
+} from "src/features/digest/presentation/run-zenn-digest";
 
 function createDiscordRecommendationContent(
   overrides: Partial<DiscordRecommendationContent> = {},

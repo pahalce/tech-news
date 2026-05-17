@@ -1,5 +1,7 @@
 import {
   createVocabularySuggestionRun,
+  isInsideArticleFeatureSuggestionLookbackWindow,
+  meetsArticleFeaturePromotionThreshold,
   type VocabularyPromotionCandidate as DomainVocabularyPromotionCandidate,
   type VocabularySuggestionState,
 } from "src/domains/article";
@@ -57,10 +59,6 @@ export type SuggestFeatureVocabularyCandidatesResult = {
   vocabularySuggestionState: VocabularySuggestionState;
   featureVocabulary: FeatureVocabularyConfig;
 };
-
-const minimumOccurrenceCount = 2;
-const suggestionLookbackDays = 7;
-const highSalienceThreshold = 0.8;
 
 export async function suggestFeatureVocabularyCandidates(
   input: SuggestFeatureVocabularyCandidatesInput,
@@ -142,7 +140,7 @@ async function appendCandidates(
   relatedFeedbackCounts: Map<string, number>,
 ): Promise<void> {
   for (const [key, occurrence] of occurrences) {
-    if (!meetsPromotionThreshold(occurrence, kind)) {
+    if (!meetsArticleFeaturePromotionThreshold(occurrence, kind)) {
       continue;
     }
 
@@ -170,21 +168,7 @@ export function isInsideSuggestionLookbackWindow(
   extractedAt: string,
   suggestedAt: string,
 ): boolean {
-  const elapsedMs = Date.parse(suggestedAt) - Date.parse(extractedAt);
-  return elapsedMs >= 0 && elapsedMs <= suggestionLookbackDays * 24 * 60 * 60 * 1000;
-}
-
-function meetsPromotionThreshold(
-  occurrence: { count: number; maxSalience: number },
-  kind: "other_signal" | "unknown_topic",
-): boolean {
-  if (kind === "unknown_topic") {
-    return occurrence.count >= minimumOccurrenceCount;
-  }
-
-  return (
-    occurrence.count >= minimumOccurrenceCount || occurrence.maxSalience >= highSalienceThreshold
-  );
+  return isInsideArticleFeatureSuggestionLookbackWindow(extractedAt, suggestedAt);
 }
 
 function addOccurrence(

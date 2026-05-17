@@ -1,5 +1,9 @@
-import type { AgentState } from "src/shared/application/agent-state";
-import type { FeatureVocabularyConfig } from "src/domains/article";
+import type {
+  FeatureExtractionState,
+  FeatureVocabularyConfig,
+  VocabularySuggestionState,
+} from "src/domains/article";
+import type { PublicationState } from "src/domains/digest";
 import {
   isInsideSuggestionLookbackWindow,
   suggestFeatureVocabularyCandidates,
@@ -14,7 +18,9 @@ import {
 } from "src/shared/application/workflow-logger";
 
 export type RunSuggestFeatureVocabularyWorkflowInput = {
-  agentState: AgentState;
+  articleExtractionRegistry: FeatureExtractionState;
+  publishedDigestRegistry: PublicationState;
+  articleFeatureSuggestionHistory: VocabularySuggestionState;
   featureVocabulary: FeatureVocabularyConfig;
   suggestedAt: string;
   describer: VocabularyCandidateDescriber;
@@ -23,7 +29,7 @@ export type RunSuggestFeatureVocabularyWorkflowInput = {
 };
 
 export type RunSuggestFeatureVocabularyWorkflowResult = {
-  agentState: AgentState;
+  articleFeatureSuggestionHistory: VocabularySuggestionState;
 };
 
 export async function runSuggestFeatureVocabularyWorkflow(
@@ -31,23 +37,23 @@ export async function runSuggestFeatureVocabularyWorkflow(
 ): Promise<RunSuggestFeatureVocabularyWorkflowResult> {
   const logger = input.logger ?? silentWorkflowLogger;
   const workflowStartedAt = performance.now();
-  const lookbackExtractions = input.agentState.featureExtractionState.extractions.filter(
-    (extraction) => isInsideSuggestionLookbackWindow(extraction.extractedAt, input.suggestedAt),
+  const lookbackExtractions = input.articleExtractionRegistry.extractions.filter((extraction) =>
+    isInsideSuggestionLookbackWindow(extraction.extractedAt, input.suggestedAt),
   );
 
   logger.info("workflow started", {
     suggestedAt: input.suggestedAt,
-    featureExtractionCount: input.agentState.featureExtractionState.extractions.length,
+    featureExtractionCount: input.articleExtractionRegistry.extractions.length,
     lookbackExtractionCount: lookbackExtractions.length,
-    publicationRecordCount: input.agentState.publicationState.publicationRecords.length,
+    publicationRecordCount: input.publishedDigestRegistry.publicationRecords.length,
   });
 
   logger.info("collecting vocabulary promotion candidates");
   const suggested = await suggestFeatureVocabularyCandidates({
-    featureExtractions: input.agentState.featureExtractionState.extractions,
+    featureExtractions: input.articleExtractionRegistry.extractions,
     featureVocabulary: input.featureVocabulary,
-    publicationRecords: input.agentState.publicationState.publicationRecords,
-    vocabularySuggestionState: input.agentState.vocabularySuggestionState,
+    publicationRecords: input.publishedDigestRegistry.publicationRecords,
+    vocabularySuggestionState: input.articleFeatureSuggestionHistory,
     suggestedAt: input.suggestedAt,
     describer: input.describer,
     notifier: input.notifier,
@@ -61,10 +67,7 @@ export async function runSuggestFeatureVocabularyWorkflow(
   logger.info("workflow finished", { elapsedMs: elapsedMs(workflowStartedAt) });
 
   return {
-    agentState: {
-      ...input.agentState,
-      vocabularySuggestionState: suggested.vocabularySuggestionState,
-    },
+    articleFeatureSuggestionHistory: suggested.vocabularySuggestionState,
   };
 }
 

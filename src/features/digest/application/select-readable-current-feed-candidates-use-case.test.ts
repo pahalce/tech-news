@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 
-import { createCurrentFeedCandidate } from "src/features/digest/application/current-feed-candidate";
+import { createCurrentFeedCandidate } from "src/domains/article";
 import { selectReadableCurrentFeedCandidates } from "src/features/digest/application/select-readable-current-feed-candidates-use-case";
 
 describe("Readable Current Feed Candidate selection use case に関するテスト", () => {

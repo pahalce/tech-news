@@ -1,4 +1,4 @@
-import { type ArticleAuthor } from "src/features/digest/application/article-author";
+import { type ArticleAuthor } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
 import { parseRecommendationContent, type RecommendationContent } from "src/domains/digest";
 

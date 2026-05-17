@@ -2,13 +2,10 @@ import { jsonSchema, type JSONSchema7 } from "ai";
 import * as v from "valibot";
 
 import { defaultZennArticleFeeds } from "src/features/digest/infrastructure/zenn-article-feeds";
-import {
-  formatArticleAuthorLine,
-  type ArticleAuthor,
-} from "src/features/digest/application/article-author";
+import { formatArticleAuthorLine, type ArticleAuthor } from "src/domains/article";
 import { resolveZennArticleAuthor } from "src/features/digest/infrastructure/zenn-article-author";
 import { readZennRssFeed } from "src/features/digest/infrastructure/zenn-rss-feed-reader";
-import { createFileAgentStateRepository } from "src/shared/infrastructure/file-agent-state";
+import { createFileStateRepositories } from "src/shared/infrastructure/file-agent-state";
 import type { FeatureVocabularyConfig } from "src/domains/article";
 import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
 import { env } from "src/shared/infrastructure/env";
@@ -102,7 +99,14 @@ const RecommendationContentOutputSchema = jsonSchema<
 const maxFeedEntriesPerFeed = 3;
 
 export async function validateZennDigestDryRun(): Promise<void> {
-  await createFileAgentStateRepository().load();
+  const stateRepositories = createFileStateRepositories();
+  await Promise.all([
+    stateRepositories.articleExtractionRegistry.load(),
+    stateRepositories.preferenceProfile.load(),
+    stateRepositories.preferenceSummaryHistory.load(),
+    stateRepositories.publishedDigestRegistry.load(),
+    stateRepositories.recommendationContentHistory.load(),
+  ]);
   await loadFeatureVocabularyConfig();
 }
 
@@ -126,7 +130,7 @@ export async function runZennDigest(): Promise<void> {
   });
 
   await runZennDigestJob({
-    agentStateRepository: createFileAgentStateRepository(),
+    stateRepositories: createFileStateRepositories(),
     articleFeatureVocabularyReader: { read: loadFeatureVocabularyConfig },
     feeds: defaultZennArticleFeeds,
     feedReader: async (feed) => {

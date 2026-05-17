@@ -1,4 +1,4 @@
-import { type CurrentFeedCandidate } from "src/features/digest/application/current-feed-candidate";
+import { type CurrentFeedCandidate } from "src/domains/article";
 import type { ArticleFeatures } from "src/domains/article";
 import { parseFeatureExtractionState, type FeatureExtractionState } from "src/domains/article";
 

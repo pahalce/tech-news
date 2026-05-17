@@ -1,4 +1,4 @@
-import type { FeedbackAgentStateRepository } from "src/features/feedback/application/ports/agent-state-repository";
+import type { FeedbackStateRepositories } from "src/features/feedback/application/ports/agent-state-repository";
 import type {
   PreferenceSummaryUpdater,
   ReactionFeedbackReader,
@@ -6,20 +6,37 @@ import type {
 import { runCollectFeedbackWorkflow } from "src/features/feedback/application/run-collect-feedback-workflow";
 
 export type RunCollectFeedbackJobInput = {
-  agentStateRepository: FeedbackAgentStateRepository;
+  stateRepositories: FeedbackStateRepositories;
   collectedAt(): string;
   reactionFeedbackReader: ReactionFeedbackReader;
   preferenceSummaryUpdater: PreferenceSummaryUpdater;
 };
 
 export async function runCollectFeedbackJob(input: RunCollectFeedbackJobInput): Promise<void> {
-  const agentState = await input.agentStateRepository.load();
+  const [
+    articleExtractionRegistry,
+    publishedDigestRegistry,
+    preferenceProfile,
+    preferenceSummaryHistory,
+  ] = await Promise.all([
+    input.stateRepositories.articleExtractionRegistry.load(),
+    input.stateRepositories.publishedDigestRegistry.load(),
+    input.stateRepositories.preferenceProfile.load(),
+    input.stateRepositories.preferenceSummaryHistory.load(),
+  ]);
   const result = await runCollectFeedbackWorkflow({
-    agentState,
+    articleExtractionRegistry,
+    publishedDigestRegistry,
+    preferenceProfile,
+    preferenceSummaryHistory,
     collectedAt: input.collectedAt(),
     reactionFeedbackReader: input.reactionFeedbackReader,
     preferenceSummaryUpdater: input.preferenceSummaryUpdater,
   });
 
-  await input.agentStateRepository.save(result.agentState);
+  await Promise.all([
+    input.stateRepositories.publishedDigestRegistry.save(result.publishedDigestRegistry),
+    input.stateRepositories.preferenceProfile.save(result.preferenceProfile),
+    input.stateRepositories.preferenceSummaryHistory.save(result.preferenceSummaryHistory),
+  ]);
 }

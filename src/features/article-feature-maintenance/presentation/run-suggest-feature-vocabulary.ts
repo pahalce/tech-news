@@ -1,7 +1,7 @@
 import { jsonSchema } from "ai";
 import * as v from "valibot";
 
-import { createFileAgentStateRepository } from "src/shared/infrastructure/file-agent-state";
+import { createFileStateRepositories } from "src/shared/infrastructure/file-agent-state";
 import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
 import type { VocabularyPromotionCandidate } from "src/features/article-feature-maintenance/application/suggest-feature-vocabulary-candidates-use-case";
 import { env } from "src/shared/infrastructure/env";
@@ -39,7 +39,12 @@ const VocabularyCandidateDescriptionOutputSchema = jsonSchema<
 );
 
 export async function validateSuggestFeatureVocabularyDryRun(): Promise<void> {
-  await createFileAgentStateRepository().load();
+  const stateRepositories = createFileStateRepositories();
+  await Promise.all([
+    stateRepositories.articleExtractionRegistry.load(),
+    stateRepositories.publishedDigestRegistry.load(),
+    stateRepositories.articleFeatureSuggestionHistory.load(),
+  ]);
   await loadFeatureVocabularyConfig();
 }
 
@@ -57,7 +62,7 @@ export async function runSuggestFeatureVocabulary(): Promise<void> {
   });
 
   await runSuggestFeatureVocabularyJob({
-    agentStateRepository: createFileAgentStateRepository(),
+    stateRepositories: createFileStateRepositories(),
     articleFeatureVocabularyReader: { read: loadFeatureVocabularyConfig },
     suggestedAt: () => new Date().toISOString(),
     logger,

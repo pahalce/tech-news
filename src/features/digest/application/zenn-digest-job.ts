@@ -1,6 +1,6 @@
 import type { ExtractCurrentFeedCandidateFeaturesInput } from "src/features/digest/application/extract-current-feed-candidate-features-use-case";
 import type { CollectCurrentFeedCandidatesInput } from "src/features/digest/application/collect-current-feed-candidates-use-case";
-import type { DigestAgentStateRepository } from "src/features/digest/application/ports/agent-state-repository";
+import type { DigestStateRepositories } from "src/features/digest/application/ports/agent-state-repository";
 import type { ArticleFeatureVocabularyReader } from "src/features/digest/application/ports/article-feature-vocabulary-reader";
 import type { RecommendationPublisher } from "src/features/digest/application/publish-recommendations-use-case";
 import type { RecommendationContentCreator } from "src/features/digest/application/create-recommendation-contents-use-case";
@@ -16,7 +16,7 @@ import {
 } from "src/shared/application/workflow-logger";
 
 export type RunZennDigestJobInput = {
-  agentStateRepository: DigestAgentStateRepository;
+  stateRepositories: DigestStateRepositories;
   articleFeatureVocabularyReader: ArticleFeatureVocabularyReader;
   feeds: CollectCurrentFeedCandidatesInput["feeds"];
   feedReader: CollectCurrentFeedCandidatesInput["feedReader"];
@@ -34,17 +34,32 @@ export async function runZennDigestJob(input: RunZennDigestJobInput): Promise<vo
   const logger = input.logger ?? silentWorkflowLogger;
   const startedAt = performance.now();
   logger.info("job started");
-  logger.info("loading Agent State and Feature Vocabulary");
-  const [agentState, featureVocabulary] = await Promise.all([
-    input.agentStateRepository.load(),
+  logger.info("loading digest state and Feature Vocabulary");
+  const [
+    articleExtractionRegistry,
+    preferenceProfile,
+    preferenceSummaryHistory,
+    publishedDigestRegistry,
+    recommendationContentHistory,
+    featureVocabulary,
+  ] = await Promise.all([
+    input.stateRepositories.articleExtractionRegistry.load(),
+    input.stateRepositories.preferenceProfile.load(),
+    input.stateRepositories.preferenceSummaryHistory.load(),
+    input.stateRepositories.publishedDigestRegistry.load(),
+    input.stateRepositories.recommendationContentHistory.load(),
     input.articleFeatureVocabularyReader.read(),
   ]);
-  logger.info("loaded Agent State and Feature Vocabulary", {
-    featureExtractionCount: agentState.featureExtractionState.extractions.length,
-    recommendedArticleCount: agentState.publicationState.recommendedArticles.length,
+  logger.info("loaded digest state and Feature Vocabulary", {
+    featureExtractionCount: articleExtractionRegistry.extractions.length,
+    recommendedArticleCount: publishedDigestRegistry.recommendedArticles.length,
   });
   const result = await runZennDigestWorkflow({
-    agentState,
+    articleExtractionRegistry,
+    preferenceProfile,
+    preferenceSummaryHistory,
+    publishedDigestRegistry,
+    recommendationContentHistory,
     featureVocabulary,
     feeds: input.feeds,
     feedReader: input.feedReader,
@@ -58,11 +73,15 @@ export async function runZennDigestJob(input: RunZennDigestJobInput): Promise<vo
     logger,
   });
 
-  logger.info("saving Agent State");
-  await input.agentStateRepository.save(result.agentState);
+  logger.info("saving digest state");
+  await Promise.all([
+    input.stateRepositories.articleExtractionRegistry.save(result.articleExtractionRegistry),
+    input.stateRepositories.publishedDigestRegistry.save(result.publishedDigestRegistry),
+    input.stateRepositories.recommendationContentHistory.save(result.recommendationContentHistory),
+  ]);
   logger.info("job finished", {
     elapsedMs: elapsedMs(startedAt),
-    featureExtractionCount: result.agentState.featureExtractionState.extractions.length,
-    recommendedArticleCount: result.agentState.publicationState.recommendedArticles.length,
+    featureExtractionCount: result.articleExtractionRegistry.extractions.length,
+    recommendedArticleCount: result.publishedDigestRegistry.recommendedArticles.length,
   });
 }
