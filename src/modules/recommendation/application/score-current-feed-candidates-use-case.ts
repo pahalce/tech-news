@@ -1,8 +1,5 @@
-import {
-  calculateRuleScore,
-  type RuleScoreArticleFeatures,
-  type RuleScorePreferenceProfile,
-} from "../domain/rule-score";
+import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
+import { calculateRuleScore, type RuleScorePreferenceProfile } from "../domain/rule-score";
 
 type CurrentFeedCandidate = {
   articleId: string;
@@ -15,7 +12,7 @@ type CurrentFeedCandidate = {
 
 type CurrentFeedCandidateFeatures = {
   candidate: CurrentFeedCandidate;
-  articleFeatures: RuleScoreArticleFeatures;
+  articleFeatures: ArticleFeatures;
 };
 
 export type ScoreCurrentFeedCandidatesInput = {

@@ -1,4 +1,4 @@
-import type { RuleScoreArticleFeatures } from "../domain/rule-score";
+import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
 
 type RerankCurrentFeedCandidate = {
   articleId: string;
@@ -8,7 +8,7 @@ type RerankCurrentFeedCandidate = {
   feedIds: readonly string[];
   firstSeenInCurrentFeedsAt: string | null;
   ruleScore: number;
-  articleFeatures: RuleScoreArticleFeatures;
+  articleFeatures: ArticleFeatures;
 };
 
 type LlmRerankCandidate = {

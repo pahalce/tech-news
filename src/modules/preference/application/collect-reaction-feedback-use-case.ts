@@ -1,5 +1,5 @@
-import { applyArticleFeatureFeedback } from "../../../shared/domain/article-feature-weighting";
-import type { ArticleFeatures } from "../../../shared/domain/article-features";
+import { applyArticleFeatureFeedback } from "../../feature-extraction/domain/article-feature-weighting";
+import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
 import type { PreferenceProfile, PreferenceSummaryHistory } from "../domain/preference-state";
 
 type ReactionFeedback = {

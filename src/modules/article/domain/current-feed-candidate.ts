@@ -1,5 +1,6 @@
 import * as v from "valibot";
 
+import { ArticleIdSchema } from "./article-id";
 import { ArticleSourceSchema } from "./article-source";
 import {
   createArticleFeed,
@@ -12,10 +13,7 @@ import { UrlStringSchema } from "./canonical-url";
 
 const CurrentFeedCandidateSchema = v.pipe(
   v.object({
-    articleId: v.pipe(
-      v.string(),
-      v.regex(/^zenn:[\da-f]{64}$/u, "Article ID must be source plus Canonical URL hash."),
-    ),
+    articleId: ArticleIdSchema,
     source: ArticleSourceSchema,
     canonicalUrl: UrlStringSchema,
     title: v.pipe(v.string(), v.nonEmpty("Current Feed Candidate title must not be empty.")),

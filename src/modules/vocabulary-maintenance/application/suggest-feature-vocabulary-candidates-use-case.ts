@@ -3,7 +3,7 @@ import {
   type VocabularyPromotionCandidate as DomainVocabularyPromotionCandidate,
   type VocabularySuggestionState,
 } from "../domain/vocabulary-suggestion";
-import type { ArticleFeatures } from "../../../shared/domain/article-features";
+import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
 
 export type VocabularyPromotionCandidate = DomainVocabularyPromotionCandidate;
 

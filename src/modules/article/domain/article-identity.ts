@@ -2,13 +2,9 @@ import { createHash } from "node:crypto";
 
 import * as v from "valibot";
 
+import { ArticleIdSchema } from "./article-id";
 import { ArticleSourceSchema, type ArticleSource } from "./article-source";
 import { normalizeCanonicalUrl, UrlStringSchema } from "./canonical-url";
-
-const ArticleIdSchema = v.pipe(
-  v.string(),
-  v.regex(/^zenn:[\da-f]{64}$/u, "Article ID must be source plus Canonical URL hash."),
-);
 
 const ArticleIdentitySchema = v.pipe(
   v.object({

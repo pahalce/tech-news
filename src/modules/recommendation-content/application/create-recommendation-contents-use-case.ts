@@ -1,5 +1,5 @@
 import { type ArticleAuthor } from "../../article/application/article-author";
-import type { ArticleFeatures } from "../../../shared/domain/article-features";
+import type { ArticleFeatures } from "../../feature-extraction/domain/article-features";
 import {
   parseRecommendationContent,
   type RecommendationContent,

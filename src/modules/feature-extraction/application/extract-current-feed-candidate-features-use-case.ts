@@ -1,4 +1,4 @@
-import { type ArticleAuthor } from "../../../shared/domain/article-author";
+import { type ArticleAuthor } from "../../article/application/article-author";
 import { type FeatureVocabularyConfig } from "../../feature/application/feature-vocabulary-config";
 import { type CurrentFeedCandidate } from "../../article/application/current-feed-candidate";
 import {
