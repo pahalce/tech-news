@@ -98,18 +98,6 @@ const RecommendationContentOutputSchema = jsonSchema<
 
 const maxFeedEntriesPerFeed = 3;
 
-export async function validateZennDigestDryRun(): Promise<void> {
-  const stateRepositories = createFileStateRepositories();
-  await Promise.all([
-    stateRepositories.articleExtractionRegistry.load(),
-    stateRepositories.preferenceProfile.load(),
-    stateRepositories.preferenceSummaryHistory.load(),
-    stateRepositories.publishedDigestRegistry.load(),
-    stateRepositories.recommendationContentHistory.load(),
-  ]);
-  await loadFeatureVocabularyConfig();
-}
-
 export async function runZennDigest(): Promise<void> {
   const featureExtractionModel = resolveLlmModel(runtimeConfig.llm, "featureExtraction");
   const rerankModel = resolveLlmModel(runtimeConfig.llm, "rerank");

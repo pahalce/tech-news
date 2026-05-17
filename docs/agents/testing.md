@@ -46,7 +46,6 @@ src/features/digest/infrastructure/
 
 - feature entrypoint の runtime wiring
 - CLI-facing message formatting
-- dry-run validation
 
 ## 書き方
 

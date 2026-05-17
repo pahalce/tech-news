@@ -38,16 +38,6 @@ const VocabularyCandidateDescriptionOutputSchema = jsonSchema<
   },
 );
 
-export async function validateSuggestFeatureVocabularyDryRun(): Promise<void> {
-  const stateRepositories = createFileStateRepositories();
-  await Promise.all([
-    stateRepositories.articleExtractionRegistry.load(),
-    stateRepositories.publishedDigestRegistry.load(),
-    stateRepositories.articleFeatureSuggestionHistory.load(),
-  ]);
-  await loadFeatureVocabularyConfig();
-}
-
 export async function runSuggestFeatureVocabulary(): Promise<void> {
   const vocabularySuggestionModel = resolveLlmModel(runtimeConfig.llm, "vocabularySuggestion");
   const logger = createConsoleWorkflowLogger("suggest-feature-vocabulary");

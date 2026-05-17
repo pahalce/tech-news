@@ -41,16 +41,6 @@ const PreferenceSummaryOutputSchema = jsonSchema<v.InferOutput<typeof Preference
   },
 );
 
-export async function validateCollectFeedbackDryRun(): Promise<void> {
-  const stateRepositories = createFileStateRepositories();
-  await Promise.all([
-    stateRepositories.articleExtractionRegistry.load(),
-    stateRepositories.publishedDigestRegistry.load(),
-    stateRepositories.preferenceProfile.load(),
-    stateRepositories.preferenceSummaryHistory.load(),
-  ]);
-}
-
 export async function runCollectFeedback(): Promise<void> {
   const preferenceSummaryModel = resolveLlmModel(runtimeConfig.llm, "preferenceSummary");
   const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);

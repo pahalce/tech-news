@@ -11,13 +11,9 @@
     "test": "vp test",
     "check": "vp check --fix && pnpm check:architecture",
     "collect-feedback": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts",
-    "collect-feedback:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts --dry-run",
     "publish-recommendations": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
-    "publish-recommendations:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts --dry-run",
     "zenn-digest": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
-    "zenn-digest:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts --dry-run",
-    "suggest-feature-vocabulary": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/suggest-feature-vocabulary.ts",
-    "suggest-feature-vocabulary:dry-run": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/suggest-feature-vocabulary.ts --dry-run"
+    "suggest-feature-vocabulary": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/suggest-feature-vocabulary.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.73",
