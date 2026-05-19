@@ -160,7 +160,12 @@
         "ツール導入後の効果測定と改善サイクル",
         "データに基づくLLMワークフロー最適化手法"
       ],
-      "signalsUsed": ["データ駆動型改善", "開発者生産性向上", "LLM活用事例", "実測に基づく成果"]
+      "signalsUsed": [
+        "データ駆動型改善",
+        "開発者生産性向上",
+        "LLM活用事例",
+        "実測に基づく成果"
+      ]
     },
     {
       "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
@@ -248,7 +253,12 @@
         "Disjunction max queryを使用することで、複数の検索対象フィールド間でのスコアリングを調整し、関連度の高い結果を適切に上位表示できる。",
         "日本語の検索精度を調整する際は、kuromoji analyzerのデフォルト設定に含まれる品詞やストップワードのフィルタを適切にカスタマイズする必要がある。"
       ],
-      "signalsUsed": ["elasticsearch", "performance", "backend", "production_case_study"]
+      "signalsUsed": [
+        "elasticsearch",
+        "performance",
+        "backend",
+        "production_case_study"
+      ]
     },
     {
       "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
@@ -261,7 +271,11 @@
         "NIX_USER_CONF_FILES環境変数を利用すると、複数の設定ファイルを結合して読み込ませることができるため、local.confなどで秘密情報を分離管理できます。",
         "GitHubトークンは環境変数GITHUB_TOKENでも設定可能であり、GitHub CLIと併用することで状況に応じた柔軟な認証管理が可能です。"
       ],
-      "signalsUsed": ["nix_flakes", "github_api_tokens", "security_considerations"]
+      "signalsUsed": [
+        "nix_flakes",
+        "github_api_tokens",
+        "security_considerations"
+      ]
     },
     {
       "articleId": "zenn:049908866a1b9e6d27f116c92891dc72ec72106f3f5d39844e61e5ddd7f4fad6",
@@ -294,7 +308,13 @@
         "PNG変換に用いるresvg-jsはRustバインディングを使用しており、1リクエストあたり最大300MB程度のメモリを消費するため、サーバー環境のメモリ設定に注意する。",
         "同一画像生成の無駄を省くため、クエリパラメータをSHA-256でハッシュ化してキャッシュキーを生成するアプローチが効率的である。"
       ],
-      "signalsUsed": ["satori", "resvg_js", "react", "ogp_generation", "implementation_guide"]
+      "signalsUsed": [
+        "satori",
+        "resvg_js",
+        "react",
+        "ogp_generation",
+        "implementation_guide"
+      ]
     },
     {
       "articleId": "zenn:6e7510bfe9d6c687d07d0f039a89fdb5afbdd50c1ee89d6bba204a24545d0ea7",
@@ -442,6 +462,116 @@
         "desktop_app_development",
         "tradeoff_analysis",
         "comparison"
+      ]
+    },
+    {
+      "articleId": "zenn:79d6c1fc1c19da9042623bb9cc95eb97b51be770f5528fbca9f36541b1d58d40",
+      "summary": "検索リランクモデルの改善がプラットフォーム全体の売上を向上させた事例を基に、検索と推薦の売上カニバリゼーションのメカニズムを分析しています。表面的なKPIの変化だけでなく、ユーザーの転換プロセスを構造的に理解することの重要性を解説した記事です。",
+      "whyRecommended": "データ分析に基づいたビジネス貢献とプロダクト改善の論理構成が非常に質高く、検索・推薦システムを開発するエンジニアにとって、評価指標を設計する際の有益なガイドとなるため。",
+      "learningPoints": [
+        "検索経由の売上増加には、既存購入者の経路が置き換わるケースと、非購入者が購入者に転換するケースの2種類が存在する。",
+        "推薦機能からの売上奪取（カニバリゼーション）が起きても、非購入者が購入者に転換していればプラットフォーム全体の売上は向上する。",
+        "PF全体売上の変化を分析する際は、ARPUを分解してCVRとARPPUのどちらが寄与しているかを確認することでメカニズムを特定できる。",
+        "検索機能は単なる意図に対する応答機能ではなく、購入に至っていなかったユーザーを救い上げる役割も担い得る。"
+      ],
+      "signalsUsed": [
+        "search_and_recommendation_systems",
+        "ab_testing_methodology",
+        "cannibalization_analysis",
+        "tradeoff_analysis",
+        "measured_results"
+      ]
+    },
+    {
+      "articleId": "zenn:1e0e6d53dc6f213c5e967738a49677b6ce2a1b3a5e8dac599f04bc1785f564bf",
+      "summary": "柔軟な動的設計はシステムの寿命を延ばしますが、それは往々にして運用現場への認知負荷という形でコストを転嫁しています。真に優れたシステムには、汎用的なコア層と、それぞれのユースケースに特化して使いやすさを担保するUI層の分離が不可欠であると説いています。",
+      "whyRecommended": "技術的な柔軟性を追求した先にある「運用の現実」という、シニア層が直面する本質的なトレードオフが深く洞察されており、アーキテクチャ設計の質を高めるための示唆に富んでいるため。",
+      "learningPoints": [
+        "柔軟な汎用モデルを無理に既存構造に適合させ続けることは、運用手順書や例外処理を複雑化させ、結果として運用者に負債を強いることになる。",
+        "設計者が「モデルを破壊せず変更を吸収できた」と感じる成功体験の裏には、必ず運用の難易度上昇というコストが存在する。",
+        "モデルは汎用的なまま維持しつつ、その上に個別のユースケースに最適化された具体的なUIを構築することで、システムの柔軟性と操作性を両立できる。",
+        "長期的なシステム運用において、コアとなるモデルの寿命と、その上のインターフェースの寿命は非対称であることを許容する必要がある。"
+      ],
+      "signalsUsed": [
+        "tradeoff_analysis",
+        "real_world_experience",
+        "architecture_decision_support",
+        "software_sustainability",
+        "operational_debt",
+        "cognitive_load"
+      ]
+    },
+    {
+      "articleId": "zenn:a74e54c70c96d6a1c32a955a3ec243ec4ef3e011c28dce9f7cbc4c9d8b5a0175",
+      "summary": "WebAssemblyとThree.jsを活用し、ブラウザ上で動作する高機能なIFCビューアおよび干渉チェックツールを開発した事例です。大規模な3D建築モデルを扱う際のUIフリーズ対策やレイキャスト高速化などの技術的課題と、その解決策が具体的にまとめられています。",
+      "whyRecommended": "フロントエンドで重厚なBIMデータを扱うための技術的な最適化手法（WASM、Octree、BVH）が実践的に解説されており、パフォーマンスチューニングの参考になる良記事だからです。",
+      "learningPoints": [
+        "web-ifcライブラリを利用することで、ブラウザ内でC++実装のIFCエンジンをWebAssemblyとして動かし、ローカル環境で機密データを処理可能です。",
+        "大規模な3Dモデルのメッシュ構築時にUIスレッドがフリーズしないよう、チャンク分割とsetTimeoutを用いた非同期処理でメインスレッドを解放する仕組みが有効です。",
+        "Three.jsのデフォルトレイキャストを高速化するために、八分木（Octree）を導入して走査範囲をO(log n)に絞り込むことで動作が劇的に向上します。",
+        "干渉チェックでは、まずAABBで候補を除外し、次にthree-mesh-bvhを用いて三角形レベルで精密判定する2フェーズ構成にすることで計算量を削減できます。"
+      ],
+      "signalsUsed": [
+        "webassembly",
+        "three_js",
+        "ifc",
+        "performance",
+        "typescript"
+      ]
+    },
+    {
+      "articleId": "zenn:5c302b2d8d710bf98ae4b6e03e3c12a2bec3b922549a542d69cfab64ce78561f",
+      "summary": "Legend-Stateを使用した、ブラウザのオンライン/オフライン状態を監視する実装パターンを紹介する記事です。SSR環境を考慮した安全な監視関数の実装から、Reactコンポーネントでの利用方法までを解説しています。",
+      "whyRecommended": "状態管理ライブラリを活用した、実用的で再利用性の高いフロントエンドの実装パターンが簡潔にまとめられているため、技術スタックのモダン化を検討しているエンジニアに適しています。",
+      "learningPoints": [
+        "windowとnavigatorの存在を確認することで、SSRやNode.js環境での実行時エラーを防ぐことができます。",
+        "navigator.onLineプロパティとonline/offlineイベントを組み合わせることで、現在のネットワーク接続状態を正確に追跡可能です。",
+        "Legend-StateのobservableとuseValueを使うと、状態の変化に応じてReactコンポーネントを効率的にリアクティブに再レンダリングできます。",
+        "監視の開始と停止を行う関数をフックから返却し、ReactのuseEffect内で適切に後処理することでメモリリークを防げます。"
+      ],
+      "signalsUsed": [
+        "legend_state",
+        "react",
+        "typescript",
+        "state_management",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "zenn:d3d2621485237c2e1f0b9483ddf3f7397a462efafbc166e29004a965628a3df8",
+      "summary": "Reactの仕組みやSPAの挙動を、ゼロから徹底的に解説する初心者向け記事です。DOM操作やVirtual DOM、Stateの役割など、Reactの本質を直感的に理解できます。",
+      "whyRecommended": "Reactの技術的な背景と挙動が極めて論理的かつ図解的に説明されており、初学者が陥りやすい「ブラックボックス化」を防ぐ良質な基礎学習資料であるため。",
+      "learningPoints": [
+        "SPAはブラウザ上でJavaScriptが画面遷移を制御するため、ページ遷移のたびにHTML全体をサーバーから再取得する必要がありません。",
+        "ReactのJSXはブラウザが直接理解できる形式ではなく、ビルド工程を経てJavaScriptの関数呼び出しに変換されます。",
+        "DOMの直接操作はコストが高いため、ReactはVirtual DOMで差分のみを検出し、必要な部分だけを実際のDOMに反映させることで効率化しています。",
+        "Stateを直接書き換えてもReactに更新通知が届かないため、必ず専用の更新関数（useStateのセッターなど）を使用する必要があります。",
+        "useEffectの依存配列に指定した値が変化した時のみ、指定した副作用処理が再実行されます。"
+      ],
+      "signalsUsed": [
+        "react",
+        "frontend",
+        "web_development",
+        "spa_concepts",
+        "virtual_dom",
+        "state_management"
+      ]
+    },
+    {
+      "articleId": "zenn:3dbb4ad987c070348956f798c028edc1f01032ee7c460a0822dc763cdaeb8192",
+      "summary": "PlaywrightのstorageState機能を使用して、ログイン済み状態をJSONファイルとして保存し、テスト間で使い回す方法を解説しています。ログイン処理をセットアップとして分離することで、テスト実行の高速化を実現します。",
+      "whyRecommended": "E2Eテストのボトルネックになりがちなログイン処理を効率化する実用的なテクニックであり、Playwrightのプロジェクト構成におけるベストプラクティスが簡潔にまとめられているためです。",
+      "learningPoints": [
+        "page.context().storageState({ path: 'ファイル名' })を実行することで、クッキーやLocalStorageなどの認証状態を外部ファイルに保存できます。",
+        "playwright.config.tsのprojects設定でdependenciesを利用し、ログイン用テストを先に実行させることで、他のテストがログイン済み状態で開始されます。",
+        "storageStateプロパティを各プロジェクトのuse設定に追加することで、特定のテストセットに認証済み状態を適用できます。",
+        "ログイン状態が保存されたファイルを使用するかどうかで、プロジェクト単位で認証が必要なテストと不要なテストを簡単に切り分けられます。"
+      ],
+      "signalsUsed": [
+        "testing",
+        "typescript",
+        "e2e_testing",
+        "authentication_automation"
       ]
     }
   ]
