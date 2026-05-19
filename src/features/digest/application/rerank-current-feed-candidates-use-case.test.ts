@@ -3,7 +3,7 @@ import { describe, expect, it } from "vite-plus/test";
 import { rerankCurrentFeedCandidates } from "src/features/digest/application/rerank-current-feed-candidates-use-case";
 
 describe("LLM Rerank use case に関するテスト", () => {
-  it("品質が十分な候補だけ返されたとき、10件未満の選択結果となる", async () => {
+  it("品質が十分な候補だけ返されたとき、3件未満の選択結果となる", async () => {
     // Arrange
     const scoredCandidates = [
       createScoredCandidate("zenn:typescript", "TypeScript 深掘り", 0.9, ["typescript"]),
@@ -77,8 +77,39 @@ describe("LLM Rerank use case に関するテスト", () => {
         longTermPreferenceSummary: null,
         recentPreferenceSummary: null,
         qualityCriteria: ["同じ Primary Topic の記事を必要以上に重複させない"],
-        maxRecommendations: 10,
+        maxRecommendations: 3,
       },
+    ]);
+  });
+
+  it("LLM が4件以上返しても、最終的な選択結果は最大3件に制限する", async () => {
+    // Arrange
+    const scoredCandidates = [
+      createScoredCandidate("zenn:typescript", "TypeScript 深掘り", 0.9, ["typescript"]),
+      createScoredCandidate("zenn:react", "React 実装", 0.8, ["react"]),
+      createScoredCandidate("zenn:nextjs", "Next.js 実装", 0.7, ["nextjs"]),
+      createScoredCandidate("zenn:backend", "Backend 実装", 0.6, ["backend"]),
+    ];
+    const llmReranker = {
+      rerank: async () => ({
+        selectedArticleIds: ["zenn:typescript", "zenn:react", "zenn:nextjs", "zenn:backend"],
+      }),
+    };
+
+    // Act
+    const actual = await rerankCurrentFeedCandidates({
+      scoredCandidates,
+      longTermPreferenceSummary: null,
+      recentPreferenceSummary: null,
+      qualityCriteria: [],
+      llmReranker,
+    });
+
+    // Assert
+    expect(actual.selectedCandidates.map((candidate) => candidate.articleId)).toEqual([
+      "zenn:typescript",
+      "zenn:react",
+      "zenn:nextjs",
     ]);
   });
 });

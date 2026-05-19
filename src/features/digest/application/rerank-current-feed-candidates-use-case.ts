@@ -48,7 +48,7 @@ export type RerankCurrentFeedCandidatesResult = {
   selectedCandidates: RerankCurrentFeedCandidate[];
 };
 
-const defaultMaxRecommendations = 10;
+const defaultMaxRecommendations = 3;
 
 export async function rerankCurrentFeedCandidates(
   input: RerankCurrentFeedCandidatesInput,

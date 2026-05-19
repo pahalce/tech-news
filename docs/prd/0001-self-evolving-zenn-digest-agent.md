@@ -8,7 +8,7 @@ Owner は毎日 Zenn のトレンドや関心トピックから、実務に役�
 
 ## Solution
 
-GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn のトレンド RSS と指定トピック RSS から記事候補を集め、本文取得と Feature Extraction を行い、Preference Profile と Feature Vocabulary に基づく Rule Score と LLM Rerank で最大10本を選ぶ。
+GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn のトレンド RSS と指定トピック RSS から記事候補を集め、本文取得と Feature Extraction を行い、Preference Profile と Feature Vocabulary に基づく Rule Score と LLM Rerank で最大3本を選ぶ。
 
 推薦された記事だけ Recommendation Content を生成し、Discord に1記事1メッセージで投稿する。投稿後の 👍 / 👎 リアクションを毎朝収集し、Reaction Feedback として Preference Profile に反映する。Feature Vocabulary は初期語彙から始め、Other Signals と Unknown Topic を週次で Discord に通知して手動メンテナンスできるようにする。
 
@@ -28,8 +28,8 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 12. As an Owner, I want Feature Extraction では summary や learning points を生成しないでほしい, so that 学習用構造データと投稿文生成の責務が混ざらない。
 13. As an Owner, I want 推薦された記事だけ Recommendation Content を生成してほしい, so that 不要な LLM 呼び出しを減らせる。
 14. As an Owner, I want Discord 投稿に summary, why recommended, learning points, signals used を含めてほしい, so that 記事本文を開く前に読む価値を判断できる。
-15. As an Owner, I want 毎日最大10本まで推薦してほしい, so that digest が多すぎて読めなくならない。
-16. As an Owner, I want 良い記事が少ない日は10本未満でもよい, so that 数合わせの低品質記事を避けられる。
+15. As an Owner, I want 毎日最大3本まで推薦してほしい, so that digest が多すぎて読めなくならない。
+16. As an Owner, I want 良い記事が少ない日は3本未満でもよい, so that 数合わせの低品質記事を避けられる。
 17. As an Owner, I want Rule Score で候補を絞ってから LLM Rerank してほしい, so that 再現性と文脈判断の両方を活かせる。
 18. As an Owner, I want Feature Vocabulary の key に日本語説明が付いていてほしい, so that 各特徴量の意味を理解して調整できる。
 19. As an Owner, I want topics を aliases 付きの正規化辞書として扱ってほしい, so that `next.js` と `nextjs` のような揺れを吸収できる。
@@ -89,7 +89,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 - Failed Extraction Attempts are not saved as Feature Extraction and may retry when the article appears again as a Current Feed Candidate.
 - Build a scoring module that computes Rule Score as the sum of feature weight multiplied by Feature Salience. It excludes features below the Salience Threshold of 0.3.
 - Mentioned Topic contribution uses a Mentioned Topic Factor of 0.3 and only applies when salience is at least 0.7.
-- Build an LLM Rerank module that takes top Rule Score candidates, Long-Term Preference Summary, Recent Preference Summary, and quality criteria, then selects up to ten final articles.
+- Build an LLM Rerank module that takes top Rule Score candidates, Long-Term Preference Summary, Recent Preference Summary, and quality criteria, then selects up to three final articles.
 - Build a Recommendation Content module that runs only for recommended articles and creates Discord-facing summary, why recommended, learning points, and signals used.
 - Build a Discord notification module that posts one message per article and records a Publication Record only after the post succeeds.
 - The article becomes a Recommended Article only after Discord posting succeeds.
@@ -114,7 +114,7 @@ GitHub Actions 上で毎日動く Flue agent を実装する。agent は Zenn �
 - Test Feature Extraction validation with readable, unreadable, unknown feature, other signal, unknown topic, and failed LLM cases.
 - Test that an Extracted Article is not extracted again and can return as a candidate only when it appears in the current feed.
 - Test Rule Score calculation, including Salience Threshold, Mentioned Topic Factor, missing feature weights as zero, and weight clamping after feedback.
-- Test LLM Rerank at the boundary where fewer than ten high-quality articles are available.
+- Test LLM Rerank at the boundary where fewer than three high-quality articles are available.
 - Test Recommendation Content separately from Feature Extraction so summary and learning points are not required for scoring.
 - Test Discord posting behavior: one article per message, no Publication Record on post failure, and first_recommended_at only after post success.
 - Test feedback collection with saved message ids only, posted_at within and outside seven days, processed_at per reaction, contradictory 👍 / 👎 handling, and ignored_reason.
