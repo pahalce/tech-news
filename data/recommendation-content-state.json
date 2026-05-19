@@ -160,12 +160,7 @@
         "ツール導入後の効果測定と改善サイクル",
         "データに基づくLLMワークフロー最適化手法"
       ],
-      "signalsUsed": [
-        "データ駆動型改善",
-        "開発者生産性向上",
-        "LLM活用事例",
-        "実測に基づく成果"
-      ]
+      "signalsUsed": ["データ駆動型改善", "開発者生産性向上", "LLM活用事例", "実測に基づく成果"]
     },
     {
       "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
@@ -253,12 +248,7 @@
         "Disjunction max queryを使用することで、複数の検索対象フィールド間でのスコアリングを調整し、関連度の高い結果を適切に上位表示できる。",
         "日本語の検索精度を調整する際は、kuromoji analyzerのデフォルト設定に含まれる品詞やストップワードのフィルタを適切にカスタマイズする必要がある。"
       ],
-      "signalsUsed": [
-        "elasticsearch",
-        "performance",
-        "backend",
-        "production_case_study"
-      ]
+      "signalsUsed": ["elasticsearch", "performance", "backend", "production_case_study"]
     },
     {
       "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
@@ -271,11 +261,7 @@
         "NIX_USER_CONF_FILES環境変数を利用すると、複数の設定ファイルを結合して読み込ませることができるため、local.confなどで秘密情報を分離管理できます。",
         "GitHubトークンは環境変数GITHUB_TOKENでも設定可能であり、GitHub CLIと併用することで状況に応じた柔軟な認証管理が可能です。"
       ],
-      "signalsUsed": [
-        "nix_flakes",
-        "github_api_tokens",
-        "security_considerations"
-      ]
+      "signalsUsed": ["nix_flakes", "github_api_tokens", "security_considerations"]
     },
     {
       "articleId": "zenn:049908866a1b9e6d27f116c92891dc72ec72106f3f5d39844e61e5ddd7f4fad6",
@@ -308,13 +294,7 @@
         "PNG変換に用いるresvg-jsはRustバインディングを使用しており、1リクエストあたり最大300MB程度のメモリを消費するため、サーバー環境のメモリ設定に注意する。",
         "同一画像生成の無駄を省くため、クエリパラメータをSHA-256でハッシュ化してキャッシュキーを生成するアプローチが効率的である。"
       ],
-      "signalsUsed": [
-        "satori",
-        "resvg_js",
-        "react",
-        "ogp_generation",
-        "implementation_guide"
-      ]
+      "signalsUsed": ["satori", "resvg_js", "react", "ogp_generation", "implementation_guide"]
     },
     {
       "articleId": "zenn:6e7510bfe9d6c687d07d0f039a89fdb5afbdd50c1ee89d6bba204a24545d0ea7",
@@ -511,13 +491,7 @@
         "Three.jsのデフォルトレイキャストを高速化するために、八分木（Octree）を導入して走査範囲をO(log n)に絞り込むことで動作が劇的に向上します。",
         "干渉チェックでは、まずAABBで候補を除外し、次にthree-mesh-bvhを用いて三角形レベルで精密判定する2フェーズ構成にすることで計算量を削減できます。"
       ],
-      "signalsUsed": [
-        "webassembly",
-        "three_js",
-        "ifc",
-        "performance",
-        "typescript"
-      ]
+      "signalsUsed": ["webassembly", "three_js", "ifc", "performance", "typescript"]
     },
     {
       "articleId": "zenn:5c302b2d8d710bf98ae4b6e03e3c12a2bec3b922549a542d69cfab64ce78561f",
@@ -567,12 +541,7 @@
         "storageStateプロパティを各プロジェクトのuse設定に追加することで、特定のテストセットに認証済み状態を適用できます。",
         "ログイン状態が保存されたファイルを使用するかどうかで、プロジェクト単位で認証が必要なテストと不要なテストを簡単に切り分けられます。"
       ],
-      "signalsUsed": [
-        "testing",
-        "typescript",
-        "e2e_testing",
-        "authentication_automation"
-      ]
+      "signalsUsed": ["testing", "typescript", "e2e_testing", "authentication_automation"]
     }
   ]
 }
