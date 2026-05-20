@@ -14,6 +14,14 @@ const PublishedAtSchema = v.nullable(
 const ArticleFeedSchema = v.object({
   id: v.pipe(v.string(), v.nonEmpty("Article Feed id must not be empty.")),
   source: ArticleSourceSchema,
+  reader: v.optional(
+    v.union([
+      v.literal("zenn_rss"),
+      v.literal("hatena_blog_topic"),
+      v.literal("hatena_bookmark_rss"),
+    ]),
+    "zenn_rss",
+  ),
   url: UrlStringSchema,
 });
 
@@ -23,7 +31,7 @@ const ArticleFeedEntrySchema = v.object({
   publishedAt: PublishedAtSchema,
 });
 
-export type ArticleFeed = v.InferOutput<typeof ArticleFeedSchema>;
+export type ArticleFeed = v.InferInput<typeof ArticleFeedSchema>;
 
 export type ArticleFeedEntry = v.InferOutput<typeof ArticleFeedEntrySchema>;
 

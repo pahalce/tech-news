@@ -12,6 +12,7 @@
     "check": "vp check --fix && pnpm check:architecture",
     "collect-feedback": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/collect-feedback.ts",
     "publish-recommendations": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
+    "publish-digest": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-digest.ts",
     "zenn-digest": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/publish-recommendations.ts",
     "suggest-feature-vocabulary": "node --env-file-if-exists=.env --loader ./scripts/ts-extension-loader.mjs src/jobs/suggest-feature-vocabulary.ts"
   },

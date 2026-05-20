@@ -155,8 +155,8 @@ describe("Recommendation Publication use case に関するテスト", () => {
   });
 });
 
-const articleIdA = `zenn:${"a".repeat(64)}`;
-const articleIdB = `zenn:${"b".repeat(64)}`;
+const articleIdA = "a".repeat(64);
+const articleIdB = "b".repeat(64);
 
 function createRecommendationContent(articleId: string) {
   return {

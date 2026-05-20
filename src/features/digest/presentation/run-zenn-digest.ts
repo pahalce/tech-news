@@ -9,21 +9,25 @@ import {
   normalizeDiscordBotToken,
 } from "src/features/digest/infrastructure/discord-recommendation-publisher";
 import {
-  createZennFeedReader,
+  createArticleFeedReader,
   maxFeedEntriesPerFeed,
 } from "src/features/digest/infrastructure/zenn-feed-reader-adapter";
 import { createZennArticleBodyFetcher } from "src/features/digest/infrastructure/zenn-article-body-fetcher";
-import { defaultZennArticleFeeds } from "src/features/digest/infrastructure/zenn-article-feeds";
+import { defaultMultiSourceArticleFeeds } from "src/features/digest/infrastructure/zenn-article-feeds";
 import { env } from "src/shared/infrastructure/env";
 import { loadFeatureVocabularyConfig } from "src/shared/infrastructure/file-article-feature-vocabulary-config";
 import { resolveLlmModel, runtimeConfig } from "src/shared/infrastructure/runtime-config";
 import { createConsoleWorkflowLogger } from "src/shared/infrastructure/workflow-logger";
 
 export async function runZennDigest(): Promise<void> {
+  await runDigest();
+}
+
+export async function runDigest(): Promise<void> {
   const featureExtractionModel = resolveLlmModel(runtimeConfig.llm, "featureExtraction");
   const rerankModel = resolveLlmModel(runtimeConfig.llm, "rerank");
   const recommendationContentModel = resolveLlmModel(runtimeConfig.llm, "recommendationContent");
-  const logger = createConsoleWorkflowLogger("zenn-digest");
+  const logger = createConsoleWorkflowLogger("digest");
   const httpRequestTimeoutMs = runtimeConfig.http.requestTimeoutMs;
   const discordBotToken = normalizeDiscordBotToken(env.DISCORD_BOT_TOKEN);
   const discordChannelId = env.DISCORD_CHANNEL_ID;
@@ -41,8 +45,8 @@ export async function runZennDigest(): Promise<void> {
   await runZennDigestUseCase({
     stateRepositories: createFileDigestStateRepositories(),
     articleFeatureVocabularyReader: { read: loadFeatureVocabularyConfig },
-    feeds: defaultZennArticleFeeds,
-    feedReader: createZennFeedReader({ timeoutMs: httpRequestTimeoutMs, logger }),
+    feeds: defaultMultiSourceArticleFeeds,
+    feedReader: createArticleFeedReader({ timeoutMs: httpRequestTimeoutMs, logger }),
     now: () => new Date().toISOString(),
     fetchArticleBody: createZennArticleBodyFetcher({ timeoutMs: httpRequestTimeoutMs, logger }),
     extractArticleFeatures: createLlmFeatureExtractor({

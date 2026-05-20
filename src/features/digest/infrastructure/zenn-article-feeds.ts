@@ -12,3 +12,25 @@ export const defaultZennArticleFeeds: readonly ArticleFeed[] = [
     }),
   })),
 ];
+
+export const defaultMultiSourceArticleFeeds: readonly ArticleFeed[] = [
+  ...defaultZennArticleFeeds,
+  createArticleFeed({
+    id: "hatena-blog-topic-technology",
+    source: "hatena_blog",
+    reader: "hatena_blog_topic",
+    url: "https://blog.hatena.ne.jp/-/topics/technology",
+  }),
+  createArticleFeed({
+    id: "hatena-bookmark-technology-hotentry",
+    source: "other",
+    reader: "hatena_bookmark_rss",
+    url: "https://b.hatena.ne.jp/hotentry/it.rss",
+  }),
+  createArticleFeed({
+    id: "hatena-bookmark-technology-entrylist",
+    source: "other",
+    reader: "hatena_bookmark_rss",
+    url: "https://b.hatena.ne.jp/entrylist/it.rss",
+  }),
+];

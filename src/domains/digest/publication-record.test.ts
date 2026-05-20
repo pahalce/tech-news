@@ -65,7 +65,7 @@ describe("Published Digest Registry に関するテスト", () => {
   });
 });
 
-const articleId = `zenn:${"a".repeat(64)}`;
+const articleId = "a".repeat(64);
 const deliveryReference = {
   externalSystem: "discord",
   destination: "channel-1",

@@ -282,7 +282,7 @@ describe("Zenn Digest Workflow に関するテスト", () => {
         publicationRecords: [],
         recommendedArticles: [
           {
-            articleId: "zenn:171f05ee8bb9e85d98d8af68741e2fbd61a6bc6b17e127b01026383834ebd83b",
+            articleId: "171f05ee8bb9e85d98d8af68741e2fbd61a6bc6b17e127b01026383834ebd83b",
             firstRecommendedAt: "2026-05-13T00:00:00.000Z",
           },
         ],

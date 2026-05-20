@@ -2,6 +2,7 @@ import { describe, expect, it } from "vite-plus/test";
 
 import {
   createArticleFeedEntry,
+  createArticleIdentity,
   createCurrentFeedCandidate,
   normalizeCanonicalUrl,
   parseArticleIdentity,
@@ -30,20 +31,36 @@ describe("Article domain model に関するテスト", () => {
   });
 
   it("Article Identity の Article ID が Canonical URL と一致しないとき、domain validation エラーとなる", () => {
-    const actual = () =>
-      parseArticleIdentity({
-        articleId: "zenn:0000000000000000000000000000000000000000000000000000000000000000",
-        source: "zenn",
-        canonicalUrl: "https://zenn.dev/kazuyataira/articles/rss-entry",
-      });
+    // Arrange
+    const identity = {
+      articleId: "0".repeat(64),
+      source: "zenn",
+      canonicalUrl: "https://zenn.dev/kazuyataira/articles/rss-entry",
+    } as const;
 
+    // Act
+    const actual = () => parseArticleIdentity(identity);
+
+    // Assert
     expect(actual).toThrow("Article ID must match source and Canonical URL");
+  });
+
+  it("Article Source が違う同じ Canonical URL を渡したとき、同じ Article ID になる", () => {
+    // Arrange
+    const url = "https://zenn.dev/kazuyataira/articles/rss-entry";
+
+    // Act
+    const zennIdentity = createArticleIdentity("zenn", url);
+    const otherIdentity = createArticleIdentity("other", url);
+
+    // Assert
+    expect(otherIdentity.articleId).toBe(zennIdentity.articleId);
   });
 
   it("Current Feed Candidate の feedIds が空のとき、domain validation エラーとなる", () => {
     const actual = () =>
       parseCurrentFeedCandidate({
-        articleId: "zenn:488e4f9f9007621f5a60d198e3953705eb8ffcae9c31c0b3d69502c626b87d76",
+        articleId: "488e4f9f9007621f5a60d198e3953705eb8ffcae9c31c0b3d69502c626b87d76",
         source: "zenn",
         canonicalUrl: "https://zenn.dev/kazuyataira/articles/rss-entry",
         title: "RSS entry",

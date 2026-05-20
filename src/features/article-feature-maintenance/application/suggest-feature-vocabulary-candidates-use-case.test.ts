@@ -124,8 +124,8 @@ describe("Feature Vocabulary maintenance suggestion use case に関するテス�
   });
 });
 
-const articleIdA = `zenn:${"a".repeat(64)}`;
-const articleIdB = `zenn:${"b".repeat(64)}`;
+const articleIdA = "a".repeat(64);
+const articleIdB = "b".repeat(64);
 
 function createInput(input: {
   featureExtractions: ReturnType<typeof createFeatureExtraction>[];

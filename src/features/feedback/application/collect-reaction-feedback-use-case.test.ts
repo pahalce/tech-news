@@ -258,7 +258,7 @@ describe("Reaction Feedback 収集 use case に関するテスト", () => {
   });
 });
 
-const articleIdA = `zenn:${"a".repeat(64)}`;
+const articleIdA = "a".repeat(64);
 
 function createPublicationRecord(
   postedAt: string,

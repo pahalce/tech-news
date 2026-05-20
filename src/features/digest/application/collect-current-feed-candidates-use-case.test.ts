@@ -26,7 +26,7 @@ describe("Current Feed Candidate 収集 use case に関するテスト", () => {
 
     expect(actual.candidates).toEqual([
       {
-        articleId: "zenn:da3d8034d616ae652906cc0d8570382bc2b1d91309a1b3364bae8a6233867763",
+        articleId: "da3d8034d616ae652906cc0d8570382bc2b1d91309a1b3364bae8a6233867763",
         source: "zenn",
         canonicalUrl: "https://zenn.dev/kazuyataira/articles/testing-flue",
         title: "Article from zenn-trend",
@@ -40,7 +40,7 @@ describe("Current Feed Candidate 収集 use case に関するテスト", () => {
       duplicateEntryCount: 1,
       duplicateEntries: [
         {
-          articleId: "zenn:da3d8034d616ae652906cc0d8570382bc2b1d91309a1b3364bae8a6233867763",
+          articleId: "da3d8034d616ae652906cc0d8570382bc2b1d91309a1b3364bae8a6233867763",
           canonicalUrl: "https://zenn.dev/kazuyataira/articles/testing-flue",
           title: "Article from zenn-topic-typescript",
           feedId: "zenn-topic-typescript",
@@ -48,6 +48,36 @@ describe("Current Feed Candidate 収集 use case に関するテスト", () => {
         },
       ],
     });
+  });
+
+  it("同じ Canonical URL が異なる Article Source から見つかったとき、1件にまとめて feed 情報を残す", async () => {
+    // Arrange
+    const feeds = [
+      { id: "zenn-trend", source: "zenn", url: "https://zenn.dev/feed" },
+      {
+        id: "hatena-bookmark-technology-hotentry",
+        source: "other",
+        url: "https://b.hatena.ne.jp/hotentry/it.rss",
+      },
+    ] as const;
+
+    // Act
+    const actual = await collectCurrentFeedCandidates({
+      feeds,
+      feedReader: async (feed) => [
+        {
+          title: `Article from ${feed.id}`,
+          url: "https://zenn.dev/kazuyataira/articles/testing-flue",
+          publishedAt: null,
+        },
+      ],
+    });
+
+    // Assert
+    expect(actual.candidates[0]?.feedIds).toEqual([
+      "zenn-trend",
+      "hatena-bookmark-technology-hotentry",
+    ]);
   });
 
   it("一部 feed が失敗しても、成功した feed の Current Feed Candidate と失敗情報を返す", async () => {

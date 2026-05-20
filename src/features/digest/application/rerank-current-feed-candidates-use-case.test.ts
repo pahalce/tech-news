@@ -6,13 +6,13 @@ describe("LLM Rerank use case に関するテスト", () => {
   it("品質が十分な候補だけ返されたとき、3件未満の選択結果となる", async () => {
     // Arrange
     const scoredCandidates = [
-      createScoredCandidate("zenn:typescript", "TypeScript 深掘り", 0.9, ["typescript"]),
-      createScoredCandidate("zenn:react", "React 実装", 0.8, ["react"]),
-      createScoredCandidate("zenn:thin", "薄い記事", 0.7, ["typescript"]),
+      createScoredCandidate("6".repeat(64), "TypeScript 深掘り", 0.9, ["typescript"]),
+      createScoredCandidate("7".repeat(64), "React 実装", 0.8, ["react"]),
+      createScoredCandidate("8".repeat(64), "薄い記事", 0.7, ["typescript"]),
     ];
     const llmReranker = {
       rerank: async () => ({
-        selectedArticleIds: ["zenn:typescript", "zenn:react"],
+        selectedArticleIds: ["6".repeat(64), "7".repeat(64)],
       }),
     };
 
@@ -27,22 +27,22 @@ describe("LLM Rerank use case に関するテスト", () => {
 
     // Assert
     expect(actual.selectedCandidates.map((candidate) => candidate.articleId)).toEqual([
-      "zenn:typescript",
-      "zenn:react",
+      "6".repeat(64),
+      "7".repeat(64),
     ]);
   });
 
   it("重複 Topic 回避の品質基準を渡したとき、候補の Primary Topic とともに Rerank 入力へ渡される", async () => {
     // Arrange
     const scoredCandidates = [
-      createScoredCandidate("zenn:typescript-a", "TypeScript A", 0.9, ["typescript"]),
-      createScoredCandidate("zenn:typescript-b", "TypeScript B", 0.8, ["typescript"]),
+      createScoredCandidate("4".repeat(64), "TypeScript A", 0.9, ["typescript"]),
+      createScoredCandidate("5".repeat(64), "TypeScript B", 0.8, ["typescript"]),
     ];
     const receivedInputs: unknown[] = [];
     const llmReranker = {
       rerank: async (input: unknown) => {
         receivedInputs.push(input);
-        return { selectedArticleIds: ["zenn:typescript-a"] };
+        return { selectedArticleIds: ["4".repeat(64)] };
       },
     };
 
@@ -60,16 +60,18 @@ describe("LLM Rerank use case に関するテスト", () => {
       {
         topScoredCandidates: [
           {
-            articleId: "zenn:typescript-a",
+            articleId: "4".repeat(64),
             title: "TypeScript A",
-            canonicalUrl: "https://zenn.dev/example/articles/zenn-typescript-a",
+            canonicalUrl:
+              "https://zenn.dev/example/articles/4444444444444444444444444444444444444444444444444444444444444444",
             ruleScore: 0.9,
             primaryTopics: ["typescript"],
           },
           {
-            articleId: "zenn:typescript-b",
+            articleId: "5".repeat(64),
             title: "TypeScript B",
-            canonicalUrl: "https://zenn.dev/example/articles/zenn-typescript-b",
+            canonicalUrl:
+              "https://zenn.dev/example/articles/5555555555555555555555555555555555555555555555555555555555555555",
             ruleScore: 0.8,
             primaryTopics: ["typescript"],
           },
@@ -85,14 +87,14 @@ describe("LLM Rerank use case に関するテスト", () => {
   it("LLM が4件以上返しても、最終的な選択結果は最大3件に制限する", async () => {
     // Arrange
     const scoredCandidates = [
-      createScoredCandidate("zenn:typescript", "TypeScript 深掘り", 0.9, ["typescript"]),
-      createScoredCandidate("zenn:react", "React 実装", 0.8, ["react"]),
-      createScoredCandidate("zenn:nextjs", "Next.js 実装", 0.7, ["nextjs"]),
-      createScoredCandidate("zenn:backend", "Backend 実装", 0.6, ["backend"]),
+      createScoredCandidate("6".repeat(64), "TypeScript 深掘り", 0.9, ["typescript"]),
+      createScoredCandidate("7".repeat(64), "React 実装", 0.8, ["react"]),
+      createScoredCandidate("9".repeat(64), "Next.js 実装", 0.7, ["nextjs"]),
+      createScoredCandidate("0".repeat(64), "Backend 実装", 0.6, ["backend"]),
     ];
     const llmReranker = {
       rerank: async () => ({
-        selectedArticleIds: ["zenn:typescript", "zenn:react", "zenn:nextjs", "zenn:backend"],
+        selectedArticleIds: ["6".repeat(64), "7".repeat(64), "9".repeat(64), "0".repeat(64)],
       }),
     };
 
@@ -107,9 +109,9 @@ describe("LLM Rerank use case に関するテスト", () => {
 
     // Assert
     expect(actual.selectedCandidates.map((candidate) => candidate.articleId)).toEqual([
-      "zenn:typescript",
-      "zenn:react",
-      "zenn:nextjs",
+      "6".repeat(64),
+      "7".repeat(64),
+      "9".repeat(64),
     ]);
   });
 });

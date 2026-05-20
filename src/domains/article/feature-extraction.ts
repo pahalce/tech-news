@@ -6,7 +6,7 @@ import type {
   FeatureSignal,
   OtherSignal,
 } from "src/domains/article/article-features";
-import { ArticleIdSchema } from "src/domains/article/article-id";
+import { ArticleIdSchema, normalizeLegacyArticleId } from "src/domains/article/article-id";
 
 const SalienceSchema = v.pipe(
   v.number(),
@@ -214,7 +214,7 @@ export function createFailedExtractionAttempt(
 }
 
 export function parseArticleExtractionRegistry(input: unknown): ArticleExtractionRegistry {
-  const state = v.parse(ArticleExtractionRegistrySchema, input);
+  const state = v.parse(ArticleExtractionRegistrySchema, normalizeArticleExtractionRegistry(input));
 
   return {
     version: state.version,
@@ -222,6 +222,47 @@ export function parseArticleExtractionRegistry(input: unknown): ArticleExtractio
     bodyFetchFailures: [...state.bodyFetchFailures],
     failedExtractionAttempts: [...state.failedExtractionAttempts],
   };
+}
+
+function normalizeArticleExtractionRegistry(input: unknown): unknown {
+  if (!input || typeof input !== "object") {
+    return input;
+  }
+
+  const registry = input as {
+    extractions?: unknown;
+    bodyFetchFailures?: unknown;
+    failedExtractionAttempts?: unknown;
+  };
+
+  return {
+    ...registry,
+    extractions: normalizeArticleIdRecords(registry.extractions),
+    bodyFetchFailures: normalizeArticleIdRecords(registry.bodyFetchFailures),
+    failedExtractionAttempts: normalizeArticleIdRecords(registry.failedExtractionAttempts),
+  };
+}
+
+function normalizeArticleIdRecords(records: unknown): unknown {
+  if (!Array.isArray(records)) {
+    return records;
+  }
+
+  return records.map((record) => {
+    if (!record || typeof record !== "object") {
+      return record;
+    }
+
+    const articleRecord = record as { articleId?: unknown };
+
+    return {
+      ...articleRecord,
+      articleId:
+        typeof articleRecord.articleId === "string"
+          ? normalizeLegacyArticleId(articleRecord.articleId)
+          : articleRecord.articleId,
+    };
+  });
 }
 
 function normalizeTopics(
