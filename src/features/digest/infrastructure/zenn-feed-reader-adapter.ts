@@ -1,6 +1,9 @@
 import type { CollectCurrentFeedCandidatesInput } from "src/features/digest/application/collect-current-feed-candidates-use-case";
 import { fetchTextWithTimeout } from "src/features/digest/infrastructure/http-client";
 import { readZennRssFeed } from "src/features/digest/infrastructure/zenn-rss-feed-reader";
+import { createCompositeArticleFeedReader } from "src/features/digest/infrastructure/composite-article-feed-reader";
+import { readHatenaBlogTopicFeed } from "src/features/digest/infrastructure/hatena-blog-topic-feed-reader";
+import { readHatenaBookmarkRssFeed } from "src/features/digest/infrastructure/hatena-bookmark-rss-feed-reader";
 import { elapsedMs, type WorkflowLogger } from "src/shared/infrastructure/workflow-logger";
 
 export const maxFeedEntriesPerFeed = 3;
@@ -29,4 +32,22 @@ export function createZennFeedReader(input: {
     });
     return selectedEntries;
   };
+}
+
+export function createArticleFeedReader(input: {
+  timeoutMs: number;
+  logger: WorkflowLogger;
+}): CollectCurrentFeedCandidatesInput["feedReader"] {
+  const fetchText = (url: string) =>
+    fetchTextWithTimeout({
+      url,
+      timeoutMs: input.timeoutMs,
+      failurePrefix: "article feed fetch failed",
+    });
+
+  return createCompositeArticleFeedReader({
+    zennRss: createZennFeedReader(input),
+    hatenaBlogTopic: async (feed) => readHatenaBlogTopicFeed(feed, fetchText),
+    hatenaBookmarkRss: async (feed) => readHatenaBookmarkRssFeed(feed, fetchText),
+  });
 }

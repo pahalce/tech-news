@@ -15,7 +15,7 @@ function createCandidate(
     key: "example-signal",
     descriptionJa: "例の昇格候補",
     occurrenceCount: 2,
-    representativeArticleIds: ["zenn:" + "a".repeat(64)],
+    representativeArticleIds: ["a".repeat(64)],
     relatedFeedbackCount: 0,
     recommendedAction: "Feature Axis への追加を検討",
     ...overrides,
@@ -90,9 +90,9 @@ describe("Discord vocabulary suggestion messages に関するテスト", () => {
         key: `signal-${index}`,
         descriptionJa: "長めの説明文".repeat(20),
         representativeArticleIds: [
-          `zenn:${String(index).padStart(64, "0")}`,
-          `zenn:${String(index + 1).padStart(64, "1")}`,
-          `zenn:${String(index + 2).padStart(64, "2")}`,
+          String(index).padStart(64, "0"),
+          String(index + 1).padStart(64, "1"),
+          String(index + 2).padStart(64, "2"),
         ],
       }),
     );

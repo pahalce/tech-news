@@ -6,7 +6,7 @@ import {
   createFeatureExtraction,
 } from "src/domains/article";
 
-const articleId = `zenn:${"a".repeat(64)}`;
+const articleId = "a".repeat(64);
 
 describe("Feature Extraction domain model に関するテスト", () => {
   it("Readable Article を抽出したとき、Primary Topic が正規化されて保存される", () => {

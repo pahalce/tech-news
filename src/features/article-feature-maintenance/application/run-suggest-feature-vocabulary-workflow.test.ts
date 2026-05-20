@@ -5,8 +5,8 @@ import { runSuggestFeatureVocabularyWorkflow } from "src/features/article-featur
 describe("Suggest Feature Vocabulary Workflow に関するテスト", () => {
   it("Other Signals が候補条件を満たすとき、Vocabulary Suggestion State が更新される", async () => {
     // Arrange
-    const articleIdA = `zenn:${"a".repeat(64)}`;
-    const articleIdB = `zenn:${"b".repeat(64)}`;
+    const articleIdA = "a".repeat(64);
+    const articleIdB = "b".repeat(64);
 
     // Act
     const actual = await runSuggestFeatureVocabularyWorkflow({

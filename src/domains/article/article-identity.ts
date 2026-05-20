@@ -11,7 +11,7 @@ const ArticleIdentitySchema = v.pipe(
     source: ArticleSourceSchema,
   }),
   v.check(
-    (identity) => identity.articleId === deriveArticleId(identity.source, identity.canonicalUrl),
+    (identity) => identity.articleId === deriveArticleId(identity.canonicalUrl),
     "Article ID must match source and Canonical URL.",
   ),
 );
@@ -26,7 +26,7 @@ export function createArticleIdentity(
   const canonicalUrl = normalizeCanonicalUrl(urlInput);
 
   return parseArticleIdentity({
-    articleId: deriveArticleId(source, canonicalUrl),
+    articleId: deriveArticleId(canonicalUrl),
     canonicalUrl,
     source,
   });
@@ -36,10 +36,10 @@ export function parseArticleIdentity(input: unknown): ArticleIdentity {
   return v.parse(ArticleIdentitySchema, input);
 }
 
-function deriveArticleId(source: ArticleSource, canonicalUrl: string): string {
+function deriveArticleId(canonicalUrl: string): string {
   const canonicalUrlHash = sha256Hex(canonicalUrl);
 
-  return `${source}:${canonicalUrlHash}`;
+  return canonicalUrlHash;
 }
 
 function sha256Hex(input: string): string {

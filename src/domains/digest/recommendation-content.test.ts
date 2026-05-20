@@ -17,6 +17,6 @@ describe("Recommendation Content に関するテスト", () => {
     const actual = () => parseRecommendationContent(input);
 
     // Assert
-    expect(actual).toThrow("Article ID must be source plus Canonical URL hash.");
+    expect(actual).toThrow("Article ID must be a Canonical URL hash.");
   });
 });

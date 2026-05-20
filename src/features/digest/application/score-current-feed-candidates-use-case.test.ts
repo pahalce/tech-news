@@ -8,7 +8,7 @@ describe("Rule Score use case に関するテスト", () => {
     const currentFeedCandidateFeatures = [
       {
         candidate: {
-          articleId: "zenn:low",
+          articleId: "1".repeat(64),
           source: "zenn",
           canonicalUrl: "https://zenn.dev/example/articles/low",
           title: "Low score",
@@ -27,7 +27,7 @@ describe("Rule Score use case に関するテスト", () => {
       },
       {
         candidate: {
-          articleId: "zenn:high",
+          articleId: "2".repeat(64),
           source: "zenn",
           canonicalUrl: "https://zenn.dev/example/articles/high",
           title: "High score",
@@ -63,8 +63,8 @@ describe("Rule Score use case に関するテスト", () => {
 
     // Assert
     expect(actual.scoredCandidates.map((candidate) => candidate.articleId)).toEqual([
-      "zenn:high",
-      "zenn:low",
+      "2".repeat(64),
+      "1".repeat(64),
     ]);
   });
 
@@ -73,7 +73,7 @@ describe("Rule Score use case に関するテスト", () => {
     const currentFeedCandidateFeatures = [
       {
         candidate: {
-          articleId: "zenn:recommended",
+          articleId: "3".repeat(64),
           source: "zenn",
           canonicalUrl: "https://zenn.dev/example/articles/recommended",
           title: "Recommended",
@@ -100,7 +100,7 @@ describe("Rule Score use case に関するテスト", () => {
     const actual = scoreCurrentFeedCandidates({
       currentFeedCandidateFeatures,
       preferenceProfile,
-      recommendedArticleIds: ["zenn:recommended"],
+      recommendedArticleIds: ["3".repeat(64)],
     });
 
     // Assert

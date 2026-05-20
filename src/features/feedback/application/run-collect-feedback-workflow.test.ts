@@ -5,7 +5,7 @@ import { runCollectFeedbackWorkflow } from "src/features/feedback/application/ru
 describe("Collect Feedback Workflow に関するテスト", () => {
   it("Publication Record に正の Reaction Feedback があるとき、Preference Profile と Publication State が更新される", async () => {
     // Arrange
-    const articleId = `zenn:${"a".repeat(64)}`;
+    const articleId = "a".repeat(64);
 
     // Act
     const actual = await runCollectFeedbackWorkflow({

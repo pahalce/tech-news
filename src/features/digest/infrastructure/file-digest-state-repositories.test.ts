@@ -297,9 +297,84 @@ describe("State Repositories 読み込みに関するテスト", () => {
       expect(actual.feature_weights.topics.typescript).toBe(0.8);
     });
   });
+
+  describe("Article ID normalization に関するテスト", () => {
+    it("legacy source-prefixed Article ID を読み込んだとき、URL hash-only Article ID に正規化する", async () => {
+      // Arrange
+      const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
+      const legacyArticleId = `zenn:${"a".repeat(64)}`;
+      await writeStateFiles(
+        repositoryRoot,
+        {
+          version: 1,
+          weight_range: { min: -3, max: 3 },
+          seed_weight_range: { min: -1, max: 1 },
+          feature_weights: {
+            topics: {
+              typescript: 0.6,
+            },
+            feature_axes: {
+              depth_signals: {
+                thin_content: -0.9,
+              },
+            },
+          },
+          updated_at: null,
+        },
+        legacyArticleId,
+      );
+
+      // Act
+      const actual = await loadStateForTest(repositoryRoot);
+
+      // Assert
+      expect(actual.articleExtractionRegistry.extractions[0]?.articleId).toBe("a".repeat(64));
+    });
+
+    it("正規化後に保存したとき、URL hash-only Article ID を JSON に保存する", async () => {
+      // Arrange
+      const repositoryRoot = await mkdtemp(join(tmpdir(), "flue-state-"));
+      const legacyArticleId = `zenn:${"b".repeat(64)}`;
+      await writeStateFiles(
+        repositoryRoot,
+        {
+          version: 1,
+          weight_range: { min: -3, max: 3 },
+          seed_weight_range: { min: -1, max: 1 },
+          feature_weights: {
+            topics: {
+              typescript: 0.6,
+            },
+            feature_axes: {
+              depth_signals: {
+                thin_content: -0.9,
+              },
+            },
+          },
+          updated_at: null,
+        },
+        legacyArticleId,
+      );
+      const repositories = createFileDigestStateRepositories(repositoryRoot);
+      const registry = await repositories.publishedDigestRegistry.load();
+
+      // Act
+      await repositories.publishedDigestRegistry.save(registry);
+      const actual = JSON.parse(
+        await readFile(join(repositoryRoot, "data", "publication-state.json"), "utf8"),
+      ) as { publicationRecords: Array<{ articleId: string }> };
+
+      // Assert
+      expect(actual.publicationRecords[0]?.articleId).toBe("b".repeat(64));
+    });
+  });
 });
 
-async function writeStateFiles(repositoryRoot: string, preferenceProfile: unknown) {
+async function writeStateFiles(
+  repositoryRoot: string,
+  preferenceProfile: unknown,
+  articleId = "a".repeat(64),
+) {
   await mkdir(join(repositoryRoot, "config"), { recursive: true });
   await mkdir(join(repositoryRoot, "data"), { recursive: true });
   await writeJson(join(repositoryRoot, "config", "feature-vocabulary.json"), {
@@ -325,9 +400,18 @@ async function writeStateFiles(repositoryRoot: string, preferenceProfile: unknow
   await writeJson(join(repositoryRoot, "data", "preference-profile.json"), preferenceProfile);
   await writeJson(join(repositoryRoot, "data", "feature-extraction-state.json"), {
     version: 1,
-    extractions: [],
-    bodyFetchFailures: [],
-    failedExtractionAttempts: [],
+    extractions: [
+      {
+        articleId,
+        extractedAt: "2026-05-18T00:00:00.000Z",
+        readability: { isReadable: false, reason: "fixture" },
+        articleFeatures: null,
+      },
+    ],
+    bodyFetchFailures: [{ articleId, failedAt: "2026-05-18T00:00:00.000Z", message: "fixture" }],
+    failedExtractionAttempts: [
+      { articleId, attemptedAt: "2026-05-18T00:00:00.000Z", message: "fixture" },
+    ],
   });
   await writeJson(join(repositoryRoot, "data", "preference-summary-history.json"), {
     version: 1,
@@ -341,12 +425,31 @@ async function writeStateFiles(repositoryRoot: string, preferenceProfile: unknow
   });
   await writeJson(join(repositoryRoot, "data", "recommendation-content-state.json"), {
     version: 1,
-    recommendationContents: [],
+    recommendationContents: [
+      {
+        articleId,
+        summary: "summary",
+        whyRecommended: "why",
+        learningPoints: ["learn"],
+        signalsUsed: ["signal"],
+      },
+    ],
   });
   await writeJson(join(repositoryRoot, "data", "publication-state.json"), {
     version: 1,
-    publicationRecords: [],
-    recommendedArticles: [],
+    publicationRecords: [
+      {
+        articleId,
+        deliveryReference: {
+          externalSystem: "discord",
+          destination: "channel",
+          id: "message",
+        },
+        postedAt: "2026-05-18T00:00:00.000Z",
+        reactionFeedback: [],
+      },
+    ],
+    recommendedArticles: [{ articleId, firstRecommendedAt: "2026-05-18T00:00:00.000Z" }],
   });
   await writeJson(join(repositoryRoot, "data", "vocabulary-suggestion-state.json"), {
     version: 1,

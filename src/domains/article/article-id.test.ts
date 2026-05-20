@@ -3,19 +3,36 @@ import { describe, expect, it } from "vite-plus/test";
 import { parseArticleId } from "src/domains/article";
 
 describe("Article ID に関するテスト", () => {
-  it("source と Canonical URL hash からなる Article ID を受け付ける", () => {
+  it("Canonical URL hash だけからなる Article ID を受け付ける", () => {
+    // Arrange
+    const articleId = "a".repeat(64);
+
     // Act
-    const actual = parseArticleId(`zenn:${"a".repeat(64)}`);
+    const actual = parseArticleId(articleId);
 
     // Assert
-    expect(actual).toBe(`zenn:${"a".repeat(64)}`);
+    expect(actual).toBe(articleId);
+  });
+
+  it("source prefix 付き Article ID を渡したとき、検証エラーとなる", () => {
+    // Arrange
+    const articleId = `zenn:${"a".repeat(64)}`;
+
+    // Act
+    const actual = () => parseArticleId(articleId);
+
+    // Assert
+    expect(actual).toThrow("Article ID must be a Canonical URL hash.");
   });
 
   it("Article ID の形式が不正なとき、検証エラーとなる", () => {
+    // Arrange
+    const articleId = "zenn:not-a-hash";
+
     // Act
-    const actual = () => parseArticleId("zenn:not-a-hash");
+    const actual = () => parseArticleId(articleId);
 
     // Assert
-    expect(actual).toThrow("Article ID must be source plus Canonical URL hash.");
+    expect(actual).toThrow("Article ID must be a Canonical URL hash.");
   });
 });

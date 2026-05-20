@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-import { ArticleIdSchema } from "src/domains/article";
+import { ArticleIdSchema, normalizeLegacyArticleId } from "src/domains/article";
 
 const NonEmptyStringSchema = v.pipe(v.string(), v.nonEmpty("value must not be empty."));
 
@@ -32,10 +32,42 @@ export function parseRecommendationContent(input: unknown): RecommendationConten
 }
 
 export function parseRecommendationContentHistory(input: unknown): RecommendationContentHistory {
-  const state = v.parse(RecommendationContentHistorySchema, input);
+  const state = v.parse(
+    RecommendationContentHistorySchema,
+    normalizeRecommendationContentHistory(input),
+  );
 
   return {
     version: state.version,
     recommendationContents: [...state.recommendationContents],
+  };
+}
+
+function normalizeRecommendationContentHistory(input: unknown): unknown {
+  if (!input || typeof input !== "object") {
+    return input;
+  }
+
+  const history = input as { recommendationContents?: unknown };
+
+  return {
+    ...history,
+    recommendationContents: Array.isArray(history.recommendationContents)
+      ? history.recommendationContents.map((record) => {
+          if (!record || typeof record !== "object") {
+            return record;
+          }
+
+          const content = record as { articleId?: unknown };
+
+          return {
+            ...content,
+            articleId:
+              typeof content.articleId === "string"
+                ? normalizeLegacyArticleId(content.articleId)
+                : content.articleId,
+          };
+        })
+      : history.recommendationContents,
   };
 }

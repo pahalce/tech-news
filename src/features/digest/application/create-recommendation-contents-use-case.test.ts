@@ -107,8 +107,8 @@ describe("Recommendation Content 作成 use case に関するテスト", () => {
   });
 });
 
-const articleIdA = `zenn:${"a".repeat(64)}`;
-const articleIdB = `zenn:${"b".repeat(64)}`;
+const articleIdA = "a".repeat(64);
+const articleIdB = "b".repeat(64);
 
 function createSelectedCandidate(articleId: string, title: string) {
   return {

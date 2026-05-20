@@ -224,9 +224,9 @@ describe("Digest Selection Policy に関するテスト", () => {
   });
 });
 
-const articleId = `zenn:${"0".repeat(64)}`;
-const articleIdA = `zenn:${"a".repeat(64)}`;
-const articleIdB = `zenn:${"b".repeat(64)}`;
+const articleId = "0".repeat(64);
+const articleIdA = "a".repeat(64);
+const articleIdB = "b".repeat(64);
 
 function createArticleFeatures(topic: string, salience: number) {
   return {

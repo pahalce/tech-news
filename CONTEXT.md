@@ -12,8 +12,16 @@ _Avoid_: user, member, viewer
 A source article that may be considered for a digest.
 _Avoid_: post, feed item, recommendation
 
+**Article Source**:
+The publication platform or site where an article originates.
+_Avoid_: digest type, workflow type, discovery source, feed provider
+
+**Article Discovery Source**:
+The external place where an article was found during feed collection.
+_Avoid_: article source, publication platform, article identity source
+
 **Article Identity**:
-The stable identity of an article derived from its source and canonical URL.
+The stable identity of an article derived from its canonical URL.
 _Avoid_: raw URL, feed URL, message ID
 
 **Current Feed Candidate**:
@@ -107,6 +115,8 @@ _Avoid_: partial commit, per-step commit, runtime cache
 ## Relationships
 
 - An **Owner** has exactly one **Preference Profile**.
+- An **Article** has exactly one **Article Source**.
+- A **Current Feed Candidate** has one or more **Article Discovery Sources**.
 - An **Article** has one **Article Identity**.
 - A **Current Feed Candidate** can become a **Readable Article** when its body is fetched.
 - A **Readable Article** can produce one **Article Feature Extraction**.
@@ -114,6 +124,9 @@ _Avoid_: partial commit, per-step commit, runtime cache
 - A **Failed Extraction Attempt** can be retried if the **Article** appears again as a **Current Feed Candidate**.
 - A **Recommendation Candidate** is created from an **Extracted Article**.
 - A **Digest Selection Policy** chooses **Digest Items** from **Recommendation Candidates**.
+- **Article Source** identifies where an **Article** came from, but does not define a separate **Digest Selection Policy**.
+- **Article Discovery Source** records where an **Article** was found, but does not change the **Article Identity**.
+- **Article Identity** is independent of **Article Source** so the same canonical URL remains one **Article** across discovery paths.
 - A **Digest** contains one or more **Digest Items**.
 - A **Digest Item** has one **Recommendation Content** before it can become a **Published Digest Item**.
 - A **Published Digest Item** has one **Delivery Reference**.

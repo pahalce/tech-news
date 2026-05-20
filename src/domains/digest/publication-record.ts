@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-import { ArticleIdSchema } from "src/domains/article";
+import { ArticleIdSchema, normalizeLegacyArticleId } from "src/domains/article";
 import type { ReadonlyDeep } from "src/shared/domain/readonly-deep";
 
 const NonEmptyStringSchema = v.pipe(v.string(), v.nonEmpty("value must not be empty."));
@@ -98,33 +98,66 @@ function restoreLegacyPublishedDigestRegistry(input: unknown): unknown {
 
   return {
     ...input,
-    publicationRecords: registry.publicationRecords.map((record) => {
-      if (!record || typeof record !== "object" || "deliveryReference" in record) {
-        return record;
-      }
+    publicationRecords: registry.publicationRecords
+      .map((record) => {
+        if (!record || typeof record !== "object" || "deliveryReference" in record) {
+          return record;
+        }
 
-      const legacyRecord = record as {
-        messageId?: unknown;
-        channelId?: unknown;
-      };
+        const legacyRecord = record as {
+          messageId?: unknown;
+          channelId?: unknown;
+        };
 
-      if (
-        typeof legacyRecord.messageId !== "string" ||
-        typeof legacyRecord.channelId !== "string"
-      ) {
-        return record;
-      }
+        if (
+          typeof legacyRecord.messageId !== "string" ||
+          typeof legacyRecord.channelId !== "string"
+        ) {
+          return record;
+        }
 
-      const { messageId, channelId, ...rest } = legacyRecord;
+        const { messageId, channelId, ...rest } = legacyRecord as {
+          messageId: string;
+          channelId: string;
+          articleId?: unknown;
+        };
 
-      return {
-        ...rest,
-        deliveryReference: {
-          externalSystem: "discord",
-          destination: channelId,
-          id: messageId,
-        },
-      };
-    }),
+        return {
+          ...rest,
+          articleId:
+            typeof rest.articleId === "string"
+              ? normalizeLegacyArticleId(rest.articleId)
+              : rest.articleId,
+          deliveryReference: {
+            externalSystem: "discord",
+            destination: channelId,
+            id: messageId,
+          },
+        };
+      })
+      .map(normalizeArticleIdRecord),
+    recommendedArticles: Array.isArray(
+      (input as { recommendedArticles?: unknown }).recommendedArticles,
+    )
+      ? (input as { recommendedArticles: unknown[] }).recommendedArticles.map(
+          normalizeArticleIdRecord,
+        )
+      : (input as { recommendedArticles?: unknown }).recommendedArticles,
+  };
+}
+
+function normalizeArticleIdRecord(record: unknown): unknown {
+  if (!record || typeof record !== "object") {
+    return record;
+  }
+
+  const articleRecord = record as { articleId?: unknown };
+
+  return {
+    ...articleRecord,
+    articleId:
+      typeof articleRecord.articleId === "string"
+        ? normalizeLegacyArticleId(articleRecord.articleId)
+        : articleRecord.articleId,
   };
 }

@@ -9,7 +9,7 @@ function createDiscordRecommendationContent(
   overrides: Partial<DiscordRecommendationContent> = {},
 ): DiscordRecommendationContent {
   return {
-    articleId: `zenn:${"a".repeat(64)}`,
+    articleId: "a".repeat(64),
     canonicalUrl: "https://zenn.dev/example/articles/sample",
     title: "Claude Code派だった僕がCodexに移る前に知りたかったこと",
     summary: "Claude CodeからCodexへの移行体験記。ツール比較と設定の勘所を解説。",

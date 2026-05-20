@@ -137,7 +137,7 @@ describe("Readable Current Feed Candidate selection use case に関するテス�
             author: null,
           },
           {
-            articleId: "zenn:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            articleId: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             extractedAt: "2026-05-12T00:00:00.000Z",
             readability: { isReadable: true, reason: null },
             articleFeatures: {
