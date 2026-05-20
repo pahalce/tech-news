@@ -510,6 +510,75 @@
           "ignoredReason": null
         }
       ]
+    },
+    {
+      "articleId": "zenn:9bb0e64237e3b61a1d2ece46754725e4088e09ec3c999ba183f22ab625aa87b6",
+      "deliveryReference": {
+        "externalSystem": "discord",
+        "destination": "1504276981490122833",
+        "id": "1506505495928897568"
+      },
+      "postedAt": "2026-05-20T03:54:59.748000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    },
+    {
+      "articleId": "zenn:0ca11cb28ba022802e4ea4bec250c34b159473032abc1d03c4e80bf33bea1e1f",
+      "deliveryReference": {
+        "externalSystem": "discord",
+        "destination": "1504276981490122833",
+        "id": "1506505497015222402"
+      },
+      "postedAt": "2026-05-20T03:55:00.007000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    },
+    {
+      "articleId": "zenn:56a331d481610b86821a169062373ef4139d7c5b80c65f6b60f8816bdcdeb085",
+      "deliveryReference": {
+        "externalSystem": "discord",
+        "destination": "1504276981490122833",
+        "id": "1506505497501503598"
+      },
+      "postedAt": "2026-05-20T03:55:00.123000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
     }
   ],
   "recommendedArticles": [
@@ -600,6 +669,18 @@
     {
       "articleId": "zenn:3dbb4ad987c070348956f798c028edc1f01032ee7c460a0822dc763cdaeb8192",
       "firstRecommendedAt": "2026-05-19T03:56:14.269000+00:00"
+    },
+    {
+      "articleId": "zenn:9bb0e64237e3b61a1d2ece46754725e4088e09ec3c999ba183f22ab625aa87b6",
+      "firstRecommendedAt": "2026-05-20T03:54:59.748000+00:00"
+    },
+    {
+      "articleId": "zenn:0ca11cb28ba022802e4ea4bec250c34b159473032abc1d03c4e80bf33bea1e1f",
+      "firstRecommendedAt": "2026-05-20T03:55:00.007000+00:00"
+    },
+    {
+      "articleId": "zenn:56a331d481610b86821a169062373ef4139d7c5b80c65f6b60f8816bdcdeb085",
+      "firstRecommendedAt": "2026-05-20T03:55:00.123000+00:00"
     }
   ]
 }
