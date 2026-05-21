@@ -57,4 +57,23 @@ describe("Scheduled Agent Workflow に関するテスト", () => {
     expect(actual).toContain("inputs.job == 'suggest-feature-vocabulary'");
     expect(actual).toContain("inputs.job == 'all'");
   });
+
+  it("zenn-digest は GitHub schedule の遅延を見込んで早めに開始する", async () => {
+    // Arrange
+    const workflowPath = join(
+      import.meta.dirname,
+      "../../../.github/workflows/scheduled-agent-jobs.yml",
+    );
+
+    // Act
+    const actual = await readFile(workflowPath, "utf8");
+
+    // Assert
+    expect(actual).toContain(
+      "zenn-digest: starts at 05:00 JST daily so delayed GitHub schedules land near 09:00 JST",
+    );
+    expect(actual).toContain('cron: "0 20 * * *"');
+    expect(actual).toContain("github.event.schedule == '0 20 * * *'");
+    expect(actual).not.toContain("github.event.schedule == '0 0 * * *'");
+  });
 });
