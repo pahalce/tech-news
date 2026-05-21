@@ -687,6 +687,61 @@
         "architecture_decision_support",
         "saga_pattern"
       ]
+    },
+    {
+      "articleId": "f4da44e8ff3c4f3072934233a142399b8236f11a9dd06d2134458ef3b7ef44f6",
+      "summary": "FirebaseとReactを用いたアプリにおいて、マルチテナントな「組織」機能を実装するための具体的な設計手法を解説しています。招待リンクを使わない事前登録モデルの採用や、Firebaseカスタムクレームを用いた認証、Firestoreの書き込みをAdmin SDKに集約するセキュリティ戦略が網羅されています。",
+      "whyRecommended": "マルチテナント環境における認証、認可、データ分離の設計が非常に現実的かつ堅牢であるためです。特にSecurity Rulesをシンプルに保つための「クライアント書き込み禁止」という大胆な意思決定と、それに伴う考慮事項（カスタムクレームの反映タイミングなど）は、実開発で非常に役立つ知見です。",
+      "learningPoints": [
+        "Firebaseカスタムクレーム（organizationIdやrole）を利用することで、APIリクエストのたびにFirestoreを参照することなく、組織情報の確認が可能になる。",
+        "Firestoreのクライアントサイドからの書き込みを全て禁止し、サーバー側のAdmin SDK経由に集約することで、Security Rulesを簡素化しつつビジネスロジックを集約できる。",
+        "カスタムクレームを付与した後は、クライアント側の既存トークンをgetIdToken(true)で強制リフレッシュしなければ、新しい権限が即座に反映されない。",
+        "組織作成などの処理はFirestoreのトランザクションを用いて、組織ドキュメントと管理者ドキュメントの作成を原子的に実行する。",
+        "招待リンク不要の事前登録モデルを採用することで、リンクの有効期限管理コストを削減し、管理者によるユーザー一元管理を実現できる。"
+      ],
+      "signalsUsed": [
+        "firebase_auth_custom_claims",
+        "firestore_security_rules",
+        "multitenant_architecture",
+        "react"
+      ]
+    },
+    {
+      "articleId": "35518783320536a59d5b56498fd2f8aa639b462eb98873014533d6df5a2a4ed2",
+      "summary": "VercelとFastAPIを組み合わせた環境で長時間実行されるSSE（Server-Sent Events）を実装する際に直面する2つの主要な課題と、その解決策を解説しています。Vercelのタイムアウト制限回避やFastAPI特有の接続判定の罠など、リアルタイム通信の実装における具体的なノウハウを共有しています。",
+      "whyRecommended": "Vercelのサーバーレス制限やFastAPIのASGI仕様に起因する、実務でハマりやすいエッジケースが丁寧に解説されているため。構成の設計思想からコードレベルの修正まで示されており、同様の構成を検討しているエンジニアにとって非常に実践的です。",
+      "learningPoints": [
+        "VercelのHobbyプランにおける最大60秒の実行制限を回避するには、ブラウザからRenderなどのバックエンドへ直接SSE接続させる構成が必要である。",
+        "FastAPIのrequest.is_disconnected()は、POSTリクエストのボディを読み込んだ時点でTrueを返す場合があり、誤検知による接続切断を防ぐために使用を控えるべきである。",
+        "クライアントの実際の接続終了は、GeneratorExitやCancelledErrorをキャッチすることで正確に検知できる。",
+        "長時間の重い処理を行う際は、プロキシによるタイムアウトを防ぐために定期的にハートビートとなるSSEイベントを送信する必要がある。"
+      ],
+      "signalsUsed": [
+        "vercel_deployment_limitations",
+        "fastapi_asgi_quirks",
+        "sse_implementation",
+        "code_examples",
+        "edge_cases"
+      ]
+    },
+    {
+      "articleId": "72388c8cdcec85058cd990441119895617c64fbdcbfba478a703c2c4882f2a20",
+      "summary": "Next.jsの静的エクスポート（output: 'export'）で動的ルートのページが生成されない問題の原因と解決策を解説した記事です。fetch時のキャッシュ設定がNext.jsのレンダリング判断に与える影響と、デバッグの切り分けプロセスが詳細にまとめられています。",
+      "whyRecommended": "Next.jsのApp Router環境で静的エクスポートを行う際に遭遇しやすい「エラーが出ないのにページが生成されない」というハマりどころを、実体験ベースで論理的に解決しており、トラブルシューティングの参考として非常に価値が高いためです。",
+      "learningPoints": [
+        "Next.jsでoutput: 'export'を設定している場合、fetch関数にcache: 'no-store'を指定すると、そのルートが動的レンダリングが必要と判定され、静的ページ生成がスキップされる。",
+        "ビルド時のみAPIデータを取得してページを生成したい場合は、fetchにcache: 'force-cache'を指定して静的なデータ取得を行う必要がある。",
+        "GitHub Actionsでのビルド失敗調査において、pipefailが有効な環境ではパイプを使ったコマンド実行が後続処理を阻害するため、ログ確認時には注意が必要である。",
+        "原因不明のビルド問題に遭遇した際は、まず最小構成のテストを作成して問題箇所を特定する切り分け作業が有効である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "nextjs_app_router",
+        "static_site_generation",
+        "debugging_process",
+        "real_world_experience",
+        "failure_example"
+      ]
     }
   ]
 }
