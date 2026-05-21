@@ -2,7 +2,7 @@
   "version": 1,
   "recommendationContents": [
     {
-      "articleId": "zenn:12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
+      "articleId": "12e7e1d5ea0a88474e9633bc8b1744c412058fff6c4e3c2057acb286ef27cba1",
       "summary": "AIを用いた開発でコード品質を高め、AIの出力を安定させるためのCLAUDE.md/AGENTS.mdの活用法を紹介。",
       "whyRecommended": "AIを活用した開発ワークフローにおけるコード品質向上とレビューコスト削減に直結する実践的な手法を提供します。AIと連携する開発者必読です。",
       "learningPoints": [
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "articleId": "zenn:d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
+      "articleId": "d82ba5b52ec68bce23e12c7891ad3ab7198df9b8c1610911e165a5dc31d9042a",
       "summary": "Zephyr RTOS上でフルスペックのQt 6を動作させるための移植プロジェクト詳細。NXP MIMXRT1060-EVKをターゲットに、Qt for MCUsを使わず、QPAカスタマイズ、FreeType/HarfBuzz導入、OpenGL ESバックエンド移植など、低レベルからの実装プロセスと課題解決を解説。",
       "whyRecommended": "マイコン向けRTOS「Zephyr」でフル機能の「Qt 6」を動かすという、高度な組み込みシステム開発とGUIフレームワーク移植の具体例が詳細に解説されており、深い技術的知見が得られます。",
       "learningPoints": [
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "articleId": "zenn:3a18abd0cd47fefee6e348aae255b58b51abaf24722d1122ff79e518fdb1698f",
+      "articleId": "3a18abd0cd47fefee6e348aae255b58b51abaf24722d1122ff79e518fdb1698f",
       "summary": "Notion Developer Platformの新発表（Workers/Agents/CLI）を解説し、各機能が「誰にどのような恩恵をもたらすか」を整理した記事です。",
       "whyRecommended": "Notionの最新開発者プラットフォームの全容と、Workers、Agents、CLIといった各機能がターゲットとするユーザー層と提供価値を明確に理解できるため推薦します。",
       "learningPoints": [
@@ -71,7 +71,7 @@
       ]
     },
     {
-      "articleId": "zenn:6424a73ba44d1808f823190358018bdcfe263bd4b13ad4349b0a0ba912adc5b3",
+      "articleId": "6424a73ba44d1808f823190358018bdcfe263bd4b13ad4349b0a0ba912adc5b3",
       "summary": "Claude Codeの1000セッション分析を通じ、開発リードタイムを1週間で10%削減した事例。効果測定・分析手法から具体的な改善策まで紹介されています。",
       "whyRecommended": "AI/LLMを活用した開発効率化の実践事例として、データに基づいた改善プロセスと具体的な効果が示されており、開発者生産性向上に関心がある方に非常に参考になります。",
       "learningPoints": [
@@ -92,7 +92,7 @@
       ]
     },
     {
-      "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
+      "articleId": "73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
       "summary": "一人暮らしのネットワーク最適化に向け、OpenWrtとv6プラス（IPoE IPv4 over IPv6）の理論を解説。特にMAP-E方式の仕組みやアドレス変換の技術的詳細を深掘りします。",
       "whyRecommended": "自宅ネットワーク環境を最適化したい中〜上級者向け。v6プラスのMAP-E技術を深く理解したい方におすすめ。OpenWrt導入の技術的背景知識が身につきます。",
       "learningPoints": [
@@ -112,7 +112,7 @@
       ]
     },
     {
-      "articleId": "zenn:448c9d262ca3d9022ff61a377ee48a50b799ff3a439950804327f342d4c9dd64",
+      "articleId": "448c9d262ca3d9022ff61a377ee48a50b799ff3a439950804327f342d4c9dd64",
       "summary": "Terraformを用いた複数人開発において、dev環境での`terraform apply`競合を防ぎ、安全に運用するための具体的な手法を解説。ブランチごとにバックエンドを分けるアプローチとGitHub ActionsによるCI/CDワークフローを提案しています。",
       "whyRecommended": "複数人でTerraformを扱う際によく直面する開発環境での競合問題を、ブランチとバックエンドの分離、GitHub Actionsを活用した具体的なCI/CD戦略で解決する実用的な記事。開発の安全性と効率を向上させたい方に強くお勧めします。",
       "learningPoints": [
@@ -134,7 +134,7 @@
       ]
     },
     {
-      "articleId": "zenn:2c915f0eb6143cd1b15e5af2495403d722d3bd70eff9a982fefdff9b53f7ca63",
+      "articleId": "2c915f0eb6143cd1b15e5af2495403d722d3bd70eff9a982fefdff9b53f7ca63",
       "summary": "Claude CodeからCodex（GitHub Copilot ChatのCode Interpreter機能）への移行経験を解説。両ツールの機能比較、特にコード生成やデバッグにおける違い、設定のヒント、実際の使用感が詳細に書かれています。",
       "whyRecommended": "AIペアプログラミングツールの選定や活用に悩む開発者にとって、Claude CodeとCodexそれぞれの強みや移行時の注意点が具体的に解説されており、実践的な知見が得られます。",
       "learningPoints": [
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "articleId": "zenn:6424a73ba44d1808f823190358018bdcfe263bd4b13ad4349b0a0ba912adc5b3",
+      "articleId": "6424a73ba44d1808f823190358018bdcfe263bd4b13ad4349b0a0ba912adc5b3",
       "summary": "グロービスがClaude Codeの1000セッションを分析し、開発者生産性を向上させ、リードタイムを1週間で10%短縮した事例を紹介。そのアプローチ、実装、そして測定された結果について解説。",
       "whyRecommended": "AI/LLM（Claude Code）を開発ワークフローに統合し、具体的なパフォーマンス向上を達成した実用的な事例。データに基づいた洞察と明確な方法論が提供されており、AIエンジニアリングやDevOpsに関心のある中級・上級エンジニアにとって価値が高い。",
       "learningPoints": [
@@ -168,7 +168,7 @@
       ]
     },
     {
-      "articleId": "zenn:73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
+      "articleId": "73771741f649945e090c923f38b1a40320cc727b5044f3cbac5983c21e1331bb",
       "summary": "一人暮らしのネットワーク環境をOpenWrtとv6プラスで最適化する理論を解説。IPv6、IPoE、MAP-Eなどの基礎から、なぜOpenWrtを使うべきかを深く掘り下げます。",
       "whyRecommended": "v6プラスの仕組みとOpenWrt導入の理論的背景が非常に詳細に解説されており、自宅ネットワークを高度にコントロールしたいエンジニアや上級者にとって必読の内容です。シリーズ記事の第一弾としても期待が高まります。",
       "learningPoints": [
@@ -189,7 +189,7 @@
       ]
     },
     {
-      "articleId": "zenn:448c9d262ca3d9022ff61a377ee48a50b799ff3a439950804327f342d4c9dd64",
+      "articleId": "448c9d262ca3d9022ff61a377ee48a50b799ff3a439950804327f342d4c9dd64",
       "summary": "Terraformの複数人開発におけるdev環境での`terraform apply`競合問題を、ロックや強制上書きなしで安全に回す方法を解説。GitHub Actionsとブランチ戦略を用いた効率的な運用フローを提案しています。",
       "whyRecommended": "Terraformの複数人開発で直面しがちな`terraform apply`の競合問題を、具体的な解決策と共に示しています。環境を壊さずに安全に開発を進めるための実践的なアプローチが学べ、GitHub Actionsを活用したCI/CDワークフローの参考になります。",
       "learningPoints": [
@@ -208,7 +208,7 @@
       ]
     },
     {
-      "articleId": "zenn:2c915f0eb6143cd1b15e5af2495403d722d3bd70eff9a982fefdff9b53f7ca63",
+      "articleId": "2c915f0eb6143cd1b15e5af2495403d722d3bd70eff9a982fefdff9b53f7ca63",
       "summary": "Claude CodeからCodexへの移行体験記。ツールの特徴比較や設定の勘所、移行前に知っておくべき実用的な知見を解説しています。",
       "whyRecommended": "AIエージェントツールを比較検討している方にとって、実体験に基づいた設定のベストプラクティスや注意点が非常に参考になるため。",
       "learningPoints": [
@@ -224,7 +224,7 @@
       ]
     },
     {
-      "articleId": "zenn:e57fcc7134fdaa159bd1c60becf53e3c72c2f6376ca25050784f7c99bf812e80",
+      "articleId": "e57fcc7134fdaa159bd1c60becf53e3c72c2f6376ca25050784f7c99bf812e80",
       "summary": "エンジニアの認知戦略を「圧縮型」と「展開型」に分類する仮説に対し、その分類の危うさとチーム開発における本質的な課題を論じた批判的レビューです。設計原則がなぜ摩擦を生むのかを認知コストの観点から考察しつつ、安易な類型化がもたらすマネジメント上のリスクに警鐘を鳴らしています。",
       "whyRecommended": "エンジニア間のコミュニケーションギャップを認知科学的視点で捉える議論に対し、冷静な批判的思考を提供しているため。設計原則の意図やチーム開発における個人の役割認識を深めたいシニア層に最適な視点です。",
       "learningPoints": [
@@ -243,7 +243,7 @@
       ]
     },
     {
-      "articleId": "zenn:d3fc1959e1bd4f7d5e0700a6aa239f6224609c95389879e15f21ef0427413027",
+      "articleId": "d3fc1959e1bd4f7d5e0700a6aa239f6224609c95389879e15f21ef0427413027",
       "summary": "AlgoliaからセルフホストのElasticsearchへ移行し、アイヌ語コーパスの検索機能を実現するまでの技術的な試行錯誤をまとめた記事です。辞書やプラグインを自作せずに標準機能と設定の組み合わせで検索精度を追求する手法が解説されています。",
       "whyRecommended": "コスト削減を目的とした移行において、検索の品質を落とさずにどのようにクエリを調整していくべきか、現場の実践的な知見が詰まっているため。特にマイナー言語やコーパス検索など、特殊な要件に対するElasticsearchのチューニング事例として非常に参考になります。",
       "learningPoints": [
@@ -261,7 +261,7 @@
       ]
     },
     {
-      "articleId": "zenn:fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
+      "articleId": "fa6282d9461d7cc3d1fe1250efdf9a37202ad87efbe29e83c38531464afbd2b8",
       "summary": "Nix Flakesの依存解決で発生するGitHub APIのレートリミット超過問題を、アクセストークンを用いて緩和する方法を解説しています。コマンドライン引数、設定ファイル、環境変数という複数の設定手法が紹介されています。",
       "whyRecommended": "Nixユーザーが開発中に直面する典型的なインフラ制限問題を、具体的かつ実践的な解決策でカバーしており、セキュリティを考慮した設定方法まで網羅されているため。",
       "learningPoints": [
@@ -278,7 +278,7 @@
       ]
     },
     {
-      "articleId": "zenn:049908866a1b9e6d27f116c92891dc72ec72106f3f5d39844e61e5ddd7f4fad6",
+      "articleId": "049908866a1b9e6d27f116c92891dc72ec72106f3f5d39844e61e5ddd7f4fad6",
       "summary": "Oklch色空間の彩度軸をNaka-Rushton関数で圧縮することで、CIEDE2000と同等以上の精度を3パラメータで達成した色差改善モデル「Oklch+」の構築記録です。さらに、このパラメータを応用した色相変調や色域マッピングによる実用的なグラデーション補間手法についても解説しています。",
       "whyRecommended": "色空間の理論的背景に基づいた厳密な検証と、フロントエンドの実用的な課題解決を両立しているためです。実装コードまで直結する深い技術的知見が共有されており、CSSグラデーションの質を高めたいエンジニアにとって極めて有用な知見です。",
       "learningPoints": [
@@ -298,7 +298,7 @@
       ]
     },
     {
-      "articleId": "zenn:6d1c854469f57ee2d87b43515cbf8e7d8e4d3860d40a40028c3a5e8c7cffe71d",
+      "articleId": "6d1c854469f57ee2d87b43515cbf8e7d8e4d3860d40a40028c3a5e8c7cffe71d",
       "summary": "Reactコンポーネントを用いてOGP画像を動的生成する手法を解説した実践ガイドです。Satoriとresvg-jsを組み合わせ、日本語の適切な改行処理やメモリ制約への対策を含めた堅牢な実装方法が学べます。",
       "whyRecommended": "OGP画像生成における主要な落とし穴（フォント形式やメモリ消費量など）が詳細に網羅されており、特に実運用環境でのパフォーマンスと安定性を考慮した設計を学びたい方に最適です。",
       "learningPoints": [
@@ -317,7 +317,7 @@
       ]
     },
     {
-      "articleId": "zenn:6e7510bfe9d6c687d07d0f039a89fdb5afbdd50c1ee89d6bba204a24545d0ea7",
+      "articleId": "6e7510bfe9d6c687d07d0f039a89fdb5afbdd50c1ee89d6bba204a24545d0ea7",
       "summary": "決済システムのような高整合性が求められる領域において、DDDの原則である「1トランザクション1集約」をあえて破り、初期化フェーズで強一貫性を確保する設計判断の妥当性について解説しています。原則の遵守と実務上のリスク判断を使い分けることの重要性を説いています。",
       "whyRecommended": "DDDの理想論と、本番環境での運用コストやデータ不整合という「現実の壁」を天秤にかけた、極めて実践的なアーキテクチャ判断が学べるためです。決済という堅牢性が求められるドメインにおける設計指針として非常に参考になります。",
       "learningPoints": [
@@ -335,7 +335,7 @@
       ]
     },
     {
-      "articleId": "zenn:2adfcafe87288d201d63b09b5b975c9afa09c369d3b95277ddae5e2548ef7fb1",
+      "articleId": "2adfcafe87288d201d63b09b5b975c9afa09c369d3b95277ddae5e2548ef7fb1",
       "summary": "Next.js App Routerを用いた個人開発プロダクトにおいて、4週間かけて行ったSEO改善の実践記録です。構造化データの導入、AIクローラー向けの設定、計測の自動化を通じて検索エンジンの認知向上を目指した過程を解説しています。",
       "whyRecommended": "Next.jsの最新機能を活用したSEO対策の具体例として非常に実用的であり、特にAI検索時代の新しい最適化手法（GEO）や計測の自動化までカバーしている点が技術的にも非常に有益だからです。",
       "learningPoints": [
@@ -355,7 +355,7 @@
       ]
     },
     {
-      "articleId": "zenn:419f69dd3e072b7584719c14608a857aac9c7021d6dbf93c0434e0e7d6e072fe",
+      "articleId": "419f69dd3e072b7584719c14608a857aac9c7021d6dbf93c0434e0e7d6e072fe",
       "summary": "Rustを用いてDNSリゾルバを実装しながら、DNSが抱える仕組みの脆弱性やプロトコルの特性を深く理解する実践的な解説書です。実装を通じて、キャッシュ戦略や再帰的問い合わせにおけるエラー処理、ネットワークプロトコル特有の故障パターンを体系的に学習できます。",
       "whyRecommended": "DNSという古典的かつ複雑なプロトコルをRustによる実装を通じて学べるため、ネットワークエンジニアやRustによる低レイヤー開発に興味がある層にとって非常に実践的で質の高い教材です。",
       "learningPoints": [
@@ -374,7 +374,7 @@
       ]
     },
     {
-      "articleId": "zenn:747b4e71bbd7b2a5af0f4c27a7100c4add74277d0726aa169fa37b5282b7d471",
+      "articleId": "747b4e71bbd7b2a5af0f4c27a7100c4add74277d0726aa169fa37b5282b7d471",
       "summary": "Rustを用いて実行可能なELFバイナリを出力する小さなリンカーをゼロから自作する実践的な技術書です。ELFヘッダーの解析からシンボル解決、再配置処理まで、リンカーの核心的な動作原理をステップバイステップで実装します。",
       "whyRecommended": "リンカーという低レイヤー技術をRustの強力な型安全性を活かして実装するプロセスは、システムプログラミングの理解を深める上で非常に価値が高いためです。",
       "learningPoints": [
@@ -391,7 +391,7 @@
       ]
     },
     {
-      "articleId": "zenn:ffdf940ffdf06f6400a3649a663db25819bc0281b8efd6bcfbe824a72ec32980",
+      "articleId": "ffdf940ffdf06f6400a3649a663db25819bc0281b8efd6bcfbe824a72ec32980",
       "summary": "画像リサイズ処理における「補間アルゴリズム」の仕組みと特徴を解説した記事です。用途に応じて適切なアルゴリズムを選択することが、画質や処理負荷の最適化に繋がります。",
       "whyRecommended": "ライブラリのデフォルト設定を鵜呑みにせず、内部アルゴリズムの違いを理解することで、フロントエンドや機械学習の精度改善に直結する重要な知識が得られるためです。",
       "learningPoints": [
@@ -408,7 +408,7 @@
       ]
     },
     {
-      "articleId": "zenn:1fef5bc987e57c55eb640010811ee084e6b91bf910ec8b9bd1fde6fd532b73f5",
+      "articleId": "1fef5bc987e57c55eb640010811ee084e6b91bf910ec8b9bd1fde6fd532b73f5",
       "summary": "IMEの変換候補をJavaScriptで直接取得することは不可能なため、自前で辞書データを用意して「読み」による前方一致検索を実装する方法を解説しています。日本語入力特有のcompositionイベントやdebounceを活用し、ブラウザの垣根を超えた安定したサジェスト機能を構築するノウハウをまとめています。",
       "whyRecommended": "フロントエンド開発において避けて通れない「日本語入力中のイベントハンドリング」という難所を、実務的な解法で解決しているためです。セキュリティ上の制約を理解し、代替案として検索アルゴリズムを実装するプロの思考プロセスが学べます。",
       "learningPoints": [
@@ -427,7 +427,7 @@
       ]
     },
     {
-      "articleId": "zenn:ad9c2ab8f4c1abf751248dcfd771e16ea328841f4127de2ce7c5b68a32bdca31",
+      "articleId": "ad9c2ab8f4c1abf751248dcfd771e16ea328841f4127de2ce7c5b68a32bdca31",
       "summary": "Rustのunsafeキーワードが持つ役割と、適切に活用するためのベストプラクティスを解説する記事です。安全性を損なわないためのラップ手法や、逆に未定義動作を引き起こす危険なコード例まで具体的に紹介しています。",
       "whyRecommended": "Rustにおけるメモリ安全性の境界線と、FFIやパフォーマンス追求の現場で不可欠となるunsafeの扱い方を実践的に学べるためです。中級者向けに、単なる構文解説に留まらない「安全性への責任」という本質的な考え方がまとめられています。",
       "learningPoints": [
@@ -447,7 +447,7 @@
       ]
     },
     {
-      "articleId": "zenn:add8b29a0fd54bd02e3888aee1b87801a44f213ca8957e0a6ca80f0dc31ca5dc",
+      "articleId": "add8b29a0fd54bd02e3888aee1b87801a44f213ca8957e0a6ca80f0dc31ca5dc",
       "summary": "GitHub CLIをバックエンドに組み込み、効率的なPull Requestレビューを実現するデスクトップアプリの制作事例を紹介しています。Wailsを採用し、GoとTypeScriptを用いた軽量で開発しやすい構成を選択しました。",
       "whyRecommended": "デスクトップアプリのフレームワーク選定における比較軸が明確であり、CLIを活用したツール開発という実践的な視点がエンジニアの生産性向上に直結するため。",
       "learningPoints": [
@@ -465,7 +465,7 @@
       ]
     },
     {
-      "articleId": "zenn:79d6c1fc1c19da9042623bb9cc95eb97b51be770f5528fbca9f36541b1d58d40",
+      "articleId": "79d6c1fc1c19da9042623bb9cc95eb97b51be770f5528fbca9f36541b1d58d40",
       "summary": "検索リランクモデルの改善がプラットフォーム全体の売上を向上させた事例を基に、検索と推薦の売上カニバリゼーションのメカニズムを分析しています。表面的なKPIの変化だけでなく、ユーザーの転換プロセスを構造的に理解することの重要性を解説した記事です。",
       "whyRecommended": "データ分析に基づいたビジネス貢献とプロダクト改善の論理構成が非常に質高く、検索・推薦システムを開発するエンジニアにとって、評価指標を設計する際の有益なガイドとなるため。",
       "learningPoints": [
@@ -483,7 +483,7 @@
       ]
     },
     {
-      "articleId": "zenn:1e0e6d53dc6f213c5e967738a49677b6ce2a1b3a5e8dac599f04bc1785f564bf",
+      "articleId": "1e0e6d53dc6f213c5e967738a49677b6ce2a1b3a5e8dac599f04bc1785f564bf",
       "summary": "柔軟な動的設計はシステムの寿命を延ばしますが、それは往々にして運用現場への認知負荷という形でコストを転嫁しています。真に優れたシステムには、汎用的なコア層と、それぞれのユースケースに特化して使いやすさを担保するUI層の分離が不可欠であると説いています。",
       "whyRecommended": "技術的な柔軟性を追求した先にある「運用の現実」という、シニア層が直面する本質的なトレードオフが深く洞察されており、アーキテクチャ設計の質を高めるための示唆に富んでいるため。",
       "learningPoints": [
@@ -502,7 +502,7 @@
       ]
     },
     {
-      "articleId": "zenn:a74e54c70c96d6a1c32a955a3ec243ec4ef3e011c28dce9f7cbc4c9d8b5a0175",
+      "articleId": "a74e54c70c96d6a1c32a955a3ec243ec4ef3e011c28dce9f7cbc4c9d8b5a0175",
       "summary": "WebAssemblyとThree.jsを活用し、ブラウザ上で動作する高機能なIFCビューアおよび干渉チェックツールを開発した事例です。大規模な3D建築モデルを扱う際のUIフリーズ対策やレイキャスト高速化などの技術的課題と、その解決策が具体的にまとめられています。",
       "whyRecommended": "フロントエンドで重厚なBIMデータを扱うための技術的な最適化手法（WASM、Octree、BVH）が実践的に解説されており、パフォーマンスチューニングの参考になる良記事だからです。",
       "learningPoints": [
@@ -520,7 +520,7 @@
       ]
     },
     {
-      "articleId": "zenn:5c302b2d8d710bf98ae4b6e03e3c12a2bec3b922549a542d69cfab64ce78561f",
+      "articleId": "5c302b2d8d710bf98ae4b6e03e3c12a2bec3b922549a542d69cfab64ce78561f",
       "summary": "Legend-Stateを使用した、ブラウザのオンライン/オフライン状態を監視する実装パターンを紹介する記事です。SSR環境を考慮した安全な監視関数の実装から、Reactコンポーネントでの利用方法までを解説しています。",
       "whyRecommended": "状態管理ライブラリを活用した、実用的で再利用性の高いフロントエンドの実装パターンが簡潔にまとめられているため、技術スタックのモダン化を検討しているエンジニアに適しています。",
       "learningPoints": [
@@ -538,7 +538,7 @@
       ]
     },
     {
-      "articleId": "zenn:d3d2621485237c2e1f0b9483ddf3f7397a462efafbc166e29004a965628a3df8",
+      "articleId": "d3d2621485237c2e1f0b9483ddf3f7397a462efafbc166e29004a965628a3df8",
       "summary": "Reactの仕組みやSPAの挙動を、ゼロから徹底的に解説する初心者向け記事です。DOM操作やVirtual DOM、Stateの役割など、Reactの本質を直感的に理解できます。",
       "whyRecommended": "Reactの技術的な背景と挙動が極めて論理的かつ図解的に説明されており、初学者が陥りやすい「ブラックボックス化」を防ぐ良質な基礎学習資料であるため。",
       "learningPoints": [
@@ -558,7 +558,7 @@
       ]
     },
     {
-      "articleId": "zenn:3dbb4ad987c070348956f798c028edc1f01032ee7c460a0822dc763cdaeb8192",
+      "articleId": "3dbb4ad987c070348956f798c028edc1f01032ee7c460a0822dc763cdaeb8192",
       "summary": "PlaywrightのstorageState機能を使用して、ログイン済み状態をJSONファイルとして保存し、テスト間で使い回す方法を解説しています。ログイン処理をセットアップとして分離することで、テスト実行の高速化を実現します。",
       "whyRecommended": "E2Eテストのボトルネックになりがちなログイン処理を効率化する実用的なテクニックであり、Playwrightのプロジェクト構成におけるベストプラクティスが簡潔にまとめられているためです。",
       "learningPoints": [
@@ -575,7 +575,7 @@
       ]
     },
     {
-      "articleId": "zenn:9bb0e64237e3b61a1d2ece46754725e4088e09ec3c999ba183f22ab625aa87b6",
+      "articleId": "9bb0e64237e3b61a1d2ece46754725e4088e09ec3c999ba183f22ab625aa87b6",
       "summary": "OpenAPI生成ツール4選（openapi-typescript, hey-api, Orval, Kubb）を、実務規模のスキーマを用いて比較・検証した技術記事です。各ツールの設計思想や生成物の特徴、lintやエラーモデルの扱いの違いを深掘りし、プロジェクトに応じた選定基準を提示しています。",
       "whyRecommended": "フロントエンド開発においてOpenAPIの自動生成は必須級ですが、ツールの選定は「何を実現したいか」の思想に依存します。本記事は実務レベルの規模でのベンチマークやLintの挙動まで含めた定量的かつ実戦的な比較を行っており、アーキテクチャの意思決定に非常に有益なため推奨します。",
       "learningPoints": [
@@ -594,7 +594,7 @@
       ]
     },
     {
-      "articleId": "zenn:0ca11cb28ba022802e4ea4bec250c34b159473032abc1d03c4e80bf33bea1e1f",
+      "articleId": "0ca11cb28ba022802e4ea4bec250c34b159473032abc1d03c4e80bf33bea1e1f",
       "summary": "7,500ファイルを超える大規模TypeScriptプロジェクトにおいて、React Compilerを段階的に導入した事例です。全ファイル一括適用ではなくannotationモードとOxlintによるlint体制を組み合わせることで、リスクを制御しながら最適化を進める戦略を紹介しています。",
       "whyRecommended": "大規模プロジェクトでReact Compilerを安全に導入するための現実的なワークフローと、Oxlintを活用した高度なlint戦略が具体的に解説されており、実務での適用可能性が非常に高いため。",
       "learningPoints": [
@@ -612,7 +612,7 @@
       ]
     },
     {
-      "articleId": "zenn:56a331d481610b86821a169062373ef4139d7c5b80c65f6b60f8816bdcdeb085",
+      "articleId": "56a331d481610b86821a169062373ef4139d7c5b80c65f6b60f8816bdcdeb085",
       "summary": "複雑な決済ドメインを支えるため、アプリケーション層だけでなくDBスキーマレベルでStrategyパターンを適用する設計手法を紹介しています。基底テーブルとドメイン固有の派生テーブルを分けることで、NULLだらけの「幽霊カラム」を排除し、拡張性の高い堅牢なデータ構造を実現しました。",
       "whyRecommended": "ドメイン駆動設計の実践として、アプリ層の抽象化がDBの複雑さに追いつかなくなるという現場特有の課題に対して、物理的なテーブル設計で解決を図るというエンジニアリングの解像度が高い記事であるため。",
       "learningPoints": [
@@ -627,6 +627,65 @@
         "domain_driven_design",
         "architecture_explanation",
         "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "95cb5ae38496bc4bfc9d9e7da95567cfcd7c8186f857d5f5bb0854331c3ba042",
+      "summary": "AIペアプログラミングを活用して開発した家計簿SaaSの公開過程で、開発者が遭遇した本番特有の技術的トラブルとその解決策を解説しています。AI任せではない「人間による意思決定」と「泥臭いデバッグ」が、個人開発を完遂させる鍵であることを示しています。",
+      "whyRecommended": "技術スタックが現代的で、実務で遭遇しやすいSupabaseやVercel特有のランタイム環境の罠に焦点を当てています。単なる成功談ではなく、エラーメッセージの深掘りと解決プロセスが詳細に記述されており、技術的な成長を目指す中級者に非常に有益です。",
+      "learningPoints": [
+        "Vercel FunctionsでESMとCJSの設定が混在するとランタイムエラーが発生するため、tsconfigとpackage.jsonの整合性を確認する必要があります。",
+        "SupabaseのRLSポリシー内で自テーブルを参照するクエリは無限再帰を引き起こすため、SECURITY DEFINER属性を付与した関数でバイパスするのが定石です。",
+        "PostgRESTでINSERTと同時にSELECTを行う場合、作成したレコードをSELECTポリシーで読み取れる状態にしておかないと403エラーが発生します。",
+        "AIにコードを書かせる際、命名や美容的判断、プロダクト視点でのエラーハンドリングなど、人間による「最後の5%」の意思決定が品質を左右します。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "supabase_rls_patterns",
+        "vercel_runtime_configuration",
+        "ai_assisted_coding_workflow"
+      ]
+    },
+    {
+      "articleId": "a647cd5535856b5a798c78dbbcc6078f0e3d2e7d50856a648d9c79b629bc6a3e",
+      "summary": "NFCタグを活用したデジタル名刺をNext.jsとAWSの静的ホスティング環境で構築し、ほぼ運用コストゼロを実現した事例です。OIDCによるセキュアなGitHub ActionsデプロイやTerraformでのインフラ管理手法が具体的に解説されています。",
+      "whyRecommended": "技術選定の理由が明確で、静的サイト配信におけるベストプラクティス（S3+CloudFront+OAC）と、現代的なDevOps手法（GitHub OIDC、IaC）を個人開発の規模感で実践する際のテンプレートとして非常に優秀だからです。",
+      "learningPoints": [
+        "AWSのCloudFrontには月間1TBまでのデータ転送無料枠があり、ポートフォリオなどの小規模サイトであれば運用コストをほぼゼロに抑えられる。",
+        "Next.jsの静的生成（static export）では、ファイル名にコンテンツハッシュが含まれるため、ビルド生成物（/_next/static/）は1年間のキャッシュ設定を適用しても問題ない。",
+        "AWSへのCI/CDデプロイにはIAMユーザーの長期キーではなく、GitHub OIDCを用いた一時的な権限委譲を採用することでセキュリティリスクを大幅に低減できる。",
+        "TerraformによるIaC運用では、S3とDynamoDBをバックエンドに利用して状態管理を行うことで、破壊的変更の防止と再現性の確保が可能になる。",
+        "AWS Budgetsで月額1ドルなどの低い閾値で予算アラートを3段階（実績・予測）設定しておくことで、クラウド運用における意図しない課金を未然に防げる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "web_development",
+        "devops",
+        "aws_infrastructure",
+        "terraform",
+        "github_actions",
+        "nfc_technology",
+        "cost_optimization"
+      ]
+    },
+    {
+      "articleId": "2282c4c896f3b0dde8d24983b85ad3f5c0af14007bb8607939cf650a057ab1f6",
+      "summary": "複数集約をまたぐ処理を単一のDBトランザクションで囲むべきではない理由を、ドメイン駆動設計と運用の観点から解説した記事。強整合と弱整合を適切に分離し、結果整合を用いた設計へ移行するための判断軸を論じています。",
+      "whyRecommended": "DDDにおける集約の境界設計という概念的なトピックを、RDBのロック機構やパージ遅延といった具体的な運用リスクと結びつけて解説しており、設計と運用の妥当性を深く検証したいシニアエンジニアにとって非常に有益なため。",
+      "learningPoints": [
+        "複数集約を恒常的に同一のDBトランザクションで更新しなければならない場合、設計上の集約境界が間違っている可能性が高い。",
+        "長期間保持されるDBトランザクションは、MySQLのパージ処理を遅延させ、History list lengthを増加させてクエリの遅延や運用負荷を増大させる。",
+        "複数の集約をまたぐトランザクションは、ロック獲得順序が異なる場合にデッドロックを引き起こすリスクが構造的に含まれる。",
+        "複数集約をまたぐユースケースは、強整合ではなく、結果整合とプロセスマネージャーによる補償アクションを用いて設計するのが望ましい。",
+        "処理中や補償中のデータといった中間状態は、読み取りモデルで公開範囲を制御することで、通常の利用者ビューへの影響を回避できる。"
+      ],
+      "signalsUsed": [
+        "domain_driven_design",
+        "database_transaction_management",
+        "performance",
+        "architecture_decision_support",
+        "saga_pattern"
       ]
     }
   ]
