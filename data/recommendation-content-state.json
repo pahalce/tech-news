@@ -742,6 +742,59 @@
         "real_world_experience",
         "failure_example"
       ]
+    },
+    {
+      "articleId": "5c521ad5728e5122bf4a3037550f92bc6916c8be1f87764fc1508ffd7d7333c5",
+      "summary": "Googleの「Modern Web Guidance」に基づいた、モダンCSSの実装ガイドラインです。レイアウト手法からセレクタ、インタラクティブな要素の適切なDos/Don'tsが網羅されています。",
+      "whyRecommended": "フロントエンドエンジニアが迷いがちな「モダンCSSの正しい使い方」をGoogleの公式知見ベースで確認できるため、実装の品質向上や標準化に直結します。",
+      "learningPoints": [
+        "レイアウトの余白管理には、物理プロパティではなく論理プロパティ（margin-inline-startなど）を優先して使用する。",
+        "Flexboxの要素間隔はmarginではなくgapプロパティを使い、要素の伸縮設定にはflex一括指定を利用する。",
+        "カードグリッドなどのレスポンシブ対応には、メディアクエリの代わりにgrid-template-columns: repeat(auto-fit, minmax(200px, 1fr))を使用する。",
+        "フォーカスリングの制御には:focusではなく、キーボード操作時のみ反応する:focus-visibleを利用する。",
+        "切り抜きを行いたいだけの目的であれば、スクロールコンテナを生成してしまうoverflow: hiddenではなくoverflow: clipを採用する。"
+      ],
+      "signalsUsed": [
+        "css_best_practices",
+        "modern_css",
+        "dos_and_donts"
+      ]
+    },
+    {
+      "articleId": "cdf661e142a6893f49e01f9d96f987dd8a24d1914eb6f6eea77bdacae0829e2a",
+      "summary": "スクロール連動UIにおいてIntersectionObserverを使用すると、高速スクロール時にイベントが欠落したり状態が正しく反映されない問題が発生します。本記事では、常にビューポート中央との距離を計測する「状態駆動」のアプローチを採用することで、これらの挙動を解決する方法を解説しています。",
+      "whyRecommended": "フロントエンド開発において頻出する「スクロール連動UI」の技術的な落とし穴を、具体的なトラブルシューティングの過程を通して学べるため。性能問題への対処としてrequestAnimationFrameを利用した適切な間引き処理など、実務で即戦力となる実装パターンが網羅されています。",
+      "learningPoints": [
+        "IntersectionObserverは高速スクロール時に複数の判定がまとめて処理され、順序が保証されないため状態が飛ぶことがある。",
+        "変化点だけを監視するイベント駆動型ではなく、常に現在の要素位置を計算する状態駆動型に切り替えることで、取りこぼしを防げる。",
+        "scrollイベントとrequestAnimationFrameを組み合わせることで、不要な再描画を抑えつつスムーズなUI制御が可能になる。",
+        "active状態を更新する前に現在の値と比較することで、DOM操作の回数を最小限に抑えパフォーマンスを最適化できる。",
+        "IntersectionObserverは要素の出現検知には適しているが、連続的かつ正確な状態反映を求めるUIには向かない場合がある。"
+      ],
+      "signalsUsed": [
+        "intersection_observer_limitation",
+        "scroll_event_optimization",
+        "request_animation_frame"
+      ]
+    },
+    {
+      "articleId": "8a4cb6fa8c4c64681d5d170403e393fc2e4834f90fb7cb2b1ce31cd4beff41c5",
+      "summary": "React環境で@cyntler/react-doc-viewerを使用する際に発生するPDFの日本語表示問題を解決する方法を解説した記事です。レンダリング部分のみをreact-pdfに差し替える独自の実装パターンを紹介しています。",
+      "whyRecommended": "ライブラリを丸ごと置き換えるのではなく、既存のツールを活かしつつ特定の課題だけを最適化する実践的なアプローチが学べるため、保守性の高い実装を好むエンジニアに最適です。",
+      "learningPoints": [
+        "react-pdfで日本語を表示するために必要なcmapsとstandard_fontsをpublicディレクトリにコピーして配布する。",
+        "pdfjs-distのバージョンをreact-pdfが要求するものと完全に一致させることで、Workerのバージョン不一致エラーを防ぐ。",
+        "Viteの?urlインポートを利用してpdf.worker.min.mjsを適切なURLとして読み込む。",
+        "@cyntler/react-doc-viewerのRendererリストをフィルタリングして、特定のファイル形式のみ独自コンポーネントに差し替える。",
+        "PDFの先読みによる競合を避けるため、独自レンダラーのfileLoaderを明示的にno-op（空の処理）にする。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "react",
+        "typescript",
+        "vite_configuration",
+        "pdf_rendering_issue"
+      ]
     }
   ]
 }
