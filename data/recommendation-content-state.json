@@ -795,6 +795,64 @@
         "vite_configuration",
         "pdf_rendering_issue"
       ]
+    },
+    {
+      "articleId": "fc404d61e24a70f3a15b491dc84435daebd066266f954d83692752a82d7ee40e",
+      "summary": "本書は、類似した画面や機能が大量に存在するエンタープライズ開発において、共通化の限界を突破する「Feature Registryパターン」を解説しています。UIの差分を定義オブジェクトとして切り出し、共通の実行基盤に渡すことで、保守性と拡張性を両立させる設計手法を紹介します。",
+      "whyRecommended": "大規模なReact開発において、コンポーネントの肥大化やロジックの重複に悩むエンジニアにとって、実装の「責務」を定義に分離するという考え方は非常に実践的です。AIとの相性も含めた将来的なフロントエンド設計の視点が含まれており、アーキテクチャ設計のレベルアップに最適です。",
+      "learningPoints": [
+        "画面のルーティング情報、データ取得用Hooks、列定義、UIパーツのレンダリングを一つの定義オブジェクトにまとめることで、Containerコンポーネントを排除できる。",
+        "Feature RegistryパターンはContainer/Presentationパターンを置き換えるものではなく、それらを上位から管理するためのレイヤーとして機能する。",
+        "定義オブジェクトを型安全に構築することで、AIによる新しい画面の実装コード生成の精度と開発効率が大幅に向上する。",
+        "共通化しようとすると複雑になりがちな集約ごとのAPI用Hooksはあえて共通化せず、定義ファイル内に直接差し込むことで保守性を保つ。",
+        "UIの実装を直接記述するのではなく、差分を定義して共通基盤に実行させる設計は、Server Driven UIやGenerative UIに近い現代的なアプローチである。"
+      ],
+      "signalsUsed": [
+        "architecture_explanation",
+        "reusable_implementation_pattern",
+        "deep_technical_explanation",
+        "enterprise_development",
+        "design_pattern"
+      ]
+    },
+    {
+      "articleId": "2d3a28d64977cdb9b2e29c6ecb9625e3bec786749d82302c6167787b16ec9350",
+      "summary": "開発者が「データが端末から外に出ない」ことを重視し、サーバーレス・完全無料の家計簿PWAを開発した技術的・思想的記録。IndexedDBによる状態管理から、AI連携をクリップボード経由で行う工夫まで、個人開発における設計判断が網羅されています。",
+      "whyRecommended": "フロントエンド技術の選定理由が明確であり、特に「クラウドに頼らない」という制約下での状態管理やテスト戦略が、実用的なSPA開発の参考になるためです。",
+      "learningPoints": [
+        "Dexie 4とuseLiveQueryを組み合わせることで、サーバー側状態なしでもIndexedDBをSingle Source of Truthとしてリアクティブな状態管理ができる。",
+        "AI連携において、アプリ側でCSVを生成し、クリップボード経由でユーザーが手動でAIに渡すことで、サーバー運営コストとデータプライバシーの問題を回避できる。",
+        "UUIDではなくULIDを採用することで、時系列順のソート性を維持しつつユニークIDを生成できる。",
+        "fake-indexeddbとhappy-domを組み合わせることで、ブラウザを起動せずとも高速かつ信頼性の高いDBレイヤーのテストが可能になる。",
+        "OG画像の生成に@resvg/resvg-jsを使用してSVGから動的にPNGを生成することで、デザインリソース作成の手間を排除できる。"
+      ],
+      "signalsUsed": [
+        "pwa_development",
+        "indexeddb_usage",
+        "privacy_first_design",
+        "deep_technical_explanation",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "a75f7d9230fa290a0ceba3bc8a4019567640ed84c477df24401819899196fd59",
+      "summary": "本書は、トランザクション境界をRepositoryではなくUseCase層に配置すべき理由を解説する技術記事です。Unit of Workパターンの抽象化によるテスト容易性の向上と、業務の整合性を保つための設計指針をPythonのコードを例に示しています。",
+      "whyRecommended": "DDDやクリーンアーキテクチャを採用する際、多くの開発者が直面する「トランザクション管理の責務」という難所を、コード例と共に具体的に解消しているためです。現場で再利用可能なパターンとして実用性が高い良記事です。",
+      "learningPoints": [
+        "Repositoryごとにトランザクションを貼ると、複数の集約をまたぐ操作で整合性が担保できず、一部の更新だけが確定してしまう不整合が起きる。",
+        "Unit of Workパターンを活用し、UseCase層でトランザクションを管理することで、複数のRepositoryに対する操作をひとつの業務単位としてatomicに実行できる。",
+        "Unit of Workを抽象化することで、本番環境ではSQLAlchemy、テスト環境ではインメモリ実装へ差し替えることが容易になり、テスト速度が向上する。",
+        "Pythonのコンテキストマネージャ（async with）を利用することで、try/exceptによる冗長なトランザクション制御コードを簡潔に記述できる。"
+      ],
+      "signalsUsed": [
+        "backend",
+        "web_development",
+        "architecture_explanation",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "unit_of_work_pattern",
+        "ddd"
+      ]
     }
   ]
 }
