@@ -853,6 +853,57 @@
         "unit_of_work_pattern",
         "ddd"
       ]
+    },
+    {
+      "articleId": "823caac6a105d9915624c5e2353d89def2f1231e95bd4d298948e7398754683d",
+      "summary": "本書は、XSSによるトークン盗難リスクを防ぐためのフロントエンドにおける強固なセッション管理手法を解説しています。Web Crypto APIとIndexedDBを組み合わせ、抽出不可能な秘密鍵を用いたDPoP（Demonstrating Proof-of-Possession）の実装方法を紹介します。",
+      "whyRecommended": "CookieやLocalStorageに依存しない、Web標準技術を活用した現代的なセキュリティアーキテクチャが具体的に示されているため、高レベルなフロントエンド実装を目指すエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "Web Crypto APIで秘密鍵を生成する際、extractableオプションをfalseに設定することで、JavaScriptコードから秘密鍵のデータを外部へ送信不可能にできる。",
+        "IndexedDBはStructured Clone Algorithmに対応しているため、抽出不可能なCryptoKeyオブジェクトをそのまま保存・復元できる。",
+        "DPoP（RFC 9449）を利用してAPIリクエストに署名を付与することで、アクセストークンそのものを盗まれても攻撃者がリクエストを再利用できないように保護できる。",
+        "公開鍵から導出されるthumbprintをセッションIDとして利用すれば、トークン発行プロセスを介さずにCookieレスで安全なセッション管理を実現できる。"
+      ],
+      "signalsUsed": [
+        "web_crypto_api",
+        "dpop_rfc9449",
+        "indexeddb_storage"
+      ]
+    },
+    {
+      "articleId": "071ac51a54f9640fa26ba433613df92b94ad4dc4a4425c27031ea20f559090f9",
+      "summary": "Stripe SDK v21以降でVercelサーバーレス環境を使用する際に発生するHTTP通信エラーの解決策を解説した記事です。Stripe連携において必須となるHttpClientの設定や、安全な決済検証フロー、Webhook実装時の注意点を網羅しています。",
+      "whyRecommended": "Vercelのサーバーレス環境特有のランタイム制約と最新のStripe SDKの仕様を紐付けた実践的なトラブルシューティングであり、個人開発でStripeを安全に導入するためのチェックリストとして非常に品質が高いため。",
+      "learningPoints": [
+        "Stripe SDK v21以上をVercel環境で動かす際は、Stripeの初期化時にhttpClientへcreateFetchHttpClient()を指定する必要がある。",
+        "決済結果の検証をクライアントサイドのURLパラメータで行うと改ざんされるリスクがあるため、必ずサーバーサイドでStripe APIを叩いてpayment_statusを確認する。",
+        "Next.jsのApp RouterでWebhookを受け取る際は、req.json()ではなくreq.text()でraw bodyを取得しないと署名検証が失敗する。",
+        "WebhookからSupabaseへデータを書き込む際は、RLSを回避して確実に行うためにservice_role keyを使用し、このキーは絶対にフロントエンドに露出させてはならない。",
+        "決済完了後のブラウザ離脱による不整合を防ぐため、session_idをlocalStorageに保存し、次回起動時に再検証するフォールバックロジックを実装するのが有効である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "stripe_sdk",
+        "vercel_serverless",
+        "supabase_integration"
+      ]
+    },
+    {
+      "articleId": "6e7f254da039d5fe447ec211eacfbdabcd9c5ca3abe76c5358ba6f8acaccc300",
+      "summary": "投球記録アプリの開発を通じて、派生値を独立したstateとして保持していたことがundo機能の実装を困難にしていた事例を紹介しています。Single Source of Truthに基づき、元データから派生値を導出する設計への変更により、状態管理が簡潔になることを解説しています。",
+      "whyRecommended": "Reactにおける状態管理の基本原則である「Single Source of Truth（信頼できる唯一の情報源）」の重要性が、実務での失敗談を通じて具体的に学べるため。複雑な機能実装時に設計を見直す良いきっかけとなる記事です。",
+      "learningPoints": [
+        "他のstateから計算可能な値を独立したstateとして保持すると、手動での同期が必要となりバグの温床となる。",
+        "取り消し機能の実装が複雑だと感じる場合、state設計がSingle Source of Truthから外れている可能性がある。",
+        "元データのみをstateとして管理し、派生値はレンダー時に純粋関数で導出することで、状態の同期ミスを根本から防げる。",
+        "適切な設計がなされていれば、undo処理は配列の末尾を削除するだけで完了する。"
+      ],
+      "signalsUsed": [
+        "react",
+        "state_management",
+        "single_source_of_truth",
+        "derived_state"
+      ]
     }
   ]
 }
