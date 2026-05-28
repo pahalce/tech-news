@@ -904,6 +904,65 @@
         "single_source_of_truth",
         "derived_state"
       ]
+    },
+    {
+      "articleId": "6c2d13b612359c0f018bd8b042a7cd9042c0fe548b942d4a29fcece31d7c667d",
+      "summary": "ReactのuseOptimisticとuseTransitionを組み合わせ、DB通信の待機時間を待たずにUIを即時反映させる楽観的UIの実装方法を解説した記事です。エラー時の自動ロールバックや内部的なキュー管理の仕組みについても触れられています。",
+      "whyRecommended": "フロントエンドにおけるユーザー体験向上において重要となる「楽観的UI」のベストプラクティスが、具体的なコードベースで解説されており、実装レベルでの理解に最適だからです。",
+      "learningPoints": [
+        "useOptimisticは、第1引数に本物のStateを、第2引数に更新ロジックを受け取り、DB通信中などの非同期処理中でも仮の値をUIに反映できる。",
+        "addOptimisticPitchesによる状態更新は、Reactの優先度管理の仕組み上、必ずstartTransitionの中で呼び出す必要がある。",
+        "非同期処理でエラーが発生した場合、Reactが自動的にoptimisticな状態を元のStateへ巻き戻してくれるため、個別でのロールバック実装が不要である。",
+        "useOptimisticは内部的に更新キューを管理しており、非同期処理が完了して本物のStateが更新されると、残っているキューがその上に再適用される。",
+        "連続的な更新処理を行う場合、管理単位がtransitionブロック全体となるため、実装によっては一時的な重複表示が発生する可能性がある。"
+      ],
+      "signalsUsed": [
+        "optimistic_ui",
+        "react",
+        "nextjs",
+        "performance",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "0294a8f4938c3938d9cb835670dbf82e4c816def871bfcb5d728be7d52b1c995",
+      "summary": "JWTをブラウザのlocalStorageに保存する構成から、BFFを介したCookieセッションへの回帰というWeb認証の歴史と変遷を解説した記事です。なぜ現在、認証情報の扱いが「クライアント露出面はCookie、サーバ間はトークン」という形に落ち着いたのかを時系列で整理しています。",
+      "whyRecommended": "認証の歴史的背景と技術的なトレードオフが非常に丁寧に整理されており、モダンなWeb開発における認証設計の「現在地」を理解するのに最適です。Next.jsやBFF、RSCがなぜ流行しているのかをセキュリティの観点から深く洞察できるため、技術選定の参考になります。",
+      "learningPoints": [
+        "JWTのステートレス性はサーバ間通信には適しているが、クライアント側に持たせると即時無効化が困難というトレードオフがある。",
+        "localStorageはJavaScriptから可読であるため、XSSによってトークンが窃取されるリスクを排除できない。",
+        "BFF構成ではクライアントとBFF間をHttpOnly Cookieで保護し、BFFとAPI間をJWTで接続することで、ブラウザ側のトークン露出を防ぐのが現代の標準である。",
+        "Cookieセッションへの回帰は2005年頃への逆行ではなく、認証プロトコルをクライアント露出面とサーバ間のレイヤーで分離させる合理的な進化である。",
+        "HttpOnly Cookieはトークン窃取耐性を高めるが、XSSによるセッション乗っ取りやCSRFを自動的に防ぐわけではないため、追加の対策は依然として必要である。"
+      ],
+      "signalsUsed": [
+        "auth_history_analysis",
+        "bff_pattern_guide",
+        "cookie_vs_jwt",
+        "deep_technical_explanation",
+        "tradeoff_analysis"
+      ]
+    },
+    {
+      "articleId": "0195d17378cb9bf3f09c3fb836da350855dd13ca39586b297704622929b2f977",
+      "summary": "著者が将棋アプリの開発を通じて、クリーンアーキテクチャの導入が必ずしも正解ではないと気づいた過程を綴った記事です。外部実装への依存が少ないドメインにおいては、無理な抽象化を避けてレイヤードアーキテクチャを採用する方が適切であると結論付けています。",
+      "whyRecommended": "アーキテクチャの流行を盲目的に適用するのではなく、プロジェクトの特性（外部依存の有無など）に合わせて設計を最適化していく著者の冷静な振り返りが非常に参考になるためです。",
+      "learningPoints": [
+        "外部実装に依存しないドメインロジックのみで完結するアプリの場合、クリーンアーキテクチャの複雑な抽象化は不要になるケースが多い。",
+        "依存性の逆転は「DBなど差し替え可能な外部要素」を扱う際に真価を発揮するため、その必要性がないプロジェクトでは過剰設計を招く。",
+        "DDDにおけるEntityとクリーンアーキテクチャのEntityは定義が異なるため、アーキテクチャを混合させると混乱の原因になる。",
+        "ディレクトリ構造を整理する際は、実際の役割（Domain, Service, UseCaseなど）と名前を一致させることで、チームや自分自身の認識のズレを防ぐことができる。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "architecture_explanation",
+        "postmortem",
+        "tradeoff_analysis",
+        "real_world_experience",
+        "domain_driven_design",
+        "clean_architecture",
+        "layered_architecture"
+      ]
     }
   ]
 }
