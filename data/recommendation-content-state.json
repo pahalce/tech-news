@@ -963,6 +963,62 @@
         "clean_architecture",
         "layered_architecture"
       ]
+    },
+    {
+      "articleId": "fd21e765de80ae7eb3c8f84f7d452a10a2bb212c6db87a326227186eed5166dc",
+      "summary": "Next.js Imageコンポーネントを使用しているにもかかわらず、モバイル環境のChromeでページがクラッシュする現象の原因と解決策を解説した記事です。Next.js Imageの最適化タイミングの仕組みを理解し、サーバーサイドでの事前リサイズの重要性を説いています。",
+      "whyRecommended": "メモリ制約の厳しいモバイル端末特有の挙動や、画像最適化に関する「意外な落とし穴」を実体験ベースで学べるため、フロントエンドエンジニアにとって非常に実用的で価値が高い内容です。",
+      "learningPoints": [
+        "Next.js Imageの最適化は表示時に行われるため、ダウンロード時点では元画像サイズのままメモリを展開してしまう。",
+        "4000x4000pxの画像はブラウザのメモリ上で約64MBを消費するため、無限スクロールで連続表示すると容易にメモリ不足に陥る。",
+        "iOSのChromeはアプリ自体のUI分でメモリを消費するため、SafariよりもWebコンテンツに割り当てられるメモリ制限が厳しい。",
+        "microCMSなどの画像APIを使用して、URLパラメータでリサイズした状態で画像を配信することでメモリ消費を劇的に抑えられる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "frontend",
+        "memory_management",
+        "image_optimization",
+        "browser_compatibility"
+      ]
+    },
+    {
+      "articleId": "40ac528743748690ada66986524f6372689f28b1546896b24c30cf8cfc1d678b",
+      "summary": "img要素のパフォーマンスを最適化するdecoding、loading、fetchpriority属性について解説しています。ブラウザへのヒントを与えるこれらの属性を使い分けることで、Core Web VitalsのLCP向上やページ表示速度の改善が期待できます。",
+      "whyRecommended": "React開発者がWebパフォーマンスを最適化するための実装指針が、実用的なコード例と共に分かりやすくまとめられており、実務で即座に役立つ内容であるため。",
+      "learningPoints": [
+        "decoding='async'を指定すると、画像デコードが非同期処理となり、メインスレッドのブロックを回避してUI表示を速くできる。",
+        "loading='lazy'はファーストビュー外の画像に適用し、通信量削減と初期表示速度の改善に活用する。",
+        "LCP対象となるヒーロー画像にはfetchpriority='high'を付けることで、ブラウザのリソース取得優先度を意図的に引き上げられる。",
+        "Reactでfetchpriority属性を指定する際は、キャメルケースのfetchPriorityと記述する必要がある。"
+      ],
+      "signalsUsed": [
+        "implementation_guide",
+        "core_web_vitals",
+        "lcp_optimization",
+        "actionable_steps",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "232d8567bc96d5b07f550f557fdc90a1f33ba6937d2842d61e8a55e571298228",
+      "summary": "ブラウザのマイク入力をリアルタイムで取得し、16bit PCM形式に変換してWebSocketでサーバーへストリーミングするための最小実装を解説しています。MediaRecorderを使わず、AudioContextを用いて生データをミリ秒単位で直接送信する手法を学べます。",
+      "whyRecommended": "音声認識やAI音声対話システムをフロントエンドで構築する際、避けては通れない「Float32から16bit PCMへの変換」および「低遅延ストリーミング」の定石が非常に明快にまとまっているためです。",
+      "learningPoints": [
+        "Web Audio APIで取得できるFloat32形式の音声を、-1.0から1.0の範囲でクリッピングし、符号付き16bit整数（Int16Array）にスケーリングすることでAI API等で標準的な形式へ変換できる。",
+        "ScriptProcessorNodeのonaudioprocessイベント内で音声を処理することで、低遅延なリアルタイム・ストリーミングを実現できる。",
+        "AudioContextの初期化時にsampleRate: 16000を指定することで、ブラウザ側の機能を利用してマイク入力を自動的にダウンサンプリングできる。",
+        "AudioContextはユーザーのクリック等のアクションが発生するコンテキスト内で初期化しないと、自動再生ポリシーにより音声データが流れない。",
+        "本番環境でメインスレッドの負荷を避けるためには、ScriptProcessorNodeではなくAudioWorkletへの移行が推奨される。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "typescript",
+        "web_audio_api",
+        "low_latency_streaming",
+        "audio_processing"
+      ]
     }
   ]
 }
