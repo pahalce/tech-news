@@ -1019,6 +1019,59 @@
         "low_latency_streaming",
         "audio_processing"
       ]
+    },
+    {
+      "articleId": "47dd383e36d256f3151c65c757735143e797f5dc92e288f6babd98dd591ec5db",
+      "summary": "Claude Codeを活用してモバイルUXに特化した記事レビューエージェントを構築・改善した実践記録です。実機検証のノウハウや、PCとモバイルの両立を重視した評価ロジックの育て方を解説しています。",
+      "whyRecommended": "AIエージェントの開発において「仮説検証のサイクル」をどう回すべきか、具体的な失敗と改善策が網羅されています。中級者以上のエンジニアにとって、実戦的なエージェント設計のベストプラクティスを学べる良質なケーススタディです。",
+      "learningPoints": [
+        "Chrome DevTools Protocolのemulateツールを使用する際、mobileフラグとDPRを指定しないとmeta viewportタグが解釈されず、実機環境の再現ができません。",
+        "横スクロールの有無だけでなく、要素の縦占有率（vhRatio）や列数を計測することで、表示崩れが起きる判読困難なテーブルを自動検知できます。",
+        "モバイル最適化の際、PCの閲覧体験を損なわないよう「3つのviewport（PC・タブレット・スマホ）全てで成立させる」ことを大原則にするべきです。",
+        "カスタムエージェントのプロンプト内に「過去の失敗例（反例）」を明記することで、将来的な再発を防止し、エージェントの精度を継続的に向上させることができます。"
+      ],
+      "signalsUsed": [
+        "claude_code",
+        "mobile_ux",
+        "agent_development",
+        "cdp_emulation"
+      ]
+    },
+    {
+      "articleId": "a5f72f3506ce0bec9837ab3b400e10ea946198ea1b9fab7469558718c14c5216",
+      "summary": "Next.jsとFastAPIを用いた環境で、OAuthログインとセッション管理の実装パターンを深く解説した記事です。トークンをどこに保存し、なぜバックエンドに直接OAuthトークンを渡さないのかという設計の根拠が明確に示されています。",
+      "whyRecommended": "OAuthの実装において「トークンの保存場所」や「バックエンドとの連携方法」といった、実務で混乱しやすいセキュリティ設計の要点が整理されているためです。理論だけでなく、BFFパターンを採用した実用的な構成例として参考になります。",
+      "learningPoints": [
+        "OAuthトークンはログイン直後の本人確認のみに使用し、DBやクライアントには永続保存せず、自前のセッションCookieへ切り替えるべきである。",
+        "OAuth 2.0のAuthorization Code Flowにおいて、client_secretはブラウザに露出させてはならず、サーバー側でのみ保持する必要がある。",
+        "BFFパターンを採用することで、フロントエンドからバックエンドへのOAuthトークン受け渡しを回避し、内部APIのセキュリティを簡素化できる。",
+        "localStorageはXSSの標的になりやすいため、認証状態の保持にはJavaScriptから読み取り不可能なHttpOnly属性付きのCookieを使用するのが安全である。",
+        "GoogleのサブジェクトID（sub）をそのままユーザー識別子にするのではなく、自サービス用のUUIDを作成し、OAuth連携とユーザーマスタを紐づけて管理する。"
+      ],
+      "signalsUsed": [
+        "oauth_2_0_implementation",
+        "bff_pattern",
+        "session_management"
+      ]
+    },
+    {
+      "articleId": "eac44256effb5e1f45be6763425923e64843d8fbf3aed84bac7973df163f45f7",
+      "summary": "Jotaiの派生ライブラリであるBunshiの内部ライフサイクル管理とキャッシュの仕組みを詳細に解説した技術記事です。moleculeのキャッシュ戦略やscopeによる依存関係の解決方法を実装レベルで明らかにしています。",
+      "whyRecommended": "Bunshiはシンプルに見えますが、複雑な依存関係下でのインスタンス管理は直感に反することがあります。内部実装まで深く掘り下げているため、パフォーマンスやメモリリークを考慮した高度な設計を行うエンジニアにとって必読の内容です。",
+      "learningPoints": [
+        "Bunshiがキャッシュしているのはmoleculeが返すJotaiのatomオブジェクトであり、atomが保持する値そのものではない。",
+        "moleculeのインスタンスは[scope, value]のペアである「scope tuple」を識別子として管理される。",
+        "moleculeのキャッシュ破棄は、そのmoleculeが依存するすべてのscope tupleの参照数がゼロになったタイミングで実行される。",
+        "明示的なscopeを持たないグローバルなmoleculeであっても、Bunshi内部ではライフサイクル管理のために自動生成されたinternal global scopeが付与されている。",
+        "ReactのuseMolecule経由の呼び出しと、molecule内部でのmol関数呼び出しは、どちらも内部的に同じinjectorとキャッシュ機構を参照している。"
+      ],
+      "signalsUsed": [
+        "dependency_injection",
+        "jotai",
+        "lifecycle_management",
+        "architecture_explanation",
+        "deep_technical_explanation"
+      ]
     }
   ]
 }
