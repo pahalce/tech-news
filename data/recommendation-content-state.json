@@ -1072,6 +1072,68 @@
         "architecture_explanation",
         "deep_technical_explanation"
       ]
+    },
+    {
+      "articleId": "57ec0944babf75611810e44a3fd1a0639792b40958c107c2d06d87e130ebf60c",
+      "summary": "Next.jsアプリケーションにおいてuseOptimisticを導入した際に発生した二重カウント問題を解説し、その原因とアーキテクチャ上の相性を検証する内容です。最終的に、ツールが想定する設計思想と自身の構成が一致していないと判断し、利用を撤回した経緯が語られています。",
+      "whyRecommended": "技術選定における「ツールの設計思想」と「自身のアーキテクチャ」の不一致を深く分析しており、成功体験だけでなく撤退判断のプロセスまで含めた実践的な学びが非常に有益です。",
+      "learningPoints": [
+        "useOptimisticはサーバー側で更新データを確定させrevalidatePathでベース状態を更新する設計を前提としており、クライアント側で手動でsetStateを行うと楽観エントリと実データが競合して二重カウントが発生する。",
+        "Transition完了前にbase stateを更新すると、useOptimistic内部のキューと新しいbase stateが合成され、一瞬だけ二重にカウントされる。",
+        "楽観更新と実データを突き合わせる際は、クライアント側で生成した一時的なID（tempId）を共通識別子として利用することで、データの追加ではなく置き換えを行うことが可能になる。",
+        "ローカルファースト（IndexedDB）を採用するアーキテクチャの場合、書き込みが即時に完了するためuseOptimisticによる遅延解消の必要性がなくなる。",
+        "ツール導入時は機能の検証だけでなく、そのツールが想定しているデータフローやサーバーとの連携設計が、自身のアーキテクチャと合致しているかを優先的に確認する必要がある。"
+      ],
+      "signalsUsed": [
+        "react",
+        "nextjs",
+        "use_optimistic",
+        "state_management",
+        "local_first"
+      ]
+    },
+    {
+      "articleId": "eaeb9f611c3d4d38cdaba9c4986ce312d742776789d1dea467e8d5f2cd234a08",
+      "summary": "本書は、HTMXやAstroといったHTML Firstのアプローチと、Next.jsの技術的な違いを比較・整理した技術書です。各アーキテクチャのパフォーマンスや開発体験を検証し、ユースケースに応じた技術選定の指針を提示しています。",
+      "whyRecommended": "フロントエンド開発においてトレンドとなっているHTML Firstの概念を、Next.jsと比較することで客観的な判断軸を養えるためです。アーキテクチャ選定に迷う中上級者にとって、意思決定をサポートする非常に実践的なリソースです。",
+      "learningPoints": [
+        "HTML Firstのアプローチは、クライアントサイドのJavaScript実行量を削減することで、ネットワーク遅延の影響を受けやすい環境でのパフォーマンス向上に寄与します。",
+        "Next.jsとReactのエコシステムは、複雑なインタラクションが要求される動的コンテンツにおいて、高い開発効率と再利用性を実現する強みがあります。",
+        "サーバーサイドで生成されたHTMLを直接ブラウザに流し込む方式は、クライアントサイドレンダリングと比較して初期表示までの時間が短縮されやすい傾向があります。",
+        "プロジェクトの規模やチームのスキルセット、求められる動的なユーザー体験の複雑さに応じて、HTML FirstとNext.jsは適切に使い分けるべきです。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "nextjs",
+        "web_development",
+        "architecture_explanation",
+        "comparative_evaluation",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "measured_results",
+        "comparison",
+        "architecture_decision_support"
+      ]
+    },
+    {
+      "articleId": "0683e4db491ab66d83346ca15d94ff3d6419990361f25cabded1eba3d51222b9",
+      "summary": "PostgreSQLにおけるILIKEを用いた検索のパフォーマンス課題を、pg_trgmとGINインデックスを用いて解決した実体験の記録です。インデックスのコストベースの選択ロジックや、マルチテナント環境におけるインデックス設計の留意点について詳細に解説されています。",
+      "whyRecommended": "フロントエンドエンジニアがバックエンドのDB最適化に取り組む際の、論理的かつ実践的な思考プロセスが非常に参考になるためです。特にEXPLAIN ANALYZEによる現状把握から、副作用を抑えたインデックス戦略までの流れが丁寧で、現場ですぐに応用できる知見が詰まっています。",
+      "learningPoints": [
+        "pg_trgmは文字列を3文字単位のトリグラムに分解して索引化するため、単語分割が困難な日本語でも実用的な部分一致検索を高速化できる。",
+        "PostgreSQLのクエリオプティマイザはコスト計算を行い、検索対象のヒット率が高い場合はあえてインデックスを使わずSeq Scanを選択することがある。",
+        "HTMLタグを含むカラムをGINでインデックスすると不要な情報まで索引化されるため、GENERATED ALWAYS AS STORED機能でタグ除去済みのプレーンテキストカラムを用意するのが有効である。",
+        "論理削除フラグ（deleted_at IS NULL）を条件に含めた部分インデックスを作成することで、不要な行を索引から除外してサイズと更新コストを削減できる。",
+        "マルチテナント構成でテナントIDをインデックスに含めない場合、検索結果のフィルタリングがインデックス検索後に行われるため、テナント数が増大した際に非効率な読み込みが発生する。"
+      ],
+      "signalsUsed": [
+        "postgresql_optimization",
+        "database_indexing",
+        "multi_tenant_architecture",
+        "deep_technical_explanation",
+        "real_world_experience",
+        "tradeoff_analysis"
+      ]
     }
   ]
 }
