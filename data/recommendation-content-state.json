@@ -1134,6 +1134,60 @@
         "real_world_experience",
         "tradeoff_analysis"
       ]
+    },
+    {
+      "articleId": "7f80d3d1c7f4aead2688a21e3e07d43e635ffc70a258d1cb417ef4744a207fbe",
+      "summary": "Supabaseプロジェクトのリージョンをインドから東京へ移行し、DBレイテンシを約1/3に改善した実体験レポート。移行時に遭遇したAPIキー設定や権限管理などのハマりポイントと、その解決策を詳細に解説しています。",
+      "whyRecommended": "個人開発において、リージョン選定の重要性と移行時の落とし穴を具体的に学べる実践的な知見です。特にSupabaseの運用における権限管理やAPIキーの形式変更といった技術的なつまずきが網羅されており、開発者にとって非常に有益です。",
+      "learningPoints": [
+        "Supabaseのプロジェクトリージョンは作成後に変更できないため、初期作成時の選択が重要である。",
+        "新形式のAPIキー（sb_publishable_ / sb_secret_）を使用し、ダッシュボードのURLではなく適切なProject URLを環境変数に設定する必要がある。",
+        "Automatically expose new tablesをOFFにした場合、ALTER DEFAULT PRIVILEGESを使用して新しいテーブルに対するGRANTを自動付与する設定が推奨される。",
+        "認証メールのテンプレートにおいて、Confirm signupとMagic Linkの両方で{{ .Token }}を使用することでOTP認証へ切り替えが可能になる。"
+      ],
+      "signalsUsed": [
+        "database_migration",
+        "supabase",
+        "latency_optimization"
+      ]
+    },
+    {
+      "articleId": "a3abe637dc957cc66437a5a6ded7cc48b1be86088cacaba947507a02032724da",
+      "summary": "単一HTMLファイルで10種類の3Dグラフを動作させるためのThree.js描画レイヤー設計について解説しています。描画ロジックの共通化や、パフォーマンスを維持するためのモーダル描画手法など、実践的なアーキテクチャがまとめられています。",
+      "whyRecommended": "Three.jsを用いた複雑な3D可視化において、保守性とパフォーマンスを両立させるための「データ中間形式への変換」という設計思想が非常に参考になるためです。実務的なエッジケースへの対処法も豊富に含まれています。",
+      "learningPoints": [
+        "Three.jsのMeshを直接作成する前に、データを「何を描くか」を示す中間形式に変換することで描画レイヤーの整理が可能になります。",
+        "WebGLキャンバスは非常に重いため、カード一覧ではボタン配置に留め、全画面モーダルで個別に描画する設計がパフォーマンス向上の鍵です。",
+        "大量の点群を描画する際は、Meshを個別に作るのではなくInstancedMeshを利用することで描画負荷を大幅に軽減できます。",
+        "環境依存のlinewidthの問題を避けるため、3D上の線分描画にはCylinderGeometryを用いることで安定した見た目とクリック判定を確保できます。",
+        "再描画時にカメラの状態を保存・復元することで、ユーザーが探索中に視点がリセットされるストレスを防ぐことができます。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "web_development",
+        "three_js",
+        "data_visualization",
+        "performance"
+      ]
+    },
+    {
+      "articleId": "41f726648f246a2abbdb4bc3bd65d08da5db2a62fb775c3a96d00349dea089a5",
+      "summary": "チーム開発におけるメンテナー権限の追加とSupabaseのRLS実装を通じて、アプリケーション層とデータベース層の両面からアクセス制御を行う手法を解説しています。また、VSCodeのワークスペース設定共有によるチーム内のフォーマット環境統一や、プロジェクト規模に応じた現実的な型定義の設計方針についても触れています。",
+      "whyRecommended": "Supabaseを利用した実務的なチーム開発において、権限管理の設計からエディタ環境の標準化まで、現場で発生しがちな課題を仕組みで解決するプロセスが詳細に記録されているためです。",
+      "learningPoints": [
+        "RLSポリシーにおいて「USING」はSELECT・UPDATE・DELETEの対象行のフィルタリングに、「WITH CHECK」はINSERT・UPDATE後の書き込みデータに対する検証に使用する。",
+        "RBACの設計では、フロントエンドでUX向上のためにUIの表示を制御し、バックエンドのRLSで本質的なデータセキュリティを担保する二層構造が有効である。",
+        "VSCodeの.vscode/settings.jsonをリポジトリで共有することで、チームメンバー間でのフォーマッターやESLintの設定差異を強制的に排除できる。",
+        "プロジェクトの規模が小さい段階では、クリーンアーキテクチャ的に層ごとに型を分離するよりも、DBの型をそのまま利用するほうが実装効率が高い。",
+        "Supabaseの無料プランでは1週間アクセスがないとプロジェクトが一時停止するため、チームでプロジェクト管理情報を共有しておく必要がある。"
+      ],
+      "signalsUsed": [
+        "supabase",
+        "rbac",
+        "team_development",
+        "typescript",
+        "security"
+      ]
     }
   ]
 }
