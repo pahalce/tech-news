@@ -1188,6 +1188,65 @@
         "typescript",
         "security"
       ]
+    },
+    {
+      "articleId": "218e421ff0ba571e11f2849ec99416158ae9bd6c53a360f59a0b2871e3a86e0e",
+      "summary": "DPU（Declarative Partial Updates）を用いた次世代のHTMLストリーミング技術と、Remix 3を組み合わせたNo-JS対応のアーキテクチャについて解説しています。JSフレームワーク特有のハイドレーション問題に対し、ブラウザネイティブのDOM書き換えとクライアント側の状態管理をどう整合させるか、その解決手法が提示されています。",
+      "whyRecommended": "実験的なWeb標準技術を活用した高度なフロントエンドアーキテクチャに興味があるエンジニアにとって、実用的なコード例を交えた非常に示唆に富むケーススタディだからです。",
+      "learningPoints": [
+        "DPUはJavaScriptを使わずにHTMLの断片をネイティブブラウザパーサーで置換するため、JS無効環境でも部分更新が可能になる。",
+        "ReactのSuspenseによるストリーミングはJS実行を伴うが、DPUはネイティブ機能であるため、ReactのHydration管理と競合しやすく、表示の巻き戻りやタイミング不一致が発生するリスクがある。",
+        "DPUで置換されたDOMをクライアント側でマウントする際は、ブラウザが勝手に書き換えたDOMをそのまま使うのではなく、SSR時に埋め込んだデータを引き継ぎ、マウント前にDPUマーカーを整理することで不整合を防げる。",
+        "Cloudflare環境等でのチャンクバッファリングを防ぐため、HTMLコメントを用いて初期チャンクを一定サイズ（17KB以上）にパディングすることがストリーミング成功の鍵となる。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "experimental_web_standard",
+        "no_js_streaming",
+        "hydration_mismatch",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "a1a4f637645cac10afe347e263ed88d90fae03d63dae164086db19234b39c5e8",
+      "summary": "TanStack Queryの内部構造を理解するため、useQueryやQueryCacheといった主要コンポーネントをゼロから実装して解説する技術記事です。ブラックボックスになりがちなキャッシュ管理や購読の仕組みを、ステップバイステップで構築することで深く学べます。",
+      "whyRecommended": "ライブラリの表面的な使い方だけでなく、内部でどのように状態を管理し、重複リクエストを排除し、コンポーネントと同期させているのかという設計思想をコードベースで理解できるため、ライブラリの挙動で詰まった際のデバッグ能力が飛躍的に向上します。",
+      "learningPoints": [
+        "状態管理をReactコンポーネントの外側に配置し、プレーンなJavaScriptクラスであるQueryでキャッシュと取得ロジックを一元管理する設計になっている。",
+        "QueryCacheのbuildメソッドで「存在すれば取得、なければ作成」というget-or-createパターンを採用することで、複数のコンポーネント間で効率的なデータ共有を実現している。",
+        "statusとfetchStatusの2軸で状態を管理することで、古いデータを表示しながら裏で最新データを取得する状態を表現できる。",
+        "JSON.stringifyのreplacer引数でオブジェクトのキーをソートすることで、プロパティ順序に依存せず同一のqueryKeyを確実に判定している。",
+        "QueryクラスにPromiseを保持し、通信中であればそのPromiseを共有することで、複数コンポーネントからの同時リクエストを1回にまとめる重複排除を行っている。"
+      ],
+      "signalsUsed": [
+        "react",
+        "typescript",
+        "frontend",
+        "state_management",
+        "caching_mechanisms",
+        "hooks_pattern",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "d76a022a1bfb76d10f0e918c16e204517a3f902f5ebf190fc2206677c2ca0e14",
+      "summary": "field-guardは、TypeScriptでフィールドレベルのアクセス制御を型安全に定義・実行できる軽量ライブラリです。ホワイトリストやブラックリスト形式でのポリシー定義が可能で、複雑な権限要件をシンプルにコード化できます。",
+      "whyRecommended": "型安全性に優れた設計であり、実務で頻出する「ユーザー種別に応じたAPIレスポンスのフィールド制限」を効率的かつメンテナンスしやすく実装できるため、TypeScript開発者の生産性を高めるツールとして推奨します。",
+      "learningPoints": [
+        "定義したポリシー内でtrueを含むオブジェクトはホワイトリスト、falseのみのオブジェクトはブラックリストとして自動判定される。",
+        "checkメソッドから返されるVerdictには、coversAllやcoversSomeといった指定フィールドの可否を判定するヘルパーメソッドが用意されている。",
+        "withDeriveメソッドを用いることで、コンテキストに基づいてisAdminのような派生プロパティを事前に計算しておくことが可能。",
+        "combineGuardsを使用すると複数のリソースのGuardを統合でき、一度のコンテキストバインドで複数の評価を行える。",
+        "filterByVerdict関数のような自作ヘルパーを用意することで、評価結果に基づいてAPIのレスポンスオブジェクトから安全にフィールドを削ぎ落とせる。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "field_level_access_control",
+        "type_safety",
+        "library_announcement",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
