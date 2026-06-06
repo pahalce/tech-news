@@ -1247,6 +1247,62 @@
         "library_announcement",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "ad937180dea1dd89646792271a801d073692520246b3e379a886339bfd90bf79",
+      "summary": "年月（yyyyMM）データを扱う際、文字列型ではなくDATE型を月初日（YYYY-MM-01）として使用すべき理由と実装手法を解説した記事です。DB設計からフロントエンドとのやり取り、既存カラムからの移行手順までを体系的に網羅しています。",
+      "whyRecommended": "データベース設計において見落としがちな型選定の重要性を、MySQL 8.0の機能を踏まえて具体的に解説しています。パフォーマンスとデータ整合性の両立を重視するエンジニアにとって非常に実用的なガイドです。",
+      "learningPoints": [
+        "年月データはDATE型を使用し、常に月初日（YYYY-MM-01）として保存することで、クエリによる日付演算やインデックスの最適化が容易になる。",
+        "CHECK制約（DAYOFMONTH(column) = 1）をテーブル定義に加えることで、DBレベルで月初日以外のデータ混入を確実に防げる。",
+        "APIレスポンスではISO 8601形式（YYYY-MM-DD）を採用し、フロントエンド側で表示フォーマットを変換することで、パースエラーや言語間の差異を回避できる。",
+        "既存の文字列型カラムからDATE型へ移行する際は、新旧カラムを並存させてトリガーやアプリ側で同期させつつ、段階的に切り替えるのが安全である。",
+        "会計期間など暦と一致しない特殊な期間コードを扱う場合は、DATE型で無理に管理せず別カラムで定義すべきである。"
+      ],
+      "signalsUsed": [
+        "backend",
+        "web_development",
+        "performance",
+        "implementation_guide",
+        "mysql_8",
+        "database_schema_design"
+      ]
+    },
+    {
+      "articleId": "bc06e680b34310ee3e079bc695a5c46bd5df34da0c07612b0d467b483e64bebe",
+      "summary": "Chrome拡張機能でのスクロール位置保存を題材に、chrome.storageのlocalとsyncを適切に使い分ける設計手法が解説されています。単なるデータ保存にとどまらず、レスポンシブ対応や動的コンテンツに対する位置復元の精度を高めるための実装ノウハウが網羅されています。",
+      "whyRecommended": "Chrome拡張開発におけるストレージ選定の基準と、UI改善のための細かいテクニック（%換算や動的ロード対応）が実務レベルで非常に参考になるため。個人の開発体験に基づいた説得力のある設計指針が提示されています。",
+      "learningPoints": [
+        "大量かつ一時的なデータはchrome.storage.localに保存し、少量の端末間共有が必要なデータはchrome.storage.syncに保存する。",
+        "スクロール位置をピクセル（px）ではなくドキュメント全体に対する割合（%）で記録することで、画面サイズの違いによるズレを防げる。",
+        "画像や遅延読み込みがあるページでは、読み込み直後のscrollHeightが不安定なため、ResizeObserver等を用いて後追い補正を行う必要がある。",
+        "chrome.storage.syncには容量制限があるため、自動保存のような履歴データを含めるとすぐに上限に達する。"
+      ],
+      "signalsUsed": [
+        "chrome_extension",
+        "chrome_storage_api",
+        "tradeoff_analysis",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "4deb813570e824dc9f9721ebd85286c9a6e860542e3838d64695025395640738",
+      "summary": "個人開発における技術選定を支援するため、Next.js、Hono、Astroなど5つの主要フレームワークを7つの指標で比較評価しています。各フレームワークの得意分野や特性をマトリクスで整理し、開発目的や優先順位に応じた選び方を解説しています。",
+      "whyRecommended": "個人開発において、機能要件だけでなく、AI連携やメンテナンス性、学習コストといったビジネス視点での比較が実用的であり、技術選定の意思決定を明確に言語化できるため、非常に参考になります。",
+      "learningPoints": [
+        "Next.jsはServer ComponentsとVercel AI SDKの組み合わせにより、AI機能の導入において最も高い親和性を持ちます。",
+        "Honoはエッジ環境での動作に最適化されており、コールドスタートの抑制やDBバインディングとの相性が極めて良好です。",
+        "AstroはデフォルトでのJavaScript送信量が少なく、パフォーマンスと静的配信の観点で非常に高いセキュリティ特性を維持できます。",
+        "React Router v7やVite+Reactは学習コストが低い反面、セキュリティ対策や認証機能を自前で強固に設計する必要があります。",
+        "複数アプリの量産を目的とする場合、Next.jsはテンプレートの流用による横展開が容易で、最も量産適性が高いと言えます。"
+      ],
+      "signalsUsed": [
+        "comparative_evaluation",
+        "tradeoff_analysis",
+        "framework_metrics_matrix",
+        "architecture_decision_support",
+        "concrete_technology_named"
+      ]
     }
   ]
 }
