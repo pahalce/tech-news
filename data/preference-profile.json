@@ -10,10 +10,10 @@
   },
   "feature_weights": {
     "topics": {
-      "typescript": 1.2999999999999998,
-      "react": 1.6,
+      "typescript": 1.9999999999999998,
+      "react": 2.5,
       "nextjs": 0.7,
-      "frontend": 2.3,
+      "frontend": 3,
       "backend": 0.3,
       "web_development": 2,
       "ai_engineering": -0.5,
@@ -26,8 +26,8 @@
     "feature_axes": {
       "content_types": {
         "production_case_study": 1.8,
-        "implementation_guide": 2.5,
-        "architecture_explanation": 1.6,
+        "implementation_guide": 3,
+        "architecture_explanation": 2.5,
         "postmortem": 0.8,
         "comparative_evaluation": 0.30000000000000004,
         "tool_introduction": 0,
@@ -36,7 +36,7 @@
         "opinion_essay": 0
       },
       "evidence_signals": {
-        "code_examples": 2.7,
+        "code_examples": 3,
         "measured_results": 1.5,
         "real_world_experience": 1,
         "comparison": 0.6,
@@ -47,14 +47,14 @@
         "actionable_steps": 2.7,
         "architecture_decision_support": 1.6,
         "operationally_applicable": 0.8,
-        "reusable_implementation_pattern": 2.5,
-        "developer_productivity": 1.1999999999999997,
+        "reusable_implementation_pattern": 3,
+        "developer_productivity": 1.7999999999999998,
         "migration_guidance": 0.29999999999999993,
         "checklist_or_playbook": 0.5
       },
       "depth_signals": {
-        "tradeoff_analysis": 2.6000000000000005,
-        "deep_technical_explanation": 2.8,
+        "tradeoff_analysis": 3,
+        "deep_technical_explanation": 3,
         "edge_cases": 2.6999999999999997,
         "constraints_explained": 0.5999999999999999,
         "surface_level_summary": -0.8,
@@ -63,8 +63,8 @@
         "generic_ai_hype": -0.8
       },
       "title_signals": {
-        "specific_problem": 1.8,
-        "concrete_technology_named": 2.1,
+        "specific_problem": 2.6,
+        "concrete_technology_named": 3,
         "production_context_named": 1.2,
         "listicle_summary": -0.4,
         "clickbait": -0.8,
@@ -72,10 +72,10 @@
       },
       "audience_levels": {
         "beginner": -0.2,
-        "intermediate": 1.2000000000000002,
+        "intermediate": 2.1,
         "advanced": 2.4
       }
     }
   },
-  "updated_at": "2026-05-23T23:53:19.900Z"
+  "updated_at": "2026-06-06T23:59:59.788Z"
 }
