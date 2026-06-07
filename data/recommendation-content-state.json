@@ -1303,6 +1303,61 @@
         "architecture_decision_support",
         "concrete_technology_named"
       ]
+    },
+    {
+      "articleId": "1919bdf153256fe97336e5c5549db2e649e43785b5175c00cf9314583ff7cdb3",
+      "summary": "WSL2環境でDev Containersを運用する際、VS Code独自のライフサイクルコマンドに頼らずDocker Composeのみで環境を完結させる手法を紹介しています。ファイル所有権の問題やコンテナの初期化競合を回避し、.devcontainer内を最小限の構成にするための具体的な実践記録です。",
+      "whyRecommended": "Dev Containersを使用する際に誰もが一度は直面する「権限エラー」「初期化の競合」「メモリ不足」という現実的な課題に対して、論理的な分析と技術的な解決策が提示されています。ポータビリティを重視するエンジニアにとって非常に実用的な構成パターンです。",
+      "learningPoints": [
+        "Next.jsの初期化時、コンテナ内の一時領域で生成してからプロジェクトルートへコピーすることでファイル競合を回避できる。",
+        "コンテナ内のユーザーIDとグループIDをホスト側の環境と一致させることで、パーミッションエラーを解消できる。",
+        "WSL2のメモリ不足によるプロセス強制終了を防ぐには、Windows側の.wslconfigファイルでメモリ割り当てを8GB以上に増やす必要がある。",
+        "VS CodeのDev Containers設定をdocker-compose.ymlに集約し、起動時コマンドでパッケージインストールを自動化することで、コンテナ構成をシンプルに保てる。"
+      ],
+      "signalsUsed": [
+        "dev_containers",
+        "wsl2",
+        "docker_compose",
+        "nextjs",
+        "prisma"
+      ]
+    },
+    {
+      "articleId": "7fa0a96acae95747b740d5497ab95b7ed901e374d40c61bcc0c828e7f918976a",
+      "summary": "個人開発における認証スタックの選定基準を、Supabase AuthやClerkなどのホスト型とBetter Authなどの自前型で比較解説しています。認証機能の後付けによるDB設計の破綻を防ぐための意思決定フローを提案しています。",
+      "whyRecommended": "個人開発において、認証機能は開発の初期段階で設計を誤ると将来的な負債になりやすいためです。実用的な比較軸と、自身の開発スタイルに合わせて技術選定を行うための実用的な判断基準が網羅されています。",
+      "learningPoints": [
+        "認証機能は後付けするとDB設計の作り直しが発生しやすいため、開発の最初期に設計する必要があります。",
+        "Supabase AuthはPostgresのRLS（Row Level Security）と組み合わせることで、認可ロジックを一元化できます。",
+        "Clerkの課金単位であるMRU（Monthly Retained User）は、一般的なMAUとは定義が異なるため試算時に注意が必要です。",
+        "新規プロジェクトで自前型の認証ライブラリを検討する場合は、Auth.js（旧NextAuth）よりもBetter Authが現在の有力な選択肢です。",
+        "認証情報のService Roleキーをフロントエンドに含めると、すべてのデータが漏洩するリスクがあるため厳禁です。"
+      ],
+      "signalsUsed": [
+        "authentication_stack_selection",
+        "personal_development_context",
+        "cost_benefit_analysis",
+        "tradeoff_analysis"
+      ]
+    },
+    {
+      "articleId": "555eb0e0482fe3fed9d509bbc2b3f07aa01c365edb88ee4a6a2bc4b00f81aa1f",
+      "summary": "E2Eテストにおいて、Playwrightによる全自動化を目指すのではなく、Chrome DevToolsでの観測とPlaywrightによる回帰テストを使い分けるハイブリッド運用を提唱する記事です。特に認証が必要な画面での開発において、ログイン済みセッションをDevToolsで直接操作する手法の効率性を解説しています。",
+      "whyRecommended": "多くのE2Eテスト記事がPlaywrightの網羅的な導入を推奨する中で、実務上の保守コストや認証の不安定さを考慮した「観測」と「制御」の分離という現実的かつ実践的な視点が極めて有用なため。",
+      "learningPoints": [
+        "テストの目的を「Debugging（なぜそうなったかの観測＝DevTools）」と「Driving（操作の再現＝Playwright）」に明確に分ける。",
+        "Google OAuthのような複雑な認証フローをPlaywrightで自動化せず、既存ブラウザのセッションをDevToolsで流用することで調査コストを劇的に下げられる。",
+        "DevToolsのRecorder機能で記録した操作をPlaywrightのテストコードへエクスポートすることで、検証から回帰テストへの移行を効率化できる。",
+        "AIエージェントを活用する際も、スナップショットやアクセシビリティツリーを消費するPlaywright MCPと、詳細なCDP情報を扱うChrome DevTools MCPを用途に応じて使い分ける。",
+        "すべてのフローをテストコード化するのではなく、壊れた際に重大な影響が出るパスのみを最小限のテストとしてCIに固定する。"
+      ],
+      "signalsUsed": [
+        "tradeoff_analysis",
+        "real_world_experience",
+        "comparison",
+        "architecture_decision_support",
+        "developer_productivity"
+      ]
     }
   ]
 }
