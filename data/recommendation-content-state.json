@@ -1358,6 +1358,63 @@
         "architecture_decision_support",
         "developer_productivity"
       ]
+    },
+    {
+      "articleId": "b6de25ef31a448e74836bee36d691fd41cf2f8a11ba38b35850b6a69aff9ea3c",
+      "summary": "GitHub Actionsのバージョン管理において、SHAピン留めによる改ざん耐性と可読性を両立させるための「2-tier戦略」を解説しています。Dependabotと連携した安全かつ運用効率の良いGitHub Actionsの管理方針を、実例を交えて具体的に提案します。",
+      "whyRecommended": "技術的なトレードオフを論理的に分析しており、セキュリティと運用コストのバランスを求める実務者にとって非常に実用的です。特にインシデント事例に基づいた具体的な実装手順と、設定の落とし穴まで言及されている点が優れています。",
+      "learningPoints": [
+        "GitHub Actionsのuses行末尾に「# vX.Y.Z」と記述することで、DependabotがSHA更新時にコメントも同時に更新し、可読性を維持できる。",
+        "GitHub公式ActionはDependabot alertsの恩恵を優先して「@vX.Y.Z」に固定し、それ以外は改ざん耐性を優先して「@<sha> # vX.Y.Z」で固定する2段階戦略が有効である。",
+        "semverタグは可変参照であり改ざんリスクがあるため、重要なActionは固定が必要だが、固定前にGitHub Advisory Database等で対象コミットの安全性を確認すべきである。",
+        "リポジトリの脆弱性アラート設定（vulnerability-alerts）が有効でなければ、Dependabot alertsは機能しないため、参照形式の選定と併せてリポジトリ設定の確認が必須である。",
+        "git ls-remoteコマンドでタグを確認する際、annotated tagの場合は「^{}」が付いた行のSHAを使用しないとActionが正常に動作しない。"
+      ],
+      "signalsUsed": [
+        "github_actions",
+        "version_pinning",
+        "supply_chain_security",
+        "dependabot",
+        "tradeoff_analysis"
+      ]
+    },
+    {
+      "articleId": "a9ec03056c6318303cedda627b0ca8098a2112c0450362234ec52f42ec99196a",
+      "summary": "Cloudflare Pages、Turnstile、Resendを組み合わせることで、DBや常駐サーバーを構築せずに運用コストを無料枠内で完結させるお問い合わせフォームの実装手法を解説しています。サーバーレス関数でボット対策とメール送信ロジックを統合し、メンテナンス負荷を最小限に抑える設計が学べます。",
+      "whyRecommended": "サーバー管理やDBの保守を避け、個人開発や小規模なコーポレートサイトにおいて、コストとセキュリティリスクを最小化したい開発者に最適な構成だからです。また、具体的なコード例やモック動作を取り入れた開発効率を上げる工夫が共有されており、実践的です。",
+      "learningPoints": [
+        "Cloudflare Pages Functionsを活用することで、静的サイトホスティングとサーバーレスAPIを同一プロジェクト内で完結できる。",
+        "Google reCAPTCHAの代わりにCloudflare Turnstileを採用することで、画像選択などの手間をユーザーに強いることなくボット対策が可能になる。",
+        "データベースを構築せず、Resend API経由で直接メールを送信することで、個人情報の管理リスクを低減できる。",
+        "フォームの「ハニーポット（隠しフィールド）」と「Turnstile検証」の2段構えでボットからの不正送信を抑制する。",
+        "環境変数の設定有無を判定してメール送信をモック化することで、キー設定前の環境でもローカルやプレビュー環境での導線テストが可能になる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "cloudflare_pages",
+        "cloudflare_turnstile",
+        "resend_email_api",
+        "serverless_functions",
+        "cost_optimization"
+      ]
+    },
+    {
+      "articleId": "c4f1514f1a01fa646a8d2661b35461abc5dc7170f752881d3dbe263d60a764d1",
+      "summary": "GoランタイムにおけるGC（ガベージコレクション）の発火条件を解説し、OOM（メモリ不足）を回避するためのチューニング手法を紐解いています。理論だけでなく、コンテナ環境での実測値に基づいた改善プロセスが学べます。",
+      "whyRecommended": "GoのGC制御はブラックボックスになりがちですが、実運用でOOMに直面した際に役立つパラメータ調整の勘所が網羅されており、バックエンドエンジニアの実務レベル向上に直結するため。",
+      "learningPoints": [
+        "GCの発火タイミングは「Target heap memory到達」「GOMEMLIMIT到達」「runtime.GC()」「2分間の時間経過」の4種類である。",
+        "GOGCパラメータを下げるとGC頻度が高まりピーク時のメモリ使用量は抑制されるが、その分CPUコストが増大するトレードオフがある。",
+        "GOMEMLIMITはコンテナのようなメモリ制限環境において有効で、非ヒープ領域も含めた総メモリ量が上限を超えないようGCを動的に引き起こす。",
+        "GCが発火しない低負荷な環境であっても、前回のGCから2分経過すると強制的にGCが実行される仕組みがランタイムに存在する。"
+      ],
+      "signalsUsed": [
+        "golang_runtime",
+        "garbage_collection",
+        "memory_management",
+        "oom_prevention",
+        "code_examples"
+      ]
     }
   ]
 }
