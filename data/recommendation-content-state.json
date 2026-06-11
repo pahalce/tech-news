@@ -1415,6 +1415,62 @@
         "oom_prevention",
         "code_examples"
       ]
+    },
+    {
+      "articleId": "db297d22c72ca600866097ce61939e0e7a643e0dada35c8e2481e6507cd9b0bc",
+      "summary": "組み込みLinuxデバイスのブートプロセスにおいて、PlymouthからQtアプリケーションへ移行する際に発生する黒い画面を完全に排除し、アニメーションの連続性を保つ実装手法を解説しています。DRMの仕組みを巧みに利用し、シームレスな起動画面を実現するための技術的なステップを網羅しています。",
+      "whyRecommended": "組み込み開発におけるUXの品質を一段上げるための実践的な手法が、具体的なコードと理論的背景と共に解説されているためです。特に黒フレームの原因をDRMの視点で特定し、解決策を提示している点は技術的な難易度が高く、参考になる知見が豊富です。",
+      "learningPoints": [
+        "Plymouthの終了時に発生する黒画面は、quitコマンドによるフレームバッファの解放が原因であり、DEACTIVATE操作を用いることで回避できる。",
+        "DRM原子操作（Atomic Commit）において、モード設定がPlymouthとQt間で同一であれば、フルモードセットではなくプレーン更新のみが行われるため画面の明滅が発生しない。",
+        "Plymouthテーマ側で不可視のマーカーとして現在のアニメーション位相を埋め込み、起動時にアプリ側からKMS経由でそのフレームバッファを読み戻すことで、アニメーションの継続的な描画が可能になる。",
+        "PlymouthとQt双方のUI資産を一つの生成スクリプトから出力することで、デザインの不一致を根本から防ぐことができる。",
+        "Qtアプリケーションの起動時間を最適化するためには、エントリポイントのQMLを軽量化し、本体UIをLoaderで遅延ロードしてクロスフェードさせるのが有効である。"
+      ],
+      "signalsUsed": [
+        "embedded_systems",
+        "qt_framework",
+        "linux_kernel_drm",
+        "plymouth_boot_splash"
+      ]
+    },
+    {
+      "articleId": "b9d7e49988f0652d589d74f1adcae9339e8673d77731b89e5139788a15ffa6f7",
+      "summary": "Next.jsのApp Routerにおいてloading.tsxを使用すると、ストリーミングが開始された後にnotFound()を呼び出してもHTTPステータスが200のまま返されるという挙動を解説しています。これはバグではなく仕様であり、ステータスコードを正確に404にするための具体的な設計手法を紹介しています。",
+      "whyRecommended": "Next.jsのストリーミングアーキテクチャに深く関わる仕様の落とし穴を、実運用での課題解決（SEOやクロールバジェットの観点）を交えて深く解説しているため、中級者以上のフロントエンドエンジニアにとって非常に有益な技術的知見です。",
+      "learningPoints": [
+        "Next.jsのloading.tsxは内部でSuspense境界を生成するため、ストリーミング開始後に投げられたnotFound()やredirect()は、送信済みのレスポンスヘッダーを変更できずHTTPステータス200を返します。",
+        "Next.jsはストリーミングされる404ページに対して自動的にmetaタグでnoindexを挿入しますが、クロールバジェットやキャッシュ最適化のために厳密な404ステータスが必要な場合は別の設計が必要です。",
+        "親ディレクトリのloading.tsxも子ルート全体のレンダリングに影響を与えるため、ステータスコードの正確性が求められる場合は祖先ディレクトリのloading.tsxの存在をすべて確認する必要があります。",
+        "ストリーミングの恩恵を維持しつつ404ステータスを返すには、データの存在チェックをSuspense境界の前に配置し、重いレンダリング処理のみを明示的にSuspenseでラップする構成が有効です。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "deep_technical_explanation",
+        "edge_cases",
+        "real_world_experience",
+        "http_status_codes",
+        "streaming_architecture"
+      ]
+    },
+    {
+      "articleId": "5b00288b53538bafff9a585eef9d115f2aa572a795ce231ea0f75b6450889123",
+      "summary": "外部ライブラリを使わず、ブラウザ標準のDecompressionStream APIを活用してPDFから埋め込みXMLを抽出する方法を解説しています。PDFの構造を簡易的に走査することで、機密ファイルをサーバーに送らずローカルで処理する安全な実装を実現します。",
+      "whyRecommended": "ライブラリ依存を減らしたいフロントエンドエンジニアにとって、モダンなWeb APIの活用例として非常に実践的であり、セキュリティとパフォーマンスの両面でメリットのある設計思想が学べるため。",
+      "learningPoints": [
+        "PDFの添付データは、streamタグで囲まれたバイナリと直前のFilter辞書（FlateDecodeなど）で構成されている。",
+        "PDF内のバイナリを正規表現で走査する際は、UTF-8への変換でオフセットが崩れないようLatin1（1バイト1文字）として処理する必要がある。",
+        "zlib圧縮されたstreamは、new DecompressionStream(\"deflate\")を用いてブラウザ標準機能のみで解凍できる。",
+        "Uint8Arrayへ戻す際は、文字コードに対して& 0xffのビットマスクを行うことで、バイトオフセットを正確に復元できる。",
+        "ResponseオブジェクトとBlobを組み合わせることで、ReadableStreamの読み込みをループなしの簡潔なコードで記述できる。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "web_development",
+        "browser_api",
+        "pdf_processing",
+        "zero_dependency"
+      ]
     }
   ]
 }
