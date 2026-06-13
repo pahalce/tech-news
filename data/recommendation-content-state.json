@@ -1528,6 +1528,65 @@
         "actionable_steps",
         "code_examples"
       ]
+    },
+    {
+      "articleId": "39b47f0555c4038d975326210187f0e37d126d1fb3c7eed2b06e1cde173c273f",
+      "summary": "本書は、10種類の異なるサンプルアプリを通じてNext.js 15 App Routerの設計指針を体系的に解説する技術書です。セキュリティや観測性、パフォーマンス最適化など、実務で必須となるガイドラインを「基礎編」と「応用編」の構成で深く学べます。",
+      "whyRecommended": "機能ごとの断片的な知識ではなく、実務レベルのアプリ設計における「組み合わせ方」や「アーキテクチャ判断」に焦点を当てており、Next.jsでの開発品質を向上させたいエンジニアにとって非常に実践的です。",
+      "learningPoints": [
+        "Server Actionsにおいて型安全な実装パターンを採用し、楽観的更新を行うことでユーザー体験を向上させられる。",
+        "IDOR脆弱性を防ぐために、リソースオーナーシップのチェックと行レベルの認可を適切に実装する必要がある。",
+        "Request IDによるトレーシングや構造化ロギングを導入することで、リクエストの一気通貫した観測性を確保できる。",
+        "レート制限はアプリケーションの入り口となるServer Actionsの層で実装することで、スパムやDoS攻撃を効果的に防御できる。",
+        "Zodを用いて環境変数の起動時バリデーションを行うことで、設定ミスによる実行時の予期せぬエラーを未然に防げる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "app_router_specific",
+        "real_world_experience",
+        "architecture_decision_support",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "961c2e4e5cfd9fe03d1f643528b1cf97f6ae5810ec2a67728a468fd86eb3964c",
+      "summary": "本書は、半年間で10個の実践的なNext.jsアプリを開発した経験に基づき、App Router時代の設計指針と判断基準を体系化したガイドラインです。機能単体の使い方ではなく、実務で不可欠なセキュリティや認証、状態管理の組み合わせ方を深く解説しています。",
+      "whyRecommended": "Next.js 15等の最新技術を用いた中〜大規模開発における、現場目線の設計判断基準が言語化されているためです。特に「なぜその設計にするのか」という意図が明確で、実務でのアーキテクチャ選定に非常に役立ちます。",
+      "learningPoints": [
+        "Server Actionsの戻り値には例外を投げるのではなく、Discriminated Union型で成功・失敗を明示的に定義することで、型安全かつ制御可能なエラーハンドリングが可能になる。",
+        "認証やバリデーションといった横断的な関心事は高次関数で合成することで、チェックの抜け漏れをコード構造として防ぐことができる。",
+        "IDORを防ぐためには認証と認可を切り分け、データベースクエリのWHERE句で所有者IDを明示的に指定する必要がある。",
+        "セキュリティ・観測性・アクセシビリティは後付けのコストが極めて高いため、最初から組み込むべき設計領域である。",
+        "楽観的更新は失敗の確率がほぼゼロである場合にのみ適用し、失敗時のリカバリコストが高い処理には useStateと手動ロールバックを組み合わせるのが適切である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "typescript",
+        "architecture_explanation",
+        "production_case_study",
+        "deep_technical_explanation",
+        "reusable_implementation_pattern",
+        "security_by_design"
+      ]
+    },
+    {
+      "articleId": "20f578294f0de61cd59b496ac2dac25be58f0d64999358d842d33790a068480c",
+      "summary": "RustとWebAssembly、Canvasを組み合わせ、大量データでも高速に動作するExcelライクなテーブルコンポーネントを構築・公開するまでの実践記録です。パフォーマンスが必要なホットパスをRustで処理し、ロジックをTypeScriptに分離するアーキテクチャ設計を解説しています。",
+      "whyRecommended": "フロントエンドにおけるパフォーマンスの限界をWasmで突破する具体的な設計指針が示されており、大規模データを扱うUIコンポーネント開発を目指すエンジニアにとって非常に示唆に富む内容だからです。",
+      "learningPoints": [
+        "大量行を表示する際は、全データをWasmに渡すのではなく、ビューポート（現在表示されている範囲）のデータのみをバッチで送信する仕組みが有効である。",
+        "Wasmの初期化における非同期処理は、コンストラクタをプライベートにしてstaticな非同期ファクトリメソッド経由でインスタンス化することで、await漏れを防げる。",
+        "Canvas上で入力フォームを実装する場合、入力時のみinput要素をオーバーレイ表示し、Rust側から算出した座標をCSSに適用して同期をとる必要がある。",
+        "テスト効率を上げるため、パフォーマンスが重要ではないフィルターやソートなどのロジックはTypeScript側に配置し、ユニットテストを容易にしている。",
+        "Viteなどのバンドラー環境で公開する場合、wasm-packのビルドターゲットを--target bundlerに指定することで、Wasmを静的アセットとして適切に管理できる。"
+      ],
+      "signalsUsed": [
+        "rust_wasm_integration",
+        "canvas_api_usage",
+        "npm_package_publishing",
+        "architecture_explanation",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
