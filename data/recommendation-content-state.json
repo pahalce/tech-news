@@ -1587,6 +1587,59 @@
         "architecture_explanation",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "022289dd39c7e889a297d64572f8a3dfdb00309b2ab2a847203a40d54dc40048",
+      "summary": "React Schedulerがメインスレッドを占有せず、ブラウザの描画や入力を妨げないための協調スケジューリングの仕組みを解説しています。MessageChannelの活用や、5msのタイムスライスを用いたタスク分割、中断・再開のロジックを技術的に紐解きます。",
+      "whyRecommended": "Reactの内部動作を支える「タスクスケジューリング」の根幹を、ブラウザAPIの制約やトレードオフを交えて深く理解できるため、高度なフロントエンドエンジニアにとって必読の内容です。",
+      "learningPoints": [
+        "ブラウザにはマクロタスク間にしか描画やイベント処理の隙間がないため、React Schedulerは大きなタスクを5msごとの小さな単位に分割している。",
+        "setTimeout(0)は特定のネストレベルを超えると最低4msの待機時間が強制されるため、Schedulerはクランプの影響を受けないMessageChannelをタスク予約手段として採用している。",
+        "shouldYieldToHostは単なる時間経過の判定だけでなく、Reconcilerが要求するrequestPaintによる早期中断フラグを考慮して制御を返している。",
+        "継続（continuation）の仕組みにより、中断したタスクは戻り値として残りの処理を行う関数を返し、Schedulerがそれを次のマクロタスクで実行することで処理を再開する。",
+        "期限切れのタスク（expirationTimeが過ぎたもの）は、飢餓状態を避けるため5msルールによる中断の対象外として優先的に処理される。"
+      ],
+      "signalsUsed": [
+        "react_scheduler_internals",
+        "javascript_event_loop",
+        "browser_rendering_pipeline"
+      ]
+    },
+    {
+      "articleId": "78afabd653fc39c335e53bd2970c0fd8d195b7c475cbbcba2f73f58249f9dd00",
+      "summary": "RailsとInertia、Reactの構成において、AlbaとTypelizerを使用してバックエンドとフロントエンド間の型定義を同期させる手法を解説しています。シリアライザの定義からTypeScriptの型を自動生成することで、APIデータの構造変更に伴うフロント側の修正漏れを防ぐ開発体制を構築できます。",
+      "whyRecommended": "RailsとReactを統合する環境で、最大の課題である「型の二重管理」と「不整合」をライブラリ活用で自動化する極めて実践的な知見だからです。特に中規模以上のInertia開発において、メンテナンス性を飛躍的に高める構成となっています。",
+      "learningPoints": [
+        "AlbaのResource定義をTypelizerで読み取ることで、Rails側で確定したJSON構造に対応するTypeScript型を自動生成できる。",
+        "Albaのroot_key!設定により、フロントエンド側でラップされたデータのキー構造まで含めて型定義の自動同期が可能になる。",
+        "コントローラー側でActiveRecordオブジェクトを直接渡さず、Resourceクラスを介すことでAPIレスポンスのスキーマを確実に固定できる。",
+        "生成された型は index.ts に集約されるため、インポート時は個別ファイル指定ではなく名前付きエクスポートとして効率的に利用できる。",
+        "TypeScriptのOmit型を活用することで、生成された型からIDなどの特定フィールドを除外し、フォーム用など用途に応じた型を柔軟に派生できる。"
+      ],
+      "signalsUsed": [
+        "rails",
+        "inertia",
+        "alba",
+        "typelizer",
+        "type_safety"
+      ]
+    },
+    {
+      "articleId": "7aefbddf8572fd0e7e3b6204e28e4592493c48ca1f70f283d0437425a1bc35ab",
+      "summary": "本書はアコーディオンやモーダルなど、具体的なUIコンポーネントを作る際に必要なアクセシビリティの要件を逆引き形式で学べる実用的なカタログです。アクセシビリティと見た目のデザインを技術的に両立させるための実装手法を解説しています。",
+      "whyRecommended": "フロントエンド開発において、UIのアクセシビリティ対応をパターン別に参照できるため、即戦力となる実装知識を体系的に得られるためです。",
+      "learningPoints": [
+        "WCAGの達成基準をコンポーネント単位で紐付けることで、UI実装時に必要な考慮事項を効率的に特定できる。",
+        "キーボード操作の可否や支援技術への情報伝達をコンポーネント別に網羅して確認できる。",
+        "アクセシビリティとビジュアルデザインを技術的に両立させるための具体的な実装パターンが存在する。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "accessibility_focus",
+        "ui_component_patterns",
+        "reusable_implementation_pattern",
+        "actionable_steps"
+      ]
     }
   ]
 }
