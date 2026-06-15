@@ -1640,6 +1640,63 @@
         "reusable_implementation_pattern",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "a92c2986442ce117602f76520586ffb9174652a45140fa5668607f096b3d9dd4",
+      "summary": "Next.jsのAPI RouteをBFFとして活用し、ブラウザからAmiVoice APIへ安全に音声データを送信する実装手法を解説しています。環境変数の管理から、multipartデータ送信時の制約、取得した生JSONの型定義とテスト戦略まで網羅しています。",
+      "whyRecommended": "APIキーの保護や外部APIの認証要件など、実務で遭遇しやすい「外部連携時の落とし穴」が具体的に記述されており、Next.jsを用いたバックエンド実装のベストプラクティスを学べるため。",
+      "learningPoints": [
+        "AmiVoice同期HTTP APIの認証は、AuthorizationヘッダではなくmultipartのuフィールドにAPIキーを格納する必要がある。",
+        "multipart/form-dataで送信する際、音声データを含むフィールドは必ず最後に配置しなければならない。",
+        "ブラウザのMediaRecorderが生成するWebM形式は、コンテナにヘッダが含まれるため変換なしでそのままAPIに送れる。",
+        "外部APIからのレスポンスをそのままマッパーに渡さず、純粋関数で必要な型へ変換し、実データから生成したJSONフィクスチャでテストを行う。",
+        "実装前にcurlでAPIを直接叩き、生のレスポンス構造を先に確認しておくことが開発効率を大きく向上させる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "bff_architecture",
+        "multipart_form_data"
+      ]
+    },
+    {
+      "articleId": "c9250028f9459721b686243782a493e84ddf7cb783a52aa9a052a351b9cb1df0",
+      "summary": "音声認識API「AmiVoice」の単語単位のタイムスタンプを活用し、純粋な発話速度や淀み率を独自ロジックで計測する音読コーチングアプリの開発事例です。生成AI（Claude Haiku）には計算結果を自然なフィードバックに変換する役割のみを担わせることで、AIを賢く活用するアーキテクチャを実現しています。",
+      "whyRecommended": "技術選定の理由や実装時のハマりどころ、特に「最適化の検証結果」や「AI協業の限界」といった一次情報が極めて誠実に記述されており、実践的な開発の知見が豊富だからです。",
+      "learningPoints": [
+        "AmiVoice APIのstarttimeとendtimeを利用することで、単純な文字起こしを超えた「いつ、どの単語を、どれだけの時間で読んだか」という詳細な分析が可能になる。",
+        "APIキーをブラウザに露出させないため、Next.jsのAPI RoutesをBFF（プロキシ）として活用し、安全に外部APIを呼び出す構成が有効である。",
+        "LLMに全てを任せるのではなく、計算処理は純粋関数（コード）で完結させ、LLMには言語化とトーン調整だけを任せる「二段構え」の設計が実用性が高い。",
+        "Claude Haikuのプロンプトキャッシュは最小トークン数（4,096）を満たさないと機能しないため、事前のベンチマークや検証なしに「最適化した」と判断するのは危険である。",
+        "LLMに対して「句読点について言及しない」といった制御をプロンプトで指示しても、100%守られる保証はないため、出力結果は実データで検証し続ける必要がある。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "llm",
+        "typescript",
+        "amivoice_api_integration",
+        "architecture_decision_support",
+        "real_world_experience"
+      ]
+    },
+    {
+      "articleId": "8f999602e56877e005f0c1d82a8864051033db594dcdaea8f9f4dc3f96d88eb7",
+      "summary": "この記事は、高額なABテストツールを導入せずに、JavaScriptとGA4を用いて自前でABテスト環境を構築する方法を解説しています。実装コードの紹介に加え、テストを成功させるためのサンプルサイズや実施期間の判断基準も網羅しています。",
+      "whyRecommended": "外部ツールに依存せず、技術力でコストを抑えつつ柔軟な計測基盤を作りたい開発者に最適です。単なる実装方法だけでなく、統計的な観点からテストの信頼性を確保するための具体的な判断基準や失敗を防ぐチェックリストが実戦的です。",
+      "learningPoints": [
+        "JavaScriptのMath.random()でユーザーを振り分け、localStorageで割り当てを固定することで一貫したABテスト体験を提供できる。",
+        "GA4のカスタムイベントにtest_nameとvariantを送信することで、標準機能だけでは困難なバリアント別のCVR比較を探索レポートで行える。",
+        "曜日による変動を考慮し、統計的有意差を得るためには最低でも2週間以上のテスト期間を確保すべきである。",
+        "複数の要素を同時に変更すると寄与度が不明になるため、1回のテストで変更する要素は1つに絞る必要がある。",
+        "月間PVが1,000未満の場合は統計的意味を見出しにくいため、ABテストよりも改善施策の直接実施が推奨される。"
+      ],
+      "signalsUsed": [
+        "google_analytics_4",
+        "ab_testing",
+        "code_examples",
+        "actionable_steps",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
