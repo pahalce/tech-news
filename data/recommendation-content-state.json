@@ -1697,6 +1697,62 @@
         "actionable_steps",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "fb36309e214b3754b659d072f0459ce619cef39f1dce5656d393f6c7f11f5ba7",
+      "summary": "Next.jsのApp RouterにおけるServer ComponentとClient Componentの決定的な違いは、コードがサーバーとブラウザのどちらで実行されるかという点にあります。この実行環境の違いがデータ取得のパス指定やインフラ構成にどのような影響を与えるかを、著者の実体験を交えて解説しています。",
+      "whyRecommended": "Next.jsにおけるコンポーネントの使い分けという基本概念が、実運用上の「TLSエラー」という具体的なトラブルシューティングと紐づいており、アーキテクチャの理解を深めるのに最適です。",
+      "learningPoints": [
+        "Server Componentはサーバーで実行されるため、DBへ直接アクセス可能だがuseStateやブラウザのAPIは利用できない。",
+        "Client Componentはブラウザで実行されるため、相対パスでAPIを呼び出せるが、秘密情報を保持してはならない。",
+        "Server ComponentからHTTPで別サービスのAPIを叩く場合は、相対パスではなく証明書と一致する正しいドメイン名を含む絶対URLが必要である。",
+        "ロードバランサーの生のDNS名を絶対URLに指定すると、SSL証明書のホスト名不一致によりTLSエラーが発生する。",
+        "Next.jsアプリ内のデータ取得であれば、わざわざAPI経由でHTTP通信せず、Server ComponentでDBや関数を直接呼ぶのが最も自然である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "architecture_explanation",
+        "deep_technical_explanation",
+        "real_world_experience",
+        "failure_example",
+        "tls_error_debug"
+      ]
+    },
+    {
+      "articleId": "7d100071bf242a0521655a6bd5dadcbe2c39a809df0cae506b0e8b9f4eb194f7",
+      "summary": "Notion APIを利用したアプリにおいて、リレーション先のデータを個別に取得していたことによるN+1問題を改善した事例です。NotionのFormula機能を活用してデータを文字列として集約・転送し、API呼び出し回数を削減することで処理時間を約7.8秒から約1.5秒に短縮しました。",
+      "whyRecommended": "Notion APIの制限やパフォーマンスに悩む開発者にとって、リレーション設計の見直しとデータ取得戦略の実践的な最適化手法が具体的に解説されており、非常に参考になるため。",
+      "learningPoints": [
+        "Notionのリレーション先を個別にAPI取得する処理は、データ件数が増えると指数関数的に待ち時間が増大する原因となる。",
+        "Formula機能でリレーション先の必要な値を区切り文字で連結して出力し、API側でパースすることでHTTPリクエスト回数を大幅に削減できる。",
+        "APIの同時実行数をp-limit等で制御することで、スパイク時の負荷を抑え、システムの安定性を高めることができる。",
+        "ReactのTabsコンポーネントで不要なfetchを防ぐには、非表示状態のタブのレンダリングを制御し、必要な時だけデータ取得を行う必要がある。"
+      ],
+      "signalsUsed": [
+        "notion_api",
+        "formula_optimization",
+        "n_plus_one_problem",
+        "backend",
+        "performance"
+      ]
+    },
+    {
+      "articleId": "e33fb4a5651f0d8236f9362a0be14c2b1cc07c463b99933cdd719adef19d4350",
+      "summary": "CSSのbackdrop-filterでは実現できない「背景の屈折」を、WebGLフラグメントシェーダーを用いて再現する手法を解説した記事です。SDFによる形状定義と距離場の勾配を利用した屈折処理の仕組みを、具体的なGLSLコードと共にステップバイステップで学べます。",
+      "whyRecommended": "CSSの限界を超えたリッチなグラフィック表現を求めるフロントエンドエンジニアにとって、SDFを用いた物理ライクな描画は非常に応用範囲が広く、実装のヒントが詰まっているためです。",
+      "learningPoints": [
+        "CSSのfilterは各ピクセルの加工しかできず、背景の座標をずらす「屈折」の再現にはフラグメントシェーダーでのサンプリング位置操作が不可欠である。",
+        "ガラスの形状をSDFで定義すると、距離から法線を算出できるため、縁に向かって強く歪むレンズのような表現を数式的に計算できる。",
+        "R, G, Bチャンネルを別々のオフセットでサンプリングすることで、レンズ特有の色収差（にじみ）を擬似的に再現できる。",
+        "Retinaディスプレイ等の高解像度環境では、シェーダー内の座標計算にデバイスピクセル比（DPR）を乗算しないと見た目が崩れる。",
+        "固定カーネルによる多点サンプリングでぼかし処理を行うことで、Web環境でも比較的軽量にすりガラスのような質感を表現できる。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "webgl_shader_programming",
+        "glsl_development",
+        "sdf_graphics"
+      ]
     }
   ]
 }
