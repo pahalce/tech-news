@@ -1863,6 +1863,66 @@
         "migration_path_to_typescript",
         "legacy_to_modern_framework_comparison"
       ]
+    },
+    {
+      "articleId": "5333d83b65cbbe01eed0c86073d1070db00c0d39a09c2e2d69e80e54f009488f",
+      "summary": "本書は、ReactおよびNext.jsを用いた開発において、実装中の手戻りを防ぐための事前準備と設計の観点を解説しています。コンポーネント作成前に画面の目的やデータの流れ、責務を整理することで、複雑な状態管理や再実装のコストを最小限に抑える方法を提示しています。",
+      "whyRecommended": "Next.js App Router環境におけるコンポーネント設計やState管理のベストプラクティスが、実務レベルのチェックリスト形式でまとめられており、開発効率を向上させるための極めて実践的な知見であるため。",
+      "learningPoints": [
+        "APIレスポンスの型と、画面表示用に整えた型を分けることで、表示都合の変換処理をコンポーネントから分離できる。",
+        "URLクエリを使うべきか画面内stateで保持すべきかの判断基準は、リロードや共有後にも同じ状態を再現したいかどうかである。",
+        "サーバーコンポーネントはデータ取得や静的な表示に徹し、useStateやイベントハンドラが必要な箇所のみクライアントコンポーネントへ切り分ける。",
+        "データが0件の場合の空状態やエラー状態を、正常系と分けて事前に設計しておくことで、UXの一貫性を保てる。",
+        "コンポーネント分割を行う際は見た目だけでなく、データ取得やフォーム管理といった「責務」を基準に役割を言語化する。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "react",
+        "nextjs",
+        "typescript",
+        "implementation_guide",
+        "architecture_explanation",
+        "actionable_steps",
+        "checklist_or_playbook",
+        "component_design_patterns"
+      ]
+    },
+    {
+      "articleId": "ad7c868da1e6ba3e7717c41801de4a589d0af695694a601d4b7a0376aad10fd1",
+      "summary": "RustとWasmtimeを用いたマルチテナントFaaSプラットフォームの自作開発記です。セキュリティと可用性を重視したアーキテクチャ設計から、運用時の自己修復メカニズムの実装までを詳細に解説しています。",
+      "whyRecommended": "Rustでの分散システム設計や、WebAssemblyを用いた実行基盤のサンドボックス化という高度なテーマを、実運用を想定したレベルで網羅しているため、バックエンドエンジニアにとって非常に示唆に富んでいます。",
+      "learningPoints": [
+        "PostgreSQLのRow Level Security（RLS）を利用することで、アプリケーション層だけでなくDB層でもテナント間のデータ分離を強制できる。",
+        "Workerが侵害された場合に備え、Control Planeが署名したjob_tokenをWorkerに配布し、結果の正当性を公開鍵で検証することで不正な結果注入を検知できる。",
+        "WasmtimeのStoreLimits、epoch interruption、fuelを利用することで、無限ループやメモリ枯渇を引き起こす暴走コードを強制終了できる。",
+        "分散処理においてWorkerが予期せず停止した際、DLQ（Dead Letter Queue）の購読やReaperによる監視を行うことで、停滞したジョブを検知し同時実行数のカウンタを自動修復できる。",
+        "Wasmのアップロード時にwasmparserを用いて、許可リスト以外のimportを拒否する「deny-all」方式で機能制限を実装できる。"
+      ],
+      "signalsUsed": [
+        "rust_programming",
+        "wasmtime",
+        "multitenancy",
+        "security",
+        "distributed_systems"
+      ]
+    },
+    {
+      "articleId": "96d4c08c7119fd404ea11b08c0772dfb96fbf52b2a7f1023190c90230aa2c67f",
+      "summary": "放置された検証用アプリのSupabase無料枠の停止対策を解消するため、TiDB Cloud StarterへのDB移行を行った事例です。API Route経由でDBアクセスを抽象化していたため、最小限の工数でPostgresからMySQL互換DBへの移行に成功しています。",
+      "whyRecommended": "個人開発や検証環境におけるDB選択の判断基準として、コストや無料枠の仕様、利用機能の依存度といった実用的な分析が非常に参考になります。AIを活用した移行手順の整理プロセスもエンジニアにとって実践的です。",
+      "learningPoints": [
+        "Supabaseのプロジェクト停止対策として定期的なAPIコールを行うよりも、DBサービス自体を長期稼働に適したものへ置き換える方が検証用アプリには適している場合がある。",
+        "Next.jsのAPI Route経由でDBアクセスを分離しておくと、バックエンドDBの変更時にフロントエンド側の改修を不要にできる。",
+        "TiDB Cloud StarterのSpending Limit機能を利用することで、検証用アプリにおける予期せぬ課金のリスクを抑えられる。",
+        "DB移行時はAuthやStorageといったBaaS機能への依存度を事前に棚卸しし、移行範囲をデータベースCRUD操作のみに限定することで工数を大幅に削減できる。"
+      ],
+      "signalsUsed": [
+        "database_migration",
+        "cost_optimization",
+        "tradeoff_analysis",
+        "migration_guidance",
+        "real_world_experience"
+      ]
     }
   ]
 }
