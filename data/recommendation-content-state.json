@@ -1923,6 +1923,66 @@
         "migration_guidance",
         "real_world_experience"
       ]
+    },
+    {
+      "articleId": "0ba950f31824c92d4dbc3ba82b2f7ae323c9486d250f139ab2255bc7620a35cd",
+      "summary": "ブラウザ上でWordやExcelファイルを読み込み、HTMLへ変換した後にブラウザの印刷機能を介してPDF化する実装手法を紹介しています。外部サーバーや複雑なPDFライブラリに依存せず、クライアントサイドのみで完結させることが可能です。",
+      "whyRecommended": "ファイル変換という重い処理を、サーバー不要かつセキュリティリスクを最小限に抑えたブラウザ完結型で実現する実用的なパターンです。特に業務ツール開発においてユーザーのプライバシーを保護しつつ生産性を高める実装として参考になります。",
+      "learningPoints": [
+        "mammoth.jsでWordファイルを、SheetJSでExcelファイルをHTML文字列に変換できる。",
+        "非表示のiframeを作成してHTMLを流し込み、contentWindow.print()を呼び出すことで、ブラウザ標準の印刷ダイアログを経由してPDFを保存できる。",
+        "doc.write()直後はリソースのロードが完了していない可能性があるため、印刷実行前にsetTimeoutなどで適切な遅延時間を設ける必要がある。",
+        "CSSの@page設定とpage-break-after: alwaysプロパティを用いることで、印刷時の用紙サイズや改ページをHTML側で制御できる。",
+        "サーバーへファイルをアップロードせずに処理が完結するため、機密情報が含まれるドキュメントを扱う場合にセキュリティ面で有利になる。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "code_examples",
+        "practical_signals",
+        "browser_native_printing",
+        "client_side_processing",
+        "privacy_focused"
+      ]
+    },
+    {
+      "articleId": "a8a3e9936a27e4c8272a79e83b7e15dd4eab03ca6275224640223dc7b0719581",
+      "summary": "Next.jsのServer Componentを用いて、外部のNestJS APIからデータを直接fetchする手法と、その際のデータ受け渡しやエラーハンドリングのベストプラクティスを解説しています。App Routerを用いたモダンなデータフェッチと、クライアント境界の設計指針が具体的に学べます。",
+      "whyRecommended": "Laravel/Vueの経験があるエンジニアが、React/Next.jsのApp Routerへ移行する際に必ず遭遇する「Server Componentでのデータ取得」や「CORSの誤解」、「コンポーネント分離」の勘所を技術的背景と共に的確に解説しているため。",
+      "learningPoints": [
+        "Server Componentはサーバー上で実行されるため、async関数内で直接await fetchを行い、CORSを意識せずにAPI通信が可能である。",
+        "Client Componentへ渡せるpropsはシリアライズ可能なデータ（オブジェクト、配列、文字列、数値）のみに制限される。",
+        "loading.tsxファイルを配置すると、自動的にSuspenseでラップされ、データ取得中のフォールバック表示が適用される。",
+        "error.tsxはクライアント側のErrorBoundaryとして動作するため、必ず'use client'ディレクティブが必要である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "react",
+        "typescript",
+        "laravel_to_nextjs_migration",
+        "server_components_data_fetching",
+        "cors_explanation"
+      ]
+    },
+    {
+      "articleId": "0690857bcdf1f31ab2734b39f75cf99ebe5e799fde2e9b5757608daa1cf8224d",
+      "summary": "DoHやECHといったWeb技術の進化により、従来のネットワーク境界におけるDNSやSNIによる通信監視が困難になっています。著者は、ネットワーク境界の監視に依存し続けるのではなく、実行環境側でプロセスやファイルアクセスを含む文脈情報を取得することの重要性を説いています。",
+      "whyRecommended": "現代のインフラやセキュリティにおける「観測性の限界」という本質的な課題を、最新のプロトコル仕様を踏まえて深く分析しており、DevOpsやセキュリティエンジニアにとって今後取るべき戦略を検討する上で非常に参考になるため。",
+      "learningPoints": [
+        "DoHはDNSクエリを暗号化して特定のレゾルバへ送る技術であり、ネットワーク経路上のDNS監視を困難にする。",
+        "ECHはTLSのClientHelloに含まれるSNIを暗号化するため、中間者から接続先ホスト名を隠蔽できる。",
+        "HTTPS RRの導入により、DNSは単なるIP名前解決の手段から、HTTP/3対応やECHConfig提供を含むブラウザの接続戦略の一部へと役割が拡大している。",
+        "TLS復号（中間者による検査）はWebのプライバシー向上という流れに逆行するため、根本的な解決策としては筋が悪い。",
+        "ネットワーク境界の監視が弱まる環境では、CI/CD環境においてプロセス、ファイルアクセス、ネットワーク通信の相関ログを取得・保持することが不可欠となる。"
+      ],
+      "signalsUsed": [
+        "dns_over_https",
+        "encrypted_client_hello",
+        "observability_challenges",
+        "network_security_evolution"
+      ]
     }
   ]
 }
