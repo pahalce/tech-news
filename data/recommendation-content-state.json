@@ -1983,6 +1983,59 @@
         "observability_challenges",
         "network_security_evolution"
       ]
+    },
+    {
+      "articleId": "7be8949046e82e8d229365633fe031f626fd0d0895d261dac765d2f2bbdc0d38",
+      "summary": "FFmpeg.wasmを活用し、サーバーへ動画を送信することなくブラウザ上のみで動画を圧縮する実装方法を解説しています。Next.js環境でプライバシーを保護しつつ、動画処理をフロントエンドで完結させるための具体的なライブラリ設定や注意点をまとめました。",
+      "whyRecommended": "ブラウザベースで完結する動画処理は、サーバーコスト削減やプライバシー保護の観点で非常に実用的であり、Next.jsでの具体的な実装コードと構成設定が揃っているため参考にしやすいです。",
+      "learningPoints": [
+        "FFmpeg.wasmを使用する場合、SharedArrayBufferを有効にするため、Next.jsのnext.config.tsでCross-Origin-Opener-PolicyとCross-Origin-Embedder-Policyヘッダーの指定が必須となる。",
+        "FFmpegのコアファイルは約32MBとサイズが大きいため、バンドルに含めずCDNからtoBlobURL経由で読み込むのが推奨される。",
+        "動画圧縮の品質を制御するCRF値は18から40の範囲で指定し、標準としては23から28の間が推奨される。",
+        "解像度を変更する際、scaleフィルタで-2を指定することで、アスペクト比を維持しつつ値を偶数に丸めることができる。",
+        "FFmpeg.wasmはネイティブFFmpegに比べて処理速度が3〜5倍遅くなるため、ユーザーには処理中である旨の表示とタブを閉じないよう誘導が必要である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "nextjs",
+        "webassembly_implementation",
+        "browser_native_video_processing",
+        "cors_headers_configuration"
+      ]
+    },
+    {
+      "articleId": "4fb370f8eef043d2798352e29e09a98b2ebf8cf9e94e59d837fbe4b53a99098b",
+      "summary": "AstroでGA4が正常に計測されなかったトラブルの解決事例です。is:inline内でテンプレートリテラルを使用すると、JSが文字列として出力され実行されない原因と、set:htmlを用いた修正方法を解説しています。",
+      "whyRecommended": "フロントエンド開発で「コード上にはタグがあるのにデータが来ない」という盲点になりやすい問題を、デバッグ手順と共に具体的に解説しているため、実務上のトラブルシューティングとして非常に有用です。",
+      "learningPoints": [
+        "Astroのis:inlineディレクティブはスクリプトの中身を加工せずそのまま出力するため、式で包むと波括弧やバッククォートまでHTMLに含まれてしまう。",
+        "JavaScriptを式として注入したい場合は、is:inlineではなくset:htmlを使用して文字列のみをスクリプトタグ内に注入する必要がある。",
+        "ブラウザのコンソールでtypeof window.gtagを実行し、関数として定義されているか確認することで、計測タグが正しく実行されているか判定できる。",
+        "ネットワークログから「/g/collect」へのリクエストが発生しているかを確認することで、実際にGA4へヒットが送信されているか確実に見極められる。"
+      ],
+      "signalsUsed": [
+        "astro_framework",
+        "google_analytics_4",
+        "debugging_techniques",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "ee659fd773c4759e155844c7cbc0e1aae079251be9f1a38bbb8d1cd473d45621",
+      "summary": "GitHub Actionsのセルフホストランナーを活用し、自宅VM環境へNext.jsアプリを自動デプロイするパイプラインの構築手順を解説しています。リポジトリへのマージをトリガーにして、Dockerコンテナのビルドから起動までを自動化する方法が分かります。",
+      "whyRecommended": "オンプレミス環境におけるCI/CD自動化の実践的な構成例であり、特にセルフホストランナーのセットアップからsystemdによる自動起動設定まで、現場ですぐに役立つ具体的かつ網羅的な手順が記述されています。",
+      "learningPoints": [
+        "GitHub ActionsのRunner設定において、./svc.sh installおよびstartを実行することでsystemdへのサービス登録と自動起動が可能になる。",
+        "GitHub Actionsのワークフロー定義で、if: github.event.pull_request.merged == trueを指定することでマージ時のみデプロイを実行できる。",
+        "docker rm -fコマンドに|| trueを付与することで、初回実行時などコンテナが存在しない場合のエラーによるパイプライン停止を防げる。",
+        "セルフホストランナーの導入には公式リポジトリから配布されているtar.gzファイルをダウンロードし、config.shでトークン認証を行う手順を踏む。"
+      ],
+      "signalsUsed": [
+        "self_hosted_runner",
+        "github_actions",
+        "docker",
+        "implementation_guide"
+      ]
     }
   ]
 }
