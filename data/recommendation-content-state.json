@@ -2036,6 +2036,62 @@
         "docker",
         "implementation_guide"
       ]
+    },
+    {
+      "articleId": "3b42420f01f74a0b5683a7e9042036b6bdc6a27ac5be4f732f71a8250a8ba129",
+      "summary": "Next.js App RouterにおけるColocation（併置）を活用した、保守性の高いフォルダ設計手法を解説する記事です。ルーティング、コンポーネント、サーバーアクションを適切に配置するための具体的なディレクトリ構造や、パフォーマンスを最適化するためのベストプラクティスがまとめられています。",
+      "whyRecommended": "Next.jsのApp Routerを採用する際に直面しやすい「ディレクトリ構造の肥大化」と「Server/Client Componentの境界線」という課題に対し、明確なルールと実装パターンを提示しているため、実務で即座に役立つ知見が得られます。",
+      "learningPoints": [
+        "関連するコンポーネントやロジックを対象ルートの近くに配置することで、変更の影響範囲を限定しコードの見通しを良くする。",
+        "アンダースコア（_）で始まるフォルダ名を使用することで、ルーティングから除外された内部専用のコンポーネントやユーティリティとして整理できる。",
+        "コンポーネントはデフォルトをServer Componentとし、ブラウザAPIや状態管理が必要な末端部分のみをClient Componentとして切り出す。",
+        "Context Providerを配置する際は、Client Componentとして作成した専用ファイルを経由して、必要なレイアウト階層の直下に配置する。",
+        "同一アプリケーション内のAPIルートハンドラをfetchで呼ぶのではなく、Server Actionを直接インポートして実行することで不要なネットワークホップを削減する。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "colocation_pattern",
+        "server_components",
+        "client_components",
+        "server_actions"
+      ]
+    },
+    {
+      "articleId": "385cefb7b6cbbba6819c2dbfe0548ceef21625fbfa53a7c3becb6dea28240e88",
+      "summary": "Next.js 15とPayload CMSをCloudflare Workersの無料プランへデプロイする際、スクリプトサイズ制限（3 MiB）を回避するための最適化手法を解説しています。不要な依存関係の特定から、API Routeへの処理分離、ビルド成果物の軽量化までの具体的な手順を学べます。",
+      "whyRecommended": "Next.jsやPayload CMSをサーバーレス環境へデプロイする際の「Workerサイズ制限」という、実務で直面しやすいニッチかつ重要な課題に対する技術的解決策が網羅されています。無料枠を最大限に活用するための分析手法が非常に実践的であるためです。",
+      "learningPoints": [
+        "Cloudflare Workersの制限判定に使用されるのは「gzip圧縮後」のファイルサイズであり、ビルド時に出力される非圧縮のファイルサイズではない。",
+        "Next.jsのServer Action内でCMS初期化やDB接続を行うと、そのページチャンクに重い依存関係が引き込まれるため、API Routeへの分離で削減できる。",
+        "バンドルサイズ分析にはOpenNextが出力する「handler.mjs.meta.json」をesbuildのAnalyze Metafileへ投入するのが有効である。",
+        "ビルドツールがNFT trace経由で不要なライブラリ（@vercel/og等）を誤ってバンドルに含める場合があるため、Webpackのaliasやtrace削除スクリプトで除外する必要がある。",
+        "ISRやSSGへの移行は実行性能の向上には寄与するが、Workerスクリプトのバンドルサイズ削減には直接的な効果が薄い。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "web_development",
+        "cloudflare_workers",
+        "payload_cms",
+        "bundle_size_optimization"
+      ]
+    },
+    {
+      "articleId": "e69d425db36b34cc5da31d6ac662388e970c486918e9813823795224e5786d3d",
+      "summary": "JavaScriptの関数が特殊なオブジェクトであることを踏まえ、TypeScriptのinterfaceでなぜ関数呼び出しのシグネチャを定義できるのかを解説しています。単なる関数型を超えた、「プロパティを持つ関数」の型定義における必要性と仕組みが明確になります。",
+      "whyRecommended": "TypeScriptの型定義を深く理解する上で避けて通れない「関数とオブジェクトの境界」について、仕様レベルから論理的に解説されているため、型システムの理解を一段深くしたいエンジニアに最適です。",
+      "learningPoints": [
+        "JavaScriptの関数は内部に呼び出し用メソッド[[Call]]を持つ特別なオブジェクトであり、普通のオブジェクトに後から[[Call]]を付与することはできない。",
+        "interfaceにおけるcall signatureは、オブジェクトそのものが呼び出し可能であることを定義するための構文である。",
+        "関数とオブジェクト両方の性質（呼び出し機能＋プロパティやメソッド保持）を併せ持つ型を定義する場合、通常のtypeやアロー記法ではなくinterfaceによるcall signatureが必須となる。",
+        "「オブジェクトのプロパティに関数を入れること」と「オブジェクトそのものを関数として呼び出すこと」は全くの別物である。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "javascript_internal_spec",
+        "deep_technical_explanation",
+        "code_examples"
+      ]
     }
   ]
 }
