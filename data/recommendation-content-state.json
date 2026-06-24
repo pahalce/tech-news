@@ -2092,6 +2092,63 @@
         "deep_technical_explanation",
         "code_examples"
       ]
+    },
+    {
+      "articleId": "c0c204cf991dc6d7b1b03c0585d9d3534e079f25af0d08af7105b73ff0a614cc",
+      "summary": "立ち上げ直後のドメインでインデックスが進まない問題を、Next.jsのサイトマップ最適化によって解決した実例です。クロールバジェットの制限を考慮し、重要度の低いページを除外して検索エンジンに優先順位を伝える手法を解説しています。",
+      "whyRecommended": "新規ドメインや小規模サイトにおいてSEOのインデックス登録に悩むエンジニアにとって、具体的なコードベースでの解決策と、Googleの仕様に基づいた論理的な構成変更が非常に参考になります。",
+      "learningPoints": [
+        "立ち上げ直後のドメインでは1日あたりのクロール予算が極めて少ないため、サイトマップにはインデックス価値の高いページのみを記載すべきである。",
+        "利用規約や問い合わせページなどのユーティリティページは内部リンクから発見できるため、クロール予算を節約するためにサイトマップから除外するのが有効である。",
+        "サイトマップへの記載とページ内のnoindex指定を別々に管理せず、単一の判定関数を用いて両者の整合性を保つことで設定ミスを防げる。",
+        "sitemap.tsのlastModifiedに毎回異なるnew Date()を渡すと、Googleが値を信頼しなくなり無視される可能性があるため、固定値や更新日時を使用すべきである。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "seo_optimization",
+        "crawl_budget",
+        "sitemap_generation",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "cfb0a5862f434d05c437d94a39ba4dffe93a97ff78f1d134691debd5bd607a78",
+      "summary": "Next.jsのISRを利用したpSEO地域ページの大量公開時に発生した技術的トラブルと、既存ページを守るための監視・ロールバック体制の構築録です。非エンジニア経営者の視点から、検索順位の急落リスクを数値管理で防ぐ現実的な手法を解説しています。",
+      "whyRecommended": "pSEOというSEO戦術において「公開すること」よりも「安全に止めること」に主眼を置いた多層防御の設計思想が非常に実践的で、Next.jsのキャッシュ特性に対する深い洞察が得られるため。",
+      "learningPoints": [
+        "Next.jsのISRでDBのステータス変更を即座に反映させるには、アプリ内からrevalidatePathを明示的に呼ぶ必要があり、DB直接変更ではキャッシュが古いまま残る。",
+        "公開直後のページは内容が「変わっていない」と判定されるため、差分更新のみを行うcron処理では即時反映を保証できない。",
+        "Search Console APIを利用して主要ページ（カナリア）の順位と表示回数をbaselineと比較し、悪化した際にステータスをdraftに戻すだけの単純なロールバックフローを事前に構築する。",
+        "pSEOにおいて一気公開が許されるのは、ページごとの固有データによる差別化、看板ページの監視、即時ロールバック手段の3つが揃っている場合のみである。",
+        "検索順位の変動を主観で判断せず、順位の悪化幅（+1.5で警告、+3で撤退検討）を閾値化して機械的に監視する運用にする。"
+      ],
+      "signalsUsed": [
+        "web_development",
+        "nextjs",
+        "seo_strategy",
+        "canary_testing",
+        "automated_monitoring",
+        "tradeoff_analysis",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "17c3f047b0f62df73eb3571c6e9974376f21dc756390d9d04c08d15949cf86f2",
+      "summary": "TauriのレンダリングエンジンであるwryとtaoをCLIツールとして活用し、軽量で高速なMermaid変換エンジンを構築する手法を解説した記事です。Chromiumをバンドルする従来のアプローチと比較し、OSネイティブのWebViewを利用することで劇的な軽量化を実現する設計を詳述しています。",
+      "whyRecommended": "TauriをGUI以外の文脈で活用するという非常にユニークで実践的なアプローチが提示されており、Rustのライブラリエコシステムを深掘りするエンジニアにとって技術的知見が非常に高い内容であるため選定しました。",
+      "learningPoints": [
+        "Tauriの内部ライブラリであるwryとtaoは、Tauriフレームワーク本体から切り離して独立したライブラリとして利用可能です。",
+        "Linux環境でWebViewをヘッドレス実行する場合、Xvfbを自前で起動し、DISPLAY環境変数を明示的に制御することでGUIなしでもレンダリングが可能です。",
+        "ヘッドレス環境でのWebView実行時には、LIBGL_ALWAYS_SOFTWAREなどの環境変数を設定してGPU合成を無効化することで、不要な警告や動作不良を回避できます。",
+        "Mermaidのように「入力がテキスト」「出力がSVG」「DOM操作が必須」という条件を満たす処理において、WebViewを用いたアプローチは従来のPuppeteer等のソリューションより圧倒的に低メモリ・高速に動作します。"
+      ],
+      "signalsUsed": [
+        "rust_ecosystem",
+        "webview_manipulation",
+        "headless_browser_optimization",
+        "deep_technical_explanation",
+        "tradeoff_analysis"
+      ]
     }
   ]
 }
