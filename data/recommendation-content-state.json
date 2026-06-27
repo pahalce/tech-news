@@ -2269,6 +2269,63 @@
         "team_development",
         "supabase"
       ]
+    },
+    {
+      "articleId": "4cb93329417b1685f2c6c2931a1cf9db5415e931c9ba3771227bbf15ea37056e",
+      "summary": "Electronベースのエディタ開発において、日本語入力中のIME変換とEmacs風キーバインドが競合する問題を解決するためのrenderer側の実装手法を解説しています。変換状態の判定精度を高め、未確定文字の強制的な確定処理を実装することで、キーバインドの暴発や二重入力を防ぐ工夫が紹介されています。",
+      "whyRecommended": "自作エディタ開発において避けられないIME制御の複雑なエッジケースに対して、Reactのrefとイベントハンドラを用いた堅実かつ具体的な解決策が提示されており、技術的難易度の高いフロントエンド開発の知見として非常に有益です。",
+      "learningPoints": [
+        "Reactのステート更新による遅延（stale closure）を防ぐため、変換中かどうかの判定にはuseStateではなくrefを使用する。",
+        "ブラウザの環境によってkeydownとcompositionイベントの発火順序が前後することがあるため、KeyboardEvent.isComposingと自前のフラグを併用して判定を二重化する。",
+        "変換中の非修飾キーはデフォルト動作を止めずにreturnで処理を抜けることで、IME側に機能を委譲し、Enterや変換キーを正しく動作させる。",
+        "未確定のまま強制的に変換を確定させるには、textareaのblur/focusを行ってcompositionセッションを終了させつつ、直後のcompositionendイベントをフラグで1回だけ無視させる。"
+      ],
+      "signalsUsed": [
+        "ime_handling",
+        "electron_development",
+        "state_management",
+        "deep_technical_explanation",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "15e6ddc1054fb12201c6dec619818800c1d707640c6c5d3aca508c303203c556",
+      "summary": "Reactでのテーマ切り替え時に発生する初回ロードの画面チラつき（FOUC）の原因と対策を解説した記事です。Reactのレンダリングやフックの実行タイミングがCSSの適用よりも後になる仕様を突き、最適な解決策を提示しています。",
+      "whyRecommended": "React環境におけるフロントエンドの描画パフォーマンスとUXのトレードオフを論理的に解説しており、実務で遭遇しやすい課題への明確な実装指針が含まれているため。",
+      "learningPoints": [
+        "FOUCはブラウザがCSSを読み込む時点で、Reactが管理するテーマ属性がDOMに付与されていないために発生する。",
+        "useEffectやuseLayoutEffectはコンポーネントのマウント後に実行されるため、初回の描画遅延を解決できない。",
+        "根本的な解決には、HTMLのhead内で同期的に実行されるインラインスクリプトを用い、CSS適用前にテーマ属性を確定させる必要がある。",
+        "Next.js等のSSR環境では、サーバー側でCookieを読み取り、初期HTMLに属性を直接埋め込むことでチラつきを完全に防止できる。"
+      ],
+      "signalsUsed": [
+        "react",
+        "frontend",
+        "performance",
+        "fouc_prevention",
+        "ssr_vs_spa"
+      ]
+    },
+    {
+      "articleId": "de10a277a077f5be83afa48cb901aca15fda146d342dec114fb49b1be16a5eb3",
+      "summary": "10数サイトに乱立していた問い合わせフォームのバックエンドを、Cloudflare Workersを用いたマルチテナント構成に集約しました。フロントエンドの実装（Next.jsやWordPress）に関わらず、共通のゲートウェイへPOSTすることでスパム対策、バリデーション、通知、保存の一元管理を実現しています。",
+      "whyRecommended": "技術スタックが異なる複数のWebサイトを保守している場合、フォーム実装の共通化は非常に有用です。サーバーレス技術を無料で賢く組み合わせる構成は、個人開発や小規模なプロダクト運用において非常にコストパフォーマンスが高い好事例です。",
+      "learningPoints": [
+        "フォーム項目やバリデーション規則をコードではなく設定オブジェクトで管理することで、マルチテナント環境におけるサイト追加コストを最小化できる。",
+        "Cloudflare D1で全サイトの問い合わせを1つのテーブルに集約し、payloadカラムにJSONとしてデータを保存することで、サイトごとに項目が異なってもスキーマ変更なしで対応できる。",
+        "保存処理を最優先で確定させ、通知（メール・Discord）をctx.waitUntilで並列・非同期実行することで、レスポンス速度と信頼性を両立できる。",
+        "WordPressのプラグインに依存せず、素のHTMLとJSで構築することで、Next.jsと同じフォームバックエンドを共有できる。",
+        "Discordの通知メッセージにおいて本文をコードブロックで囲むことで、ユーザー入力によるMarkdownの誤展開やメンションの誤発火を安全に防げる。"
+      ],
+      "signalsUsed": [
+        "cloudflare_workers",
+        "multi_tenant_architecture",
+        "serverless",
+        "spam_prevention",
+        "code_examples",
+        "real_world_experience",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
