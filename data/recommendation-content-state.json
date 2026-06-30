@@ -2389,6 +2389,59 @@
         "software_lifecycle",
         "developer_productivity"
       ]
+    },
+    {
+      "articleId": "85de90377315b9dc55bc4d7c0e3a93f9564377a1a4be865734e52f125b9e17c6",
+      "summary": "RAGのリランキング処理をPython環境に頼らず、TypeScriptとWebAssemblyを用いてブラウザやエッジ環境で高速に実行する手法を紹介しています。物理シミュレーションを応用した独自アルゴリズムにより、GPUなしで高精度なリランキングを実現します。",
+      "whyRecommended": "サーバーレス環境（Edge）でのパフォーマンス最適化や、GPUコストを削減したいという技術的な要件に対し、WASMを活用した非常に具体的かつ実践的な解決策を提示しているため。",
+      "learningPoints": [
+        "「時間反転対称性」を応用し、ノイズとなる類似度の低いドキュメントを減衰させ、関連ドキュメントを先鋭化させることが可能です。",
+        "「多重散乱」のアルゴリズムは、類似ドキュメント同士がリンクし合うネットワーク密度を利用することで、ノイズを排し信頼性の高い情報を浮上させます。",
+        "WASM内のメモリをJS側と直接共有し、データのコピーを避ける実装を行うことで、実行時間を1〜3ミリ秒以下に抑えることができます。",
+        "物理リランカーを利用すると、単純なベクトル検索と比較してNDCGを20%以上向上させつつ、GPU推論の10倍以上の速度で動作可能です。"
+      ],
+      "signalsUsed": [
+        "wasm_integration",
+        "physics_simulation_in_web",
+        "edge_computing",
+        "deep_technical_explanation",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "383c4f52ae0de9df85b024a5c65c39bb53006da6105936b1a7181806c5eb3ab0",
+      "summary": "Next.js環境へReact公式チュートリアルを移植する際に発生したエラーの解決過程と、Containerコンポーネントを用いた綺麗なUI構築手法を解説した記事です。フレームワークの自動処理とReactの仕様を理解するための実践的な知見がまとめられています。",
+      "whyRecommended": "Reactの初学者がフレームワーク固有の動作で詰まりやすいポイントを実体験ベースで整理しており、技術的な泥臭い試行錯誤から学べる内容が充実しているためです。",
+      "learningPoints": [
+        "Next.js環境ではReactのマウント処理やレンダリング基盤が自動化されているため、ReactDOM.createRoot等の手動記述やscriptタグによるCDN読み込みは不要である。",
+        "ファイル分割を行う際は、モジュールのメインとなるコンポーネントにexport defaultを付与しないと別ファイルから読み込めない。",
+        "フォルダ名にアンダースコア（_）を付けることで、Next.jsのApp Routerによる自動ルーティング対象から除外できる。",
+        "共通レイアウトを実装する際は、ReactNode型をchildrenとして受け取るContainerコンポーネントを作成することで、任意のコンポーネントを再利用可能な枠組みに配置できる。"
+      ],
+      "signalsUsed": [
+        "hydration_errors",
+        "react_components_composition",
+        "troubleshooting_workflow"
+      ]
+    },
+    {
+      "articleId": "6f1639b144fcee8438c28441649a7c7a63fbfb403d7c95cd838ae870ce592a6a",
+      "summary": "巨大なリポジトリから修正対象のファイルを特定する際、Chrome DevToolsと全文検索を活用する具体的な手順を解説しています。要素の特定からコンポーネントの呼び出し元にたどり着くまでの二段階の検索フローが紹介されています。",
+      "whyRecommended": "巨大なコードベースに初めて触れるエンジニアがつまずきがちな「どこを修正すればいいか分からない」という課題に対し、ツールを組み合わせて論理的に解決する手法が非常に実践的であるため。",
+      "learningPoints": [
+        "ChromeのDevToolsで特定の要素を選択し、HTML構造から検索の手がかりとなるclass名を取得する。",
+        "汎用的な名前（cardやcontainerなど）ではなく、そのコンポーネント固有の名称で検索することで、ヒット数を絞り込む。",
+        "class名でコンポーネントの定義ファイルを見つけ、そのファイル名や定義名で再度リポジトリ全体を検索して呼び出し元を特定する二段構えの手法をとる。",
+        "CSS Modulesのようにclass名がビルド時に変換される場合は、画面上の表示文言やdata属性を検索のキーにする。",
+        "修正対象のコードを見つけた後は、周囲の文脈を確認するために必ず前後を含めてコードを読む。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "web_development",
+        "onboarding_tips",
+        "code_navigation",
+        "actionable_steps"
+      ]
     }
   ]
 }
