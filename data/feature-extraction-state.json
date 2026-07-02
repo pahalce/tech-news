@@ -52649,6 +52649,1707 @@
         "displayName": null,
         "publicationName": null
       }
+    },
+    {
+      "articleId": "91127164a44bf2d76ca2978def9faec09ca36b78378a7c264364d4141a20b5ee",
+      "extractedAt": "2026-07-02T20:58:09.706Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is well-structured and provides a clear summary of the Claude Fable 5 return, including policy changes and usage advice."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "llm",
+            "salience": 1
+          },
+          {
+            "key": "ai_engineering",
+            "salience": 0.8
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "security",
+            "salience": 0.6
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "release_news",
+              "salience": 0.9
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.4
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "constraints_explained",
+              "salience": 0.9
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.7
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "source_links",
+              "salience": 0.9
+            },
+            {
+              "key": "measured_results",
+              "salience": 0.5
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "operationally_applicable",
+              "salience": 0.8
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 1
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "event_timeline",
+            "salience": 0.7
+          },
+          {
+            "key": "cost_estimation",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "acntechjp",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "5a3ef7fd21cb95d21558a55f709e9a22f1f4078e3c191a8b463e9a9760c98eef",
+      "extractedAt": "2026-07-02T20:58:13.397Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is well-structured and provides a high-quality guide on naming conventions in software development."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.8
+          },
+          {
+            "key": "typescript",
+            "salience": 0.7
+          },
+          {
+            "key": "react",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.5
+          },
+          {
+            "key": "testing",
+            "salience": 0.4
+          },
+          {
+            "key": "nextjs",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.9
+            },
+            {
+              "key": "beginner",
+              "salience": 0.3
+            }
+          ],
+          "content_types": [
+            {
+              "key": "architecture_explanation",
+              "salience": 0.9
+            },
+            {
+              "key": "implementation_guide",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.9
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.8
+            },
+            {
+              "key": "edge_cases",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 1
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.8
+            },
+            {
+              "key": "source_links",
+              "salience": 0.5
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.9
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.8
+            },
+            {
+              "key": "actionable_steps",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.4
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "naming_conventions",
+            "salience": 1
+          },
+          {
+            "key": "code_readability",
+            "salience": 0.9
+          },
+          {
+            "key": "software_quality_metrics",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "kagan",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "158a32caa7c677b53c40ca24154bbbef64c8a60c31366f78703b43e8b207bd20",
+      "extractedAt": "2026-07-02T20:58:15.701Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is a clear and well-structured technical tutorial."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.8
+          },
+          {
+            "key": "devops",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "ai_engineering",
+            "salience": 0.4
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.9
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.9
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "edge_cases",
+              "salience": 0.5
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.8
+            },
+            {
+              "key": "source_links",
+              "salience": 0.4
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.9
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.8
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "sync_tool",
+            "salience": 0.9
+          },
+          {
+            "key": "remote_development",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "karaage0703",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "6a29492df4a5ca3c3af6af3fd9f1c39d05e2868f2309606794ae7dbdc7c04d0b",
+      "extractedAt": "2026-07-02T20:58:19.068Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Clear comparison between legacy ActionScript 3 and modern TypeScript."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.9
+          },
+          {
+            "key": "frontend",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.5
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "comparative_evaluation",
+              "salience": 0.9
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.4
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "comparison",
+              "salience": 1
+            }
+          ],
+          "practical_signals": [],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 1
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "historical_context",
+            "salience": 0.7
+          },
+          {
+            "key": "ecmascript_evolution",
+            "salience": 0.6
+          }
+        ]
+      },
+      "author": {
+        "username": "seekseep",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "3c4f2dcbcc40e3b20279d4208c183310526f1d03ab5254249842e6b0d2bc20da",
+      "extractedAt": "2026-07-02T20:58:25.083Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is clear and covers the current state and feasibility of pattern matching in TypeScript and JavaScript."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.9
+          },
+          {
+            "key": "web_development",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "opinion_essay",
+              "salience": 0.7
+            },
+            {
+              "key": "trend_overview",
+              "salience": 0.5
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.6
+            },
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.4
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "source_links",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "ecmascript_proposal",
+            "salience": 0.8
+          },
+          {
+            "key": "tc39_process",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "terass_dev",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "67838242f5a36520a1d820342f8027896f6da25aa13adfe03f76fb08ef750dc1",
+      "extractedAt": "2026-07-02T20:58:27.862Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is a well-structured technical announcement analysis."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "ai_engineering",
+            "salience": 0.9
+          },
+          {
+            "key": "typescript",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "backend",
+            "salience": 0.5
+          },
+          {
+            "key": "llm",
+            "salience": 0.5
+          },
+          {
+            "key": "web_development",
+            "salience": 0.4
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "tool_introduction",
+              "salience": 0.9
+            },
+            {
+              "key": "release_news",
+              "salience": 0.8
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.7
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.8
+            },
+            {
+              "key": "source_links",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.8
+            },
+            {
+              "key": "operationally_applicable",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "mastra_framework",
+            "salience": 0.9
+          },
+          {
+            "key": "durable_execution",
+            "salience": 0.9
+          },
+          {
+            "key": "inngest_integration",
+            "salience": 0.6
+          }
+        ]
+      },
+      "author": {
+        "username": "shiromizuj",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "3e5c49cdb76d8f35838bcdd399cdbd20121ffeadb77a494bbe26411fe28bb586",
+      "extractedAt": "2026-07-02T20:58:30.612Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article clearly describes the development and technical stack of a Mahjong analysis application."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.8
+          },
+          {
+            "key": "typescript",
+            "salience": 0.7
+          },
+          {
+            "key": "performance",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "react",
+            "salience": 0.5
+          },
+          {
+            "key": "web_development",
+            "salience": 0.5
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "tool_introduction",
+              "salience": 0.9
+            },
+            {
+              "key": "production_case_study",
+              "salience": 0.6
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.5
+            },
+            {
+              "key": "edge_cases",
+              "salience": 0.7
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "source_links",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            },
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.5
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.7
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "webassembly",
+            "salience": 0.9
+          },
+          {
+            "key": "rust",
+            "salience": 0.9
+          },
+          {
+            "key": "mahjong_algorithm",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "tomohxx",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "64f60245e519e9a9cc6b26ff9847443434a985db3a062eed86883da5d77623e2",
+      "extractedAt": "2026-07-02T20:58:32.813Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article clearly compares the reading and cognitive patterns of React and Vue code."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "react",
+            "salience": 0.5
+          },
+          {
+            "key": "frontend",
+            "salience": 0.5
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.3
+          },
+          {
+            "key": "web_development",
+            "salience": 0.2
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "comparative_evaluation",
+              "salience": 1
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.9
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "comparison",
+              "salience": 1
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 1
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "vue_js_comparison",
+            "salience": 1
+          },
+          {
+            "key": "code_readability_analysis",
+            "salience": 0.9
+          }
+        ]
+      },
+      "author": {
+        "username": "tonbi_attack",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "25c0de0dbfec2f416ec5c9ac0919039858b06b465e8beb485e9f27851c4ca72c",
+      "extractedAt": "2026-07-02T20:58:35.687Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is a well-structured, logical, and easy-to-read technical report documenting a specific migration and benchmarking task."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.9
+          },
+          {
+            "key": "performance",
+            "salience": 0.8
+          },
+          {
+            "key": "nextjs",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.7
+          },
+          {
+            "key": "react",
+            "salience": 0.7
+          },
+          {
+            "key": "web_development",
+            "salience": 0.5
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "beginner",
+              "salience": 0.8
+            },
+            {
+              "key": "intermediate",
+              "salience": 0.6
+            }
+          ],
+          "content_types": [
+            {
+              "key": "production_case_study",
+              "salience": 0.7
+            },
+            {
+              "key": "implementation_guide",
+              "salience": 0.5
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.7
+            },
+            {
+              "key": "edge_cases",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.6
+            },
+            {
+              "key": "measured_results",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.8
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.7
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "vite_migration",
+            "salience": 0.9
+          },
+          {
+            "key": "rolldown_benchmark",
+            "salience": 0.9
+          },
+          {
+            "key": "build_time_optimization",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "clopy",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "cfb76d62b4f8bc65ab440b63f1fcfddcf454922781c8b0a868df79bb3080ef4f",
+      "extractedAt": "2026-07-02T20:58:38.584Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article provides a clear historical overview and technical context for Adobe Flex."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.9
+          },
+          {
+            "key": "react",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.7
+          },
+          {
+            "key": "typescript",
+            "salience": 0.4
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "trend_overview",
+              "salience": 0.7
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.5
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.4
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "comparison",
+              "salience": 0.8
+            }
+          ],
+          "practical_signals": [],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "historical_context",
+            "salience": 0.9
+          },
+          {
+            "key": "legacy_technology",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "seekseep",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "8f621e7efcc65d315d739130f244971939d7168d65db0b11ff9b98d6393a1e60",
+      "extractedAt": "2026-07-02T20:58:41.024Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article explains the transition from building isolated UI components to managing complex application states for web administration interfaces."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.9
+          },
+          {
+            "key": "web_development",
+            "salience": 0.8
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.2
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "beginner",
+              "salience": 0.6
+            },
+            {
+              "key": "intermediate",
+              "salience": 0.4
+            }
+          ],
+          "content_types": [
+            {
+              "key": "architecture_explanation",
+              "salience": 0.7
+            },
+            {
+              "key": "opinion_essay",
+              "salience": 0.3
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.5
+            },
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.8
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.7
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.5
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.7
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "state_management_patterns",
+            "salience": 0.9
+          },
+          {
+            "key": "ui_ux_design_principles",
+            "salience": 0.5
+          }
+        ]
+      },
+      "author": {
+        "username": "shunaibuilder",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "19e712684de4b7e6541a7d8da3c966727ef9caf4f2fc21e9d2774a437ab3f3d7",
+      "extractedAt": "2026-07-02T20:58:43.863Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is a well-structured introduction to a series aimed at junior developers transitioning into frontend engineering."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.9
+          },
+          {
+            "key": "typescript",
+            "salience": 0.4
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "react",
+            "salience": 0.6
+          },
+          {
+            "key": "nextjs",
+            "salience": 0.5
+          },
+          {
+            "key": "web_development",
+            "salience": 0.7
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "beginner",
+              "salience": 1
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.8
+            },
+            {
+              "key": "opinion_essay",
+              "salience": 0.4
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "surface_level_summary",
+              "salience": 0.7
+            },
+            {
+              "key": "beginner_only",
+              "salience": 0.9
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.6
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.7
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.8
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.5
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "learning_roadmap",
+            "salience": 0.9
+          },
+          {
+            "key": "coder_to_engineer_transition",
+            "salience": 1
+          },
+          {
+            "key": "series_introduction",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "koenjineer",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "a86aaccc9fca87f85d0795f514f5757bace5919fff59ade2ef86231c55ebd93a",
+      "extractedAt": "2026-07-02T20:58:46.818Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Clear, well-structured guide on Go API anti-patterns with code examples."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "backend",
+            "salience": 0.9
+          },
+          {
+            "key": "typescript",
+            "salience": 0.1
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.8
+          },
+          {
+            "key": "performance",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "beginner",
+              "salience": 0.8
+            },
+            {
+              "key": "intermediate",
+              "salience": 0.5
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.9
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.6
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.4
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 1
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.7
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.9
+            },
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.8
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "specific_problem",
+              "salience": 0.9
+            },
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "go_language",
+            "salience": 1
+          },
+          {
+            "key": "api_design",
+            "salience": 0.9
+          },
+          {
+            "key": "anti_patterns",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "m_sakaaai",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "bfee3283d83df6173167dab3a7f1dc7122ee7a410c9c7f72e75d1ac1e402052f",
+      "extractedAt": "2026-07-02T20:58:50.133Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is clearly written, organized with headings, and provides detailed technical explanations of the architectural decisions made during a hackathon."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "backend",
+            "salience": 0.9
+          },
+          {
+            "key": "web_development",
+            "salience": 0.8
+          },
+          {
+            "key": "devops",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "frontend",
+            "salience": 0.6
+          },
+          {
+            "key": "llm",
+            "salience": 0.5
+          },
+          {
+            "key": "typescript",
+            "salience": 0.4
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            },
+            {
+              "key": "advanced",
+              "salience": 0.2
+            }
+          ],
+          "content_types": [
+            {
+              "key": "production_case_study",
+              "salience": 0.9
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.8
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.8
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.7
+            },
+            {
+              "key": "edge_cases",
+              "salience": 0.5
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "real_world_experience",
+              "salience": 0.9
+            },
+            {
+              "key": "code_examples",
+              "salience": 0.4
+            },
+            {
+              "key": "source_links",
+              "salience": 0.3
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.8
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            },
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.5
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.7
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.6
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "hackathon_experience",
+            "salience": 0.8
+          },
+          {
+            "key": "serverless_architecture",
+            "salience": 0.9
+          },
+          {
+            "key": "cloud_run_usage",
+            "salience": 0.9
+          },
+          {
+            "key": "terraform_infra_as_code",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "shvalin",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "0e5ff113bfd2025d22e5f3b46ea6efb0726a389c89f8130f728349c44ceb72d1",
+      "extractedAt": "2026-07-02T20:58:53.140Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "The article is a structured, clear report on team development activities, detailing specific technical fixes and process improvements."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "web_development",
+            "salience": 0.9
+          },
+          {
+            "key": "nextjs",
+            "salience": 0.8
+          },
+          {
+            "key": "frontend",
+            "salience": 0.7
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.6
+          },
+          {
+            "key": "devops",
+            "salience": 0.6
+          },
+          {
+            "key": "testing",
+            "salience": 0.5
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "intermediate",
+              "salience": 0.8
+            }
+          ],
+          "content_types": [
+            {
+              "key": "production_case_study",
+              "salience": 0.9
+            },
+            {
+              "key": "postmortem",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.7
+            },
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.5
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.9
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "actionable_steps",
+              "salience": 0.8
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.8
+            },
+            {
+              "key": "architecture_decision_support",
+              "salience": 0.6
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.7
+            },
+            {
+              "key": "production_context_named",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "team_development_process",
+            "salience": 0.9
+          },
+          {
+            "key": "ci_cd_automation",
+            "salience": 0.7
+          }
+        ]
+      },
+      "author": {
+        "username": "singularitylabs",
+        "displayName": null,
+        "publicationName": null
+      }
+    },
+    {
+      "articleId": "219293915f0a6dc5cd67fce1b60921b200278e3ef94ba4456238f032bc9207ef",
+      "extractedAt": "2026-07-02T20:58:56.029Z",
+      "readability": {
+        "isReadable": true,
+        "reason": "Detailed technical guide for integrating AI SDK v7 with OpenTelemetry and Langfuse."
+      },
+      "articleFeatures": {
+        "primaryTopics": [
+          {
+            "key": "ai_engineering",
+            "salience": 0.9
+          },
+          {
+            "key": "llm",
+            "salience": 0.8
+          },
+          {
+            "key": "nextjs",
+            "salience": 0.6
+          }
+        ],
+        "mentionedTopics": [
+          {
+            "key": "typescript",
+            "salience": 0.4
+          },
+          {
+            "key": "backend",
+            "salience": 0.3
+          }
+        ],
+        "unknownTopics": [],
+        "featureAxes": {
+          "audience_levels": [
+            {
+              "key": "advanced",
+              "salience": 0.9
+            }
+          ],
+          "content_types": [
+            {
+              "key": "implementation_guide",
+              "salience": 0.9
+            },
+            {
+              "key": "architecture_explanation",
+              "salience": 0.7
+            }
+          ],
+          "depth_signals": [
+            {
+              "key": "deep_technical_explanation",
+              "salience": 0.9
+            },
+            {
+              "key": "tradeoff_analysis",
+              "salience": 0.8
+            },
+            {
+              "key": "edge_cases",
+              "salience": 0.6
+            }
+          ],
+          "evidence_signals": [
+            {
+              "key": "code_examples",
+              "salience": 0.9
+            },
+            {
+              "key": "real_world_experience",
+              "salience": 0.8
+            },
+            {
+              "key": "source_links",
+              "salience": 0.5
+            }
+          ],
+          "practical_signals": [
+            {
+              "key": "reusable_implementation_pattern",
+              "salience": 0.9
+            },
+            {
+              "key": "operationally_applicable",
+              "salience": 0.8
+            },
+            {
+              "key": "developer_productivity",
+              "salience": 0.6
+            }
+          ],
+          "title_signals": [
+            {
+              "key": "concrete_technology_named",
+              "salience": 0.9
+            },
+            {
+              "key": "specific_problem",
+              "salience": 0.8
+            }
+          ]
+        },
+        "otherSignals": [
+          {
+            "key": "bedrock_prompt_caching",
+            "salience": 0.9
+          },
+          {
+            "key": "opentelemetry_genai_conventions",
+            "salience": 0.8
+          },
+          {
+            "key": "langfuse_tracing",
+            "salience": 0.8
+          }
+        ]
+      },
+      "author": {
+        "username": "tsuboi",
+        "displayName": null,
+        "publicationName": null
+      }
     }
   ],
   "bodyFetchFailures": [],
@@ -52822,6 +54523,11 @@
       "articleId": "af50c179ef18197bb3b998939aadda74c800de18e2bec88ada2735a9c5a1d0e0",
       "attemptedAt": "2026-05-27T21:49:13.084Z",
       "message": "This model models/gemini-3.1-flash-lite-preview is no longer available. Please update your code to use a newer model for the latest features and improvements."
+    },
+    {
+      "articleId": "25199783e6979d94b2e054865778ec1d3686dcf302762ab7d3f2b0a8ded3c43a",
+      "attemptedAt": "2026-07-02T20:59:02.628Z",
+      "message": "Failed after 3 attempts. Last error: You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.1-flash-lite\nPlease retry in 57.395290302s."
     }
   ]
 }
