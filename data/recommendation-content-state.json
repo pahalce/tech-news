@@ -2503,6 +2503,61 @@
         "architecture_decision_support",
         "real_world_experience"
       ]
+    },
+    {
+      "articleId": "234602151abfe8ccdcf047b889d35d7cc5c8935ea2059770971cefef28d267ee",
+      "summary": "Unityの標準的なUI開発における命令的モデルや手動の購読管理の課題を整理し、Reactの宣言的UIモデルをUnity上で実現する自作フレームワーク「velvet」を紹介する記事です。UI Toolkitを基盤とし、Hooksや関数コンポーネントを用いたモダンな開発手法を提案しています。",
+      "whyRecommended": "UnityにおけるUI開発の「書きづらさ」を構造的な問題として正確に分析しており、Reactという成熟したWeb開発の知見をゲーム開発へどう適応させるかの具体的な解法が示されているため、UI実装の改善を目指すエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "UnityのuGUIはUI構造がYAML（シーン・プレハブ）に依存しており、コードからUIの構成や条件分岐を直接読み取ることが困難である。",
+        "UI ToolkitはWebの標準技術を取り入れているものの、UI要素の検索やイベントの手動結線など、開発スタイルは2013年頃のWeb開発と類似している。",
+        "UIの状態管理にRxを用いる手法は、購読の管理やイベントストリームの複雑化を招きやすく、現在のモバイル・Web開発ではフレームワーク内部の責務として吸収する傾向にある。",
+        "「UI = f(state)」という宣言的UIモデルを採用することで、状態の変更が自動的に再描画へ反映され、手動による同期漏れを防ぐことができる。",
+        "高頻度更新が必要なUI要素は、宣言的レイヤーに乗せずにUseRefで生のVisualElementを直接制御することで、GCアロケーションを抑える最適化が可能である。"
+      ],
+      "signalsUsed": [
+        "unity_development",
+        "declarative_ui",
+        "react",
+        "architecture_explanation",
+        "comparison"
+      ]
+    },
+    {
+      "articleId": "95f85156034cc1ff4e8afb43f867ed81dae476ed7b477d9bc8153950cecf6c1f",
+      "summary": "Next.jsのData Cacheがサーバー側に保存される仕組みを解説した記事です。ローカル環境では最新データが取得できても本番環境で古いままになる現象の原因と、fetch設定による解決策を詳解しています。",
+      "whyRecommended": "Next.jsのキャッシュ仕様、特に開発環境と本番環境の挙動の違いは多くの開発者がハマる罠です。本記事は具体的な原因分析と解決策が網羅されており、トラブルシューティングのナレッジとして非常に価値が高いため推奨します。",
+      "learningPoints": [
+        "Next.jsのData Cacheはサーバー側で保持されるため、ブラウザのスーパーリロードではキャッシュをクリアできません。",
+        "ローカル開発環境のnext devは、ブラウザのハードリフレッシュを検知してキャッシュを無視する特別な仕様があるため、本番環境と挙動が異なります。",
+        "revalidateTagによるキャッシュ無効化は、Server Action等のアプリ内処理から呼び出した場合にのみ機能し、DB直接操作には追随しません。",
+        "force-dynamic設定をページに追加しても、個別のfetchでcache: force-cacheが指定されている場合、そのfetchキャッシュは無効化されません。",
+        "恒久的なキャッシュ対策として、常に最新データが必要な場合はfetchオプションをcache: no-storeにする必要があります。"
+      ],
+      "signalsUsed": [
+        "server_side_caching_misunderstanding",
+        "local_vs_production_behavior_diff",
+        "code_examples",
+        "real_world_experience",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "3cfdd7eceda38da430ea0188a88a2e52c23888d917993612d58bffd910d4f350",
+      "summary": "Vercelの標準的なGit連携だけでは実現しにくい、より柔軟なCI/CDパイプラインを構築する方法を解説した記事です。GitHub ActionsとVercel CLIを組み合わせ、テストやビルドをデプロイ前に制御する具体的なワークフローを紹介しています。",
+      "whyRecommended": "Next.jsの開発において、標準機能ではカバーできない細かいデプロイ戦略（テスト通過後のデプロイ、特定の条件でのみ動かすなど）を検討している中級以上のエンジニアにとって、非常に実践的で構成が整理されているためです。",
+      "learningPoints": [
+        "vercel buildコマンドとvercel deploy --prebuiltコマンドを組み合わせることで、事前にビルドした成果物をアップロードでき、Vercel側のビルドステップをスキップできる。",
+        "vercel.json内でgit ignoreCommandをtrueに設定するか、Vercelダッシュボードの設定を変更することで、Vercel標準の自動デプロイを無効化できる。",
+        "GitHub Actions上でvercel pullを実行し、プレビューまたは本番用の環境情報を明示的にロードすることで、柔軟なCI/CDパイプラインを制御できる。",
+        "ビルド時間の最適化には、getStaticPathsのfallback設定やISRの活用に加え、GitHub Actions側で事前にエラー検知を行うのが効果的である。"
+      ],
+      "signalsUsed": [
+        "github_actions",
+        "vercel_cli",
+        "ci_cd",
+        "nextjs"
+      ]
     }
   ]
 }
