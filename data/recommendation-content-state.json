@@ -2558,6 +2558,63 @@
         "ci_cd",
         "nextjs"
       ]
+    },
+    {
+      "articleId": "27988fdc7c157199d62e2a20a00114dc28fed02468bcb2eda07c361250f65523",
+      "summary": "Next.js 16.3で導入されたTurbopackのメモリ退避機能について、開発中のメモリ増大問題を解決するプロセスを解説した記事です。特にDocker環境で発生するパフォーマンス低下のボトルネックとその解決策についても詳細に触れています。",
+      "whyRecommended": "Next.jsのTurbopack利用時に直面しがちなメモリ不足問題に対し、実測データに基づいた具体的な解決策が提示されており、実務におけるトラブルシューティングとして非常に参考になるため。",
+      "learningPoints": [
+        "Turbopackはビルド速度向上のためにコンパイル結果をメモリに保持し続ける設計であるため、ルート数に応じてメモリ消費が比例して増加する。",
+        "Next.js 16.3でデフォルト有効となった「turbopackMemoryEviction」により、古いキャッシュをメモリからディスクへ退避させることが可能になった。",
+        "Dockerのbind mount環境では、キャッシュ書き出し先である.nextディレクトリのI/Oがボトルネックとなりパフォーマンスが低下する。",
+        "Docker環境では.nextをvolumeとして分離することで、ファイル共有層（VirtioFS等）の負荷を回避し、メモリ退避処理を高速化できる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "turbopack",
+        "performance",
+        "docker_performance_tuning"
+      ]
+    },
+    {
+      "articleId": "72ae7d9cff8e199a504737a15ea263ae293c0a031c02e6818d948a720dc443d7",
+      "summary": "TypeScriptのバージョンアップに伴う型チェック時間とメモリ使用量を、実際のReactプロジェクトで計測・比較した記事です。Go実装を採用したTypeScript 7.0のパフォーマンス向上幅や、移行時に発生しうる設定上の注意点がまとめられています。",
+      "whyRecommended": "主要なTypeScriptバージョンのパフォーマンスを実プロジェクト規模で独自検証しており、公式の謳い文句だけでなく現場での「実際の効果」を判断するための貴重な一次データを提供しているため。",
+      "learningPoints": [
+        "小～中規模のReactプロジェクトにおいて、TypeScript 7.0は5.9と比較して型チェックのTotal timeが約8.1倍速くなった。",
+        "TypeScript 6.0以降ではnoUncheckedSideEffectImportsがデフォルトで有効になり、CSS等のサイドエフェクトimportには型定義が必要になる。",
+        "小規模リポジトリでは--checkersによる並列化の効果が薄く、逆にオーバーヘッドでメモリが増加する可能性がある。",
+        "TypeScriptのバージョン移行時は、5.9から直接7.0へ上げるのではなく、JS実装の最終系である6.0を挟むことで非推奨設定の洗い出し漏れを防げる。",
+        "コンパイラのメモリ効率を測る際は、tsc内部指標のMemory usedだけでなく、OS視点のピーク値であるMax RSSも併せて確認するべきである。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "performance",
+        "frontend",
+        "measured_results",
+        "real_world_experience",
+        "compiler_performance",
+        "typescript_versioning"
+      ]
+    },
+    {
+      "articleId": "d45ed9708ffa6171aa7b01224da8c519ef81153f91ed7cfe044488bf1ca6c886",
+      "summary": "ReactとTypeScriptを用いたコードレビューにおいて、保守性と拡張性を高めるための7つの設計観点を解説しています。SOLID原則や公式ドキュメントの指針に基づいた、具体的かつ実践的なリファクタリング例が学べます。",
+      "whyRecommended": "SOLID原則をReactのコードに落とし込む際の考え方が明確で、コードの品質を底上げするための指針として非常に実用的だからです。",
+      "learningPoints": [
+        "カスタムHookを活用して、コンポーネントからAPI通信などのロジックを分離することで単一責任の原則を保つ。",
+        "コンポーネントのPropsに不要なオブジェクト全体を渡さず、必要なプロパティのみを抽出してインターフェースを分離する。",
+        "外部ライブラリを直接インポートせず、ラッパーとなるカスタムHookを挟むことでライブラリ変更時の影響範囲を限定する。",
+        "イベント処理や派生値の計算にuseEffectを使用せず、直接呼び出しやuseMemo、あるいは単純な変数代入へ置き換える。",
+        "関連するコンポーネント、フック、テスト、スタイルを同じディレクトリに集約するコロケーションを徹底して保守性を高める。"
+      ],
+      "signalsUsed": [
+        "react",
+        "typescript",
+        "code_review_best_practices",
+        "solid_principles",
+        "actionable_steps"
+      ]
     }
   ]
 }
