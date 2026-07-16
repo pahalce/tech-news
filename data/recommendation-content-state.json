@@ -2615,6 +2615,60 @@
         "solid_principles",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "832dda70c403999eca60c6cc6447090107a521c692182ca9bf217f906daa83e6",
+      "summary": "PuppeteerでReactのフォームを操作する際、単なる値の代入ではReactのstateが更新されない問題の解決策を解説しています。プロトタイプチェーンから素のDOM要素のセッターを呼び出す手法を紹介しており、実務で遭遇しやすい落とし穴への対策を網羅しています。",
+      "whyRecommended": "PuppeteerやPlaywrightを用いた自動テスト・スクレイピング開発において、React環境で発生する「入力しても反映されない」という典型的なトラブルに対し、非常に論理的かつ確実な回避策が提示されているためです。",
+      "learningPoints": [
+        "Reactのcontrolled componentに対し単にDOMのvalueを代入してもonChangeイベントが発生せず、stateが更新されない。",
+        "React 16以降はvalueのセッターを追跡しているため、Object.getOwnPropertyDescriptorから取得したプロトタイプのネイティブセッターをcall経由で適用する必要がある。",
+        "イベント発火時はReact 17以降の仕様に対応するため、bubbles: trueオプションを付与してバブリングさせる必要がある。",
+        "textareaにはHTMLTextAreaElement.prototype、checkboxにはcheckedのセッターを使用し、それぞれに適したイベントを送る必要がある。",
+        "contenteditable形式のリッチテキストエディタはDOM操作が効かないため、keyboard.typeによるキーボードイベントのシミュレーションが最も確実である。"
+      ],
+      "signalsUsed": [
+        "puppeteer",
+        "react",
+        "dom_manipulation",
+        "automation_testing"
+      ]
+    },
+    {
+      "articleId": "b1fed9f77a345cb3ef6e4b86a6d0e320bd92df6e41a1f582a054a11ff959a938",
+      "summary": "Next.jsのApp Router環境でshadcn/uiのサイドバー開閉状態をlocalStorageで管理する際に発生するFOUC（チラつき）問題の解決策を解説しています。サーバーサイドで値を読み取れるcookieを利用することで、初回描画時から正しい状態を反映する方法を詳しく紹介しています。",
+      "whyRecommended": "shadcn/uiを利用する際の実践的なUI実装の落とし穴と、SSR環境における状態管理のベストプラクティスが網羅されているため、Next.js開発者にとって非常に有益な知見です。",
+      "learningPoints": [
+        "localStorageはサーバーサイドで参照できないため、SSRで初期状態を制御するにはcookieを利用するのが最適である。",
+        "root layoutでcookies()を呼び出すと、そのルート配下全体が動的レンダリングとなり、静的プリレンダリングが制限されるというトレードオフがある。",
+        "cookieベースの状態管理に変更することで、クライアント側のuseEffectによる状態同期が不要になり、フックのコードが簡潔になる。",
+        "SPA（Viteなど）の場合はHTMLの<head>内に同期スクリプトを直接記述することで、localStorageを用いたチラつきを確実に回避できる。",
+        "shadcn/ui標準のSidebarProviderは既にcookieベースの永続化をサポートしており、既存のドキュメントやソースコードを確認することで実装のヒントが得られる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "fouc",
+        "shadcn_ui_integration",
+        "ssr_vs_spa_comparison"
+      ]
+    },
+    {
+      "articleId": "8997d914998b2069d3308301b383c7fec7ad67ba206de951c05e8d929b186a61",
+      "summary": "Nuxtプロジェクトにおける垂直スライスアーキテクチャ（VSA）の実践的な導入方法を解説しています。機能を単位としてディレクトリを構成し、コードの凝集度を高めつつNuxtの自動ルーティング等の恩恵を活かす手法を紹介しています。",
+      "whyRecommended": "大規模化しやすいNuxtアプリケーションにおいて、可読性と保守性を劇的に向上させる具体的なディレクトリ構成と設計思想が網羅されているため、中級以上の開発者にとって非常に実践的です。",
+      "learningPoints": [
+        "機能単位でディレクトリを分割することで、特定の機能修正時に必要なファイルが同じディレクトリ内に収まるようになる。",
+        "pagesディレクトリはあくまでルーティングやミドルウェア設定などの責務に限定し、実際のロジックや描画はfeatures配下へ委譲する。",
+        "言語ファイル（i18n）も機能単位で管理し、ビルド時に統合することで、機能ごとの削除や移動が容易になりレビュー効率も上がる。",
+        "Features配下ではcomposableやcomponentといった技術的な分類でサブディレクトリを作らず、ファイル名で役割を区別して構造を平坦にする。",
+        "ファイル競合を減らせるため、複数人開発やAIエージェントを活用した並列開発との相性が良い。"
+      ],
+      "signalsUsed": [
+        "vertical_slice_architecture",
+        "nuxt4",
+        "directory_structure_strategy",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
