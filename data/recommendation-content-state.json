@@ -2669,6 +2669,59 @@
         "directory_structure_strategy",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "3d6fef7437426e2c24053fa31d65e77892ee1ac0f2d7c343214634bb0feb3eb5",
+      "summary": "Reactにおけるエラーハンドリングを、「入力バリデーション」「業務エラー」「通信エラー」の3系統に分けて設計する方法を解説しています。すべてのエラーを一つの状態に集約するのではなく、出どころと表示先に応じて適切に分離することで、複雑さを解消するアーキテクチャを提案しています。",
+      "whyRecommended": "Reactでの開発において、エラーハンドリングの設計は避けて通れない課題です。単なる実装手法にとどまらず、状態管理の概念設計として非常に論理的であり、保守性の高いフロントエンドを構築したい層にとって即戦力となる知見が詰まっているため推奨します。",
+      "learningPoints": [
+        "入力バリデーション、業務エラー、通信エラーは、出どころと表示先が異なるため個別に扱うべきである。",
+        "入力バリデーションはフォームライブラリのフィールドエラーとして扱い、setErrorで個別に設定する。",
+        "フィールドエラーを更新する際は、必ず事前にclearErrorsを呼び出して古いエラーを全消去することで整合性を保つ。",
+        "業務エラーと通信エラーはダイアログ系の通知とし、エラーだけでなく成功通知や確認ダイアログも含めたNotification型として一元管理すると設計がすっきりする。"
+      ],
+      "signalsUsed": [
+        "react",
+        "error_handling",
+        "architecture_decision_support",
+        "reusable_implementation_pattern",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "f6d4549475d765b0e4bb5a1af751c1877a49b618aa152cc5984470d6d0aabc95",
+      "summary": "Node.jsにおけるストリーミング処理の基本から、バックプレッシャーの制御方法、そして実践的な実装パターンまでを解説した網羅的なガイドです。メモリ効率を最大化し、堅牢なパイプラインを構築するための推奨プラクティスを学ぶことができます。",
+      "whyRecommended": "Node.jsでのストリーム処理において「なぜ動くか」だけでなく「なぜpipe()は避けるべきか」といった落とし穴まで解説されており、実務レベルのパフォーマンスと信頼性を向上させたいエンジニアにとって非常に価値が高いため。",
+      "learningPoints": [
+        "pipe()メソッドはエラーが自動伝播せずメモリリークの原因にもなるため、Promiseベースで自動クリーンアップが行われるpipeline()の使用が推奨される。",
+        "Readableストリームのデータ消費には、イベントリスナーによるflowing modeよりもfor await...ofを利用したループ処理が現代的である。",
+        "バックプレッシャーはwrite()の戻り値がfalseの際に発生するため、drainイベントを待機することでメモリバッファの膨張を防ぐ必要がある。",
+        "Node.js StreamsとWeb Streams APIは相互変換が可能であり、fetch()やWeb標準との統合を行う場合はReadable.fromWeb()やtoWeb()を活用する。",
+        "Transformストリームの_flush()メソッドは、ストリーム終端でバッファ内に残ったデータを処理するために必須である。"
+      ],
+      "signalsUsed": [
+        "node_js_streams",
+        "backpressure_management",
+        "web_streams_api",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "5d3e157e8207d46f44469ff38dfe879682a6390490686db2164abb6fd733baac",
+      "summary": "本番環境でのみ発生する認証エラーを防ぐため、生fetchの呼び出しをESLintのno-restricted-syntaxで禁止し、再発防止を仕組み化した事例記事です。人間の注意力に頼るのではなく、静的解析で特定のコードパターンを排除し、安全なAPI利用へ誘導する実践的な設計手法が解説されています。",
+      "whyRecommended": "「気をつける」という非生産的な再発防止策を、ESLintという開発者が即座に導入可能な技術で「システム的な強制力」へ昇華させている点が非常に評価できます。ルール設定の具体性や、例外の管理方法まで含めてエンジニアとしての成熟度が非常に高い内容です。",
+      "learningPoints": [
+        "ESLintのno-restricted-syntaxでCallExpression[callee.name='fetch']を指定することで、生fetchの利用を構文レベルで一括禁止できる。",
+        "例外を個別にdisableするのではなく、ESLintのflat configでファイルを限定してルールを無効化することで、例外の存在を構造的に管理できる。",
+        "禁止ルールを導入する際は、共有クライアントに不足しているメソッド（本記事ではBlob対応など）を補完し、代替手段を楽に使えるように誘導する。",
+        "エラーメッセージ内に「なぜ禁止なのか」「代わりに何を使うべきか」という一次情報を記述し、リンクを添えることで開発者の迷いを防ぐ。",
+        "静的解析で防げるのはコードの書き間違いまでであり、プロキシ越しの挙動確認など、実環境の検証が必要な範囲を適切に見極める必要がある。"
+      ],
+      "signalsUsed": [
+        "eslint_ast_selectors",
+        "api_client_pattern",
+        "preventive_maintenance"
+      ]
     }
   ]
 }
