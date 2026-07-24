@@ -2834,6 +2834,65 @@
         "deep_technical_explanation",
         "architecture_decision_support"
       ]
+    },
+    {
+      "articleId": "72fba4cfc0a9567c3e7f51407ab5363741de5f9859783412facf402a51baeb77",
+      "summary": "ブラウザ上でWebAssemblyを用いて、指定したバイト数以下に画像を自動圧縮する実装手法を解説しています。固定品質ではなく二分探索を用いて目標サイズへ効率的に収束させるアルゴリズムが紹介されています。",
+      "whyRecommended": "フロントエンド開発において、外部サーバーへデータを送らずにローカルで画像を最適化する需要は高く、実用的なパフォーマンス改善の手法として非常に優れているためです。",
+      "learningPoints": [
+        "画像圧縮における品質設定とファイルサイズは非線形な関係にあるため、二分探索を用いることで効率的に目標バイト数へ収束させられる。",
+        "@jsquashライブラリを使用すると、WebAssembly経由でMozJPEGやWebPのエンコードをブラウザ内で完結でき、プライバシーとセキュリティを担保できる。",
+        "品質調整のみで目標サイズに届かない場合は、リサイズ処理を組み合わせることで高解像度な画像でも制約内に収めることが可能になる。",
+        "二分探索の反復回数は6〜8回程度で十分に目標値へ収束するため、パフォーマンス面でも現実的な実装コストに抑えられる。",
+        "WASMによる画像エンコード処理は重い負荷がかかるため、メインスレッドのフリーズを防ぐにはWeb WorkerとOffscreenCanvasの活用が不可欠である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "web_development",
+        "performance",
+        "typescript",
+        "webassembly",
+        "image_compression",
+        "jsquash"
+      ]
+    },
+    {
+      "articleId": "b617fc608370fa4f5eacdc9074167db4c374498b74e6a04f230bb8d46bcc2de4",
+      "summary": "Midnight NetworkのCompact言語を活用し、ゼロ知識証明を用いて投票内容を秘匿した予測市場アプリの構築事例です。コミット・リビール方式を導入することで、結果開示まで予想内容を完全に隠蔽する仕組みを実現しています。",
+      "whyRecommended": "ブロックチェーン特有の公開性を逆手に取り、プライバシー保護の技術的課題をどう解決するかという実践的なアーキテクチャが解説されているため、Web3開発者の技術スタック向上に最適です。",
+      "learningPoints": [
+        "Compact言語のwitness型を使用することで、台帳には書き込まず証明のみに使用する変数を安全に定義できる。",
+        "ハッシュ値のみを台帳に残すコミット・リビール方式において、ドメイン分離タグをハッシュ計算に加えることで混同事故を防ぐ。",
+        "予測市場におけるチーム選択や賭け金などの入力値に対して、ソルトを付与してハッシュ化することで総当たり攻撃を無効化できる。",
+        "ZK回路内で除算を行わずに、r × p ≤ n < (r + 1) × p という不等式を用いて除算結果の正当性を掛け算のみで検証できる。",
+        "ブラウザローカルのプライベートステートに依存する設計では、端末やキャッシュの消失がデータ損失に直結するため、本格運用時にはバックアップやマルチシグの考慮が不可欠である。"
+      ],
+      "signalsUsed": [
+        "zero_knowledge_proofs",
+        "midnight_network",
+        "compact_language",
+        "commitment_reveal_pattern"
+      ]
+    },
+    {
+      "articleId": "5c817a6343648c2e5352978a8495475f465cb81fad7f43733e8b59a186a3d4bc",
+      "summary": "Auth.jsと、React＋Amplify＋Cognitoでの自前認証実装を比較し、Auth.jsが解決する課題と役割を解説した記事です。Auth.jsは認証版のTanStack Queryのような位置付けであり、認証状態管理の共通処理をライブラリ側に集約するメリットを整理しています。",
+      "whyRecommended": "Next.jsで認証を実装する際、ライブラリ導入の是非やアーキテクチャへの影響を検討する上で非常に参考になるため。特にAuthContextによる自前管理との明確な比較が、意思決定の助けになります。",
+      "learningPoints": [
+        "Auth.jsはログイン状態の判定や認証イベントの監視など、Reactのstate管理で自前実装が必要な共通処理をライブラリのAPIに置き換えられる。",
+        "Auth.js導入後も、APIの401エラーハンドリングやログアウト時のキャッシュ消去など、アプリ固有の制御ロジックは依然として実装が必要になる。",
+        "React＋Vite環境ではサーバー機能がないためAuth.jsは原則使わず、Amplify AuthとAuthContextを使用するのが一般的である。",
+        "Cognitoは認証そのものを行い、Auth.jsは認証結果の仲介やアプリ内でのログイン状態保持を担当するという役割の違いがある。",
+        "認証状態を自前管理する場合のHub.listenによるイベント監視や起動時のセッション復元処理は、Auth.jsを使うことで大幅にコード量を削減できる。"
+      ],
+      "signalsUsed": [
+        "auth_js",
+        "aws_amplify",
+        "aws_cognito",
+        "comparison",
+        "architecture_decision_support",
+        "tradeoff_analysis"
+      ]
     }
   ]
 }
