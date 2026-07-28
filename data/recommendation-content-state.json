@@ -2893,6 +2893,59 @@
         "architecture_decision_support",
         "tradeoff_analysis"
       ]
+    },
+    {
+      "articleId": "182dc9959c5a0ce9ba33c07a501b5ea79f76477aa4bee76eb7211662bf17d626",
+      "summary": "VuetifyのVTooltipを大量描画した際に発生するパフォーマンス問題に対し、HTML title属性およびPopover APIを用いた軽量な代替案を検証した技術記事です。メモリ消費量やアクセシビリティの観点から各手法を比較し、大規模UIにおける最適解を考察しています。",
+      "whyRecommended": "フロントエンド開発において、UIライブラリの利便性とパフォーマンスのトレードオフを実測データに基づき分析しているため、アーキテクチャの意思決定に非常に役立ちます。",
+      "learningPoints": [
+        "HTMLのtitle属性は、キーボードやタッチ操作に対応しておらずアクセシビリティ上の懸念があるためツールチップ用途には非推奨です。",
+        "Popover APIは最上位レイヤで表示される仕組みのため、z-indexの管理が不要でメモリ消費も抑えられます。",
+        "大量のVTooltipをレンダリングすると、各コンポーネントがVNodeやオブザーバーを保持するため、Popover APIと比較して約60倍のメモリを消費します。",
+        "Popover APIでツールチップを実装する場合、ホバーアウト時に遅延処理を組み込むことで、ツールチップ内テキストのコピーなどの操作性を確保できます。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "measured_results",
+        "comparison",
+        "accessibility_focus",
+        "architecture_decision_support"
+      ]
+    },
+    {
+      "articleId": "cb0c1b7987d0b467b2c21bef758fcefed0abaec6bcfdd4107b7548e409ac84da",
+      "summary": "この記事は、DBやサーバー処理を使わずに、ユーザーの生年月日情報を秘匿したまま診断結果を共有する仕組みの実装事例を紹介しています。Canvas APIによる画像生成と、計算ロジックの純粋関数化によって、フロントエンドのみで結果を再現可能にする設計手法を解説しています。",
+      "whyRecommended": "技術的な課題に対して「DB構築が必須」という思い込みを排し、ロジックの再定義と型安全性を活用して要件を最小コストで満たすアプローチが非常にエンジニアリング的で学びが深いためです。個人開発におけるサーバーレス設計やプライバシー保護を重視した実装の好例として推奨します。",
+      "learningPoints": [
+        "Webフォントの読み込みを待つために、Canvasでの描画前にdocument.fonts.readyを実行することで、日本語のフォント化けを防止できる。",
+        "Canvasで星座記号を描画する際、iOS側で勝手に絵文字に変換されるのを防ぐには、フォントではなくSVGパスをPath2Dで直接描画する。",
+        "計算ロジックを精査することで、生年月日という機密情報を使わずとも、星座の組み合わせという低解像度なデータだけで同等の結果を再現できる場合がある。",
+        "Reactのコンポーネントにおいて、生年月日を表示するDOMを条件分岐で除外することで、データが渡ってきていない場合にソースコード上にすら情報が出力されない構造を作れる。",
+        "navigator.shareのAbortErrorはユーザーが操作を中断しただけであるため、例外として処理せずにエラー表示を抑制する。"
+      ],
+      "signalsUsed": [
+        "canvas_api",
+        "web_share_api",
+        "security_privacy",
+        "production_case_study",
+        "tradeoff_analysis"
+      ]
+    },
+    {
+      "articleId": "4b9e5eaf2d5082b83faa782a1608d1d199187e8ec821ea001dcc5f0cf4c49491",
+      "summary": "Next.jsのDynamic Routeにおいて「動的なURLパラメータを持つとCDNキャッシュができない」という誤解を解き、generateStaticParamsを活用したキャッシュ戦略を解説する記事です。ルーティング構造とレンダリング戦略を混同しがちな概念を整理し、パフォーマンス改善の実践的な知見を共有します。",
+      "whyRecommended": "Next.jsのレンダリング戦略とキャッシュ機構の混同は開発現場でよく見られる落とし穴であり、公式ドキュメントの解釈を誤りやすいポイントを実例ベースで修正しているため、中級者以上の理解を深めるのに最適です。",
+      "learningPoints": [
+        "Dynamic Route（URL構造）とDynamic pages（レンダリング戦略）は別の概念であり、Dynamic Routeであっても条件次第でCDNキャッシュは可能である。",
+        "generateStaticParamsを使用すると、Next.jsは対象ルートをプリレンダリング可能なルートとして認識し、Cache-Controlヘッダに適切なs-maxageが付与されるようになる。",
+        "generateStaticParamsに含まれないパスであっても、初回アクセス時に生成されることでCDNキャッシュの恩恵を受けることができる。",
+        "generateStaticParamsを定義するとLinkコンポーネントのprefetch対象が拡張され、RSCペイロードまで事前に取得されるためクライアントサイド遷移が高速化する。"
+      ],
+      "signalsUsed": [
+        "nextjs_app_router",
+        "cdn_caching",
+        "generate_static_params"
+      ]
     }
   ]
 }
