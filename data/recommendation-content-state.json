@@ -3006,6 +3006,60 @@
         "idempotency_patterns",
         "message_queue_reliability"
       ]
+    },
+    {
+      "articleId": "7c6339fdc1fd0a6d5a201acebf3247e3e0b984f557eb99a3b1e99db8eb3eeae2",
+      "summary": "Next.js App RouterをCloudflare Workers環境（OpenNext）で本番運用した際の構成と、実運用で発生した技術的な課題をまとめたレポートです。metadataの継承仕様やCloudflare D1のマイグレーション運用など、注意すべきポイントを具体的に解説しています。",
+      "whyRecommended": "Cloudflare上のNext.js運用という実務で直面しやすいエッジケースが丁寧に記録されており、これから同じスタックを採用する開発者にとってのトラブルシューティングガイドとして非常に価値が高いためです。",
+      "learningPoints": [
+        "Next.jsのmetadataでopenGraphを定義すると、ルートlayout.tsxの設定が継承されずに上書きされるため、共通定数として各ページへ明示的に渡す必要がある。",
+        "Cloudflare D1のマイグレーションは直接SQLを実行すると管理テーブルに記録されず整合性が取れなくなるため、必ずwrangler d1 migrations applyコマンドを使用する。",
+        "小規模サイトのレート制限は、Durable Objectsのような複雑な構成を使わずとも、Workers KVにIPアドレスと試行回数を保存する実装で十分に機能する。",
+        "静的アセットはpublicディレクトリに配置するだけで、追加設定なしにドメイン直下から配信可能である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "web_development",
+        "opennextjs",
+        "cloudflare_workers",
+        "cloudflare_d1"
+      ]
+    },
+    {
+      "articleId": "0fb3978cffe330d472cf155f57a4644692cd24e8595fc12f89edca2982a26bf0",
+      "summary": "ブラウザからgRPCを直叩きした際の挙動や制約をRESTと比較検証した技術記事です。gRPC-Webの仕組みや、エラー時でもHTTP 200が返るプロトコル上の理由が解説されています。",
+      "whyRecommended": "gRPCをフロントエンドで直接利用する際の技術的な落とし穴や、プロトコル層の仕様を実機検証とコードベースで明確に示しており、モダンなフロントエンド・バックエンド間の通信設計を考えるエンジニアにとって非常に有益な知見だからです。",
+      "learningPoints": [
+        "ブラウザはネイティブのgRPCプロトコルを扱えないため、実質的にgRPC-Webへの変換が必要となる。",
+        "gRPC通信はレスポンスがバイナリ形式のため、DevTools上では16進ダンプとして表示され、直接的な可読性が低い。",
+        "gRPCの仕様上、アプリケーションエラーが発生してもHTTPレスポンスコードは200を返し、実際のステータスはボディ末尾のトレーラーフレームで管理される。",
+        "HTTPステータスコードを「インフラ層の異常」、grpc-statusを「アプリケーションの成否」とレイヤーを分離することで、ストリーミング通信に対応している。"
+      ],
+      "signalsUsed": [
+        "grpc_web",
+        "protocol_buffers",
+        "connect_rpc",
+        "http2",
+        "cors"
+      ]
+    },
+    {
+      "articleId": "7e3b5076c3820daf99170ed5b86cdc5f848b019e9c76bcc923e71cb7b6be7385",
+      "summary": "本書は、2026年7月の仕様改訂に対応したMCPサーバー開発の設計指針を網羅した技術ガイドです。単にプログラムを動作させるだけでなく、AIエージェントが迷わずツールを使いこなせるための堅牢な実装パターンと運用設計を解説しています。",
+      "whyRecommended": "MCPを実運用レベルのサービスとして提供するための専門的な知見が詰まっており、Node.js/TypeScriptを用いた開発で陥りやすい「動くが使いにくい」という罠を回避するための設計原則が体系的に学べるためです。",
+      "learningPoints": [
+        "最新のMCP仕様では、ステートレスコアが前提となり、セッション状態ではなく永続ハンドルを用いたアプリケーション管理が求められる。",
+        "AIがツールを正しく選択するためには、曖昧さを排除した具体的なツール説明文と、構造化されたレスポンス設計が不可欠である。",
+        "MCPサーバーはCLIの一種と捉え、コアロジックをサーバー層と分離することで、CLIとAPIの両面で再利用可能な設計にするべきである。",
+        "構造化されたエラー設計を行い、エラー発生時にAIが自律的に回復・再試行できる情報を提供することで、ワークフローの信頼性が向上する。",
+        "リモートMCP運用では、OAuth 2.1やDPoPを用いたトークン管理や、Confused Deputy攻撃への対策といった高度なセキュリティ要件が重要となる。"
+      ],
+      "signalsUsed": [
+        "mcp_protocol",
+        "ai_agent_development",
+        "typescript",
+        "system_design"
+      ]
     }
   ]
 }
