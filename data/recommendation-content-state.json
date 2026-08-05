@@ -3060,6 +3060,69 @@
         "typescript",
         "system_design"
       ]
+    },
+    {
+      "articleId": "196d9f543b9e94bad8bdee82e3d7bb8207897396965555df27b3c89bc3809753",
+      "summary": "Excelで管理する名簿CSVを、スマートフォンや各種サービスへインポート可能なvCard（.vcf）形式へ変換するブラウザ完結型ツールの実装解説記事です。名前の必須プロパティ処理やRFC 2426準拠のエスケープ規則、列マッピングの自動検出ロジックといった技術的難所に焦点を当てています。",
+      "whyRecommended": "個人情報を取り扱うツールのアーキテクチャ設計や、仕様が複雑なファイルフォーマット（vCard）を実用レベルで扱うためのエッジケース対策が非常に参考になるため。フロントエンドにおける実務的な実装パターンが豊富です。",
+      "learningPoints": [
+        "vCardのN（構造化名）とFN（表示名）は別物であり、FNは必須プロパティのため、氏名が不明な場合はメールや電話番号で補完するフォールバック処理が必要である。",
+        "RFC 2426のエスケープ処理では、バックスラッシュ（\\）を必ず最初に変換しないと、エスケープ用の記号まで二重に処理されてデータが破損する。",
+        "vCard形式の行区切りはCRLF（\\r\\n）で統一する必要があり、LFのみの場合はアプリが正しく読み込めないリスクがある。",
+        "CSVのヘッダー名から列を自動判定する際、キーワードの包含関係による誤検出（「名」と「会社名」など）を防ぐには、フィールドごとの重複排除とキーワードの順序制御が重要である。",
+        "変換ロジックをDOMやファイルAPIに依存しない純粋関数として分離することで、テストが容易になり、保守性の高い実装が可能になる。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "edge_cases",
+        "code_examples",
+        "reusable_implementation_pattern",
+        "browser_based_tooling",
+        "rfc_compliance"
+      ]
+    },
+    {
+      "articleId": "41d58643dd02dce9f6c2173e268ecc4a5f45c0f3e56ef2ab9367f8a2cf61aa81",
+      "summary": "Windows環境のHeadless Chromeでスマホ幅を検証する際、指定したウィンドウサイズが正しく反映されず、誤ったレイアウト崩れを検知してしまう問題の解決策を解説しています。ウィンドウサイズと実際の測定用iframeの幅を分離する手法を用いることで、実測に基づいた正確な検証環境を構築する方法を紹介しています。",
+      "whyRecommended": "フロントエンド開発のテスト自動化において見落としがちな「実行環境の前提条件」の罠を突いた実践的な記事です。特定のOS環境でのブラウザ挙動という深い技術的知見が含まれており、堅牢なCI/CDパイプラインを構築したい開発者にとって非常に有益です。",
+      "learningPoints": [
+        "Windowsのディスプレイ設定（スケーリング）が100%以外の場合、Headless Chromeで--window-sizeを指定しても、CSSのビューポートが期待通りに縮小しないことがある。",
+        "物理的なウィンドウサイズと、メディアクエリを効かせるための幅を分離し、検証対象をiframe内に読み込ませることで正確なレイアウト測定が可能になる。",
+        "getBoundingClientRect().rightを使用してiframe内の全要素の位置を計測することで、視覚的な崩れをexit codeによる自動判定に置き換えることができる。",
+        "テストの判定失敗、対象ファイル不在、iframeへのアクセス拒否といったエラー状態を個別のexit codeとして定義し、CIの誤検知を防ぐ設計が不可欠である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "testing",
+        "web_development",
+        "deep_technical_explanation",
+        "edge_cases",
+        "real_world_experience",
+        "code_examples",
+        "reusable_implementation_pattern",
+        "actionable_steps",
+        "headless_browser_automation",
+        "viewport_behavior"
+      ]
+    },
+    {
+      "articleId": "41c53769280ff689c53bd522113021de4eb51ee2e1c9771201cc02a2e52008f4",
+      "summary": "Next.jsとVercelで動的OGP画像を生成する際、SNSのクローラーが正しくカードを表示できない問題とその解決策を解説した技術的ポストモーテムです。ストリーミングレスポンスによるキャッシュの不備や、SNS側の「カード無し」判定のキャッシュといった落とし穴と、それらへの具体的な対策をまとめています。",
+      "whyRecommended": "VercelでのOGP運用における「実運用でしか気づけない罠」が実体験ベースで網羅されており、同様のパフォーマンス問題に直面するエンジニアにとって非常に実用的かつ即効性のある知見だからです。",
+      "learningPoints": [
+        "Next.jsのImageResponseをストリーミングで返すとVercelのエッジキャッシュが機能しないため、ArrayBufferに変換してContent-Lengthを付与することで解消する。",
+        "SNSクローラーが一度「カード無し」と判定すると、その結果が約1週間キャッシュされ続けるため、修正の検証には常に新しいURLを使う必要がある。",
+        "Vercelのエッジキャッシュはリージョンごとに独立しているため、クローラーがアクセスする地域のサーバーからもキャッシュのウォームアップを行う必要がある。",
+        "stale-while-revalidateを活用することで、キャッシュ期限切れ後の初回リクエストに対しても古い画像を返しつつ裏側で再生成を走らせ、クローラーのタイムアウトを防げる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "performance",
+        "vercel_deployment",
+        "open_graph_protocol",
+        "edge_caching"
+      ]
     }
   ]
 }
