@@ -3123,6 +3123,64 @@
         "open_graph_protocol",
         "edge_caching"
       ]
+    },
+    {
+      "articleId": "75483b8b62b01c1359e4d6eb484639d2bef9d343717fab4a88e7821dceb4e9a7",
+      "summary": "本書は、React開発における状態管理とアーキテクチャ設計をTanStackエコシステムを通じて体系的に解説する技術書です。データ取得からルーティング、フォーム、仮想リストまで、フロントエンド開発に必要な主要ライブラリを実用的な視点で網羅しています。",
+      "whyRecommended": "TanStackシリーズを単なるツールとしてではなく、状態を適切に配置するための設計思想として学べるため、Reactアプリケーションの複雑なデータフローを整理したい中級者以上のエンジニアに最適です。",
+      "learningPoints": [
+        "フロントエンドの状態をサーバー状態、URL状態、クライアント状態に分類することで、適切なデータの置き場所を判断できる。",
+        "TanStack QueryのOptimistic Updateを使用すると、サーバー応答を待たずにUIを先行して更新し、ユーザー体験を向上できる。",
+        "TanStack Routerを活用することで、URLのSearch Paramsを型安全に管理し、ルーティングとデータ取得を密接に連携させられる。",
+        "TanStack Virtualを用いると、DOM要素のレンダリングを制御し、大量のデータを扱う際でもアプリケーションのパフォーマンスを維持できる。",
+        "TanStack Startを導入することで、Server Functionsを利用したフルスタックなReactアプリケーションの構築が可能になる。"
+      ],
+      "signalsUsed": [
+        "react",
+        "typescript",
+        "frontend",
+        "tanstack_ecosystem",
+        "state_management",
+        "book_format"
+      ]
+    },
+    {
+      "articleId": "ea25dca7d08b5d93651f62710a2321ef69ddffa510964fdd95657f1e8bc00176",
+      "summary": "この記事では、完全クライアントサイドで動作し、サーバー不要でプライバシーを保護するMarkdownエディタの開発手法を解説しています。データ圧縮やCSSインライン化、DOMPurifyによるXSS対策など、フロントエンドのみで高機能なツールを実現するための実装テクニックが網羅されています。",
+      "whyRecommended": "個人開発において、バックエンドコストを最小化しつつ実用的なエディタ機能を提供するための技術的ヒントが詰まっているためです。特に、クライアントサイドのみで完結する機能要件と実装の組み合わせ方は、Webツール開発者にとって非常に参考になります。",
+      "learningPoints": [
+        "URLハッシュにpakoで圧縮したBase64文字列を埋め込むことで、データベースを使わずに長文ドキュメントの共有が可能になる。",
+        "juiceライブラリを使用してCSSをインラインスタイルへ変換することで、外部CSSが効かない環境（HTMLメール等）への貼り付け時も崩れを防げる。",
+        "DOMPurifyでKaTeXやMermaidが必要とするMathML属性などをホワイトリストとして許可設定することで、XSS対策と機能性の両立が可能になる。",
+        "エディタとプレビューのスクロール同期では、フラグ管理とrequestAnimationFrameを組み合わせることで無限ループと描画のチラつきを防止できる。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "react",
+        "typescript",
+        "client_side_optimization",
+        "serverless_architecture",
+        "xss_prevention"
+      ]
+    },
+    {
+      "articleId": "d09cd294a3678525e652f3fdadc254d6b2815183ce57ce80ce17869ae77b59f9",
+      "summary": "Chromeで実験的に導入された「window.crashReport」APIを活用し、ブラウザのフリーズやメモリ不足によるクラッシュを検知する方法を解説した記事です。既存の監視ツールでは取得困難なクラッシュ時の状態を、サーバーサイドで受け取るための具体的な実装手法や注意事項を網羅しています。",
+      "whyRecommended": "フロントエンドのパフォーマンス改善に取り組むエンジニアにとって、従来の監視SDKでは解決できなかった「ページが応答しなくなる事象」を補完できる非常に希少な知見であるため。実験的なAPIの実用的な組み込み方や、注意すべきセキュリティ面まで詳細にまとめられています。",
+      "learningPoints": [
+        "window.crashReport.initialize()でメモリ領域を確保し、set()で状態を記録することで、クラッシュ直前のコンテキストを収集できる。",
+        "クラッシュレポートを確実に受け取るには、フロントエンド側および受信側サーバーの両方がhttps環境である必要がある。",
+        "応答なし時のコールスタックを取得するには、レスポンスヘッダーに「Document-Policy: include-js-call-stacks-in-crash-reports」を付与する必要がある。",
+        "crashReport APIは同期的に動作するため、毎フレームの描画処理などで頻繁に呼び出すことは避けるべきである。",
+        "Reporting APIの仕様上、レポートの到着は保証されないため、厳密なログ管理ではなく傾向分析の材料として活用するのが適切である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "performance",
+        "browser_api",
+        "experimental_feature",
+        "reporting_api"
+      ]
     }
   ]
 }
