@@ -3237,6 +3237,58 @@
         "operationally_applicable",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "c573ea5e824a3f1ee68c701612a8a13feae6b6a3da14168e85a293bd469187a0",
+      "summary": "React 19で導入されたuseOptimisticとuseTransitionを活用し、UIのレスポンスを改善する楽観的更新の実装方法を解説した記事です。実際の投票機能を通じて、非同期処理の待ち時間中に一時的な値を表示させ、通信成功時に正式な値へシームレスに切り替える一連の流れを学べます。",
+      "whyRecommended": "React 18から19への移行における実践的な知見がまとめられており、新しいHooksの具体的な組み合わせ方や、エラー時の挙動まで考慮された実装パターンが非常に参考になるため。",
+      "learningPoints": [
+        "useOptimisticはAction実行中にReducerを用いて一時的な状態を生成・表示し、Action終了後に自動で元の正式な値に戻る仕組みである。",
+        "useTransitionで関数をラップすることで、実行中の非同期処理をTransitionとして扱い、isPendingフラグによるローディング表示の切り替えが可能になる。",
+        "楽観的更新では通信が失敗した際、ベースとなる状態を更新しなければ自動的に元の値へ戻るため、特別なエラーハンドリング用の状態分岐を記述する必要がない。",
+        "useOptimisticのset関数はActionまたはTransitionの中で呼び出す必要がある。",
+        "楽観的な状態と正式な状態を管理する場合、複数の情報をオブジェクトでまとめ、useMemoを使用して正式な値が更新されたタイミングで基準となる状態を再生成するのが効率的である。"
+      ],
+      "signalsUsed": [
+        "react",
+        "react_19_migration",
+        "optimistic_ui_pattern"
+      ]
+    },
+    {
+      "articleId": "49786775118502d27734f7ebc8fd1aa9833d24142afbc35fcc57414e30b16a6f",
+      "summary": "VercelのFunction Invocationsが急増した原因が、robots.txtの設定漏れによりGooglebotが無限にページ生成を要求していたことだと判明しました。robots.txtの仕様を正しく理解し、Googlebot向けに適切なアクセス制限を設けることでコストを最適化した事例です。",
+      "whyRecommended": "Vercelのような従量課金制プラットフォームにおいて、クローラーによるインフラコスト急増は避けるべき重大なリスクです。robots.txtのグループ定義の注意点や、URL構造とパス指定の具体例が実戦的で非常に参考になります。",
+      "learningPoints": [
+        "robots.txtは指定したUser-Agentに合致するグループのみが適用され、ワイルドカード側の設定は無視されるため、グループごとに個別に記述する必要があります。",
+        "Next.jsの動的なページ生成を多用する場合、robots.txtでクローラーのアクセス範囲を制限しないと、意図しない大量のFunction起動によるコスト急増を招く可能性があります。",
+        "robots.txtにおけるアスタリスク（*）はスラッシュを含めた0文字以上にマッチするため、特定のパス深さを持つURLをまとめて拒否対象に指定できます。",
+        "検索条件の組み合わせが膨大なサイトでは、SEOの影響を考慮しつつ、検索パラメータの深さに応じてクロールを制限することがコスト管理の鍵となります。"
+      ],
+      "signalsUsed": [
+        "vercel_cost_optimization",
+        "robots_txt_configuration",
+        "real_world_experience",
+        "operationally_applicable"
+      ]
+    },
+    {
+      "articleId": "8340d4893874bd2988910292937d29c0ffc2164f2cf5468464b0fb1c7a1e8f60",
+      "summary": "JSON SchemaとZodの相互変換をブラウザ上で安全に行うための実装術を解説した記事です。evalを用いずにZodコードを解析する難所や、スキーマ間の仕様差を吸収する変換ロジックについて詳しく紹介しています。",
+      "whyRecommended": "ブラウザ完結のツール開発において、セキュリティを考慮した構文解析手法や、仕様の異なるスキーマを矛盾なくマッピングする際の注意点が実体験に基づいて詳細に語られており、ツール作成の参考として非常に質が高いからです。",
+      "learningPoints": [
+        "JSON Schemaは明示しない限り任意、Zodは明示しない限り必須という正反対の仕様があるため、相互変換時はこの既定値を明示的に変換する必要がある。",
+        "evalを使わずにZodコードを解析するには、クォート内か否かを追跡しながら入れ子になった括弧の対応を計算する独自パーサーが有効である。",
+        "オブジェクトのフィールドを分割する際は、単純なカンマ区切りではなく、深さ0のカンマのみを区切りとして認識させることで誤分割を防げる。",
+        "自動変換でサポートできない箇所を黙ってany型にせず、変換警告としてUIに表示することでユーザーの信頼性を担保できる。"
+      ],
+      "signalsUsed": [
+        "parser_implementation",
+        "security_concerns_no_eval",
+        "code_examples",
+        "real_world_experience",
+        "developer_productivity"
+      ]
     }
   ]
 }
