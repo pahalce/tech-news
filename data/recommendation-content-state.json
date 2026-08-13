@@ -3289,6 +3289,62 @@
         "real_world_experience",
         "developer_productivity"
       ]
+    },
+    {
+      "articleId": "789cb576f9ecb4159789d08fcbca79b4dcd08eb67f52a421b87b9922e1c99ce2",
+      "summary": "Next.jsをCloudflare Workers上で運用し、DBにTursoを採用するフルスタック構成の実戦的な知見をまとめた記事です。コストを抑えつつ本番環境を構築する過程で遭遇した特有の技術的な罠と、その具体的な回避策を解説しています。",
+      "whyRecommended": "低コストなインフラ構成で本番運用を行う際の具体的な技術的課題と、それに対する実践的な設計パターンが網羅されており、エッジ環境でのNext.js運用に関心があるエンジニアにとって非常に有益な知見が詰まっているため。",
+      "learningPoints": [
+        "OpenNext構成では画像最適化サーバーが動かないため、next/imageの代わりに素のimgタグを使用し、eslint-plugin-importで制限をかける必要がある。",
+        "TursoへのアクセスはHTTPS往復が毎回発生するため、Drizzle ORMのbatch処理やPromise.allを活用してDBアクセス回数を最小化すべきである。",
+        "サーバーコンポーネントでDBから取得したデータはRSC payloadに含まれてクライアントに送られるため、セキュリティ上不要なカラムはクエリ時点で除外する。",
+        "use clientを持つモジュールの関数をサーバー側から直接呼び出すと実行時に500エラーとなるため、共通ユーティリティはuse clientを含まない別ファイルに分離して管理する。",
+        "Cloudflareの環境はUTCで動作するため、日時処理は常にタイムゾーンを明示し、クライアント側でISO 8601形式へ変換してから送信することでhydration mismatchを防ぐ。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "cloudflare_workers",
+        "turso_libsql",
+        "production_case_study",
+        "deep_technical_explanation",
+        "edge_cases",
+        "reusable_implementation_pattern"
+      ]
+    },
+    {
+      "articleId": "0fcb1c4786e1a538eb3cd5e5bd705a266f422d42b56a592f27afe88617851fb8",
+      "summary": "Rust製の高速な静的解析ツールであるBiomeとOxlintを比較し、なぜパフォーマンスに大きな差が出るのかを技術的に解説しています。解析範囲やメモリ管理戦略の違い、型認識の実装アプローチが速度に与える影響を明らかにしています。",
+      "whyRecommended": "技術的な実測データに基づき、単に「Rust製だから速い」という表面的な理解を超えて、ツールが採用しているデータ構造やアーキテクチャのトレードオフを深く掘り下げているため、フロントエンドエンジニアのツール選定の指針になります。",
+      "learningPoints": [
+        "Oxlintは使い捨て前提のアリーナメモリ確保（Bump Allocation）を採用しており、BiomeのロスレスCST（Red-Green Tree）に比べてメモリ管理と走査コストが低い。",
+        "Biomeは複数ファイルの跨ぎ解析やCSSのlintなど解析範囲が広いため、機能の多さが実行速度のトレードオフになっている。",
+        "Biomeは独自の実装で型情報を推論するため型認識lintが高速だが、Oxlint（tsgolint）はより正確な型検査を優先するため実行時間が長くなる。",
+        "BiomeのCST（Red-Green Tree）は、エディタ連携やフォーマッタとのAST共有を最適化する設計であり、純粋なlintの速度だけを競うモデルとは目的が異なる。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "measured_results",
+        "comparison",
+        "tradeoff_analysis",
+        "static_analysis_tooling"
+      ]
+    },
+    {
+      "articleId": "910387c101ef80c5ceb0767cd2c340b18c08ca6d8e15e114e49d087bde331695",
+      "summary": "Vue/Nuxtのラッパーコンポーネントに対して@blurでイベントハンドラを付与しても発火しない原因と、その解決策を解説した技術記事。イベントのバブリング仕様とフォールスルー属性の挙動を深く掘り下げ、フォームバリデーションにおける最適なイベント選択を提示しています。",
+      "whyRecommended": "フロントエンド開発において頻出する「イベントが期待通りに動作しない」という問題に対し、ブラウザの仕様レベルまで踏み込んだ明確な解を提供しており、デバッグの質を向上させるため非常に有益です。",
+      "learningPoints": [
+        "Vueのコンポーネントに付与した@blurなどのイベントハンドラは、コンポーネント内のルート要素にフォールスルー属性として適用される。",
+        "blurイベントは親要素にバブリング（伝播）しないため、ルート要素でイベントを待ち受けても内側の入力要素で発生したイベントは検知できない。",
+        "focusoutイベントはバブリングするため、ラッパーコンポーネント経由でも親要素で確実に検知可能である。",
+        "changeイベントは値が変更された瞬間にしか発火しないため、入力を行わずにフォーカスを外すケースのバリデーションには適さない。"
+      ],
+      "signalsUsed": [
+        "vue_specific",
+        "event_bubbling",
+        "form_validation"
+      ]
     }
   ]
 }
