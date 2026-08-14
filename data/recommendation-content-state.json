@@ -3345,6 +3345,62 @@
         "event_bubbling",
         "form_validation"
       ]
+    },
+    {
+      "articleId": "9d37b7b9419b3967d23499f1d67539a5ce2e3888b60069d051621e5ca41b3aee",
+      "summary": "MongoDBの監査ログ検索をElasticsearchによるあいまい検索へ移行する過程で発生した設計判断やトラブルシュートをまとめた技術記録です。Change Streamを用いたリアルタイム同期や、無停止インデックス更新のためのエイリアス活用など、実務で役立つアーキテクチャ設計の知見が解説されています。",
+      "whyRecommended": "バックエンド開発において不可欠な検索エンジン活用の勘所と、リアルタイム同期における障害対応・監視設計の泥臭い実体験が詰まっているため。単なる導入ガイドではなく、捨てた選択肢と理由が明記されており、設計の納得感が高い。",
+      "learningPoints": [
+        "Elasticsearchのfuzzy検索はクエリ側のアナライザを通さないため、text型ではなくkeyword型で定義しないと正しく機能しない。",
+        "前方一致検索（foo*）は辞書順のソートを利用して高速化できるが、先頭ワイルドカード（*foo）は全termをスキャンするためパフォーマンスが著しく低下する。",
+        "Change Streamはoplogを基盤としており、resume tokenを利用することでプロセス境界を越えた同期再開が可能になる。",
+        "poison pill（処理失敗し続けるデータ）対策として、連続再起動カウンターを用いて特定のイベントをスキップする仕組みを設けることでシステム全体の頑健性を維持できる。",
+        "監視指標は「その数値を見て誰がどのアクションを取るのか」を定義してから実装しないと、不要な指標が蓄積され形骸化する。"
+      ],
+      "signalsUsed": [
+        "elasticsearch",
+        "mongodb",
+        "change_stream",
+        "poison_pill_handling",
+        "performance",
+        "backend"
+      ]
+    },
+    {
+      "articleId": "de4f5c84361f39b184afdd5600bd76c9cc35a3f13e06e3a098ab27b9c4594cf4",
+      "summary": "Cloudflare Workersからローカル環境のAPIへ安全にアクセスするための、Cloudflare TunnelとWorkers VPCを活用した実装構成を解説しています。環境依存のAPI接続や秘密鍵の使用など、Workersで完結しない処理をローカルプロキシに分離し、安全に連携させる手法が学べます。",
+      "whyRecommended": "サーバーレス環境の制約をローカルネットワークのブリッジで解決する実践的なアーキテクチャであり、セキュリティと運用の切り分けが非常に明確であるため、エンタープライズレベルの構成を検討する開発者に最適です。",
+      "learningPoints": [
+        "cloudflaredはトンネル接続のみを担い、アプリケーション実行基盤ではないため、通信先としてのローカルサーバーは別途起動と管理が必要です。",
+        "Workerとローカルプロキシ間はVPC Service bindingを介し、Bearertokenで認証を行うことで、インターネットに公開せずに通信を保護できます。",
+        "任意のURLを中継せず、ローカル側で特定のAPI操作のみを実装することで、SSRF（サーバーサイドリクエストフォージェリ）や踏み台攻撃のリスクを低減できます。",
+        "レスポンスをtext()などで一度メモリに展開せず、response.bodyをそのままストリームとして返すことで、Workersのメモリ消費量を抑えられます。",
+        "Workerからfetch()する際のURLは実在するドメインである必要はなく、VPC Serviceに登録した識別名を使用することでローカルサービスへ到達可能です。"
+      ],
+      "signalsUsed": [
+        "cloudflare_workers",
+        "cloudflare_tunnel",
+        "workers_vpc"
+      ]
+    },
+    {
+      "articleId": "c87c2c5efdd4f5fed7fda49f4285543eb18cb4131e54c65ef0910fb727707974",
+      "summary": "ReactとLaravelを用いた構成におけるAPIエラー処理の共通化と、画面固有の処理との切り分け方を解説した記事です。成功前提で画面遷移していたコードの不備を修正し、401/403/422エラーに対する適切な責務の境界を整理しています。",
+      "whyRecommended": "フロントエンドとバックエンドの境界におけるエラーハンドリングという、実務で頻出する課題に対してコード例を用いた具体的な解決策が提示されており、設計の考え方が非常に実践的です。",
+      "learningPoints": [
+        "401や403は画面によらず共通の復帰動作が可能だが、422バリデーションエラーはどのフィールドに表示するかという画面固有の文脈が必要なため共通化すべきではない。",
+        "非同期処理においてmutateの直後にnavigateを行うと、エラー時に画面が遷移してしまうため、mutateAsyncをawaitした後の成功時にのみ遷移させるべき。",
+        "APIのレスポンス形式（snake_case）とフォームのフィールド名（camelCase）が一致しない場合、バリデーションエラーをフォームへ適用する際に変換処理が必要。",
+        "AcceptヘッダーがJSONを期待していない場合にLaravelがリダイレクトを試みて500エラーになるケースがあるため、Middleware設定でJSONレスポンスを強制する対応が有効。"
+      ],
+      "signalsUsed": [
+        "api_error_handling",
+        "react",
+        "laravel",
+        "typescript",
+        "deep_technical_explanation",
+        "code_examples"
+      ]
     }
   ]
 }
