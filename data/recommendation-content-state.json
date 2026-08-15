@@ -3401,6 +3401,62 @@
         "deep_technical_explanation",
         "code_examples"
       ]
+    },
+    {
+      "articleId": "6d484cb65e26f6e0c65db84775a05b66a3839771b8fdf34748c26777d2e6f3f0",
+      "summary": "個人開発のB2B SaaS公開までを題材に、技術選定のADR（意思決定記録）と実際の運用・コストを比較検証した技術選定のポストモーテム記事です。選定した技術がなぜ外れたのか、初期見積もりから実際の請求書でどうズレが生じたかを具体的に解説しています。",
+      "whyRecommended": "技術選定における「何を捨てたか」という判断基準と、個人開発特有の制約（時間・固定費・撤退の容易さ）が言語化されており、開発効率と運用の持続性を高めたいエンジニアにとって非常に示唆に富む内容だからです。",
+      "learningPoints": [
+        "AWSのNAT Gatewayは月額35ドル以上の固定費がかかるため、コストを優先するなら構成から除外するか見直しが必要です。",
+        "Vercel等のホスティング環境では関数実行時間の上限があるため、長時間かかるAI生成機能などを実装する際は、選定段階で上限を確認しておくべきです。",
+        "モノレポ構造は物理的な置き場所を提供するだけであり、型同期を強制するにはOpenAPI等のスキーマから自動生成する仕組みを最初に導入する必要があります。",
+        "初期クレジットはAWS利用料のみを相殺するものであり、ドメイン費用や外部AIサービスなどの実費は対象外であることに注意が必要です。",
+        "将来必要になるかもしれないという予測だけで技術スタックを増やすと、実装されないまま環境複雑度だけが上がることがあるため、必要になる直前まで選定を保留するのが合理的です。"
+      ],
+      "signalsUsed": [
+        "tradeoff_analysis",
+        "real_world_experience",
+        "aws_cost_optimization",
+        "solo_development",
+        "architecture_decision_records"
+      ]
+    },
+    {
+      "articleId": "b8a262442ac18e719c90e85e10165c0651a53878aa7fd080f0ef2a9f95af2ff4",
+      "summary": "Web Workerを適切に使用して、重い計算処理をメインスレッドから切り離す手法を解説しています。計算の高速化ではなく、UIの操作性を維持するための分業手段としての役割を明確にします。",
+      "whyRecommended": "フロントエンドのパフォーマンスチューニングにおいて、async/awaitとWeb Workerの使い分けや、実際の導入基準が非常に分かりやすく整理されているため。",
+      "learningPoints": [
+        "async/awaitは通信の待機には有効だが、CPUを専有する計算処理を別スレッドに移すことはできない。",
+        "Web Workerへデータを渡す際は構造化クローンアルゴリズムで複製されるため、巨大なデータはTransferable Objectsで所有権を移すことでコピーコストを削減できる。",
+        "WorkerはDOM操作ができないため、UIと計算の責務を分離する良い設計のきっかけになる。",
+        "Workerの起動やデータ通信にはコストがかかるため、短時間の処理を移しても逆効果になる可能性がある。",
+        "Chrome DevToolsのPerformanceパネルでLong Taskを確認し、UIへの影響が明確な場合にのみWorker導入を検討するのが適切である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "performance",
+        "web_workers",
+        "main_thread_blocking"
+      ]
+    },
+    {
+      "articleId": "d630d7fbf40a3f2e7b103c11534b41bed62778f2ebfa4fe49eb1039a5d9b09e3",
+      "summary": "Next.jsのMiddlewareがEdge Runtimeで動作する際に、Node.js依存のライブラリ（Prismaやbcrypt）を読み込むとエラーが発生する問題の解決策を解説しています。設定ファイルを分割し、Runtimeの要件に応じて読み込むコードを分ける手法を紹介しています。",
+      "whyRecommended": "Next.jsのApp RouterでAuth.jsやPrismaを導入する際に遭遇しやすいランタイム制限の問題を、実践的なコード分割手法で解決しており、実務で役立つ構成案が示されているため。",
+      "learningPoints": [
+        "Next.jsのMiddlewareはEdge Runtimeで実行されるため、Node.js固有のモジュール（cryptoなど）は直接利用できない。",
+        "Prisma ClientやbcryptのようにNode.jsランタイムを前提としたライブラリは、Middlewareから直接インポートするとビルドや実行時にエラーになる。",
+        "認証設定をEdge環境用の設定（auth.config.ts）とNode.js環境用の本体（auth.ts）に分割することで、ランタイムの衝突を回避できる。",
+        "Edge Runtimeは軽量な実行環境であり、ファイルシステムやNode.js標準のcryptoモジュールの一部が制限されている。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "prisma_integration",
+        "auth_js_usage",
+        "edge_runtime_vs_nodejs_runtime",
+        "reusable_implementation_pattern",
+        "actionable_steps"
+      ]
     }
   ]
 }
