@@ -3457,6 +3457,71 @@
         "reusable_implementation_pattern",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "10eb78729d7a168bdc39428861bd9d5fba9577f1081316ef5e93bb51da4d89b2",
+      "summary": "さくらのAppRunを活用し、Vercelのような自動プレビュー環境を構築する手法を解説した実戦記録です。制約の多い環境下で、セキュアかつ運用コストを抑えたPRプレビュー環境を実現する設計上の工夫が網羅されています。",
+      "whyRecommended": "サーバーレス環境のデプロイ自動化において、APIの仕様やレジストリ設定の落とし穴といった実務で直面する技術課題への対処法が非常に具体的で、エンジニアリングの質の高い知見が得られるため。",
+      "learningPoints": [
+        "AppRun共用型の制約上、アプリケーション単位でプレビュー環境を作る必要があり、同時に保持できるのは最大4本までとなる。",
+        "Docker Hubをレジストリとして使う際、AppRunのAPI認証で送るサーバー名はdocker.ioではなくindex.docker.ioを指定しなければならない。",
+        "AppRunは構成情報が変わらないと新しいバージョンを作成しないため、イメージ参照にタグではなくdigestを指定することで確実にデプロイを反映させる。",
+        "プレビュー環境のBasic認証をPRコード内で実装する場合、PRコード自体が認証を回避したりsecretを漏洩させたりするリスクがあるため、本番secretをプレビュー環境には入れない設計が必須である。",
+        "Terraform apply実行時の事故を防ぐため、重要なリソースにはlifecycleブロックでprevent_destroy = trueを指定する。"
+      ],
+      "signalsUsed": [
+        "web_development",
+        "devops",
+        "nextjs",
+        "infra_as_code",
+        "github_actions",
+        "sakura_cloud"
+      ]
+    },
+    {
+      "articleId": "dc55cf3445d5071c6e5863c2a828dd11d32ae383cc696ed24fa5048fe9f05591",
+      "summary": "SvelteKit経験者がReactでニュースアプリを開発する過程で、責務を明確に分離するアーキテクチャを構築しました。通信、状態管理、UIコンポーネントを段階的に切り出し、メンテナンス性の高い構成を実現しています。",
+      "whyRecommended": "React初学者や、コンポーネントの肥大化に悩む開発者にとって、責務の分離という抽象的な概念が具体的なコード構成（API層・Hook層・UI層）として示されており、実践的な指針となるため。",
+      "learningPoints": [
+        "APIリクエスト処理とエラーハンドリングを独立したapi.tsに集約することで、コンポーネント側からfetchを排除できる。",
+        "データ取得と状態管理をカスタムフックとTanStack Queryに任せることで、コンポーネントは表示ロジックに専念できる。",
+        "UIコンポーネントには必要なデータのみをpropsとして渡し、コンポーネント内で使用する型も必要最小限に定義する。",
+        "JSXとスタイルを同じファイルに配置することで、UIの構造と見た目を一度に把握しやすくなる。"
+      ],
+      "signalsUsed": [
+        "react",
+        "architecture_explanation",
+        "reusable_implementation_pattern",
+        "separation_of_concerns"
+      ]
+    },
+    {
+      "articleId": "2bae3f3164e8ef62756d50c3fbc9abfc9dfe7fd0e3107aa752f2ab408dcdeb0c",
+      "summary": "Next.jsをBFFとして導入すると、セキュリティ境界がRailsからNext.jsへ移行するため、脆弱性対策の責任も開発者側に委ねられます。Railsと異なりNext.jsはデフォルトの保護機能が限定的であるため、適切な対策を怠るとかえってCSRFなどのリスクが高まる危険性について解説しています。",
+      "whyRecommended": "モダンなフロントエンド構成でよく採用されるBFFパターンにおいて、見落とされがちな「セキュリティの責任分界点」を明快に言語化しており、アーキテクチャ選定を行うエンジニアにとって非常に示唆に富む内容だからです。",
+      "learningPoints": [
+        "Next.jsをBFFとして採用した場合、セキュリティ対策の責任はNext.js側が担うことになります。",
+        "Ruby on Railsは標準で強力なCSRF対策が組み込まれていますが、Next.jsのApp RouterではServer Action以外のエンドポイント（Route HandlerやPages Router）にはCSRF対策が用意されていません。",
+        "SameSite属性やCORSの設定だけではCSRF攻撃を根本的に防ぐことはできず、サーバー側でのTokenやOriginヘッダーによる検証が必須です。",
+        "Route HandlerがContent-Typeを強制しないなど単純なリクエストを受け入れる場合、認証Cookieが送信されやすくなりCSRF攻撃が成立するリスクが高まります。"
+      ],
+      "signalsUsed": [
+        "security",
+        "nextjs",
+        "backend",
+        "architecture_explanation",
+        "comparative_evaluation",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "real_world_experience",
+        "comparison",
+        "architecture_decision_support",
+        "specific_problem",
+        "concrete_technology_named",
+        "production_context_named",
+        "csrf_vulnerability",
+        "secure_by_default_philosophy"
+      ]
     }
   ]
 }
