@@ -3579,6 +3579,63 @@
         "ui_testing_strategy",
         "reverse_engineering_methodology"
       ]
+    },
+    {
+      "articleId": "34eb838c5d778b5bf5c7c6f1325f24950892f8879f6910310f34e3146a07db52",
+      "summary": "TypeScript 7と6を併用し、パフォーマンス向上の恩恵を受けつつ型情報付きLint環境を維持するための検証記事です。公式のalias構成を用いた環境構築手順と、単純な移行で陥るLintの停止リスクを実測値とともに解説しています。",
+      "whyRecommended": "TypeScript 7の導入検討において、実用上の最大の壁となる既存ツール（typescript-eslint）との共存問題を具体的に解決しており、最新の移行ノウハウとして非常に実用性が高いためです。",
+      "learningPoints": [
+        "TypeScript 7への単純なアップグレードでは、typescript-eslintがTypeScript 7のバージョンを検知して起動時にエラーで停止します。",
+        "npmパッケージのエイリアス機能を使用することで、@typescript/nativeでTS7、typescript名でTS6を並走させる構成が可能です。",
+        "typescript-eslintは内部的にTSのCompiler APIに依存しているため、TS7側ではcreateProgramが未定義となり、従来のLint設定は動作しません。",
+        "TypeScript 7の型チェックの並列実行数は--checkersオプションで制御可能であり、4コア環境から8コアへの拡張では性能向上が緩やかになる傾向があります。",
+        "npmのピア依存関係は、aliasを使用することでパッケージ名が衝突せず、正常に解決可能になります。"
+      ],
+      "signalsUsed": [
+        "typescript_7_migration",
+        "eslint_compatibility",
+        "package_manager_alias",
+        "benchmark_analysis"
+      ]
+    },
+    {
+      "articleId": "7b87c52115a32d723fd030c42c2497b1ec29b86290eb6c14560dc76ead08212d",
+      "summary": "JSX内の改行によって日本語の助詞や句読点が不自然に割れてしまう問題に対し、Playwrightを用いたE2Eテストでの検知手法を解説する記事です。sitemapから全ページを動的に取得し、描画後のHTMLを正規表現で解析することで、コードレビューで見落とされがちなレイアウト崩れを自動修正する仕組みを紹介しています。",
+      "whyRecommended": "フロントエンド開発において、視覚的な崩れを属人的なチェックに頼らず、自動テストで解決する具体的なアプローチが網羅されています。テスト対象の自動選定から、正規表現による誤検知の排除、そしてテスト自体のメンテナンス性（例外リストの管理）に至るまで、実務ですぐに使える知見が豊富です。",
+      "learningPoints": [
+        "JSXでは隣接するノードの種類により、改行が半角スペースに変換される場合と完全に削除される場合があるため、ソースコード上の見た目だけで判定できない。",
+        "誤検知を防ぐために、正規表現の文字クラスには数字や英字を含めず、あくまで「日本語同士の間に挟まれた半角空白」のみを対象にする。",
+        "テストの精度を保つため、HTMLの表示上の空白（&nbsp;）をあらかじめ通常の半角空白に正規化してから解析を行う。",
+        "全件を漏れなくキャプチャするために、matchAllとゼロ幅の先読みを組み合わせ、重なり合う部分も無視せずに抽出する。",
+        "テストが対象ページゼロで合格してしまうことを防ぐため、最低限の検査件数とステータスコードを確認する仕組みを組み込む。"
+      ],
+      "signalsUsed": [
+        "jsx_behavior",
+        "playwright",
+        "e2e_testing_strategy",
+        "japanese_typography"
+      ]
+    },
+    {
+      "articleId": "a795d2022eb830df7c4068772eaba2cd41b74b4e376ff4c899ce8f2cae7a74ac",
+      "summary": "ブラウザ完結型の画像リサイズツール開発における、Canvas APIを活用した実装の知見をまとめた記事。アスペクト比を維持する双方向バインディングの実装手法や、Canvasによる縮小処理の画質トレードオフ、JPEG出力時の透過情報の扱いに焦点を当てています。",
+      "whyRecommended": "フロントエンド開発において頻出する「画像操作」という具体的な課題に対し、ライブラリに頼らずCanvas APIで解決するための実用的な設計判断や注意点が技術的根拠と共に網羅されているため、実務に応用しやすい内容です。",
+      "learningPoints": [
+        "画像のアスペクト比はuseStateではなくuseRefで管理することで、再レンダリングを抑えつつ入力ハンドラから同期的に参照できる。",
+        "幅から高さを算出する際は割り算、高さから幅を算出する際は掛け算を用いる必要があり、Math.roundで整数値に丸めることでピクセル座標に対応させる。",
+        "CanvasのdrawImageによる1パス縮小は実装が容易だが、大幅な縮小時には画質劣化が起こるため、画質重視なら多段階縮小を検討する必要がある。",
+        "JPEG形式はアルファチャンネルを持たないため、透過PNGを処理すると背景が黒く塗りつぶされる副作用が発生する。",
+        "UI上の「アスペクト比維持」と「規定サイズのプリセット適用」は別要求であると割り切り、プリセット適用時はアスペクト比ロックの状態を無視して指定サイズを強制的に反映させる設計が有効である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "typescript",
+        "canvas_api",
+        "image_processing",
+        "react_useref_patterns",
+        "tradeoff_analysis",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
