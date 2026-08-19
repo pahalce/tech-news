@@ -3636,6 +3636,64 @@
         "tradeoff_analysis",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "80d3e649d39ac8079fc3638365c1ead0d71aabec436e5c7fcc169eeab1132103",
+      "summary": "Playwrightを用いたE2Eテストにおいて、変更に強く保守コストを抑えるための「4層構造」の設計手法を解説しています。要素と手順を別々の層に分離し、機械的なゲートでルールを強制することで、テストの信頼性と継続性を確保する方法を提示しています。",
+      "whyRecommended": "E2Eテストの肥大化とメンテナンスの難しさに悩むエンジニアにとって、責務の分離とCIによる構造維持という具体的な解決策が示されており、長期的な運用を目指すプロジェクトに非常に有益な知見を提供しているため。",
+      "learningPoints": [
+        "E2Eテストの責務を「Config/Env」「Tests」「Actions」「Page Objects」の4層に分離し、変更発生源ごとに修正箇所を閉じることで保守性を向上できる。",
+        "Page ObjectはUI要素の定義のみを担当し、業務フローや操作手順はAction層へ切り出すことで、仕様変更時の修正範囲を最小化できる。",
+        "Test層にLocatorを書かず、Action層にexpectを書かないことで、テストとUI構造の依存関係を排除できる。",
+        "Action層での待機処理にはwaitForメソッドを用い、真偽値を返す設計にすることで、テスト層でLocatorを知らずに検証を完結させられる。",
+        "CI上でコードの禁止パターンやレイヤー境界違反を機械的に検知し、構造の腐敗を自動的に防ぐハーネスを導入することで、持続可能なテスト環境を構築できる。"
+      ],
+      "signalsUsed": [
+        "playwright",
+        "e2e_testing",
+        "maintainability",
+        "code_architecture"
+      ]
+    },
+    {
+      "articleId": "711d0087c126acf8b5e6bf1e56020586d6e973125465c6ec8a94e3c66f735775",
+      "summary": "本書は、TanStack Startを活用したモダンなWebアプリケーション開発を包括的に解説する技術書です。データフェッチからレンダリング戦略、HonoやBetter Authと連携したCloudflare Workers環境での構築手法までが体系的にまとめられています。",
+      "whyRecommended": "TanStack Startという新興フレームワークを単なるAPI解説に留めず、設計思想やキャッシュ戦略、認証実装などの実務的な判断軸まで詳細に解説されており、モダンなWeb開発のアーキテクチャを深く学びたい方に最適です。",
+      "learningPoints": [
+        "データフェッチではリクエストのメモ化を過度に期待せず、DataLoaderを活用することでN+1問題を防ぐ設計が重要です。",
+        "コンポーネント設計において、Client Componentsの範囲を必要最小限に抑えることで、サーバーとクライアントの境界を最適化できます。",
+        "キャッシュ戦略を検討する際は、Static RenderingとDynamic Renderingの境界を明示し、キャッシュの保存先と共有範囲を意識的に制御する必要があります。",
+        "認証やAPIの実装において、CORSの設定で苦労するよりも、same-origin gatewayを採用することで構成をシンプルに保てます。",
+        "アプリケーションのエラーは種類に応じて分類し、テスト層や運用コストの観点から適切なハンドリングを行うことが重要です。"
+      ],
+      "signalsUsed": [
+        "tanstack_start",
+        "cloudflare_workers",
+        "hono",
+        "better_auth",
+        "book_format",
+        "implementation_guide",
+        "architecture_explanation"
+      ]
+    },
+    {
+      "articleId": "fc76f2b26e8aa00f5904f24467fcc947054b44fbb6e924001ffa00167f1fac03",
+      "summary": "関数が予期せぬ挙動を起こさないための「純粋関数」の考え方を解説した記事です。引数以外の外部データに依存せず、副作用を分離する書き方を学ぶことで、壊れにくいコードの書き方を習得します。",
+      "whyRecommended": "フロントエンド開発の基礎であるReactの設計思想に通じる重要な概念であり、コードの品質と保守性を高めたい初〜中級者にとって非常に有益な構成であるため。",
+      "learningPoints": [
+        "純粋関数とは「同じ引数なら必ず同じ結果を返す」かつ「関数外の状態を書き換えない」関数である。",
+        "外部変数に依存する処理は、必要な値を引数として受け取る設計に修正することで関数の独立性を高められる。",
+        "配列の要素追加やソートを行う際、元のデータを直接操作せず、新しい配列を生成して返すことで副作用を抑制できる。",
+        "計算ロジックとDOM操作などの副作用を関数として分離することで、テストが容易になりバグの調査範囲を特定しやすくなる。",
+        "Reactのコンポーネントは純粋関数であることが前提であり、この原則を守ることで最適化が正常に働き、アプリの安定性が向上する。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "typescript",
+        "react",
+        "functional_programming",
+        "javascript"
+      ]
     }
   ]
 }
