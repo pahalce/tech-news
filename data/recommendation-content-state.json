@@ -3754,6 +3754,62 @@
         "real_world_experience",
         "distributed_systems"
       ]
+    },
+    {
+      "articleId": "99017ac78fcd17e4ba9c9979c9f1161b2317d939a37fd7294fb0bc8d68e8b00f",
+      "summary": "Reactフォームの遷移遅延に対し、描画最適化ではなく重複するAPI通信の削除が根本解決となった事例です。計測に基づき、改善の根拠を説明できない変更はPRから排除するという論理的な判断基準を提示しています。",
+      "whyRecommended": "フロントエンドのパフォーマンスチューニングにおいて、思い込みによる最適化を避け、具体的な計測と依存関係の分析で意思決定する姿勢が非常に参考になるためです。",
+      "learningPoints": [
+        "「クリックから画面反映まで」のようにユーザーが体感する区間を定義し、処理を細分化して計測することでボトルネックを特定する。",
+        "描画の再レンダリングを疑う前に、重複して発生している不要なAPIリクエストや、直列的な通信依存がないかを確認する。",
+        "判定結果の共有キャッシュなどを実装する場合、入力値の変化に応じた破棄条件やサーバー側との整合性担保をセットで設計する必要がある。",
+        "設計上もっともらしく見えても、再現性のある計測結果で差を確認できない変更は、説明責任を果たせないためPRに含めないという判断基準を持つ。"
+      ],
+      "signalsUsed": [
+        "measured_results",
+        "real_world_experience",
+        "decision_making_process",
+        "measurement_methodology",
+        "pr_review_criteria"
+      ]
+    },
+    {
+      "articleId": "c552868df16d63ab89fc565fc3b16809569d57e4bfffe9ac553b0050573f6b7d",
+      "summary": "この記事では、フロントエンド開発における「コロケーション（コードの配置）」と「パフォーマンス」のトレードオフについて解説しています。GraphQLのFragment ColocationとReact Server Components（RSC）という異なるアプローチが、どのようにこの課題を解決し、UXとDXの両立を実現しているのかを論理的に紐解きます。",
+      "whyRecommended": "Reactのデータフェッチにおけるウォーターフォール問題の本質を捉え、RSCとGraphQLの共通点を見出す鋭い視点が評価できます。Next.jsやReact Routerを採用するエンジニアにとって、コンポーネント設計やデータフェッチ戦略を再考するための深い知見が得られるためです。",
+      "learningPoints": [
+        "コンポーネント内で個別にデータを取得すると、親のレンダリング待ちが発生し、ネットワークの往復回数が増えるウォーターフォール問題が生じる。",
+        "ルート単位でデータを一括取得する手法はパフォーマンスに優れるが、データの定義とUIが分離されるため開発体験（DX）が低下する。",
+        "GraphQLのFragment Colocationは、UI側で必要なデータを宣言し、それをサーバー側で一つのクエリに集約することで「コロケーション」と「パフォーマンス」を両立させている。",
+        "RSCはフェッチ処理をサーバー側に限定することで、データソースとの地理的な距離を短縮し、クライアントへはレンダリング済みのツリーを一度の往復で送信する。",
+        "Client Component（use client）の下でServer Componentを表示したい場合は、Compositionパターン（childrenとして受け取る）を利用することでインポートの制約を回避できる。"
+      ],
+      "signalsUsed": [
+        "rsc_vs_graphql_comparison",
+        "graphql_fragment_colocation",
+        "data_fetching_waterfall",
+        "architecture_decision_support"
+      ]
+    },
+    {
+      "articleId": "aad77f87b7ad5e3ef40d1fca779f2eb05b1c9a183b952e77792fd54b9e22899f",
+      "summary": "React 19.3で導入予定のbrowser() APIを活用し、サーバーサイドレンダリング(SSR)時にブラウザ専用コンポーネントを適切に制御する方法を解説しています。特に、ルーティングライブラリにおけるハイドレーションミスマッチを防ぐための実践的な適用例を紹介しています。",
+      "whyRecommended": "Reactの最新機能であるbrowser() APIの意図や具体的な活用シーンが、OSS開発者の視点から分かりやすく言語化されており、SSRやSuspenseの深い理解に役立つため。",
+      "learningPoints": [
+        "browser() APIはSSR中にコンポーネントを疑似的にサスペンドさせ、クライアントサイドでのレンダリングまで待機させるための仕組みである。",
+        "SSR中にbrowser()が呼び出されると、直近のSuspenseバウンダリがフォールバックUIを表示し、ハイドレーション成功後に本来の内容へ切り替わる。",
+        "従来、コンポーネントで意図的にエラーを投げて行っていたSSR時のフォールバック処理を、エラーログを出さずに公式APIとして安全に実装できる。",
+        "URLが未確定なPathless SSR環境において、Outlet内のレンダリングをbrowser()で制御することで、サーバーとクライアント間のハイドレーションミスマッチを解消できる。"
+      ],
+      "signalsUsed": [
+        "react",
+        "web_development",
+        "frontend",
+        "performance",
+        "hydration_mismatch",
+        "ssr_optimization",
+        "suspense_pattern"
+      ]
     }
   ]
 }

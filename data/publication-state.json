@@ -4382,6 +4382,75 @@
           "ignoredReason": null
         }
       ]
+    },
+    {
+      "articleId": "99017ac78fcd17e4ba9c9979c9f1161b2317d939a37fd7294fb0bc8d68e8b00f",
+      "deliveryReference": {
+        "externalSystem": "discord",
+        "destination": "1504276981490122833",
+        "id": "1540455670803857449"
+      },
+      "postedAt": "2026-08-21T20:20:52.202000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    },
+    {
+      "articleId": "c552868df16d63ab89fc565fc3b16809569d57e4bfffe9ac553b0050573f6b7d",
+      "deliveryReference": {
+        "externalSystem": "discord",
+        "destination": "1504276981490122833",
+        "id": "1540455675317067776"
+      },
+      "postedAt": "2026-08-21T20:20:53.278000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
+    },
+    {
+      "articleId": "aad77f87b7ad5e3ef40d1fca779f2eb05b1c9a183b952e77792fd54b9e22899f",
+      "deliveryReference": {
+        "externalSystem": "discord",
+        "destination": "1504276981490122833",
+        "id": "1540455677221150820"
+      },
+      "postedAt": "2026-08-21T20:20:53.732000+00:00",
+      "reactionFeedback": [
+        {
+          "emoji": "👍",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        },
+        {
+          "emoji": "👎",
+          "userIds": [],
+          "processedAt": null,
+          "ignoredReason": null
+        }
+      ]
     }
   ],
   "recommendedArticles": [
@@ -5144,6 +5213,18 @@
     {
       "articleId": "30d24abf6468697209869480cc5a5c728d0f2df7bad1e98d707ac129b3de5ff2",
       "firstRecommendedAt": "2026-08-20T20:23:58.514000+00:00"
+    },
+    {
+      "articleId": "99017ac78fcd17e4ba9c9979c9f1161b2317d939a37fd7294fb0bc8d68e8b00f",
+      "firstRecommendedAt": "2026-08-21T20:20:52.202000+00:00"
+    },
+    {
+      "articleId": "c552868df16d63ab89fc565fc3b16809569d57e4bfffe9ac553b0050573f6b7d",
+      "firstRecommendedAt": "2026-08-21T20:20:53.278000+00:00"
+    },
+    {
+      "articleId": "aad77f87b7ad5e3ef40d1fca779f2eb05b1c9a183b952e77792fd54b9e22899f",
+      "firstRecommendedAt": "2026-08-21T20:20:53.732000+00:00"
     }
   ]
 }
