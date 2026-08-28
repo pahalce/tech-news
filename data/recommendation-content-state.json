@@ -3921,6 +3921,61 @@
         "dependency_injection",
         "testing"
       ]
+    },
+    {
+      "articleId": "ea3c21d9aacd0b94d1d1978d70e0bc27f765370822e288dc4dc1d4a785daeb51",
+      "summary": "Datadog RUMのSession Replayにおいて、アプリごとにサンプリング率が正しく反映されない問題とその解決策を解説した記事。マイクロフロントエンド環境下でコストを制御しつつ、録画対象を適切に管理するための設計手法を実体験ベースで紹介しています。",
+      "whyRecommended": "Datadog RUMの複雑な課金体系（RUM without Limits）とSDKのセッション管理仕様を深く掘り下げており、本番環境でのコスト最適化に直面しているシニアエンジニアにとって非常に実用的かつ示唆に富んでいるため。",
+      "learningPoints": [
+        "Session Replayのサンプリングはセッション開始時に一度だけ決定され、マイクロフロントエンド環境では最初にロードされたアプリの設定が全体に適用される。",
+        "force: trueによる強制録画は「Sessions with forced replays」という永久保持フィルタによって全件課金対象となるため、コスト管理を目的とした使用には適さない。",
+        "Retention Filterはfirst-match方式で評価されるため、録画付きセッションを適切に間引くには、エラーセッションの保持フィルタよりも優先順位を高く設定する必要がある。",
+        "Retention Filterはセッション内のイベントが一つでもマッチすればセッション全体と録画が保持される仕様であり、録画の有無をイベント単位で個別に制御することはできない。",
+        "手動録画モード（startSessionReplayRecordingManually: true）を併用し、SDK側で一律100%設定にした上で、必要なアプリのみで録画開始メソッドを呼ぶ構成にすると制御しやすい。"
+      ],
+      "signalsUsed": [
+        "datadog_rum",
+        "session_replay_cost_optimization",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "eb680a5133047e2da05c16c21e6e593e47a69e3a072cebff6cc26337cdb5d549",
+      "summary": "Next.jsのApp Routerで、共通レイアウトに配置したIntersectionObserverがページ遷移後に動かなくなる問題の原因と対策を解説しています。useEffectの依存配列にusePathnameを含めることで、ページ遷移ごとに監視対象を再取得する実装方法を紹介します。",
+      "whyRecommended": "App Router特有のレンダリングライフサイクルに起因するバグを実例ベースで解決しており、IntersectionObserverを多用するサイト構築において非常に実用的な知識が得られるためです。",
+      "learningPoints": [
+        "App Routerの共有レイアウトはページ遷移で再マウントされないため、空の依存配列を持つuseEffectは初期表示時に一度しか実行されません。",
+        "usePathnameをuseEffectの依存配列に追加することで、パスが変わるたびに監視対象のDOMを再取得し、Observerを再登録できます。",
+        "IntersectionObserverを使用する際は、ページ遷移やアンマウント時にdisconnect()で全監視を解除し、メモリリークや意図しない動作を防ぐ必要があります。",
+        "prefers-reduced-motion設定時にはアニメーションを無効化し、noscriptタグを用いてJavaScriptが無効な環境でもコンテンツが非表示にならないようフォールバックを実装すべきです。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "react",
+        "intersection_observer",
+        "app_router_lifecycle"
+      ]
+    },
+    {
+      "articleId": "ae1b13823095bbb707fcd57bdcf4eb5f231b045bd236fcb1239f87e9c1e03fbe",
+      "summary": "Firestoreの読み取りコストを削減するため、全件読み込みから集計専用のミラーデータを用いた方式に移行した設計事例です。ライブ配信される発言データを効率的に管理し、読み取り回数を約99.2%削減することに成功しました。",
+      "whyRecommended": "Firestoreのコスト最適化とデータの整合性維持という、実務で頻出する課題に対する具体的なアーキテクチャの改善策が提示されているため。特に「二乗で増える読み取り」の解決手法として非常に参考になります。",
+      "learningPoints": [
+        "更新のたびに全件集計し直す設計は発言数に対して計算量が二乗で増えるため、データ量が増えるとコストが急増する。",
+        "集計用のミラードキュメントを1件作成し、必要なパラメータのみを保持することで、読み取り量を線形に抑えられる。",
+        "単純な増分加算はイベントの重複や途中更新により二重計上のリスクがあるため、常に最新状態で再計算するミラー方式が安全である。",
+        "キャッシュやミラーの不整合を考慮し、定期的にcount()で件数を照合して必要に応じて再構築する仕組みを組み込む。",
+        "ミラーが制限値を超えた場合には、安価なミラー方式を捨てて正確さを担保する全件読み取りへ自動で切り替える安全策を実装する。"
+      ],
+      "signalsUsed": [
+        "firestore_optimization",
+        "database_cost_reduction",
+        "production_case_study",
+        "architecture_decision_support"
+      ]
     }
   ]
 }
