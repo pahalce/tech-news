@@ -3976,6 +3976,82 @@
         "production_case_study",
         "architecture_decision_support"
       ]
+    },
+    {
+      "articleId": "d72b23c1c9f06914280c0c9ecdede4ba0746ff58ddccd8c35fa66d79022d1a68",
+      "summary": "ReactでBlock Editorを自作する過程で、状態管理の複雑さとDOM操作との兼ね合いを考察した技術記事です。データモデルの設計から、Enter/Backspace操作に伴うDOMの焦点制御まで、Editor開発特有の課題を体系的に整理しています。",
+      "whyRecommended": "Reactアプリケーションにおける「状態の所在」と「レンダリング後の副作用」について、具体的な実装課題に基づいた深い洞察が得られるため、中級者以上のフロントエンドエンジニアにとって非常に有益な知見です。",
+      "learningPoints": [
+        "データの保持場所は「情報の利用範囲（複数コンポーネントか局所か）」と「再レンダリングの要否」という基準で、共有State・Local State・Refに切り分けるべきである。",
+        "Editorのようなツールでは、単なるデータの更新だけでなく「次の操作への文脈（挿入位置など）」を一時的な状態として管理する必要がある。",
+        "EnterやBackspaceの実装では、Reactのstate更新後にDOMの反映を待ち、useLayoutEffect等を用いてfocusやcaretを制御するフローが不可欠である。",
+        "「選択状態」「focus状態」「caret位置」は別物として扱い、DOM APIを駆使してこれらを同期させることがユーザー体験の向上につながる。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "react",
+        "typescript",
+        "state_management",
+        "dom_interaction",
+        "architecture_decision_support",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "4af86088cc7aba660e54506055aa2c3b59aabadbbf9392f48cc685ae40a95209",
+      "summary": "個人開発のロボット目撃SNSを10日間で本番リリースした際の開発体験をまとめた事例記事です。UIのモック作成から始まり、DB権限の不備やスマホ画面の表示崩れ、API構成の刷新など、実運用で直面した課題と解決策を詳細に解説しています。",
+      "whyRecommended": "技術的な判断基準が明確で、個人開発から本番運用へ移行する際の「インフラ変更に対する耐性」や「DB設計の境界線」といった実践的な思考プロセスを学べるためです。",
+      "learningPoints": [
+        "RLSポリシーを設定しても、PostgreSQL側で必要なGRANT権限が不足していると匿名ユーザーからの読み取りは成立しない。",
+        "テーブル間に複数の外部キーがある場合、Supabase等のAPI経由ではリレーション解決の曖昧さを避けるために外部キー制約を明示して結合させる必要がある。",
+        "投稿処理など複数の副作用が伴う操作は、Go言語のpgx等を用いた単一トランザクションで行うことで、中途半端なデータ状態を防げる。",
+        "フロントエンドとAPI間の境界を最初からHTTPで明確にしておけば、Cloudflare Containersのようなインフラ構成が変更になってもドメインロジックの修正を最小限に抑えられる。",
+        "プライバシー保護のため、正確な位置情報はサーバー保存時に小数第3位まで丸め、画像アップロード前にEXIF情報を削除する。",
+        "モバイルブラウザでの表示において、vh単位のズレやアドレスバーの影響を避けるために動的ビューポート単位（dvh）を使用する。"
+      ],
+      "signalsUsed": [
+        "web_development",
+        "backend",
+        "frontend",
+        "typescript",
+        "performance",
+        "security",
+        "production_case_study",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "edge_cases",
+        "real_world_experience",
+        "architecture_decision_support",
+        "reusable_implementation_pattern",
+        "developer_productivity",
+        "specific_problem",
+        "concrete_technology_named",
+        "production_context_named",
+        "personal_development",
+        "go_programming",
+        "supabase_usage",
+        "cloudflare_infrastructure"
+      ]
+    },
+    {
+      "articleId": "9dbec030a3a0fc2846eec585d848723bf7c4527eb6263050e017cefbf964ef10",
+      "summary": "この記事は、大規模なPDFライブラリを使用せずに、ブラウザのCanvas APIとバイナリ操作のみでJPEG画像をPDF化する実装手法を解説しています。PDFの構造を理解し、必要最低限のオブジェクトを直接構築することで、軽量かつセキュアなPDF生成を実現しています。",
+      "whyRecommended": "フロントエンド開発において、依存関係を極限まで減らしたい、あるいは特定の機能（画像連結など）だけに絞って軽量な実装を行いたいという技術的関心に強く刺さる内容だからです。バイナリデータ操作という低レイヤーな話題を扱いながらも、実用的な実装例が示されている点が非常に優れています。",
+      "learningPoints": [
+        "PDFの画像オブジェクトで/DCTDecodeフィルタを指定すると、JPEGバイト列を再エンコードなしで直接埋め込める。",
+        "PDFの座標系は左下が原点であり、ブラウザのCanvas（左上原点）とは上下が逆になるため、変換行列（cm）で位置指定する必要がある。",
+        "PDFの末尾に記載するxrefテーブルの各エントリは必ず20バイトで構成される必要があり、末尾のスペース不足などはファイル破損の原因となる。",
+        "バイナリと文字列を混合して扱う際は、全てTextEncoderでUint8Arrayに変換してから連結することでデータの破損を防げる。",
+        "透過PNGをPDFに埋め込む際は、そのままCanvasに描画すると背景が黒くなるため、事前に背景を白で塗りつぶす必要がある。"
+      ],
+      "signalsUsed": [
+        "binary_data_manipulation",
+        "pdf_specifications",
+        "canvas_api",
+        "reusable_implementation_pattern",
+        "deep_technical_explanation"
+      ]
     }
   ]
 }
