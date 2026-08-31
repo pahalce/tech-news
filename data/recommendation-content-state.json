@@ -4165,6 +4165,67 @@
         "compiler_architecture",
         "measured_results"
       ]
+    },
+    {
+      "articleId": "3fc2aa7a11bce55863550cdaceddb35d8ecab825e08a0963fdea43b57022b60d",
+      "summary": "Next.jsのRoute Handlerを用いたSSE（Server-Sent Events）実装により、子プロセスのログ監視をポーリングからリアルタイム通信へ効率的に移行した事例です。定型処理を共通基盤へ切り出すことで、接続管理の複雑さを解消し、堅牢なストリーム制御を実現しています。",
+      "whyRecommended": "個人開発においてWebSocketという過剰な選択肢を避け、SSEを活用してNext.js内で完結させる判断基準が明確です。特に、接続管理やリソースリークを防ぐための共通基盤設計は、実務でも参考になる実践的な知見です。",
+      "learningPoints": [
+        "双方向通信が不要なサーバーからの通知のみであれば、WebSocketではなくSSEを採用することで、追加ライブラリなしにNext.jsのRoute Handlerのみで簡潔に実装できる。",
+        "SSEの基盤実装に「閉じていたら送らない」というチェック機能を内包させることで、個別のルートで接続確認を行うコードの重複とエラー発生を防げる。",
+        "ブラウザのEventSourceは接続が切れると自動再接続するため、サーバー側で終了状態を明示的に管理しないと再接続の無限ループが発生する。",
+        "切断検知には書き込み失敗時およびハートビートの活用が有効であり、切断時には必ずタイマーを解除しないとリソースリークにつながる。",
+        "CLIのログに含まれるANSIカラーコードは、環境変数で抑制しつつ、フロントエンド側で除去することで適切に表示制御できる。"
+      ],
+      "signalsUsed": [
+        "server_sent_events",
+        "nextjs",
+        "reusable_implementation_pattern",
+        "real_world_experience",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "a668ac1ea473802e1a1fc5a08ced1043621b57b34ff7a526b2af75c29b6d301e",
+      "summary": "フロントエンドのfetchで発生する「TypeError: Failed to fetch」の根本原因と切り分け方法を解説した記事です。このエラーはHTTPのステータスコードによる失敗ではなく、通信そのものが成立しなかったネットワーク層の異常を指します。",
+      "whyRecommended": "フロントエンド開発において、fetch関連の不明瞭なエラーは生産性を低下させる典型的な問題です。ブラウザのDevToolsを活用した具体的なトラブルシューティング手順がまとめられており、実務でのデバッグスピードを向上させる有益な内容です。",
+      "learningPoints": [
+        "Failed to fetchは404や500などのHTTPエラーでは発生せず、レスポンスが全く得られない通信失敗時にのみ発生します。",
+        "エラーの詳細はコンソールに出力されるnet::ERRエラーや、Networkタブのステータス列を確認することで特定できます。",
+        "Failed to fetchを引き起こす代表的な原因には、CORSブロック、接続拒否、Mixed Content、リクエストの中断、DNS解決失敗など6つのパターンが存在します。",
+        "Node.jsのfetchではエラーが「fetch failed」となり、error.causeプロパティにECONNREFUSEDなどの真因が格納されます。",
+        "「Failed to fetch dynamically imported module」は通信エラーではなく、デプロイ後の古いハッシュ付きモジュールの読み込み失敗が原因です。"
+      ],
+      "signalsUsed": [
+        "specific_problem",
+        "concrete_technology_named",
+        "implementation_guide",
+        "troubleshooting_guide",
+        "actionable_steps",
+        "browser_devtools_usage"
+      ]
+    },
+    {
+      "articleId": "7cfac556155535e950a37b4250a5efffb139e7a9e42081e8d18a37745fa930c2",
+      "summary": "CSSのクラス衝突やカスケード依存の問題を解決し、予測可能性の高いスタイリングを実現する手法としてStyleXとPlumeriaを比較解説しています。特にAtomic CSSでありながらスタイル定義の順序に依存しない設計の重要性と、それぞれの技術的なトレードオフを作者の視点から紐解いています。",
+      "whyRecommended": "フロントエンド開発において、CSSの特異性やカスケードによる意図しないスタイルの上書き問題に悩むエンジニアにとって、解決策の決定版となり得る技術選定の指針が示されているためです。特に、AI時代における型安全かつ予測可能なスタイリングの設計思想は非常に参考になります。",
+      "learningPoints": [
+        "Tailwind CSSにおけるクラス結合問題は、クラスの順序ではなくCSSの並び順に依存してスタイルが決定されるために発生する。",
+        "StyleXは引数の並び順に基づいてスタイルが合成されるため、コンポーネント呼び出し時のスタイル定義順序が結果として反映される。",
+        "Plumeriaはコンパイル時にクラスの競合を解決し、負けたクラスをDOMから除外することでブラウザの判定順序に依存しないスタイリングを保証する。",
+        "Plumeriaのゼロランタイム設計は、コンパイラが静的にクラス名を解決してコードを書き換えることで、ランタイムのオーバーヘッドをゼロにしている。",
+        "CSSのショートハンドとロングハンドの競合に対し、Plumeriaは:not(#\\#)という特異性の擬似クラスを付与する仕組みで、プロパティの深さを解決している。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "code_examples",
+        "comparison",
+        "architecture_decision_support",
+        "css_in_js",
+        "atomic_css",
+        "zero_runtime"
+      ]
     }
   ]
 }
