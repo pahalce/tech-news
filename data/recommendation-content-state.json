@@ -4226,6 +4226,64 @@
         "atomic_css",
         "zero_runtime"
       ]
+    },
+    {
+      "articleId": "0616241b8bacd4f64fe7f85e4ff85b42638cab5f99309f9f15c316b3fc163df5",
+      "summary": "本書は、スマホをモーションコントローラーとして活用するブラウザゲーム9種を構築したエンジニアリング事例です。センサー値の正規化処理と、PCを唯一の正（Authoritative Host）とするリアルタイム同期アーキテクチャについて詳細に解説しています。",
+      "whyRecommended": "ブラウザベースでマルチデバイスの入力を統合する難しさと、その解決策が技術的・具体的なコードを伴って提示されており、Web技術を用いたリアルタイム通信やゲーム開発に関心がある方に最適です。",
+      "learningPoints": [
+        "センサーイベントの生値を直接扱うのではなく、ユーザーの「持ち方」や画面回転を考慮した座標変換関数を介して正規化する。",
+        "サーバー側でのティック計算を避け、PC側のブラウザをゲーム状態の正（Authoritative Host）とすることで実装コストを抑える。",
+        "センサー値、UI更新、通信頻度を分離し、requestAnimationFrame等を用いてそれぞれの更新タイミングを適切に管理する。",
+        "スマホ側の傾きを絶対方位ではなく、開始時の姿勢をゼロとした「相対差分」として計算することで、ドリフトの影響を最小限に抑える。",
+        "複数のライフサイクルイベント（blur, pagehide, visibilitychange）で操作状態をリセットし、アプリが非アクティブになった際の入力スタックを防ぐ。"
+      ],
+      "signalsUsed": [
+        "web_development",
+        "frontend",
+        "typescript",
+        "durable_objects",
+        "web_sensors",
+        "websocket_architecture"
+      ]
+    },
+    {
+      "articleId": "df56a99b2c4fc2d6c778c5a0d017783080de8b0f9fafa5d52012344289a0f6ec",
+      "summary": "GA4をSPA環境に導入する際に発生した「計測が一切行われない」「データが正しく収集されない」といったトラブル事例をまとめた技術記事です。TypeScriptでの実装やプリレンダリング構成における特有の罠と、その解決策が詳細に解説されています。",
+      "whyRecommended": "GA4の実装において見落としがちな設定の不備や、SPA特有の「後から復旧不可能なデータの欠落」を回避するための貴重な知見がまとまっており、実装の信頼性を高めるために非常に役立つため。",
+      "learningPoints": [
+        "gtag.jsのシムを実装する際はアロー関数ではなくfunction宣言を使い、argumentsをそのままpushする必要がある。",
+        "ブラウザ拡張機能はfetchやsendBeaconを捕捉できない場合があるため、パフォーマンス計測のAPI（performance.getEntriesByType）で確認するのが確実である。",
+        "プリレンダリング時に動的に挿入したスクリプトタグがHTMLに焼き付くのを防ぐため、ヘッドレスブラウザ判定を入れて初期化を制御する。",
+        "page_locationを再構築する際にクエリ文字列を落とすとUTMパラメータまで削除され、流入元の分析が不可能になる。",
+        "GA4のカスタムディメンションは登録前の過去データには適用されないため、イベント名自体を分ける設計も検討すべきである。"
+      ],
+      "signalsUsed": [
+        "ga4_analytics",
+        "debugging_techniques",
+        "deep_technical_explanation",
+        "edge_cases",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "22690db1ce61d3cebf7fef019008365c04f756280f199b88408a4557de5788c2",
+      "summary": "Next.jsのmiddleware（proxy）のmatcherを保護したいパスのみに限定すると、セッション更新が適切に行われずログイン状態が維持できない問題が発生します。本記事では、matcherは「実行範囲」を指定するものであり、保護自体は中身のif文で制御すべきという設計の勘所を解説しています。",
+      "whyRecommended": "Next.jsのApp Routerにおける認証実装時、初心者が見落としがちなmatcherの仕様とセッション管理の関係が深く掘り下げられており、実務上の事故を防ぐための知識として非常に有用だからです。",
+      "learningPoints": [
+        "middlewareのmatcherは「保護対象」ではなく「middlewareを実行する範囲」を指定するものである。",
+        "matcherから特定のパスを除外すると、セッション更新が行われず一定時間後にログアウトされる可能性があるため、認証が必要な処理では原則として全パスを対象に設定すべきである。",
+        "matcherの設定値はビルド時に静的解析されるため、変数を使用しても反映されず、変更時は開発サーバーの再起動が必要である。",
+        "Server Functions（Server Actions）は配置されたルートへのPOSTリクエストとして扱われるため、matcherで除外すると認証処理をスルーしてしまうリスクがある。",
+        "Proxy（middleware）のみでセキュリティを担保せず、Server Function内でも個別に認証・認可の確認を行うべきである。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "middleware_config",
+        "security",
+        "real_world_experience",
+        "code_examples"
+      ]
     }
   ]
 }
