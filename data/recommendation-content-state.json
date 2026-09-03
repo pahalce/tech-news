@@ -4342,6 +4342,62 @@
         "architecture_decision_support",
         "developer_productivity"
       ]
+    },
+    {
+      "articleId": "a759029455f4ff517a6d054f097464c378d58042946d2fa1f8a514767ddf6d5e",
+      "summary": "API仕様が未確定な状況でのフロントエンド開発において、データ取得ロジックとUIが密結合する問題を解決する手法を解説しています。リポジトリパターンを採用し、インターフェースを介してモックと本番実装を切り替えることで、並行開発の効率を高める方法を提示しています。",
+      "whyRecommended": "フロントエンド開発において頻出する「API未定時の先行開発」という実用的な課題に対し、リポジトリパターンを用いた保守性の高い解決策が具体的に提示されているため。コード例が明快で、設計の意図とメリットが簡潔にまとめられています。",
+      "learningPoints": [
+        "データ取得のインターフェースを先に定義することで、コンポーネントが実装詳細に依存するのを防げる。",
+        "リポジトリパターンとFactory関数を組み合わせることで、モックと本番用APIの実装切り替えを単一の場所に集約できる。",
+        "両方の実装を同一インターフェースに準拠させることで、型の不一致をコンパイル時に検知できる。",
+        "モック使用時はエラーハンドリングが疎かになりやすいため、本番切り替え時にエラー状態のUI確認を忘れずに行う必要がある。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "typescript",
+        "react",
+        "repository_pattern",
+        "parallel_development",
+        "implementation_guide"
+      ]
+    },
+    {
+      "articleId": "d23adcd619726516719f65a10e819045f7721ad710b280e245f49e8bde9b42c1",
+      "summary": "Next.jsのApp Router環境でFirebase Authenticationの認証状態をサーバー側へ引き継ぎ、SSR（サーバーサイドレンダリング）で認証が必要なコンテンツを配信する方法を解説した記事です。クライアント側のFirebase ID Tokenをサーバー側でSession Cookieに変換することで、Server Componentからセキュアな認証判定を実現しています。",
+      "whyRecommended": "Firebase AuthenticationとNext.jsのApp Routerを組み合わせて、SSGとSSRを高度に使い分けるための実用的なアーキテクチャが具体的に示されているためです。特にセキュリティとパフォーマンスを両立させる構成は、会員制メディア等の開発に非常に参考になります。",
+      "learningPoints": [
+        "FirebaseのID Tokenはブラウザ上のClient SDKで取得し、サーバー側のRoute HandlerでSession Cookieへ交換することで、ブラウザの自動送信機能を活用できる。",
+        "Server Component内では、Firebase Admin SDKのverifySessionCookie()を用いて、署名・有効期限・Audienceなどの検証を確実に行える。",
+        "認証済みユーザーのみがアクセス可能なデータ取得をServer Componentに委譲することで、microCMS等のAPIキーをブラウザへ露出させずに安全なコンテンツ配信が可能になる。",
+        "React Suspenseとストリーミングを併用することで、非会員向けの静的なコンテンツを先に返し、会員向けの動的コンテンツを後から読み込ませる効率的なUXを提供できる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "firebase_auth",
+        "session_cookie",
+        "implementation_guide",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "7fb1d4e108aa8fdd4df078893fb32002c3c5320263115363228c9cb111dc5d92",
+      "summary": "Next.jsのApp RouterにおけるRSC Payloadの役割とhydrationの仕組みを、DevToolsでの実演を通じて詳細に解説する記事です。Pages Routerとのアーキテクチャの違いも比較し、データ伝送とレンダリングのプロセスを明確に整理しています。",
+      "whyRecommended": "RSC Payloadというブラックボックスになりがちな概念が、具体的なDevToolsの調査ステップと検証コードによって可視化されています。Next.jsのレンダリングの裏側を正しく理解したいエンジニアにとって、実装の最適化やトラブルシューティングに直結する良質なガイドです。",
+      "learningPoints": [
+        "初回表示時はServer ComponentとClient Componentの両方がHTMLにプリレンダリングされ、ブラウザに送られる。",
+        "hydration処理の対象はClient Componentのみであり、Server Componentのコードはブラウザ側で再実行されない。",
+        "App Routerの画面遷移では、HTMLの代わりにRSC Payloadを取得してServer Componentの実行結果と必要なClient Componentの情報を差分更新する。",
+        "RSC PayloadはServer Componentの実行結果とClient Componentへの参照を含むが、Pages Routerの__NEXT_DATA__はPage Componentを動かすための初期データ（props等）をシリアライズしたものという点で役割が異なる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "react",
+        "server_components",
+        "hydration_mechanism",
+        "devtools_debugging",
+        "rsc_payload_structure"
+      ]
     }
   ]
 }
