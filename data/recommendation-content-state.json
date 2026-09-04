@@ -4398,6 +4398,70 @@
         "devtools_debugging",
         "rsc_payload_structure"
       ]
+    },
+    {
+      "articleId": "833766b3fc6c4837509399d1ce58be07feeb6ed7d85a1b25ab23c1e34164a4b5",
+      "summary": "Next.jsで構築されたランディングページの表示速度を、静的化やアセット最適化により1.2秒から0.3秒へ大幅に改善した事例です。サーバーレス環境特有のコールドスタート問題の解消や、日本語フォントのサブセット化など、個人開発でも実践可能な具体的な手法を解説しています。",
+      "whyRecommended": "フロントエンドのパフォーマンス最適化において、理論だけでなく実測値に基づいた改善プロセスが詳細に記録されているためです。特にNext.jsの機能を最大限活用した静的化や、フォントのプリロード過多といった盲点となる問題を、AIを活用して解決するアプローチは非常に参考になります。",
+      "learningPoints": [
+        "Next.jsの「output: 'export'」設定で静的サイトとしてビルドすることで、サーバーレス環境のコールドスタートを排除しホスティング費用を無料化できる。",
+        "日本語フォントを全て読み込むのではなく、サイト内で使用するユニークな文字のみを抽出してサブセット化することで、フォントデータを数メガバイト単位で削減できる。",
+        "Next.jsの画像最適化はサーバーが必須であるため、静的サイト化の際はビルド前にsharpなどで画像を圧縮し、Next.js側ではunoptimized設定にする。",
+        "サードパーティ製ライブラリの読み込みを動的import（await import）に切り替え、初期ロード時のバンドルサイズを最適化することでパフォーマンスを向上できる。",
+        "Lighthouseのスコアを改善するためには、LCPのボトルネックとなっている要素を特定し、仮説検証のサイクルを回す必要がある。"
+      ],
+      "signalsUsed": [
+        "performance",
+        "nextjs",
+        "frontend",
+        "production_case_study",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "measured_results",
+        "code_examples",
+        "actionable_steps",
+        "lighthouse_optimization",
+        "static_site_generation",
+        "font_subsetting"
+      ]
+    },
+    {
+      "articleId": "f11922ee87a838233bc51eddbaed6441277c807d954bdadfad98f1092ca5c51b",
+      "summary": "TanStack Virtualを用いた大規模なデータグリッド実装における、パフォーマンス最適化と技術的課題の解決策を解説した記事です。DOMの仮想化だけでなく、JavaScriptオブジェクトのメモリ管理やCSSのレイアウト計算における工夫が網羅されています。",
+      "whyRecommended": "66万セルを超える大量データを扱う実践的なケーススタディであり、ライブラリ導入時に直面する「仮想化の副作用」への対処法が非常に具体的であるため、フロントエンドエンジニアにとって極めて参考になります。",
+      "learningPoints": [
+        "仮想化によるパフォーマンス向上は、初期描画のDOM削減よりも、スクロール時の1フレームあたりの再計算量削減に大きく寄与する。",
+        "position:stickyは直近のスクロール要素を基準とするため、親要素にoverflow-x:autoを付与すると stickyが機能しなくなる。",
+        "ResizeObserverなどで測定したレイアウト値をReactのstateに保存すると、再描画の無限ループを招くため、CSS変数に直接適用すべきである。",
+        "大量のデータ保持はDOM数だけでなく、JavaScriptオブジェクト数もメモリとGCに負荷をかけるため、Float64Arrayなどの型付き配列で管理してオブジェクト数を削減するのが有効である。",
+        "TanStack VirtualのestimateSizeには関数を渡せるため、行ごとに異なる動的な高さを指定することが可能である。"
+      ],
+      "signalsUsed": [
+        "performance",
+        "react",
+        "dom_virtualization",
+        "memory_optimization",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "2cca7f85e0e891c27011b88a884180dbd8eda5d628b2f9c7b613442c6167e3f1",
+      "summary": "Next.jsの「Loading chunk failed」エラーが、実はDB接続プールの上限超過に起因していた事例のトラブルシューティング記事。ブラウザの表面的なエラーメッセージに惑わされず、サーバー側のログとDBの稼働状況を突き合わせることで真因を特定した過程が詳細にまとめられています。",
+      "whyRecommended": "フロントエンドのエラーがバックエンドの設定不整合（接続プーリング）によるものという盲点をつく事例であり、複雑なシステム構成におけるデバッグ戦略として非常に実践的であるため。",
+      "learningPoints": [
+        "Next.jsの「Loading chunk failed」はサーバー側でのレンダリング失敗の結果としてブラウザに表示されることがあり、必ずしもファイル配信の問題ではない。",
+        "データベースがリソース不足で停止したかを確認するには、`pg_postmaster_start_time()`を実行して、直近でプロセス再起動が発生したかを確認するのが有効。",
+        "接続プールの設定において、クライアント側のコネクション上限とサーバー側のプールサイズに乖離があると、負荷が高まった際に接続エラーが発生する。",
+        "DBの接続状況を確認する際は`pg_stat_activity`をクエリし、特定のアプリケーション名でフィルタリングすることで、現在消費しているコネクション数を正確に把握できる。",
+        "SupabaseのHyperdriveなどにおいて、接続用ポート番号の違いでセッションモードとトランザクションモードが切り替わるため、環境ごとの設定整合性には注意が必要である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "web_development",
+        "troubleshooting_methodology",
+        "database_connection_pooling"
+      ]
     }
   ]
 }
