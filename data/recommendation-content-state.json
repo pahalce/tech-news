@@ -4462,6 +4462,76 @@
         "troubleshooting_methodology",
         "database_connection_pooling"
       ]
+    },
+    {
+      "articleId": "ec4f4a63834013c6a7c2d1f1e458c097d95e44cffe9ad1db0b4b76a2d33ff00c",
+      "summary": "ProseMirrorを採用しているnoteの編集画面に対し、ブラウザ自動化で安全にコンテンツを書き換える手法を解説した技術的知見です。DOM操作や合成イベントに頼らず、ReactのFiberツリーからEditorViewを特定して直接操作する実践的なアプローチが紹介されています。",
+      "whyRecommended": "フロントエンドの自動化における「ブラウザ上の見え方」と「ライブラリの内部状態」の不一致という高度な課題に対し、実体験に基づいた解決策と堅牢な検証ロジックが示されており、自動化の信頼性向上を目指すエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "ProseMirrorを採用するエディタでは、DOMの選択範囲と内部状態（EditorState）が同期しないため、execCommand等の標準的なDOM操作では編集事故が起きやすい。",
+        "Reactで構築された画面からProseMirrorのEditorViewを取得するには、DOMノードから親のFiberツリーを辿り、memoizedProps内を探索してインスタンスを抽出する必要がある。",
+        "部分編集はリスクが高いため、文書全体を入れ替える全文置換方式を採用することで操作の予測可能性を高められる。",
+        "二重貼りを検知するには単純な文字数比較だけでなく、h2タグの重複チェックを行うのが効果的であり、構造的な特徴から不整合を特定できる。",
+        "ブラウザ上のDOM状態とサーバー側の保存内容は別物であるため、編集作業の成否を確定させるにはAPI経由で実データを確認するプロセスが不可欠である。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "web_development",
+        "react",
+        "performance",
+        "deep_technical_explanation",
+        "edge_cases",
+        "tradeoff_analysis",
+        "code_examples",
+        "real_world_experience",
+        "failure_example",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "architecture_decision_support",
+        "specific_problem",
+        "concrete_technology_named",
+        "prosemirror_internals",
+        "automation_reliability",
+        "react_fiber_inspection"
+      ]
+    },
+    {
+      "articleId": "fcba85da1947fae2ef9b80cd4e2a7ee354a9748750a8945996f4d3f744d5237f",
+      "summary": "Next.jsのビルド時に発生した「Offset is outside the bounds of the DataView」というエラーの調査記録です。fetchの戻り値検証不足や、ビルド時の過剰な外部リクエストが原因で発生していたことを突き止め、具体的な修正手順を紹介しています。",
+      "whyRecommended": "フロントエンド開発において、外部API（特にフォント取得）を扱う際の「エラーハンドリングの盲点」を突いた非常に実践的なポストモーテム記事だからです。デバッグ時の誤診プロセスまで率直に書かれており、トラブルシューティングの教訓として非常に価値が高いです。",
+      "learningPoints": [
+        "JavaScriptのfetch APIはHTTPエラー（4xx/5xx）が発生しても例外を投げないため、必ずres.okを確認してレスポンスの妥当性をチェックする必要があります。",
+        "フォントファイルなどのバイナリデータを受け取る際は、ファイルの先頭4バイトを確認し、期待したシグネチャ（woff2やOTTOなど）と一致するか検証すると安全です。",
+        "ビルド環境での外部リクエストは、ネットワークの制約や同時接続制限によりローカル環境とは成功率が異なるため、リクエスト数の削減やキャッシュの活用、指数バックオフによる再試行が不可欠です。",
+        "テスト用のモックデータが「現実の異常値」を正しくシミュレートできていないと、バグが隠蔽されたままテストを通過してしまう危険性があります。",
+        "並列処理のワーカー数を減らすことでエラーログが可視化される場合があり、「並列度を下げたら直った」という現象はメモリ不足の裏付けではなく、一時的な負荷軽減による偶然の可能性があることを留意すべきです。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "fetch_api_pitfalls",
+        "build_stability",
+        "misdiagnosis_warning",
+        "postmortem"
+      ]
+    },
+    {
+      "articleId": "3216943aae1e84ed02c1ab7b3b7c4dfeadd3616fdd4262ef0ed6e93ede425396",
+      "summary": "Next.jsアプリケーションにおけるnext-intlの設計上のボトルネックを指摘し、パフォーマンス改善のための最適化手法と、次世代のi18nアプローチを解説した記事です。特にRSC時代の最適化や、静的解析を活用した不要な翻訳データの削減に焦点を当てています。",
+      "whyRecommended": "Next.jsのApp Router環境でi18nを導入する際、パフォーマンス面で陥りやすい罠と、それを回避するための現実的かつ高度なアーキテクチャ設計が示されているため、実運用レベルの最適化を目指すエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "ルートレイアウトでgetMessagesを一括注入すると、現在表示中のページに関係のない翻訳データまでブラウザに送信され、バンドルサイズを増大させる。",
+        "setRequestLocaleの呼び出しを忘れると、静的レンダリングが無効化され、意図せずリクエスト毎の動的レンダリングにフォールバックされる。",
+        "翻訳データを画面ごとのネームスペースに分割し、ページ単位で必要なデータのみを読み込むことで、不要な翻訳文言の混入を抑制できる。",
+        "クライアントコンポーネントのuseTranslationsではなく、サーバーコンポーネント側のgetTranslationsを使用することで、クライアント側のハイドレーション負荷をゼロにできる。",
+        "コンパイル時にコードを解析し、実際に使用されている翻訳データのみを抽出・配信する手法を導入することで、手動のネームスペース管理を排除できる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "i18n",
+        "architecture_explanation",
+        "deep_technical_explanation"
+      ]
     }
   ]
 }
