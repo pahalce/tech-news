@@ -4588,6 +4588,79 @@
         "reusable_implementation_pattern",
         "deep_technical_explanation"
       ]
+    },
+    {
+      "articleId": "eae7252e2d7573f82a7794e0575cab498c2a842ba26bf4e5ffbefc3e340ebc71",
+      "summary": "クライアントとサーバーで個別に実装された判定ロジックが、AND/ORの挙動の違いにより食い違ってしまう問題の原因と解決策を解説しています。既存の挙動を整理した上で、純粋関数として共有ロジックを抽出するリファクタリング手順を紹介しています。",
+      "whyRecommended": "フロントエンドとバックエンドの境界で発生しやすい「仕様の乖離」という実務上の難所に対し、純粋関数への切り出しと境界ケースの分析という、再現性の高い解決アプローチを提示しているため。",
+      "learningPoints": [
+        "JavaScriptのsomeメソッドはOR的な判定、everyメソッドはAND的な判定を行うため、空配列に対する挙動が異なります。",
+        "判定ロジックを副作用のない純粋関数として1箇所に切り出すことで、クライアントとサーバー間でのロジックのドリフトを防げます。",
+        "ロジックを統一する際は、既存の挙動を記録するテストコードを書き、境界ケースを確認してから新しい仕様を定義する必要があります。",
+        "重複を含む配列の比較は、単純なincludesの使用では個数まで判定できないため、ソートや要素数比較を組み合わせる必要があります。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "frontend",
+        "backend",
+        "code_examples",
+        "real_world_experience",
+        "actionable_steps",
+        "pure_function_usage"
+      ]
+    },
+    {
+      "articleId": "2ec47869c69075cedef8df8c06975f94b4833c8bb8942075b14cc62f7c66acbf",
+      "summary": "Cloudflare上のWebアプリから、工場のLAN内にあるレガシーなサーマルプリンタやドットプリンタを直接制御するための実装記録です。HTTPS環境の制約を回避するため、現場PCにNode.js製の中継サーバーを配置し、プリンタ固有のコマンド制御や無音印刷を実現しています。",
+      "whyRecommended": "ブラウザからは直接制御できないLAN内の周辺機器を、実用的な工夫でWebシステムから統合する泥臭いエンジニアリングが詳細に解説されており、製造現場などのレガシー環境でWebアプリを運用する際の貴重なナレッジとなっているためです。",
+      "learningPoints": [
+        "HTTPSのWebアプリからLAN内サーバーを叩く際、Chromeの設定で対象Originを例外登録することでMixed Content制限を回避できる。",
+        "スター精密などのサーマルプリンタは、TCP 9100ポートへRawデータとして制御コードを送信することで、専用SDKなしで直接印字制御が可能である。",
+        "ドットインパクトプリンタへの無音印刷は、SumatraPDFをコマンドラインから`-print-to`オプション付きで呼び出すことで実現できる。",
+        "react-pdfで描画内容が白紙になる場合は、指定したフォントサイズが設定した行高を上回っていないか確認する必要がある。",
+        "レガシーなプリンタのドット配置に合わせてバーコードを印字するには、画像ではなくドット単位で座標計算したSVG（ベクター）形式で描画すると読み取り精度が安定する。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "web_development",
+        "backend",
+        "typescript",
+        "implementation_guide",
+        "production_case_study",
+        "deep_technical_explanation",
+        "edge_cases",
+        "constraints_explained",
+        "code_examples",
+        "real_world_experience",
+        "failure_example",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "specific_problem",
+        "production_context_named",
+        "windows_server_administration",
+        "legacy_printer_integration",
+        "browser_security_bypass"
+      ]
+    },
+    {
+      "articleId": "087de767a9fb86e58325130ae4cb881f6d7baede90d7c39c21ccbf4f69428610",
+      "summary": "Next.jsのApp Routerを使用して、公開前のお知らせ記事を下書きプレビューできる仕組みの実装方法を解説した記事です。公開用とプレビュー用で表示用のJSXコンポーネントを共通化しつつ、取得条件を分けることで効率的に運用する手法を紹介しています。",
+      "whyRecommended": "Next.jsでCMSを扱う際の「プレビュー環境の構築」という、実務で頻出する課題に対する具体的な実装パターンが提示されています。キャッシュの考え方やエラーハンドリングまで網羅されており、中級者の現場での開発にもそのまま活かせる品質です。",
+      "learningPoints": [
+        "公開記事と下書きプレビューで表示コンポーネントを共通化し、データ取得条件だけをsearchParams（draftKeyの有無）で切り替えることでメンテナンス性を高められる。",
+        "下書きプレビュー機能において、取得失敗時やキーが不正な場合に公開版の記事を誤って表示しないよう、エラーハンドリングを明確に分けるべきである。",
+        "プレビューの取得処理にはキャッシュを適用せず、公開記事の配信とは異なる優先度で実装することで、編集作業の即時性を確保できる。",
+        "URLパラメータにdraftKeyを持たせる構成を採用する場合、OGP生成や共有リンクなどへの誤流用を防ぐための注意が必要である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "typescript",
+        "cms_integration",
+        "app_router_pattern",
+        "actionable_steps",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
