@@ -4661,6 +4661,61 @@
         "actionable_steps",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "b94647a01d4332d6c05f8dde12b290171c93e6de54f17a22d76398280040f10d",
+      "summary": "Next.jsにおけるHydration Errorの発生メカニズムを解説し、具体的な解決策を網羅した実践ガイドです。useEffectやnext/dynamicを活用した適切なクライアントサイド制御など、堅牢なアプリ構築に必要なノウハウを体系的に学べます。",
+      "whyRecommended": "Next.js開発で頻出するHydration Errorの根本原因を、技術的背景から実装レベルまで丁寧に掘り下げており、トラブルシューティングの参考に最適だからです。",
+      "learningPoints": [
+        "Hydration Errorは、サーバーで生成したHTMLとクライアントサイドでReactが生成したDOMツリーが一致しない場合に発生します。",
+        "useEffectを使用して初期レンダリング後に値を更新することで、サーバーとクライアントの初期値の不一致を防げます。",
+        "next/dynamicのssr: falseオプションを使うと、特定のコンポーネントをサーバー側でのレンダリング対象から外すことができます。",
+        "pタグの中にdivタグをネストするなど、HTMLのセマンティクスに反する構造はブラウザがDOMを修正するためエラーの原因になります。",
+        "suppressHydrationWarningは警告を抑制するのみの最終手段であり、根本的な解決策として多用すべきではありません。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "react",
+        "hydration_error",
+        "ssr_vs_csr",
+        "code_examples",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "a287b5765727d3aed153217ed9fcec81d2cb1facc0157ae44ca3bfebf826843f",
+      "summary": "SupabaseやVercelを利用する際に多用されるOAuthのリダイレクト許可設定について、ワイルドカードを用いた設定が抱えるセキュリティリスクを解説しています。特にVercelのドメイン割り当て仕様を考慮した、安全な設定管理手法とプロジェクト構成のベストプラクティスを提案しています。",
+      "whyRecommended": "OAuthの設定は一度決めると忘れがちですが、誤ったワイルドカード指定は認証コードの流出につながる重要なセキュリティトピックであるため、実務でSupabaseとVercelを組み合わせている開発者にとって必須の知識だからです。",
+      "learningPoints": [
+        "Supabaseの「Site URL」と「Redirect URLs」は役割が異なり、前者は常に許可されるoriginとして機能するが、後者は追加の許可リストである。",
+        "Supabaseのグロブマッチにおいて、区切り文字は「.」と「/」の2つであり、クエリ文字列にはこの区切りが含まれないため、/*ではなく/**で指定しないと階層の深いパスにマッチしない。",
+        "Vercelの代表URLはプロジェクト名からの先着順で割り当てられるため、myapp-*-myteam.vercel.appのようにチームのslugを含めても、他人がそのプロジェクト名を取得すればマッチしてしまう。",
+        "ワイルドカードでの運用は危険なため、基本的には自分が管理する具体的なURLを列挙するか、Deployment Protectionを活用してプレビュー環境を保護するべきである。",
+        "1つのSupabaseプロジェクトを複数アプリで共有する場合、メールテンプレートやSite URLも共有されるため、各アプリに最適化したリダイレクト設定が困難になる。"
+      ],
+      "signalsUsed": [
+        "oauth_security",
+        "glob_pattern_matching",
+        "vercel_domain_security"
+      ]
+    },
+    {
+      "articleId": "3bc3be8f36060c685348fe650209946f7504e219315d64b749d1c4981aa3de76",
+      "summary": "Go言語を用いた実践的なRBAC（ロールベースアクセス制御）の実装チュートリアルです。ミドルウェアを活用し、権限に基づいた認可ロジックを効率的に管理するアーキテクチャを解説しています。",
+      "whyRecommended": "バックエンド開発における認可のベストプラクティスが、コード例と共に非常に具体的にまとめられているため。設計の落とし穴や、RBACの守備範囲を理解するのに最適です。",
+      "learningPoints": [
+        "ユーザーと権限を直接紐付けずロールを介在させることで、ユーザー管理や権限変更に伴う設定ミスを構造的に防止できる。",
+        "認可ロジックはロール名での条件分岐ではなく、必要な権限をミドルウェアで宣言する方式にすることでコードの重複と修正コストを大幅に減らせる。",
+        "認可情報が定義されていない場合やロール名が不正な場合は、全て拒否される「fail-closed」な設計にすることでセキュリティを向上できる。",
+        "RBACは操作の種類を制御する仕組みであり、リソース所有権のチェック（IDOR対策）は個別のハンドラで別途実装する必要がある。",
+        "クライアントから送られてくるロール情報（JWT等）は信頼せず、サーバー側で管理している権限情報を利用して判定を行う。"
+      ],
+      "signalsUsed": [
+        "rbac_implementation",
+        "golang_middleware",
+        "jwt_authentication",
+        "authorization_logic"
+      ]
     }
   ]
 }
