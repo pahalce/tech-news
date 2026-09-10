@@ -4716,6 +4716,64 @@
         "jwt_authentication",
         "authorization_logic"
       ]
+    },
+    {
+      "articleId": "e78a383d01d6415daa22eedc0eba09420e40ca0edbef70e57012335c2124e8e9",
+      "summary": "業務用バーコードスキャナ（HID）をWebアプリケーションで活用する際、機種依存のサフィックス（Enter/Tab）問題やタブレットのIME表示といった現場特有の課題に対する実装の解決策を解説しています。入力欄を廃止し、ドキュメント全体でkeydownイベントを監視するアプローチをとることで、UXを損なわずに安定したスキャン入力を実現しています。",
+      "whyRecommended": "現場環境での実体験に基づいた「開発機では動くが現場では動かない」課題への実践的な解決策が示されており、ハードウェア連携を含むWeb業務システム開発の参考資料として非常に質が高いためです。",
+      "learningPoints": [
+        "サフィックスを送信しないスキャナ対策として、入力の無入力状態が300ms継続した後に規定桁数以上であれば確定させるロジックが有効です。",
+        "ReactでsetTimeout内の値を扱う際は、最新値を取得するためにStateではなくuseRefを利用する必要があります。",
+        "タブレットのソフトキーボードやIMEメニューを非表示にするには、inputタグへinputMode=\"none\"を指定するのが定石です。",
+        "入力欄へのフォーカス自体を避けるため、documentのkeydownイベントでキー入力を拾い、他の編集可能要素（input等）がアクティブな場合は処理を無視する制御が重要です。",
+        "現場作業員はUIよりも音によるフィードバックを頼りにしていることが多いため、読み取り成否に旧システムと同じ音源を使用することは運用上の事故を防ぐ観点から不可欠です。"
+      ],
+      "signalsUsed": [
+        "hid_scanner_integration",
+        "browser_ime_issues",
+        "ux_for_factory_floor",
+        "code_examples",
+        "real_world_experience"
+      ]
+    },
+    {
+      "articleId": "1f8f12e59575d841e681c8650cd0098f0a22e171141e77e51d0322dd1a83d04b",
+      "summary": "Reactでモーダル内のフォームが閉開してもリセットされない不具合の原因と修正方法を解説しています。コンポーネントが常時マウントされている場合、useEffectの依存配列に開閉状態を含める必要があることを示しています。",
+      "whyRecommended": "React Hook Formを使用したフォーム実装でありがちな「マウントとレンダリングのライフサイクル」に関する勘違いを、実体験ベースで論理的に説明しているため、デバッグの思考プロセスとして非常に参考になります。",
+      "learningPoints": [
+        "常時マウントされるコンポーネントでは、モーダルの開閉によるisOpenの変更だけではuseEffectの依存配列に含まれていない限り副作用は再実行されない。",
+        "条件付きレンダリング（{isOpen && <Component />}）を採用すると、アンマウント時にstateが破棄されるため、今回のようなフォーム値の残りが発生しない。",
+        "常時マウント型でフォームをリセットしたい場合は、useEffectの依存配列にisOpenを追加し、副作用内でif (!isOpen) return; と記述することで、開いた時のみ初期化を走らせることができる。",
+        "実装の不具合を調査する際は、正常に動作している類似コンポーネントと依存配列の構成を比較することで、原因の特定時間を短縮できる。"
+      ],
+      "signalsUsed": [
+        "react",
+        "use_effect_dependency_array",
+        "react_hook_form",
+        "component_lifecycle",
+        "deep_technical_explanation",
+        "real_world_experience",
+        "code_examples",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "d44e6b23c072d5cc58a78ed8ef4a432d637b4faa255d443e6535bafd90c97811",
+      "summary": "DuckDBがメモリ制限を超える大規模なGROUP BYをどのように処理するか、内部のハッシュ集約アルゴリズムと外部ディスクへの退避メカニズムを解説しています。実測データを用いて、メモリ上のハッシュテーブルと一時ファイル間のI/O動作を可視化しました。",
+      "whyRecommended": "メモリ管理に厳しい環境でのDB運用において、DuckDBの挙動をブラックボックスにせず、`duckdb_memory()`やFileSystemログを用いた検証手法を提示しているため、パフォーマンスチューニングの実践的なガイドとなります。",
+      "learningPoints": [
+        "GROUP BYなどのblocking operatorは、集計結果が確定するまで全グループ分の集計状態をハッシュテーブルとしてメモリに保持する必要がある。",
+        "メモリ不足時には、ハッシュテーブルを固定サイズのページ単位でディスクへ退避・読み戻しする「外部ハッシュ集約」が行われる。",
+        "DuckDBのメモリ消費は`duckdb_memory()`関数でタグ別に確認可能で、`HASH_TABLE`と`ALLOCATOR`の合計が設定した`memory_limit`に追随する。",
+        "メモリ上限を厳しく絞りすぎると、退避可能なハッシュテーブルではなく、退避不可能な`ALLOCATOR`領域が不足してクエリが失敗する。",
+        "スレッド数を増やすと退避できない作業領域の消費が増えるため、メモリ制限下での運用時は本番環境のスレッド数で負荷テストを行う必要がある。"
+      ],
+      "signalsUsed": [
+        "database_internals",
+        "duckdb",
+        "memory_management",
+        "out_of_core_processing"
+      ]
     }
   ]
 }
