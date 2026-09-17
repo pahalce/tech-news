@@ -4949,6 +4949,62 @@
         "actionable_steps",
         "local_documentation_discovery"
       ]
+    },
+    {
+      "articleId": "f9c1d26c08786eba6f99218b1e88a57b8d09d9dc8261f4bb15d2719b5b9f933e",
+      "summary": "本書は、CursorのAI Custom Skillを活用してフロントエンド開発のコード規約を自動化し、開発工数を50%削減した実例を解説しています。リアルタイムでAPI仕様を取得するMCP統合や、原子的なスキルを組み合わせるオーケストレーション手法により、高品質かつ一貫性のあるコード生成を実現しています。",
+      "whyRecommended": "フロントエンド開発におけるAI活用を単なる「コード生成」で終わらせず、チーム規約の強制と新人オンボーディングへの活用にまで昇華させている点が非常に実践的であり、生産性向上を目指すエンジニアにとって示唆に富む内容だからです。",
+      "learningPoints": [
+        "Firecrawl-MCPを活用し、最新のSwaggerドキュメントをスキル実行時にリアルタイムで取得してLLMに注入することで、ハルシネーションを防ぎつつ型安全なコード生成が可能になる。",
+        "複数の原子的なスキル（アイコン検証、データストア構築、UIコンポーネント選択など）をオーケストレーションすることで、複雑なページ開発の精度を担保できる。",
+        "特定のディレクトリ構造やReact Queryのファクトリパターンといった社内規約をAIに学習・強制させることで、ジュニアメンバーでも即戦力として規約に準拠した実装が可能になる。",
+        "AIが生成したコードの80%をベースにし、残りの20%を業務ロジックの権限管理や微調整といった人間の判断領域に充てることで、効率的に開発サイクルを回すことができる。"
+      ],
+      "signalsUsed": [
+        "production_case_study",
+        "implementation_guide",
+        "developer_productivity",
+        "code_examples",
+        "mcp_protocol",
+        "cursor_ide"
+      ]
+    },
+    {
+      "articleId": "b39c11c676b749603bc550edd22e8fac51eec4ac035ed87b619bcb3526511660",
+      "summary": "JavaプロジェクトへのNullAway導入を通じたNullabilityの整理と静的解析による安全性担保の事例を紹介します。既存のコードベース全体へ段階的に適用するために、インフラ層からユースケース層へと順序立ててアノテーションを整備する手法が解説されています。",
+      "whyRecommended": "Spring Boot環境でNullAwayを安全かつ効率的に全社適用した具体的なプロセスが記述されており、大規模リファクタリングの計画と実行、CI/CDとの連携の参考になります。",
+      "learningPoints": [
+        "NullAway導入時、一度に全体へ適用せず、InfrastructureからDomain、Presentation、Usecase層の順に段階的に設定することで移行リスクを低減できる。",
+        "Spring Data JDBCではDBスキーマのnot null制約を、Domain層では不変条件をNullabilityの根拠として利用する。",
+        "Mavenのmaven-compiler-pluginにおいて、-Jオプションでコンパイラ引数を渡し、Error Proneの設定とNullAwayのAnnotatedPackagesを設定することでチェックを実行する。",
+        "OpenAPI GeneratorのimportMapping機能を利用して、生成されるモデルのNullabilityアノテーションをJSpecify規格へ統一できる。",
+        "自動生成コードやテストコードは検査対象から除外し、ExcludedClassAnnotations設定を用いることで、不要なコンパイルエラーを回避しつつ整合性を維持できる。"
+      ],
+      "signalsUsed": [
+        "java_ecosystem",
+        "spring_boot",
+        "static_analysis",
+        "refactoring_strategy"
+      ]
+    },
+    {
+      "articleId": "d7939bedbc4910194f15a0070973d06ffb9f3e33e7a20843a1b3607b65f0de88",
+      "summary": "Next.js App RouterにおけるServer ComponentsとClient Componentsの最適な使い分けと設計パターンを解説した記事です。パフォーマンスを最大化しつつ開発効率を落とさないための具体的なアーキテクチャ戦略を提示しています。",
+      "whyRecommended": "App Router移行後に直面しがちなコンポーネント境界の設計ミスを防ぎ、パフォーマンスを最適化するための実践的な指針が整理されています。特にバンドルサイズ肥大化の回避策やServer Actionsの活用方法が具体的で、実務ですぐに活かせるため推奨します。",
+      "learningPoints": [
+        "Next.js App RouterではコンポーネントがデフォルトでServer Componentとして扱われ、'use client'ディレクティブが必要な部分にのみ付与することで最適化する。",
+        "データフェッチは可能な限りServer Componentで行い、取得したデータをpropsとしてClient Componentへ渡すことで、初期表示速度の向上とセキュリティの担保が可能になる。",
+        "Client Component化はコンポーネントツリーの末端に近い部分で行うことがベストプラクティスであり、'use client'を上位層に置きすぎるとバンドルサイズが肥大化する。",
+        "Server ActionsとuseActionStateフックを組み合わせることで、API Routesを作成せずに簡潔なフォーム処理やデータ操作を実装できる。",
+        "Server ComponentからClient Componentへデータを渡す際は、シリアライズ可能なpropsを用いるか、childrenとしてコンポーネントを配置する手法が推奨される。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "react",
+        "server_components",
+        "client_components",
+        "server_actions"
+      ]
     }
   ]
 }
