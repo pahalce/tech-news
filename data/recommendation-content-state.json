@@ -5005,6 +5005,63 @@
         "client_components",
         "server_actions"
       ]
+    },
+    {
+      "articleId": "dca9be4591fd4c056cd87a205bb80eb58f406e5af061e03e8df12f3231345a5e",
+      "summary": "Cloudflare WorkersからAI API「Jev」を呼び出す際の最適な構成を、Node.js環境と比較しながらレイテンシの観点で検証した技術調査レポート。結論として、Workersから直接APIを叩く構成が最も高速であり、AI Gatewayの導入には速度とのトレードオフがあることを示しています。",
+      "whyRecommended": "Cloudflare Workersのグローバルネットワークを活かしたパフォーマンス検証という実用的かつ再現性の高い構成で、AI API利用時のアーキテクチャ選定に直接役立つ知見が含まれているため。",
+      "learningPoints": [
+        "日本からOregonにあるJev APIを呼び出す際、Cloudflare Workers経由の通信はバックボーンを活用できるため、ローカルのNode.js環境から呼び出すよりもレイテンシが低い。",
+        "Cloudflare AI Gateway経由の呼び出しは、リクエスト間隔が空いた際に接続が冷えてしまい、直接呼び出しと比較してレイテンシが大幅に悪化する場合がある。",
+        "Node.js環境（undici）のデフォルトkeep-alive設定は4秒と短く、30秒間隔の通信では毎回TCP/TLSのハンドシェイクが発生しパフォーマンスが低下する。",
+        "Cloudflare WorkersはHTTP/2での多重化がデフォルトで効くため、連続した複数リクエストを同時並行で行う際に、HTTP/1.1のNode.js環境よりも有利に働く。",
+        "どこからアクセスしても自動的にその地域に近いエッジサーバーからJevを呼び出せる点は、固定サーバーで運用するVPSにはないWorkers特有の強みである。"
+      ],
+      "signalsUsed": [
+        "latency_benchmarking",
+        "cloudflare_workers",
+        "jev_api",
+        "comparison",
+        "real_world_experience"
+      ]
+    },
+    {
+      "articleId": "0c3e49477a4af14189842f104b62618ba523febd92532b56a54073c7801813ac",
+      "summary": "AIコーディングにおける「責任のあるコード」を生成するために、Next.jsプロジェクトで活用できるルールファイル（ハーネス）の設計手法を解説しています。CLAUDE.mdへの要約と詳細ルールの分割、およびテストを用いた強制的な品質担保の重要性を論じています。",
+      "whyRecommended": "AIの出力をエンジニア自身が理解・保守可能な状態に保つための具体的な設計パターンが公開されており、実務におけるAI活用レベルを一段引き上げるための実践的な指針となるためです。",
+      "learningPoints": [
+        "CLAUDE.mdには要約と参照先のみを記載し、詳細は.claude/rules/配下に分割してトリガー表で読み込みタイミングを指定する。",
+        "ライブラリのバージョン固有の挙動について、AIにネット検索させるのではなくローカルのnode_modules内にある一次情報を直接読み込ませる。",
+        "Server Actionはコントローラーではなくクライアントからの入口と定義し、page.tsxからは直接usecaseを呼び出すことでサーバー内部の責務を明確化する。",
+        "AIの判断の余地をなくすため、層ごとに使用する用語（Action, usecase, repository等）を厳格に定義する。",
+        "セキュリティやバリデーションなど絶対に守らせたいルールは文章の指示だけでなく、テストコードを用いて副作用の有無まで確認する。"
+      ],
+      "signalsUsed": [
+        "ai_engineering",
+        "nextjs",
+        "typescript",
+        "reusable_implementation_pattern",
+        "actionable_steps",
+        "code_quality_assurance"
+      ]
+    },
+    {
+      "articleId": "e5f0a746746f1935f1aacc71a5f23f6743d74b50dd7504ef892a58438c0eaa9e",
+      "summary": "Apple Payのドメイン認証用ファイルを配置する際、16進数テキストをデコードしてしまうと検証に失敗します。このファイルは中身を解釈せず、ダウンロードしたバイト列をそのままサーバーの指定場所に配置する必要があります。",
+      "whyRecommended": "Apple Pay導入時のドメイン検証という、ドキュメントの記載が曖昧な部分でハマりやすい罠を具体的な解決策と共に提示しています。開発者が陥りがちな「親切心によるデータ変換」というミスを指摘しており、実務で同様の認証ファイルを取り扱う際にも応用可能な知見が含まれているためです。",
+      "learningPoints": [
+        "Apple Payのドメイン検証ファイルは中身を変換せず、ダウンロードしたバイト列をそのままの状態で配信する。",
+        "エディタの自動整形やGitの改行コード変換によってファイルが破壊されるのを防ぐため、.editorconfigや.gitattributesでバイナリとして扱う設定を行う。",
+        "配置したファイルが正常に配信されているか確認するため、curlで取得したデータのハッシュ値をダウンロード元のオリジナルファイルと照合する。",
+        "Next.js等でmiddlewareを使用している場合、.well-knownパスが認証やリダイレクトの対象から外れているかを確認する。"
+      ],
+      "signalsUsed": [
+        "apple_pay",
+        "binary_file_handling",
+        "real_world_experience",
+        "failure_example",
+        "actionable_steps"
+      ]
     }
   ]
 }
