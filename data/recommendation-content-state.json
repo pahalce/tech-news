@@ -5062,6 +5062,63 @@
         "failure_example",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "2b1738ecfd6cf038037fb7012242f10326deaeb9790d1e8a494ecb3dac266431",
+      "summary": "Next.jsにおけるServer ActionsとRoute Handlersの使い分け指針を、呼び出し元との「約束（インターフェース定義）」の観点から解説した記事です。画面操作を主とする処理と、モバイルアプリやCronなど外部との通信規約を重視する処理での最適な選定基準を提示しています。",
+      "whyRecommended": "「フォームだからAction」という表面的な判断ではなく、システム構成や拡張性を考慮したアーキテクチャの意思決定プロセスが学べるため。実務でのコードベースにおける検証方法にも触れており、技術的な信頼性が高いです。",
+      "learningPoints": [
+        "Next.jsの画面操作に紐づく一連の更新処理にはServer Actionsが適している。",
+        "URL、HTTPメソッド、認証ヘッダーといった通信規約を外部に明示する必要がある場合はRoute Handlerを選択すべきである。",
+        "Server Actionsを使用する際も、フォームの入力値やセッション情報だけに頼らず、データアクセス層で必ず権限確認を行う必要がある。",
+        "将来的な再利用性を考慮する場合、入口（Action/Route）と業務処理ロジックを分離し、共通の業務関数を呼び出す構成にするのが望ましい。",
+        "HTTPルートの検証を行う際は、正常系だけでなく「拒否条件」が正しく機能して後続の処理（DB操作等）が実行されないことをテストで確認する。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "architecture_explanation",
+        "tradeoff_analysis",
+        "code_examples",
+        "server_side_architecture",
+        "api_design",
+        "security_considerations"
+      ]
+    },
+    {
+      "articleId": "577a0639e33e97beef7704fa49abafc0e2354c6a90736a52b399bd76dc0be1c8",
+      "summary": "ページ内リンクが意図せず別ページへ遷移してしまう現象の原因と解決策を解説した記事です。HTMLのbaseタグが相対URLの解決に与える影響と、デバッグおよび修正方法を実体験に基づいて紹介しています。",
+      "whyRecommended": "フロントエンド開発で遭遇しがちな「なぜか動かない」という挙動に対し、ブラウザの挙動や開発者ツールの活用法まで網羅的に解説されており、実務でのトラブルシューティングに即役立つため。",
+      "learningPoints": [
+        "HTMLのbaseタグが存在すると、ページ内リンク（#id）がbaseタグのURLを基準に解決されるため、ページ遷移が発生する。",
+        "現在のページにbaseタグが適用されているかは、ブラウザのコンソールでdocument.baseURIを確認することで判別できる。",
+        "baseタグの影響を受けずにページ内スクロールを実現するには、イベントリスナーでpreventDefaultし、scrollIntoViewまたはlocation.hashを操作する。",
+        "リンク要素の挙動を調査する際は、getAttribute('href')で本来の属性値を確認し、.hrefプロパティでブラウザが解決した完全なURLを確認する。",
+        "外部からHTMLを読み込んで表示する構成では、環境による影響を再現するために手元のHTMLのhead内にbaseタグを追加してテストする必要がある。"
+      ],
+      "signalsUsed": [
+        "html_base_tag_troubleshooting",
+        "browser_development_tools",
+        "code_examples",
+        "real_world_experience",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "df5cccb3e719ef037c39081ecaff6f698c5d684a6912cc760312104abf494d7a",
+      "summary": "cve-lite-cliを活用して、フロントエンド開発における脆弱性管理をローカル環境で完結させる手法を解説しています。単なるスキャンにとどまらず、修正用コマンドの提示やEPSS指標を用いた優先度付けが可能なため、効率的な依存関係管理を実現できます。",
+      "whyRecommended": "フロントエンド開発において脆弱性対応は後回しにされがちですが、本記事は導入コストを抑えつつ開発者が手元で即座に修正・判断できる実用的なワークフローを提示しており、セキュリティ意識を高めるための第一歩として最適です。",
+      "learningPoints": [
+        "cve-lite-cliは、直接インストールしたパッケージと依存パッケージを分けて表示し、コピー可能な修正コマンドを提供します。",
+        "cve-lite-cliの--check-maintenanceオプションを使用すると、更新が停止したパッケージや非推奨パッケージも検知できます。",
+        "CVSSスコアは脆弱性の深刻度を示す一方、EPSSスコアは今後30日以内に悪用される確率を予測するため、優先順位付けに役立ちます。",
+        "cve-lite-cliはバージョン1.33以降、CVSSとEPSSを組み合わせて脆弱性を4段階の優先度（fix_nowなど）に自動分類します。"
+      ],
+      "signalsUsed": [
+        "cve_vulnerability_management",
+        "dependency_management",
+        "epss_score_usage"
+      ]
     }
   ]
 }
