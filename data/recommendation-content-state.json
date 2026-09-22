@@ -5119,6 +5119,64 @@
         "dependency_management",
         "epss_score_usage"
       ]
+    },
+    {
+      "articleId": "b37be8d8d08ddaa9e14030e023e85b0f1877af7b0439252cf3ac6004fb5a9cc8",
+      "summary": "Next.jsとSupabaseを用いた安全なチーム招待機能の実装手法を解説しています。トークンのハッシュ化、データベースレベルでの状態制御、レート制限などの具体的なセキュリティ対策が網羅されています。",
+      "whyRecommended": "SaaS開発で必須となる「招待機能」において、セキュリティ上の落とし穴になりやすい箇所が網羅的に解説されており、実践的なコードとテスト戦略が提示されているため非常に参考になります。",
+      "learningPoints": [
+        "招待トークンはデータベース流出時のリスクを考慮し、平文ではなくSHA-256でハッシュ化した値のみを保存する。",
+        "招待の「1回限り」の制限は行を削除せず、statusカラム（pending/accepted/revoked）で管理することで、招待の成否を監査可能にする。",
+        "同時押しによる二重登録を防ぐため、受諾処理のSQL内でFOR UPDATEを用いて行ロックを行い、状態の再評価を行う。",
+        "招待の一覧や更新権限をRLSで制御する際、membershipsテーブルを直接参照するとポリシー循環が発生するため、Security Definer関数経由で役割を判定する。",
+        "招待メール送信機能が迷惑メールの踏み台にされないよう、組織単位およびIP単位でのレート制限を設ける。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "security",
+        "supabase_rls",
+        "database_security"
+      ]
+    },
+    {
+      "articleId": "3c888534addc9a4be4d37ae111d1a29928638fd40d3819888aab11c848639574",
+      "summary": "Next.jsの静的書き出し時に生成される不要なRSCペイロードがデプロイ上限を圧迫していた問題を、ビルド後のファイル削除で解決した実例記事です。クライアント側遷移を利用していないサイト特性を逆手に取り、安全性を担保しつつファイル数を大幅に削減しました。",
+      "whyRecommended": "Next.jsのoutput: 'export'運用における具体的なトラブルシューティングの好例であり、最適化の際に重要な『前提条件をテストで守る』という設計思想がエンジニアとして非常に参考になるため。",
+      "learningPoints": [
+        "Next.jsの静的書き出し（output: 'export'）であっても、クライアント側遷移用のRSCペイロード（.txt）がルートごとに5つ生成される。",
+        "クライアント側遷移を利用していないサイトであれば、ビルド後のpostbuild処理でこれらの.txtファイルを削除してもサイトの機能に影響はない。",
+        "最適化の前提条件（例：クライアント側遷移の不使用）を維持するため、ソースコードを走査して対象コードの有無を検知するユニットテストを導入すべきである。",
+        "実物を走査するテストでは、対象ファイルの取得が空振りしてテストが意図せず通過しないよう、ファイル数などが閾値を超えているかチェックする仕組みが必要である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "rsc_payload",
+        "static_site_generation",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "50646ca1a89b0096ef84788a0a6dbb8441679c1a2b5632c810db4e1fd6b09221",
+      "summary": "Next.jsとTanStack Startの設計思想や技術スタックの違いを、ルーティングやデータ取得などの10項目で詳細に比較検証しています。RSCを中心に据えたサーバーファーストのNext.jsと、TanStack Routerを基盤とするクライアント中心のTanStack Startの選択基準を明確に解説しています。",
+      "whyRecommended": "現在主流のNext.jsと、注目を集めるTanStack Startを実コードで比較しており、選定基準を検討する際の意思決定材料として非常に質が高い記事です。",
+      "learningPoints": [
+        "Next.jsはRSCを軸としたサーバーファースト設計であるのに対し、TanStack Startは型安全なルーティングを中心にサーバー機能を統合するクライアントファーストな設計である。",
+        "Next.jsはTurbopackによる最適化が特徴だが、TanStack StartはViteを採用しているため既存のViteプラグイン資産をそのまま流用できる。",
+        "TanStack Startはルートツリー全体から型を自動生成するため、paramsやsearchパラメータの型定義を冗長に書く必要がない。",
+        "サーバー処理において、Next.jsは'use server'ディレクティブを使用するのに対し、TanStack StartはcreateServerFnを用いてバリデーションを組み込んだ関数として定義できる。",
+        "Next.jsはVercelへの最適化が強力だが、TanStack StartはNode.jsサーバーやCloudflare Workersなど、より広範なデプロイ先に対して柔軟なアダプター構成が可能である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "tanstack_start",
+        "frontend",
+        "web_development",
+        "typescript",
+        "react",
+        "framework_selection"
+      ]
     }
   ]
 }
