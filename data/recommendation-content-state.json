@@ -5234,6 +5234,66 @@
         "measured_results",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "fe82ade040a967119c76a5d9bb1346ca046d7d8c792e77581115a1c345c61eb1",
+      "summary": "TypeScriptとWeb Workerを活用し、連珠の禁じ手ルールに対応したブラウザ五目並べAIの構築手法を解説した技術記事です。評価関数のテーブル化や時間予測を用いた探索制御など、ブラウザ環境で高速動作させるための高度な最適化テクニックが網羅されています。",
+      "whyRecommended": "ブラウザというリソース制約のある環境で、ゲームAIをいかに効率的かつ実用的に実装するかという設計指針が極めて具体的に示されているため。Web WorkerによるUIと探索の完全分離や、Typed Arrayを用いたメモリ管理など、フロントエンドエンジニアが参考にすべきパフォーマンスチューニングの好例です。",
+      "learningPoints": [
+        "盤面の各ラインを9桁の3進整数にエンコードし、パターンテーブルを参照することで評価計算を高速化できる。",
+        "反復深化において、過去の深度ごとの所要時間から次の深度の完走可否を予測し、制限時間内に確実に終わる深度で探索を打ち切ることで実戦的な強さを維持できる。",
+        "ReactのUIレンダリングとWeb Workerでの探索処理を分離し、メインスレッドをブロックしない構造にすることでスムーズな操作性を実現できる。",
+        "禁じ手判定をUIとAIの共通関数に集約することで、ルール実装の不一致によるバグを防止できる。",
+        "Zobrist置換表において、オブジェクト生成を避けるために固定サイズのTyped Arrayを直接マッピングすることで、ブラウザ特有のGCによる停止を防げる。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "web_worker_usage",
+        "game_ai_algorithm",
+        "zobrist_hashing",
+        "minimax_alpha_beta",
+        "performance"
+      ]
+    },
+    {
+      "articleId": "0f6ef057ebe3adb12f7018d3da61d94a1c9b6ad2ecb902f60ffe5b4bc292591d",
+      "summary": "iOS Safariで音が鳴らない現象の原因をWebKitソースコードに基づき詳細に解説した技術記事です。アンロック処理の失敗や競合など、確率的に発生する「13の穴」を特定し、Web Audio APIを併用した確実な再生手法を提示しています。",
+      "whyRecommended": "フロントエンド開発において最もフラストレーションが溜まる「iOS Safariでの音声再生制限」に対し、仕様とソースコードから裏付けられた具体的な解決策が提示されているためです。中級〜上級者向けの非常に実用的な実装ガイドです。",
+      "learningPoints": [
+        "iOS Safariでは、audio要素ごとにユーザー操作内でのplay()呼び出しが必要であり、 muted設定であってもユーザー操作外では制限が解除されない。",
+        "play()直後にload()を呼ぶと再生要求が取り消されるため、アンロック処理内ではload()を避けるべきである。",
+        "指が触れた瞬間（pointerdown）はユーザー操作として数えられないため、タッチ環境でのアンロック判定はpointerupやclickなどを使用する。",
+        "iPhoneの消音スイッチへの挙動を安定させるには、AudioContext生成前にnavigator.audioSession.typeをplaybackに設定する必要がある。",
+        "動画やBGMなどの音声ファイルは、ffmpeg等のツールを使用して目次情報（moov atom）を先頭に配置（faststart）することで読み込み開始の遅延を防げる。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "edge_cases",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "webkit_internals",
+        "ios_safari_limitations",
+        "audio_api_handling"
+      ]
+    },
+    {
+      "articleId": "d2420203170ccd12f0ec461da4cdfd7ed2fc6b21c428d2e247f333919bb31701",
+      "summary": "Reactにおける「表示」と「通信処理」の依存関係を切り離すための設計パターンを紹介しています。Render Propsを用いたControllerによる接続結果の提供と、Slotによるコンポーネント合成を組み合わせることで、疎結合なUI構築を可能にします。",
+      "whyRecommended": "コンポーネントの再利用性向上とテストのしやすさを両立させる、実践的でアーキテクチャの指針となる設計パターンが学べます。特に複雑な状態管理や操作を持つUIの整理に悩むエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "表示コンポーネントは値とコールバックのみをpropsとして受け取ることで、通信ロジックへの依存を完全に排除できる。",
+        "Controllerパターン（Render Props）を利用して、接続用Hookの戻り値を子要素へ渡すことで、表示側が接続方法を知る必要がなくなる。",
+        "Slotパターンを活用して組み立て済みのJSXを親から注入することで、子コンポーネントの責務を単なる配置に限定できる。",
+        "依存関係を組み立てる場所に集約することで、特定の表示に対して利用する操作やロジックを柔軟に入れ替えられる。",
+        "常に表示と接続をセットで変更する小規模なコンポーネントの場合、このパターンを適用すると逆にコード量が増えるため使い分けが必要。"
+      ],
+      "signalsUsed": [
+        "react",
+        "frontend",
+        "design_pattern",
+        "component_composition",
+        "render_props"
+      ]
     }
   ]
 }
