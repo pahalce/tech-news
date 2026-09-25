@@ -5294,6 +5294,63 @@
         "component_composition",
         "render_props"
       ]
+    },
+    {
+      "articleId": "fa19cca8c3167b4ff507d1472ab5014124e6b75ccb7eb59382bd41f604e96404",
+      "summary": "Cloudflare Workers Buildsでモノレポ構成のNext.jsをビルドする際、ビルド時間が長大化する問題に対する最適化事例です。ビルドコマンドの不要な再インストール削除、並列化の限界分析、およびビルド出力キャッシュを強制的に効かせる具体的な実装手法を解説しています。",
+      "whyRecommended": "モノレポ環境でビルドキャッシュが効かない原因を正確に突き止め、プラットフォームの制約を回避して大幅な高速化（約53%短縮）を実現した実践的な内容です。検証手順やログの読み解き方が非常に論理的で、同様のCI/CD環境を運用しているエンジニアにとって有益な知見が詰まっています。",
+      "learningPoints": [
+        "Cloudflare Workers Buildsはビルド前に自動で依存をインストールするため、ビルドコマンド内でnpm ciを実行すると二重インストールとなり無駄な時間がかかる。",
+        "ビルド環境のCPUコア数が少ない場合、Next.jsのビルド並列化はCPU負荷とコンテキストスイッチの増大を招き、期待したほどの短縮効果が得られないことがある。",
+        "Workers Buildsのキャッシュ機能が「not supported」となるのは、モノレポのルートpackage.jsonにフレームワーク（Next.js）が含まれておらず、構成が正しく判定されていないことが主因である。",
+        "Next.js 16以降はビルド時のTurbopack FSキャッシュが既定で無効であり、experimental設定で明示的に有効にしなければ、キャッシュを保存・復元しても中身がほぼ空になる。",
+        "キャッシュの効果はビルドトリガー単位で管理されるため、プレビュー環境で生成したキャッシュは本番ビルドには引き継がれない。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "devops",
+        "cloudflare_workers",
+        "monorepo_build_optimization"
+      ]
+    },
+    {
+      "articleId": "ea3258834a67f04666e7036917359c75e7430b250310306ee871f1b1a803ffea",
+      "summary": "Cloudflare Workers Cacheを利用して、Next.jsのCache Componentsに近い体験をHonoで実現するライブラリ「hono-workers-cache」の紹介記事です。レスポンスにヘッダを付与し、Worker実行前段のエッジキャッシュをタグ単位で制御する仕組みを解説しています。",
+      "whyRecommended": "Next.jsのような宣言的なキャッシュ管理をHono環境で再現したいという実用的なニーズに対し、Cloudflare Workers Cacheの仕組みを深く理解した上で、既存のキャッシュAPIにはない「CPUコストゼロのHIT」を実現する方法を具体的に提示しているため。",
+      "learningPoints": [
+        "CloudflareのWorkers Cacheを有効化すると、Workerが起動する前段でキャッシュが照合されるため、HIT時はCPUコストが発生しない。",
+        "ライブラリの内部動作は、レスポンスにキャッシュ制御ヘッダを付与し、無効化時に`cache.purge()`を呼ぶというシンプルな実装に留めている。",
+        "ブラウザ向けの`Cache-Control`とエッジ向けの`CDN-Cache-Control`を分けて設定することで、エッジのSWRとブラウザ側の即時再検証を両立させ、キャッシュ更新を全ユーザーへ素早く反映できる。",
+        "Workers Cacheの`purge()`は、単一データセンターのCache APIとは異なり、タグやパスプレフィックスを指定してグローバルにキャッシュを無効化できる。",
+        "Workers Cacheは自動的にリードスルー型のキャッシュ管理を行い、リクエストの重複排除（Collapsing）や多段キャッシュ（Tiered cache）にも対応している。"
+      ],
+      "signalsUsed": [
+        "hono_framework",
+        "cloudflare_workers_cache",
+        "reusable_implementation_pattern",
+        "cache_invalidation_strategy",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "d103a925306b0e02c05a5e66fa85e9943a6f33a2a538d9d978c330189294b50f",
+      "summary": "Next.jsのApp Router環境における、保守性の高いディレクトリ構成とファイル配置の判断基準を解説した記事です。app/、screens/、features/、shared/の4層構造を採用し、依存の向きを制御することで整理されたコードベースを実現しています。",
+      "whyRecommended": "ファイル配置の迷いを解消する「誰の都合で仕様が変わるか」という明確な判断基準が提示されており、スケーラビリティを重視するエンジニアにとって即実践可能な指針となるためです。",
+      "learningPoints": [
+        "ディレクトリ構成をapp（ルーティング）、screens（画面本体）、features（機能）、shared（汎用）の4層に分け、importの向きをappからsharedへ向かう一方向に制限する。",
+        "ファイルの置き場所は「何であるか」ではなく「その仕様が誰の都合で変わるか」を基準に決定する。",
+        "shared層のコンポーネントには具体的な機能の型を渡さず、表示に必要な最小限のプリミティブな値のみをpropsで受け取る。",
+        "UIコンポーネントの共通化は、2箇所目ではなく3箇所目で使用されたタイミングで行い、propsの肥大化を防ぐ。",
+        "迷う場合は一度screens層に置き、後から必要に応じてfeatures層へ切り出すことで安全にリファクタリングを行う。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "architecture_explanation",
+        "implementation_guide",
+        "architecture_decision_support",
+        "folder_structure"
+      ]
     }
   ]
 }
