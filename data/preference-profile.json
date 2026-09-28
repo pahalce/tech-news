@@ -14,14 +14,14 @@
       "react": 3,
       "nextjs": 0.7,
       "frontend": 3,
-      "backend": 0.3,
+      "backend": 1.1,
       "web_development": 2.7,
-      "ai_engineering": -0.5,
-      "llm": -0.5,
+      "ai_engineering": -0.29000000000000004,
+      "llm": -0.29000000000000004,
       "testing": 0.4,
       "performance": 1.51,
       "security": 1.2,
-      "devops": 1.1
+      "devops": 2.1
     },
     "feature_axes": {
       "content_types": {
@@ -38,15 +38,15 @@
       "evidence_signals": {
         "code_examples": 3,
         "measured_results": 1.5,
-        "real_world_experience": 2.8,
+        "real_world_experience": 3,
         "comparison": 0.6,
         "failure_example": 1.2999999999999998,
         "source_links": 3
       },
       "practical_signals": {
         "actionable_steps": 3,
-        "architecture_decision_support": 2.4000000000000004,
-        "operationally_applicable": 1.7000000000000002,
+        "architecture_decision_support": 3,
+        "operationally_applicable": 2.5,
         "reusable_implementation_pattern": 3,
         "developer_productivity": 2.5,
         "migration_guidance": 0.29999999999999993,
@@ -56,7 +56,7 @@
         "tradeoff_analysis": 3,
         "deep_technical_explanation": 3,
         "edge_cases": 3,
-        "constraints_explained": 0.5999999999999999,
+        "constraints_explained": 1.4,
         "surface_level_summary": -0.8,
         "beginner_only": -0.6,
         "thin_content": -0.9,
@@ -77,5 +77,5 @@
       }
     }
   },
-  "updated_at": "2026-08-31T01:02:20.085Z"
+  "updated_at": "2026-09-28T01:21:32.685Z"
 }
