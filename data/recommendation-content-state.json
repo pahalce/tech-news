@@ -5528,6 +5528,64 @@
         "gil",
         "database_performance"
       ]
+    },
+    {
+      "articleId": "060cbd161838540655a67b5146a431c02423c1e3b84eec09e888f297ecfc246a",
+      "summary": "静的サイトにおいて「今日」という日付をどう扱うかという技術的課題を、表示・生成・ビルドの3つの観点で解説した記事です。hydration時の不整合を避けつつ、動的な日付情報を適切に実装する実用的なパターンを紹介しています。",
+      "whyRecommended": "静的サイト生成(SSG)における日付の扱いという、一見単純そうでハマりやすい落とし穴に対する、明確かつ具体的なアーキテクチャの指針が示されているため。実体験に基づいたトラブルシューティングが豊富で非常に参考になります。",
+      "learningPoints": [
+        "クライアント側で日付を表示する場合、初期HTMLには日付を入れず、hydration前にインラインスクリプトまたはクライアントコンポーネントで動的に反映する。",
+        "hydrationの警告を抑制する際は、影響範囲を絞るために必要な要素だけにsuppressHydrationWarningを指定する。",
+        "ビルド時生成する日付関連の素材は、デプロイ遅延や時刻のズレを考慮し、前後を含めた複数日分の幅を持たせて出力することで冗長性を持たせる。",
+        "ビルドの基準時刻を環境変数で固定できるように一箇所に集約することで、ビルド結果の再現性と出力の比較検証を容易にする。",
+        "時刻関連の不具合を早期発見するために、テスト環境のタイムゾーンを日本時間以外に固定した環境で動作確認を行う。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "react",
+        "web_development",
+        "testing",
+        "static_site_generation_ssg",
+        "hydration_mismatch",
+        "time_zone_handling"
+      ]
+    },
+    {
+      "articleId": "d5b3fd7bd844f8b69b57fdf395f6ed494cf28624b89f8a5ccb17a833ff8adc8e",
+      "summary": "CSSのbox-sizing: border-boxを指定してもレイアウトが崩れる原因を、7つの実測ケースで解説しています。widthの指定、marginの扱い、paddingやborderによる下限値の影響などを具体例で示し、修正方針を整理しています。",
+      "whyRecommended": "フロントエンド開発で頻出する「はみ出し」問題に対し、憶測ではなくブラウザの計算結果に基づいた実証的な解決策が提示されており、設計の考え方が非常に明確で実務レベルが高いため。",
+      "learningPoints": [
+        "box-sizing: border-boxを指定しても、外側のmarginは要素の合計幅に加算されるため、親要素からはみ出す可能性がある。",
+        "通常のブロック要素においてwidth: 100%を明示せずwidth: autoに任せると、paddingやborderを考慮した適切な幅が自動計算される。",
+        "box-sizing: border-boxであっても、paddingとborderの合計値が指定したwidthよりも大きい場合、コンテンツ幅を0にしてもその合計値が最小幅として維持される。",
+        "コンポーネント全体にbox-sizingを適用する場合、* { box-sizing: border-box; }だけでなく、継承を利用して::beforeや::afterにも適用させる設計が推奨される。",
+        "FlexboxやGrid環境下では、アイテムの最小サイズ制約によりはみ出すことがあり、その場合はmin-width: 0の指定が解決策の一つとなる。"
+      ],
+      "signalsUsed": [
+        "css_box_model",
+        "layout_debugging",
+        "measured_results",
+        "implementation_guide",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "e47e9f662f38dbf78bd84bb059adbe891df8eb246d0cdab17eb020201d26c6c0",
+      "summary": "PostgreSQLをジョブキューとして活用する際、複数ワーカーの競合を防ぐための効率的なロック手法を解説した記事です。FOR UPDATE SKIP LOCKEDを使用して、ロック中の行をスキップしつつ安全にジョブを割り当てる実装パターンを紹介しています。",
+      "whyRecommended": "バックエンド開発においてDBを簡易キューとして扱う際の定番かつ重要な最適化手法であり、安全な非同期処理の実装に必要な具体的なコードと設計の注意点が網羅されているため。",
+      "learningPoints": [
+        "SELECT句でFOR UPDATE SKIP LOCKEDを指定することで、他トランザクションでロック中の行を待機せずに次の未処理行を取得できる。",
+        "ジョブの確保とステータスの更新は、競合を避けるために同一トランザクション内で実行する必要がある。",
+        "WITH句（CTE）を使用して、ジョブの取得とステータス更新を1回のクエリで完結させると効率的である。",
+        "長時間トランザクションを防ぐため、DB操作はジョブの確保と更新に留め、重い処理はコミット後に行うべきである。",
+        "ワーカーの異常終了に備えて、処理中のジョブには期限を設け、一定時間経過後に再取得できるように設計する必要がある。"
+      ],
+      "signalsUsed": [
+        "database_locking",
+        "job_queue_pattern",
+        "transaction_management"
+      ]
     }
   ]
 }
