@@ -5648,6 +5648,64 @@
         "go_backend",
         "spanner_database"
       ]
+    },
+    {
+      "articleId": "534882c86ffbf540d99f26d302b2077d16efc2cb2ee5599e3bfec830e3c832d9",
+      "summary": "TerraformでCloud Runを管理する際、lifecycleのignore_changesでコンテナイメージを無視すると、環境変数更新時などに意図せず古いイメージへ巻き戻る現象が報告されています。本記事では、このリスクを回避するための設計上のトレードオフと、今後の改善策が解説されています。",
+      "whyRecommended": "Cloud RunにおけるTerraform運用の落とし穴を実体験ベースで解説しており、Infrastructure as Codeの運用における「宣言的管理」と「デプロイの責任分界点」の難しさを学ぶのに最適です。",
+      "learningPoints": [
+        "lifecycleのignore_changesは「値を維持する」のではなく「差分を無視する」指示であるため、リソース構成の変更時にstate上の古い値で上書きされるリスクがある。",
+        "Cloud Run v2はtemplateブロック内に環境変数とイメージ情報が混在しており、環境変数のみの変更でもコンテナ設定全体が再適用され、意図せず古いイメージに戻る場合がある。",
+        "Terraformのplan結果にはignore_changes対象の差分が表示されないため、レビュー時に巻き戻りの危険性に気づくことが難しい。",
+        "アプリケーションの起動方式により、コンテナの検証失敗を検知できないケースがあり、デプロイ後の500エラーで初めて障害に気づく可能性がある。",
+        "コンテナイメージのバージョン管理において、タグを変数としてTerraformに渡す運用を採用することで、イメージの意図しない巻き戻りを防ぎつつバージョンを追跡できる。"
+      ],
+      "signalsUsed": [
+        "terraform_lifecycle_misunderstanding",
+        "cloud_run_deployment_gotchas",
+        "infrastructure_as_code_risks",
+        "failure_example"
+      ]
+    },
+    {
+      "articleId": "06ce002488d470b5fbd0d0a502a8ebe7e032b1fae681403b301d3c3b7f70d5fa",
+      "summary": "個人開発で大規模な口コミサービスを運用する著者が、全6リポジトリ構成やインフラ設計、コスト最適化の全体像を解説する記事。評価を料理単位に限定し、低評価を非公開データとして活用することでマッチング精度を高めるユニークなプロダクト設計を紹介しています。",
+      "whyRecommended": "個人開発において、従量課金APIのコスト抑制やテスト自動化、マルチリポジトリ戦略をここまで突き詰めた知見は希少です。特に、設計判断をADRとして残し、AI（Claude Code）と協働する開発スタイルは、今後の個人開発のロールモデルとして非常に参考になります。",
+      "learningPoints": [
+        "低評価をユーザーに公開せず内部マッチングの精度向上のみに使用することで、情報の非対称性とネガティブな影響を排除している。",
+        "アプリ本体と運営コンソールでDBへのアクセス権限（RLSの有無）を分離し、同じDBを異なる流儀で安全に操作する設計を採用している。",
+        "従量課金APIの利用に対して8層の防壁を設けることで、月間MAUが急増してもコストの上振れを劇的に抑え込んでいる。",
+        "テスト戦略として単体テスト（Vitest）、DBロジック（pgTAP）、E2E（Playwright）の3層構成を採用し、2,200件以上のケースを担保している。",
+        "コードだけでなく、ADRや運営施策などのドキュメントをリポジトリ化し、AIエージェントが文脈を理解して作業できる体制を構築している。"
+      ],
+      "signalsUsed": [
+        "web_development",
+        "nextjs",
+        "backend",
+        "personal_development",
+        "supabase",
+        "adr",
+        "ai_assisted_development"
+      ]
+    },
+    {
+      "articleId": "1d46bb831d3b6a5a9a749b69b5777fc0e72f00d35d6c8637984cd4220864cfe8",
+      "summary": "loading.tsxを廃止した動的ルートで発生する遷移の遅延に対し、Next.jsのuseLinkStatusを活用してUIにフィードバックを実装する方法を解説しています。さらにTailwind CSSの:has()バリアントを組み合わせることで、状態管理を最小限に抑えつつ連打防止を実装するテクニックが紹介されています。",
+      "whyRecommended": "loading.tsxを意図的に排除した環境でのUX改善という、実務的なトレードオフに対する解決策が示されており、Next.jsの最新機能を効率的に活用するための具体的なパターンとして非常に有用です。",
+      "learningPoints": [
+        "Next.js 15.3.0で追加されたuseLinkStatusフックを使用することで、Linkの遷移が保留中（pending）か否かを判定できる。",
+        "useLinkStatusはLinkコンポーネントの子孫でのみ使用可能であり、状態に応じてUIの表示内容を動的に切り替えられる。",
+        "遷移先の事前読み込みが完了しているとpending状態が即座に終了するため、この手法はprefetch={false}と組み合わせるのが最も効果的である。",
+        "連打防止処理を個別にuseStateで管理する代わりに、子要素にdata-pending属性を付与し、親のLinkでTailwindのhas-[[data-pending]]:pointer-events-noneを適用することでCSSのみで制御できる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "react",
+        "typescript",
+        "tailwind_css",
+        "ux_optimization"
+      ]
     }
   ]
 }
