@@ -5706,6 +5706,63 @@
         "tailwind_css",
         "ux_optimization"
       ]
+    },
+    {
+      "articleId": "b9a170faafd5ca9fb6a3093d51833e85ed2869495d8d5acce733da8143c9cd09",
+      "summary": "Next.js 16の個人開発において、Web Vitals計測で見つけたパフォーマンス改善の罠と解決策を解説する実録記事。サーバーのリージョン設定やローディング表示、認証ロジックなどの最適化を通じて、体感速度と数値を両立させるプロセスがまとめられています。",
+      "whyRecommended": "プロダクション環境での深い技術的な計測に基づいた知見であり、特にNext.jsのApp Router利用時に陥りやすい盲点が実例付きで紹介されているため、フロントエンドのパフォーマンスチューニングを目指すエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "Vercelのサーバー関数は明示的に設定しない限り米国東部で動作するため、東京リージョン等へ変更しないとDBとの往復遅延が発生する。",
+        "loading.tsxによるスケルトン表示を導入すると、next/imageの画像読み込みが後回しになりLCPが悪化するため、優先度の高い画像にはpreload属性を付与する必要がある。",
+        "Next.jsのMiddleware（proxy）で毎回認証サーバーへ通信するのではなく、getClaims()を使用して署名をその場で検証することで認証確認のレイテンシを大幅に短縮できる。",
+        "ローカル開発環境と本番環境ではDB通信の速度が大きく異なるため、ローカルの指標だけで最適化の効果を見積もると判断を誤る可能性がある。",
+        "Suspenseやストリーミングの最適化は、計測により『他よりも極端に遅い処理』が特定できた場合にのみ導入すべきであり、無闇に分割すると複雑性が増し予期せぬ挙動を生む。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "web_vitals_measurement",
+        "production_case_study",
+        "deep_technical_explanation",
+        "measured_results"
+      ]
+    },
+    {
+      "articleId": "237159e418cd83aa0e4496a4e7d9eaf558585e83062b8234f4b8635a34492bfe",
+      "summary": "Googleトレンドの非公式RSSフィードを利用したChrome拡張機能の開発事例です。API提供がない外部サービスのデータとどう向き合うか、テスト容易性を高めるアーキテクチャ設計、PiP実装時のブラウザ制約への対処法について詳細に解説されています。",
+      "whyRecommended": "非公式APIの不安定さを前提とした設計判断や、ブラウザAPI特有の挙動に対する泥臭い試行錯誤が言語化されており、実務での複雑な課題解決に直結する知見が得られるためです。",
+      "learningPoints": [
+        "非公式フィードの並び順は検索順位の根拠にならず、実際には新着順に近い挙動を示す場合がある。",
+        "バックグラウンド処理のロジックからchrome.* APIをDIで切り離すことで、Vitestを用いた高速なテストが可能になる。",
+        "Document Picture-in-Pictureにおいてポップアップウィンドウの最小化を利用することで、openerを閉じずにPiPウィンドウを維持できる。",
+        "PiPの requestWindow() はポップアップが開いたあとの直接的なユーザー操作が必要であり、初期化時の挙動には注意が必要である。",
+        "chrome.windows.createやupdateなどの一部APIはmanifest.jsonへの権限宣言が不要であり、最小権限の原則を守りやすい。"
+      ],
+      "signalsUsed": [
+        "chrome_extension_development",
+        "deep_technical_explanation",
+        "architecture_decision_support",
+        "reusable_implementation_pattern",
+        "browser_api_limitations"
+      ]
+    },
+    {
+      "articleId": "b53d7ee35a8bcd25d70bc6943ce083d904efd19c4024c3059fd7f799efe1f508",
+      "summary": "StarWebPRNTを用いたWeb印刷で発生するプリンタの停止やハングアップ問題に対する、信頼性の高い実装手法を解説しています。状態確認からデータ送信のチャンク分割、タイムアウト処理、状態更新の制御まで、現場で安定して運用するための具体的改善策を提示しています。",
+      "whyRecommended": "Webアプリケーションからのハードウェア制御は不安定になりがちですが、実運用での失敗から導き出された「再試行可能にするための設計」が非常に実践的で、同様の課題を持つエンジニアにとって即効性のある知見であるためです。",
+      "learningPoints": [
+        "StarWebPrintTraderの初期化コマンドを利用し、印刷開始前にisCoverOpenやisOffLineなどでプリンタの状態を確認することで、異常な状態での送信を回避できます。",
+        "印刷ジョブを3枚ずつのチャンクに分割して送信し、各完了を待機することで、通信不良時にプリンタ側に残るデータの量を最小限に抑え、復旧を容易にできます。",
+        "ライブラリ標準のtimeoutだけでなく、setTimeoutによる自前のタイムアウト処理を併用することで、応答が一切返らない状況でも20秒で処理を打ち切り、UIのフリーズを防げます。",
+        "印刷成功の判定を呼び出し元にBooleanで返し、全てのデータ送信が正常に完了した後にのみデータベースの注文ステータスを更新することで、印刷の不整合を防げます。"
+      ],
+      "signalsUsed": [
+        "error_handling",
+        "hardware_integration",
+        "timeout_management",
+        "production_case_study",
+        "edge_cases"
+      ]
     }
   ]
 }
