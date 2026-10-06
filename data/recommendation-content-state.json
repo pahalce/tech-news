@@ -5874,6 +5874,69 @@
         "implementation_guide",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "6da0ddd6fc2991941b3934449b9dcc055152379291d04f329f793fc720dcc483",
+      "summary": "決済処理などの非冪等なPOSTリクエストにおける二重送信を防ぐための設計手法を解説した記事です。クライアントが生成するIdempotency-Keyを用い、サーバー側で重複リクエストを適切に処理・抑制する具体的な実装アプローチが学べます。",
+      "whyRecommended": "バックエンドエンジニアとして避けては通れない「リクエストの再送問題」に対して、フロントエンドとサーバー双方の視点から現実的な解決策を提示しています。特にPostgreSQLを用いた安全な予約処理の実装コードは非常に実用的であり、決済システムなどの信頼性が求められる開発現場で即座に役立つ知見であるためです。",
+      "learningPoints": [
+        "通信タイムアウト時などの「成功したか不明な失敗」を考慮し、ボタンのdisabled制御だけでなく、サーバー側でIdempotency-Keyを用いた冪等性の確保が必須である。",
+        "サーバー側の予約処理は、SELECTで確認してからINSERTするのではなく、INSERT ... ON CONFLICT DO NOTHINGを使用してアトミックに行う。",
+        "クライアント側でのキー生成はボタンを押すたびに行わず、注文の意図ごとに一つ作成し、成功レスポンスを得るまで使い回す。",
+        "冪等キーを削除する際、決済が完了している可能性を考慮し、タイムアウト時はキーを削除せず「処理中」の状態を維持して照会に備える。",
+        "Idempotency-Keyの標準化ドラフトは失効しているが、処理中の409エラーや内容不一致時の422エラーなど、定義された振る舞いはAPI設計の参考として有効である。"
+      ],
+      "signalsUsed": [
+        "backend",
+        "web_development",
+        "postgresql",
+        "idempotency_design",
+        "payment_systems",
+        "implementation_guide"
+      ]
+    },
+    {
+      "articleId": "19f26acd714af077b72cd16d2646d34ed22be4a2b5084ed40526774c563dd89a",
+      "summary": "GitHub Actionsのキャッシュ容量不足を解消するため、上限引き上げと不要キャッシュの自動削除ワークフローを実装した事例記事です。CIの実行時やプルリクエストのクローズ時に、GitHub CLIを用いて不要なキャッシュを適切に削除する方法を解説しています。",
+      "whyRecommended": "GitHub Actionsのキャッシュ管理はCI高速化において重要ですが、公式の削除ロジックだけでは不十分なケースが多いです。本記事は実運用で遭遇する「競合」や「削除失敗」といったエッジケースを考慮した安全な削除スクリプトを提示しており、DevOpsの実践知として非常に質が高いです。",
+      "learningPoints": [
+        "GitHub Actionsのキャッシュ上限（デフォルト10GB）は、組織設定の上位値に依存するため、リポジトリ側で変更する前に組織レベルの権限確認が必要。",
+        "GitHub CLI（gh cache list）のデフォルト上限値は30件と少ないため、大規模リポジトリでは--limitフラグで取得件数を増やす必要がある。",
+        "ワークフローのシェルではデフォルトでpipefailが無効なため、コマンドの失敗を検知して停止させるには明示的にset -euo pipefailを設定する。",
+        "同じブランチへの連続pushで先発のジョブが削除されないよう、concurrency設定で実行を直列化するか、未完了のジョブがないかを確認してから削除を実行する。",
+        "クローズ済みプルリクエストや削除済みブランチのキャッシュを消す際は、CIの実行IDを使って自分自身のキャッシュを誤削除しないよう注意が必要。"
+      ],
+      "signalsUsed": [
+        "github_actions",
+        "github_cli",
+        "cache_cleanup_strategy"
+      ]
+    },
+    {
+      "articleId": "c1bf80139ee3f824ef382953ca586805040e272f2ed19017fe872c3bc18a06c3",
+      "summary": "複数RDBMSの構文差分を比較するWebツールを構築した事例。データ構造をTypeScriptの型で一元管理し、対応・非対応の情報をヘルパー関数で強制することでメンテナンス性を高めています。",
+      "whyRecommended": "DB種別の増減や仕様変更に対して強い堅牢なデータ設計手法が学べるため。個人開発ツールでありながら、実務で事故を防ぐためのUX上の工夫（代替手段の提示など）がコードレベルで組み込まれている点が非常に優れています。",
+      "learningPoints": [
+        "DBプラットフォームを追加した際に型エラーで未定義箇所を検知できるよう、4DB分の情報を1つの型定義（SQLDialectEntry）に集約する。",
+        "対応・非対応の表現を統一しつつ、非対応時には代替手段（代替構文）を必ず記載するルールをヘルパー関数で強制する。",
+        "詳細な仕様比較とは別に、本質的な注意点だけを1行でまとめたcomparisonNoteフィールドを設けて結論を先回りして伝える。",
+        "50〜100件程度のデータ規模であれば、検索対象を結合してincludesで判定する手法でもパフォーマンス上の懸念はほとんどない。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "backend",
+        "architecture_explanation",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "code_examples",
+        "reusable_implementation_pattern",
+        "developer_productivity",
+        "specific_problem",
+        "concrete_technology_named",
+        "database_schema_design",
+        "typescript_type_safety",
+        "personal_tooling_development"
+      ]
     }
   ]
 }
