@@ -5817,6 +5817,63 @@
         "production_case_study",
         "tradeoff_analysis"
       ]
+    },
+    {
+      "articleId": "f565fe5736ad9fb4f8ece23a232d5bf99c0262ba6692d41d85ab43aa2c4a95fe",
+      "summary": "Next.js App Routerを用いた大規模プロジェクトにおいて、AIへの指示が明確化されるようなディレクトリ設計の重要性を解説した記事です。実サービスでの経験を基に、コンポーネント構成やディレクトリの役割分担、状態管理の最適解を提示しています。",
+      "whyRecommended": "AIを活用した開発フローを前提に、コードの配置ルールを「判断の余地がない」レベルまで厳格化する考え方は、モダンな開発現場において非常に実践的であり、保守性と生産性を両立させるための優れた知見が含まれているためです。",
+      "learningPoints": [
+        "ディレクトリ構造をルール化することで、AIがファイルを配置する際に迷わず、短い指示でも正確な実装を引き出せるようになる。",
+        "index.ts（バレルファイル）を禁止することで、import文を見ただけでファイルの実体場所が明確に把握できる。",
+        "Next.jsのApp Routerでは、appディレクトリをルーティング定義のみに留め、実装をすべてsrc配下に分離することでフレームワークのルールと設計ルールが衝突するのを防ぐ。",
+        "サーバー専用の処理にはserver-onlyパッケージを併用し、誤ってクライアントサイドで呼び出した場合にビルド時点でエラーを検知できる構成にする。",
+        "Server Componentの普及により、ブラウザ側で保持すべき状態が減ったことで、大規模な状態管理ライブラリが不要になり、必要に応じてuseSyncExternalStoreで簡潔に代用できる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "web_development",
+        "ai_assisted_development",
+        "server_components"
+      ]
+    },
+    {
+      "articleId": "b6292e518871cd249fc109f025e812eb78842c03f99699bd0cf4cb02a5da594b",
+      "summary": "UI描画における「端数スケーリング（fractional scaling）」が引き起こす表示ズレや滲みの原因と、その本質的な困難さについて解説しています。UIライブラリ実装者および利用者がどのようにこの問題と向き合い、回避策を講じるべきかを実体験に基づいてまとめています。",
+      "whyRecommended": "UI開発において避けられない物理ピクセルの丸め問題を理論と実務の両面から深く掘り下げており、クロスプラットフォームなUI設計に携わるエンジニアにとって技術的な視座を高める必読の内容だからです。",
+      "learningPoints": [
+        "論理ピクセルにスケールを掛けた値を個別に丸めると、要素同士の境界に隙間やズレが生じる原因になる。",
+        "UI描画の解決策には、境界を共有するShared Edge方式と、論理サイズ自体を調整する事前丸め込み方式があるが、いずれも完璧ではない。",
+        "AppleのOSは整数スケーリングを優先し、端数が必要な場合は一旦高解像度で描画してから縮小することで視覚的なぼやけをハードウェアでカバーしている。",
+        "UIライブラリ利用時は、スケール値によって描画結果が変わる可能性があることを前提とし、SVGなどのベクター素材を活用する。",
+        "ビットマップではなくCanvasやWebGLを使用する場合は、物理ピクセル単位でバッファを確保することで描画の不整合を回避できる場合がある。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "edge_cases",
+        "real_world_experience",
+        "architecture_decision_support",
+        "specific_problem"
+      ]
+    },
+    {
+      "articleId": "77dd88ebd475a78dc28873d0b67b63891821b9edfdcd50ccb2b1ec2a323182bb",
+      "summary": "ReactおよびTypeScriptプロジェクトにおける、ESLint v9のFlat ConfigとPrettierの最適な併用設定を解説したガイドです。ツールの責務を明確に分担し、設定の競合を回避しつつCIやエディタで効率的に運用する手順をまとめました。",
+      "whyRecommended": "React開発においてeslint-plugin-prettierの使用を避け、本来の役割分担に基づいたシンプルかつモダンな構成を推奨している点が非常に実践的で、設定の破綻を防ぐためのベストプラクティスが凝縮されているため。",
+      "learningPoints": [
+        "ESLint v9のFlat Configにおいて、eslint-config-prettierは必ず配列の最後に配置することで、整形系ルールの競合を無効化できる。",
+        "React 17以降の新JSX Transform環境では、react/react-in-jsx-scopeルールをoffにすることで不要なimportエラーを防げる。",
+        "lint(品質検査)とformat(整形)はeslint-plugin-prettierで統合せず、コマンドを別々に分けることでパフォーマンスと運用の明確さを維持できる。",
+        "VS Code設定にてeditor.codeActionsOnSaveでsource.fixAll.eslintを有効にすると、保存時に自動で品質改善の修正を適用できる。"
+      ],
+      "signalsUsed": [
+        "eslint_flat_config",
+        "prettier_integration",
+        "vs_code_settings",
+        "implementation_guide",
+        "actionable_steps"
+      ]
     }
   ]
 }
