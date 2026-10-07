@@ -5937,6 +5937,65 @@
         "typescript_type_safety",
         "personal_tooling_development"
       ]
+    },
+    {
+      "articleId": "b24bbf6d858089731565f5d147e29e70dfa45893aee0f94efef3ba8396cdb3ea",
+      "summary": "Next.jsアプリケーションのパフォーマンス向上のため、初期JSの読み込み量を削減する手法を解説した実践的な事例紹介です。単なる動的インポートの導入だけでなく、コンポーネントのマウント戦略や計測時の技術的課題、遅延読み込みに伴うUXの副作用への対策まで詳しく網羅されています。",
+      "whyRecommended": "フロントエンドのバンドルサイズ削減という定番の課題に対し、単なる理論に留まらない、実務で発生する落とし穴（アニメーションの挙動やデプロイ後のチャンク欠損エラーなど）への具体的な対処法がまとめられているため、中級以上のエンジニアにとって即戦力の知見となります。",
+      "learningPoints": [
+        "クライアントコンポーネントが不要な場合、usePathname等のフックをプロパティ渡しに書き換えるだけでサーバーコンポーネント化し、bundleサイズを大幅に削減できる。",
+        "Next.jsのdynamic()はレンダー時点で読み込みが走るため、openフラグでの条件付きレンダリングと組み合わせる際は、マウント制御を別途行う必要がある。",
+        "ダイアログの遅延ロード時に閉じアニメーションを維持したい場合、propsから導出した状態を用いて「初回開封時まで未マウント、以降はマウント維持」の状態を管理するのが効果的である。",
+        "遅延ロード導入により、デプロイ後のチャンクファイル消失によるエラーがページ全体に波及するため、ダイアログ単位でエラー境界を設けてページ全体のエラーを防ぐ必要がある。",
+        "Turbopack環境では既存のbundle-analyzerが動作しないため、manifestファイルのチャンク構成を分析してバイト数を算出する方法が有効である。"
+      ],
+      "signalsUsed": [
+        "performance",
+        "nextjs",
+        "frontend",
+        "javascript_bundle_optimization",
+        "next_js_dynamic_import",
+        "react_server_components"
+      ]
+    },
+    {
+      "articleId": "7db1a7f3e3784d3b7e271bd53c0449d9653552d055063b08c4a8ff591b2a73b5",
+      "summary": "TypeScriptライブラリのビルド環境をtsupからtsdownへ移行する際の検証プロセスをまとめた記事です。ビルドの成功だけでなく、既存のパッケージ契約（ファイル構成や型定義など）を維持することの重要性に焦点を当てています。",
+      "whyRecommended": "ライブラリメンテナンスにおいて、単なるビルドツールの置き換えに留まらず、利用者の環境を壊さないためのテスト戦略やパッケージ構造の維持方法が具体的に示されており、OSSメンテナーにとって非常に実践的で質の高い知見が得られるためです。",
+      "learningPoints": [
+        "ビルドが正常終了しても生成物の拡張子が変更される場合があるため、既存のパッケージ契約（exports等の定義）を維持するにはoutExtensionsの設定が必要である。",
+        "ライブラリの互換性維持には、ソースコードのテストだけでなく、実際にnpm packしたパッケージを一時的なプロジェクトにインストールして動作確認する「smoke test」が不可欠である。",
+        "tsupからtsdownへの移行時、ビルド設定ファイルは.mts拡張子にすることでNode.jsの警告を回避しつつ適切に再解釈させることができる。",
+        "tsdownはパッケージのタイプやフォーマットに応じて安全な拡張子を選択するが、これが既存公開済みのパッケージにとっては破壊的変更となる可能性がある。",
+        "新しいビルドツールへの移行によってビルド時間が短縮されても、artifact（成果物）のファイルサイズは逆に増加する場合があるため確認が必要である。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "web_development",
+        "production_case_study",
+        "implementation_guide",
+        "npm_package_contract_preservation",
+        "tsup_to_tsdown_migration"
+      ]
+    },
+    {
+      "articleId": "c6971ebf65c7dc790a4cdeb49b2bc59e70c040012a8b4336a6685c6c170f6a1f",
+      "summary": "Next.jsのServer ActionsでDBを更新しても画面が自動で同期されない原因と解決策を解説しています。Next.jsは関数内のDB操作を検知できないため、revalidatePathを用いて明示的に更新を伝える必要があります。",
+      "whyRecommended": "Next.jsのApp Routerにおけるキャッシュとデータの整合性に関する典型的な落とし穴を、実体験に基づき技術的視点から深く掘り下げているためです。",
+      "learningPoints": [
+        "Next.jsはServer Actions内でのDB操作を自動的に検知して画面を再描画することはない。",
+        "revalidatePathを呼び出すと、サーバー側は更新後のデータをRSCペイロードとしてレスポンスに同梱する。",
+        "revalidatePath使用時に画面が更新されるのは、クライアント側でGETリクエストが再送されたからではなく、POSTのレスポンス自体が更新されたためである。",
+        "Server Actionsは単なる関数呼び出しであり、データの変化をフレームワークに教えるためには明示的な宣言が必要となる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "server_actions",
+        "revalidate_path",
+        "rsc_payload",
+        "deep_technical_explanation",
+        "real_world_experience"
+      ]
     }
   ]
 }
