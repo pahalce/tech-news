@@ -6054,6 +6054,65 @@
         "tradeoff_analysis",
         "ssd_wear_analysis"
       ]
+    },
+    {
+      "articleId": "3dd9d78e8b19e4ddb189f6a6e74e2558b27b3185c80ec2477875ee04cd3fc913",
+      "summary": "Next.jsのApp Router環境からCloudflareのvinextへSSG構成で移行した際の実践記録です。移行時の設定変更から、VitestやStorybook等の周辺ツールで発生した競合問題の解決策までを網羅しています。",
+      "whyRecommended": "Next.jsからViteベースの環境へ移行する際の具体的なハマりどころと、ランタイム（Node.js/Cloudflare Workers）の切り分けといった深い知見がまとめられており、実用性が非常に高いため。",
+      "learningPoints": [
+        "Cloudflare PagesでのSSG配信であれば、必ずしもCloudflare Workersランタイムを組み込む必要はなく、Viteの設定次第でNode.js上のファイルシステムを用いたビルドを維持できる。",
+        "ルートのvite.config.tsはVitestやStorybookにも読み込まれるため、vinext()をそのまま使うと重複エラーが発生する。Vitestの場合はmodeで、Storybookの場合はviteConfigPathを指定することでプラグインの干渉を回避できる。",
+        "package.jsonに\"type\": \"module\"が導入されることで、従来のCommonJS形式の設定ファイルが読み込めなくなる場合がある。その際は拡張子を.cjsに変更することで解決できる。",
+        "StorybookのViteビルダーがルートのvite.config.tsを自動マージする挙動により、App Routerのコンテキストエラーが発生することがある。存在しないパスを指定してルートの設定読み込みを無効化し、viteFinal内で必要な設定を個別に足すのが有効な対処法となる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "vite",
+        "vinext",
+        "cloudflare_pages",
+        "storybook",
+        "vitest",
+        "vanilla_extract",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "e6a4c83e3f063167fa0e7a190ed2cf181c693754cc4cfc0a363dfd119fb18056",
+      "summary": "irpcは、Goのインターフェースから型付きRPCコードを自動生成する軽量なライブラリです。gRPCなどのIDLを使用せず、Goの標準的なインターフェース定義とio.ReadWriteCloserを満たす接続を用いることで、TCPやWebSocketを透過的に扱えます。",
+      "whyRecommended": "Goで完結するプロジェクトにおいて、プロトコルバッファの手間を省きつつ、コードベースの一貫性を保ったまま双方向通信を実現するアプローチとして非常に効率的だからです。",
+      "learningPoints": [
+        "サービスIDはインターフェース定義のハッシュから生成されるため、メソッドの追加やコメント変更だけで別サービスとして扱われる。",
+        "irpcが要求するのはio.ReadWriteCloserのみであり、net.ConnやWebSocketのラッパーをそのまま利用して通信路を確立できる。",
+        "リクエスト番号による非同期応答システムにより、一つのコネクション内で同時に複数のリクエストを処理・呼び出しが可能である。",
+        "デフォルトのワーカー枠（同時実行数）に上限があるため、複雑な呼び返し設計では受信ループがブロックしないよう注意が必要である。",
+        "エラーは文字列として送られるため、型安全なエラーハンドリングが必要な場合は、戻り値に型を含めたインターフェース設計を行うのが望ましい。"
+      ],
+      "signalsUsed": [
+        "golang",
+        "rpc",
+        "irpc",
+        "websocket",
+        "implementation_guide",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "1d9c44d49181f62c34bd74f6b0d9432c7e577afe61d77464832aed072c1effa4",
+      "summary": "本書は、Reactプロジェクトにおけるコンポーネントの責務分離や状態管理のベストプラクティスを解説する設計ガイドです。保守性を高めるための具体的な原則と、過度な抽象化を避けるための判断基準を体系的に学べます。",
+      "whyRecommended": "React初学者から中級者へステップアップする過程で直面する「コンポーネントが肥大化する」「propsが多すぎる」といった悩みに対し、現場で即座に応用可能な具体的指針が示されているためです。",
+      "learningPoints": [
+        "コンポーネントの責務を最小化するため、データ取得などのロジックはカスタムフックへ切り出し、ビューと分離する。",
+        "propsが多すぎる場合はオブジェクトとしてまとめたり、childrenコンポジションを活用することでインターフェースを整理する。",
+        "状態は可能な限りそれを使用する場所の近くに配置し、複数コンポーネントで共有が必要な場合のみ親へリフトアップする。",
+        "他の値から算出可能な値はstateとして保持せず、レンダリング時に計算して導出することで同期ズレを防ぐ。",
+        "共通化による抽象化は、実際に3回同じパターンが出現してから行う「Rule of Three」を基準にする。"
+      ],
+      "signalsUsed": [
+        "react",
+        "component_design_principles",
+        "code_maintainability",
+        "developer_productivity"
+      ]
     }
   ]
 }
