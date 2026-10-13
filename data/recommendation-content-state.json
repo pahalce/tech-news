@@ -6168,6 +6168,63 @@
         "code_examples",
         "database_design"
       ]
+    },
+    {
+      "articleId": "b9de875b9b2f1564b9925f577eb40d5b4beca8583d73f8f9c3827a38bf3a38e6",
+      "summary": "データベースにおける楽観ロックと悲観ロックの仕組みと使い分けについて、PostgreSQLを例に解説した記事です。フロントエンド開発者が陥りやすい「読み取りと書き込みの間の競合」を防ぐための設計判断基準がまとめられています。",
+      "whyRecommended": "バックエンド開発において不可欠な排他制御の概念を、具体的なコード例と実務的な判断軸に基づいて解説しており、設計時の思考プロセスが明確に理解できるためです。",
+      "learningPoints": [
+        "悲観ロックは「SELECT ... FOR UPDATE」で行を確保して後続を待たせる一方、楽観ロックは「version列」を用いて更新時に整合性を確認し、失敗させる。",
+        "ロックを検討する前に、条件付きUPDATE（WHERE句で条件を付与する）だけで競合を回避できないかを確認する。",
+        "管理画面での編集のように人間の操作時間が挟まる場合は、ロックを保持し続けられないため楽観ロックを選択する。",
+        "悲観ロックを使用する際、トランザクション内で外部API呼び出し等の待機時間が発生するとDB接続を枯渇させる原因になるため注意が必要である。",
+        "ロックの実装時は、更新件数が0件の場合を正しくハンドリングし、ユーザーに適切なエラーメッセージを返す必要がある。"
+      ],
+      "signalsUsed": [
+        "architecture_explanation",
+        "tradeoff_analysis",
+        "code_examples",
+        "architecture_decision_support",
+        "postgresql_specific"
+      ]
+    },
+    {
+      "articleId": "937dd8ea66ec189165aa8d5f6c1889d3f20b73e9af7ed1fbf2554c1812dccc88",
+      "summary": "GitHub ActionsからKubernetes上のAIエージェントを呼び出す際の認証を、従来の静的なAPIキー方式からOIDCを用いたシークレットレスな構成へ刷新する手法を解説した記事です。Keycloakを活用して短命な入館証を発行し、GitHubのワークフローファイルやブランチ条件と組み合わせた厳格な権限管理を実現しています。",
+      "whyRecommended": "セキュリティリスクの高い「外部からKubernetesへのAIエージェント呼び出し」において、OIDCとWorkload Identityによる認証のベストプラクティスが具体的に実装ベースで学べるため。特に、トークンによる認証だけでなく、RBACによる権限最小化や条件分岐の設計思想が非常に実践的です。",
+      "learningPoints": [
+        "GitHub ActionsのOIDCトークンにjob_workflow_refを含める設定を行うことで、ワークフロー単位での粒度の細かい認証が可能になる。",
+        "KeycloakのFederated Client Authenticationを使用し、APIキーを保存せずに外部発行のJWTでクライアントを認証できる。",
+        "PRコメントからの実行権限を制御する場合、GitHubイベントのペイロードや条件判定を常にmainブランチのワークフローで実行させることで、PR作成者による不正なコード改変を防げる。",
+        "LLMエージェントへの指示はプロンプトインジェクションのリスクがあるため、最終的な権限制御はエージェント側のプロンプトではなく、KubernetesのRBACおよびネットワークポリシーで行うのが安全である。",
+        "GitHub Actionsのトークン再利用を防ぐために、OIDCのjtiクレームを活用した検証を組み込むことが重要である。"
+      ],
+      "signalsUsed": [
+        "security",
+        "devops",
+        "ai_engineering",
+        "kubernetes_security",
+        "github_actions_oidc",
+        "keycloak_federated_auth"
+      ]
+    },
+    {
+      "articleId": "fc9cdfe7c4a3662444973532bdff5f82363d4c262a265ef6466c1ffaaaa1366d",
+      "summary": "個人開発者がセキュリティの脆弱性を自己点検するために、OWASP Top 10でリスクを把握し、ASVSで具体的な実装を検証する実践的なアプローチがまとめられています。実際に253項目をセルフチェックした経験に基づき、コード修正だけでなく設計や設定の見落としといった課題が可視化されています。",
+      "whyRecommended": "セキュリティに対する漠然とした不安を、公開されている国際標準を活用して具体的なタスクに落とし込む方法論が非常に参考になります。個人開発者が一人で品質を担保するための現実的なロードマップとして優れています。",
+      "learningPoints": [
+        "OWASP Top 10はリスク認識のための文書であり、ASVSは要件ごとに検証手順が示された点検用の基準であるため、両者を組み合わせて活用する。",
+        "ASVSのような基準を使ってドメインごとに点検することで、機能開発では見落としがちな権限チェックやヘッダー付与などの不備を発見できる。",
+        "フレームワークをアップデートや移行する際は、以前のバージョンでデフォルト有効だった制限が維持されているか、別途再確認が必要である。",
+        "開発の初期には備わっていたはずの保護機能も、機能追加や構成変更の過程で外れてしまうケースがあるため、定期的にチェックリストを回すことが重要である。"
+      ],
+      "signalsUsed": [
+        "owasp_asvs",
+        "owasp_top_10",
+        "personal_development",
+        "deep_technical_explanation",
+        "actionable_steps"
+      ]
     }
   ]
 }
