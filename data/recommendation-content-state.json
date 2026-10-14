@@ -6279,6 +6279,67 @@
         "security",
         "production_case_study"
       ]
+    },
+    {
+      "articleId": "15f9dab5c7c70927ad8214eb11e6c73515f3a0b5b53fc606ecb52a7869145609",
+      "summary": "Next.js 13.2環境下でreact-router 6.15以降へアップデートした際に発生した、ビルド後の画面真っ白問題の調査録です。SWC minifierがenum定義を誤ってtree shakingする不具合が原因であり、その回避策とCIでの検知方法を解説しています。",
+      "whyRecommended": "本番環境でだけ発生する難解なバグのトラブルシューティングとして極めて実践的です。単なるライブラリ依存の問題に留まらず、ビルドアーティファクトの解析からE2Eでの検証ステップまでを網羅しており、フロントエンドのデバッグスキルを高める良質なケーススタディであるためです。",
+      "learningPoints": [
+        "Next.js 13.2等の古いSWC minifierは、react-router 6.15以降で使用されている/*#__PURE__*/付きの即時関数を伴うenum定義を誤って削除し、ReferenceErrorを引き起こす可能性がある。",
+        "ビルド後の挙動異常は、next.config.jsでswcMinify: falseを設定しTerserを利用することで回避できる場合がある。",
+        "CIでnext build後の成果物をheadless Chromeで起動し、コンソールエラーや特定のDOMの有無を確認することで、本番環境のビルドエラーを早期に検知できる。",
+        "React Routerのバージョンアップによりenumの出力形式が変更され、それがMinifierのバグを踏むトリガーとなった。",
+        "JavaScriptのビルド成果物において「定義だけが消えて変数名だけが残る」場合、tree shakingの不完全性が疑われる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "typescript",
+        "devops",
+        "swc_minifier_bug",
+        "smoke_testing",
+        "github_actions"
+      ]
+    },
+    {
+      "articleId": "2e2ebfc7f76a1b59aaece7d0d32286cbfc42ddc770b062ba2c107711511f28c3",
+      "summary": "Next.jsのPages Router環境において、WebpackのsplitChunks設定を調整することでJavaScriptの分割数を大幅に削減し、CloudFrontのリクエスト数制限を回避した事例です。表示速度への影響を許容範囲内に抑えつつ、ビルド成果物の構成を最適化する手法を解説しています。",
+      "whyRecommended": "CloudFrontのコスト最適化という実務的な課題に対し、Next.jsの内部構造を理解した上で具体的なWebpack設定による解決策を提示している点が非常に実践的です。パフォーマンスとリクエストコストのトレードオフを論理的に分析しており、インフラコストに悩むエンジニアにとって有益な技術選定の参考になります。",
+      "learningPoints": [
+        "Next.jsのデフォルトのsplitChunks設定はページごとのコード最適化を優先するため、リクエスト数が増加しやすい特性がある。",
+        "next.config.js内でcacheGroupsを個別に追加する際は、設定を丸ごと上書きせずに特定のグループのみを拡張することでリスクを最小化できる。",
+        "リクエスト数を減らすために共有コードを一本化すると、初回のロードサイズが増加するため、パフォーマンスとのトレードオフを許容する必要がある。",
+        "ビルド成果物の構成が意図通りであることを維持するために、build-manifest.jsonを解析してCIで本数チェックを自動化するのが有効である。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "webpack_customization",
+        "cloudfront_cost_optimization",
+        "production_case_study",
+        "tradeoff_analysis",
+        "real_world_experience",
+        "measured_results"
+      ]
+    },
+    {
+      "articleId": "fcd67561303ad25d9931cc9d0eb5522174d45a480c21fbffc713243a96183af0",
+      "summary": "Amazon SQSにおけるロングポーリングの仕組みと、Java SDK 2.xを用いた具体的な実装方法を解説しています。空レスポンスの削減やAPI呼び出しの最適化といったパフォーマンス向上に不可欠な知識が網羅されています。",
+      "whyRecommended": "SQSを扱うバックエンド開発者にとって、リソースの無駄を省きコストを最適化する実践的な設定方法がコード例付きで解説されており、実務で即座に役立つ内容だからです。",
+      "learningPoints": [
+        "ReceiveMessageRequestのwaitTimeSecondsに0より大きい値（最大20秒）を設定することでロングポーリングが有効になります。",
+        "メッセージがない場合、指定時間待機するだけでなく、待機中にメッセージが到着すれば即座にレスポンスが返されます。",
+        "クライアント側のHTTPタイムアウト設定は、SQSの待機時間よりも長い値に設定する必要があります。",
+        "複数キューを扱う際は、直列で待機させず、キューごとに独立したスレッドや非同期処理で待機させる構成が推奨されます。",
+        "ロングポーリングの設定は、リクエスト単位だけでなくキュー属性のReceiveMessageWaitTimeSecondsでも指定可能です。"
+      ],
+      "signalsUsed": [
+        "aws_sqs",
+        "java_sdk_v2",
+        "long_polling",
+        "performance",
+        "implementation_guide"
+      ]
     }
   ]
 }
