@@ -6340,6 +6340,66 @@
         "performance",
         "implementation_guide"
       ]
+    },
+    {
+      "articleId": "fa36089e8961266e45901fdcd0c49c07b7062c5544efc70d13e8266b2241b0b8",
+      "summary": "個人開発SaaSにおいて高額なチャットツールを導入する代わりに、Supabaseの機能を活用して問い合わせチャットを自前実装した事例です。コストを抑えつつ、ユーザー情報とのシームレスな統合やUIの完全なカスタマイズを実現する設計とセキュリティ対策が解説されています。",
+      "whyRecommended": "コスト最適化と高いUXを両立させたい個人開発者にとって、具体的なDB設計やRLSによる権限管理の実装指針は非常に実践的であり、そのまま設計パターンとして取り入れやすいためです。",
+      "learningPoints": [
+        "user_idにUNIQUE制約を付与し、find-or-create処理時に競合が発生しても再取得へフォールバックさせることで安全にスレッドを作成できる。",
+        "RLSのポリシーにおいて、クライアント側から送信されたフラグの値をDB側の真の権限データと照合することで、一般ユーザーによる管理者権限の偽装を確実に防げる。",
+        "メッセージ投稿時にフロントエンドでスレッドの未読フラグや更新日時を更新するのではなく、DBのAFTER INSERTトリガーを使用することで、データの不整合を防ぎ処理をアトミックに実行できる。",
+        "運営者フラグの更新を防ぐトリガーを設置することで、ユーザーがAPI経由で自身の権限を勝手に書き換えるリスクを遮断できる。"
+      ],
+      "signalsUsed": [
+        "architecture_explanation",
+        "implementation_guide",
+        "production_case_study",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "code_examples",
+        "reusable_implementation_pattern",
+        "supabase_realtime",
+        "database_security",
+        "cost_optimization"
+      ]
+    },
+    {
+      "articleId": "8b1319a57fcfde59b932d3a1396c8c7565507829ea9ab34a70707a8eec9c418d",
+      "summary": "Node.jsとPiscinaを用いたAPIのパフォーマンスチューニングにおいて、Workerやプロセス数を単純に増やすのではなく、ボトルネックを正確に特定する手順を解説した技術記事です。負荷試験と計測データに基づき、キュー待ち（waitTime）とタスク実行時間（runTime）を分解して分析することの重要性を説いています。",
+      "whyRecommended": "現場で発生しがちな「なんとなくWorkerを増やす」という安易なパフォーマンス改善を排し、観測可能な指標に基づいた論理的なキャパシティプランニングの手法が学べるためです。実務で役立つトラブルシューティングの思考プロセスが網羅されています。",
+      "learningPoints": [
+        "WorkerやPM2のプロセス数を増やしても、サーバー全体の物理的なCPU計算能力自体は増えない。",
+        "APIの遅延が「実行前のキュー待ち」によるものか、「実行中の処理遅延」によるものかをwaitTimeとrunTimeで切り分ける。",
+        "Workerの増設はキュー待ちの改善には有効だが、CPUが飽和している状況ではかえってリソース競合を招く可能性がある。",
+        "負荷試験で最適な構成を判断する際は、単発の結果ではなく、複数回の再計測による再現性と安定性を評価する。",
+        "非同期I/Oの待機はPiscinaのWorkerを専有させる必要がなく、CPUを消費し続けるタスクとは根本的に対処方針が異なる。"
+      ],
+      "signalsUsed": [
+        "node_js",
+        "performance",
+        "tradeoff_analysis",
+        "measured_results",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "3994679faf6eb0f8451e75e04bea56f099c761694c4a4ff9f1f35dc49ddc737b",
+      "summary": "決済代行会社（PG）をToss PaymentsからNicePayへ、サービスを止めることなく安全に移行した実例を紹介する記事です。フロントエンドを1人で担当する中で、将来的なリスク分散を見据えた設計や切り替え戦略を解説しています。",
+      "whyRecommended": "ECサイト運営において重要な「決済サービス停止」という危機に際し、特定のPGに依存しない堅牢な設計と、デプロイと切り替えタイミングを分離した運用手法は、他のフロントエンド開発者にとっても非常に実践的な知見だからです。",
+      "learningPoints": [
+        "決済プロバイダの切り替えスイッチをフロントエンドのビルド環境ではなく、バックエンドのモール情報APIに持たせることでデプロイなしの切り替えを実現した。",
+        "複数のPGのSDKをあらかじめ読み込んでおき、分岐を「決済ボタンクリック時」の1か所に集約することで、複雑な条件分岐がUIコンポーネントに混入するのを防いだ。",
+        "バックエンド側でPGごとの結果受け取り仕様を吸収し、フロントへは共通のクエリパラメータで結果を渡す設計により、結果画面のロジックをPG非依存に保った。",
+        "署名用の秘密鍵をハードコードせず、最初から環境変数で管理すべきという決済機能特有の運用ルール。",
+        "Web Crypto APIはHTTPS/localhost環境以外では動作しないため、WebViewなどの非セキュアな環境への対応が必要な場合はライブラリ選定に注意が必要である。"
+      ],
+      "signalsUsed": [
+        "zero_downtime_migration",
+        "payment_gateway",
+        "adapter_pattern",
+        "production_case_study"
+      ]
     }
   ]
 }
