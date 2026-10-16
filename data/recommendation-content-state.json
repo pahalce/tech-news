@@ -6400,6 +6400,61 @@
         "adapter_pattern",
         "production_case_study"
       ]
+    },
+    {
+      "articleId": "24079640a8b83f9f94bbade01a634cb9260e184fdf07b488b006a2d325043802",
+      "summary": "レガシーなPHP環境において、Viteを活用してTypeScriptやSCSS、TSXを効率的に管理するディレクトリ構成と設計戦略を解説する記事です。テンプレートディレクトリ単位でフロントエンド資産を対応させることで、保守性を高める具体的なアプローチを紹介しています。",
+      "whyRecommended": "モダンなフロントエンド開発環境とレガシーなバックエンド環境を共存させる際の「現実的な落とし所」が、コード例と共に丁寧に解説されているため、実務で同様の構成に悩む方に最適な知見です。",
+      "learningPoints": [
+        "PHPのテンプレートディレクトリ名とTypeScript・SCSSのエントリーポイント名を一致させることで、修正箇所を特定しやすくする。",
+        "TypeScriptでは機能を「modules（実装）」と「library（初期化・呼び出し）」に分けることで、共通処理の管理を効率化する。",
+        "Reactは全体導入ではなく、特定のUI機能に対してroot単位で部分的にレンダリングする戦略をとる。",
+        "非同期通信を行うReactコンポーネントは、API通信層・状態管理（Hooks）・UIコンポーネントを分離し、SkeletonやError表示を含めた状態をRoot単位で管理する。",
+        "SCSSはcomponentsとmodulesに粒度を分け、共通デザインはmixin等で定義しつつ、ページ固有のレイアウトは専用ファイルで管理する。"
+      ],
+      "signalsUsed": [
+        "legacy_system_modernization",
+        "vite_configuration",
+        "folder_structure_strategy"
+      ]
+    },
+    {
+      "articleId": "300e527f02e1601e50ce307382aafc2013e84b2bf41d2cb6833c0633622ea7d8",
+      "summary": "Next.jsとMDXで構築されたブログの全110記事をPageSpeed Insights APIでモバイル計測したところ、パフォーマンススコア80以上が皆無という実態が判明しました。デスクトップとモバイルの評価乖離の原因と、限られたリソースで効率的に改善を進める戦略を解説しています。",
+      "whyRecommended": "自身のサイトで実測データを取得し、なぜローカルのデスクトップ評価と実際のモバイル環境で大きな乖離が生まれるのかという技術的背景を、実体験ベースで深く学べるためです。",
+      "learningPoints": [
+        "PageSpeed Insights APIのmobile設定はMoto G Powerをシミュレートしており、CPUスロットリングによってJSのパース時間がデスクトップ環境より大幅に遅延します。",
+        "MDXのカスタムコンポーネントが全ページで読み込まれるとJSバンドルが肥大化するため、動的インポートやServer Componentへの移行が有効です。",
+        "LCP要素となる画像にpriority属性を付与していない場合、読み込み順序が遅れモバイルスコアを大きく損ないます。",
+        "全記事を均一に改善するのではなく、SEO流入ターゲットとなる記事を絞り込み、重点的にパフォーマンスを最適化する戦略が現実的です。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "web_development",
+        "lighthouse_analysis",
+        "measured_results",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "18b5150b87d31e11c1cf736430f8ab5a7976f2437a6ae708ebf4a8036e5983bf",
+      "summary": "外部ライブラリに依存せず、Node.js標準機能のみで環境変数の整合性をアプリ起動前に検証するTypeScriptテンプレートを紹介しています。設定ファイルの読み込み、検査、型変換を1箇所に集約し、不正な設定を即座にエラーで弾く堅牢な仕組みを解説しています。",
+      "whyRecommended": "環境変数の設定ミスによるランタイムエラーを防ぐための、軽量で実用的な構成管理パターンが学べるためです。ライブラリ依存を最小化したいプロジェクトや、基本的なバリデーションフローを構築したい開発者に非常に有益です。",
+      "learningPoints": [
+        "Node.js標準のutil.parseEnv()を利用することで、外部ライブラリ不要で.envファイルをオブジェクト化できる。",
+        "環境変数のバリデーションはアプリ起動直前のプリフライト工程で行い、Object.freeze()で設定をイミュータブル化すると安全。",
+        "未知のキーを拒否しつつ、PATHなどのシステム環境変数を除外するために、schemaKeysで定義したキーのみを照合する実装にする。",
+        "機密情報（Secret）がエラーメッセージやログへ混入しないよう、バリデーション失敗時の出力内容をテンプレート化して制御する。",
+        "node:testを用いて、環境変数欠落や不正な値のケースを再現し、アプリケーションが正しく起動停止する挙動を担保する。"
+      ],
+      "signalsUsed": [
+        "node_js",
+        "typescript",
+        "zero_dependency",
+        "configuration_management",
+        "testing"
+      ]
     }
   ]
 }
