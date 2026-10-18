@@ -6455,6 +6455,69 @@
         "configuration_management",
         "testing"
       ]
+    },
+    {
+      "articleId": "a9631c18df36afa7d8ef321dc7e5d17c29d835cb0a99ec333497d5bc36c845ba",
+      "summary": "Web APIのセキュリティチェックを「エッジ・ミドルウェア・ハンドラ・リポジトリ」の4つの層に体系化し、それぞれの役割と責務を整理する解説記事です。OWASP API Security Top 10を層別にマッピングすることで、実装の抜け漏れを防ぎ、保守性の高い設計を実現する手法を提示しています。",
+      "whyRecommended": "APIセキュリティにおいて「どこでチェックすべきか」という設計の迷いを解消するための決定版です。PSR-15をベースに、ミドルウェアの適切な適用順序や、リポジトリ層での認可の重要性を具体的に学べるため、中級以上のエンジニアにとってコード品質を底上げする強力なガイドとなります。",
+      "learningPoints": [
+        "リクエスト処理をエッジ・ミドルウェア・ハンドラ・リポジトリの4層に分け、チェック項目を層ごとに固定することでセキュリティの穴を塞ぐ。",
+        "認可制御において「どのオブジェクトの所有者か」はDB層（リポジトリ）で判断する必要があり、ハンドラやミドルウェアだけで完結させない。",
+        "CORSのPreflightリクエストは認証処理の前に配置しないと、ブラウザからのリクエストが正常に動作しなくなる。",
+        "ミドルウェアの適用順序は極めて重要であり、例えばボディサイズ制限はハンドラがJSONを読み込む前に実行して保護する。",
+        "管理用エンドポイントは認証機能で守るだけでなく、そもそも本番環境のルート登録から除外してインターネットに公開しない。"
+      ],
+      "signalsUsed": [
+        "backend",
+        "security",
+        "web_development",
+        "architecture_explanation",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "code_examples",
+        "architecture_decision_support",
+        "reusable_implementation_pattern",
+        "owasp_api_security",
+        "psr_15",
+        "middleware_design",
+        "api_authorization"
+      ]
+    },
+    {
+      "articleId": "93b249889daa860e848991d6b1949669bcc81967fb014fde359a0a2e505361d8",
+      "summary": "Web APIにおける認可の不備を解消するための、実装レベルでの具体的な対策を解説した記事です。人間の注意力に頼らず、コードの構造や制約によって「他人のデータが見えない」「権限外の操作ができない」状態を強制する方法が示されています。",
+      "whyRecommended": "API Security Top 10のリスクをコードレベルでどう防ぐかという実践的な指針があり、特に「ヒューマンエラーを仕組みで防ぐ」というエンジニアリングの原則に基づいた設計論が非常に実用的です。",
+      "learningPoints": [
+        "リポジトリ層で所有者IDを必須条件としたメソッドのみを公開することで、ハンドラでの認可チェック忘れを物理的に防げる。",
+        "他人のリソースへのアクセスを403（禁止）ではなく404（見つからない）とすることで、IDの存在そのものを秘匿できる。",
+        "入力用と出力用のDTOを定義し、フィールド単位で許可リストを管理することで、Mass Assignmentのようなプロパティ単位の認可不備を防止できる。",
+        "管理機能のエンドポイントは認可ミドルウェアのグループ内に配置することをルール化し、ルート登録段階で認可を強制する構造にする。",
+        "未知のフィールドを含むリクエストに対しては黙って捨てるのではなく、400エラーを返してクライアント側の実装ミスや攻撃の試行を早期に検知する。"
+      ],
+      "signalsUsed": [
+        "backend",
+        "security",
+        "implementation_guide",
+        "owasp_compliance",
+        "authorization_patterns"
+      ]
+    },
+    {
+      "articleId": "af9b393bb83ce4435e0c8609b5c3ff587eba775fbca33b7a284a2a16330463e7",
+      "summary": "Node.js 26.11で追加されたperf_hooksのヒストグラムsnapshotとdiff機能を用いた、イベントループ遅延の非破壊的な窓別監視手法を解説しています。従来のreset方式とは異なり、ヒストグラムをリセットせずに期間ごとの遅延状況を可視化する方法と、その実装上の注意点を提示しています。",
+      "whyRecommended": "Node.jsのパフォーマンス監視において、ヒストグラムの破壊的リセットを回避するモダンな手法を具体的に学べるため。実用的な導入判断基準とパフォーマンス計測のためのスクリプトが含まれており、現場での即戦力となる知識が得られます。",
+      "learningPoints": [
+        "Node.js 26.11以降ではmonitorEventLoopDelayで取得したヒストグラムに対し、snapshotとdiffを用いることで、リセット操作なしに期間ごとの遅延データを抽出できる。",
+        "複数の監視処理が同じヒストグラムを共有している場合、外部でresetが実行されても、fallback処理を実装することで監視を継続できる。",
+        "resolution（解像度）の設定値によってサンプリング数が大きく変動するため、本番環境に近い負荷で適切なコストをベンチマークしてから導入する必要がある。",
+        "イベントループ遅延の数値単独でパフォーマンス低下の根本原因を断定することは避け、CPU使用率やELU（Event Loop Utilization）と併せて多角的に診断すべきである。"
+      ],
+      "signalsUsed": [
+        "node_js_performance_monitoring",
+        "event_loop_latency",
+        "observability"
+      ]
     }
   ]
 }
