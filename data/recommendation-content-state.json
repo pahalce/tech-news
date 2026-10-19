@@ -6518,6 +6518,59 @@
         "event_loop_latency",
         "observability"
       ]
+    },
+    {
+      "articleId": "6997c5a2c4f42a7bb443289f70a3aaaedc4f693bda2823b78e1a1407bf549530",
+      "summary": "Next.jsで日本語フォントを使用する際、ウェイトを複数指定すると大量のpreloadが発生してLCPが大幅に悪化する現象とその解決策を解説しています。設定一つでパフォーマンスを劇的に改善し、検証時の注意点までを網羅した実践的な構成です。",
+      "whyRecommended": "フロントエンド開発において見落としがちなWebフォントの読み込み戦略と、実数値に基づいたパフォーマンスチューニングの思考プロセスが非常に勉強になるため、パフォーマンス最適化に関心がある方へ強く推奨します。",
+      "learningPoints": [
+        "Google Fontsの日本語フォントはunicode-rangeで細かく分割されており、ウェイトを複数指定するとnext/fontのサブセット判定ロジックにより不要なファイルまでpreloadされる場合がある。",
+        "next/fontでpreload: falseを指定すると、ブラウザが実際に必要な文字範囲（unicode-range）のみを読み込むようになり、フォントの総リクエスト数を大幅に削減できる。",
+        "パフォーマンス改善を検証する際は、LCPだけでなくレイアウトシフト（CLS）が発生していないかも必ず確認する必要がある。",
+        "本番環境へデプロイする前に、ビルド後のHTMLファイルからgrepでpreloadの数をカウントすることで、デプロイ前に改善効果を概算できる。",
+        "デスクトップPCのような高速な環境ではボトルネックが顕在化しないため、パフォーマンス測定は必ずスロットリングされたモバイル環境でも行う必要がある。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "google_fonts_loading_behavior",
+        "lighthouse_usage",
+        "build_time_optimization"
+      ]
+    },
+    {
+      "articleId": "fc79e140ea8e4cc586a21b933667ca2367540c03cba433bd74be5c3d345bdd15",
+      "summary": "TypeScriptの厳格なコンパイラフラグ4種を導入した開発プロジェクトにおいて、実務上どのフラグが有効に機能したかを検証したレポートです。AIを活用した開発スタイルの中で、各フラグがコード品質や生産性に与えた影響を実データに基づいて分析しています。",
+      "whyRecommended": "「厳格な設定をとりあえず入れる」という慣習に対し、実際のコードベースでの貢献度を測定するというエンジニアリングの姿勢が非常に参考になるため。特定のフラグが不要なケースや、代わりにどのような実装パターンが効果的かを学べます。",
+      "learningPoints": [
+        "noUncheckedIndexedAccessを有効にすると、配列アクセスのundefinedチェックをAIが自律的に実装するようになり、安全性が向上する。",
+        "exactOptionalPropertyTypesは、キーの有無とundefined値を厳密に区別する必要がないプロジェクトでは、コードの複雑性を増すだけでメリットが薄い。",
+        "noImplicitOverrideやnoFallthroughCasesInSwitchは、継承やswitch文の使用頻度が低い小規模〜中規模のプロジェクトでは恩恵を感じにくい。",
+        "anyを回避するには、外部ライブラリの入力をunknownで受け取り、Zod等のバリデーターや手書きの型ガード関数で絞り込むアプローチが有効である。"
+      ],
+      "signalsUsed": [
+        "measured_results",
+        "real_world_experience",
+        "typescript_compiler_optimization",
+        "ai_assisted_development"
+      ]
+    },
+    {
+      "articleId": "3fc34466009b0abb824e7cd95742ce9817f275518a09e402656713b88a420ba6",
+      "summary": "ブラウザがHTMLの文字列をどのように解釈し、DOMという木構造へ変換するのかを内部的な解析プロセスから解説する技術記事です。状態機械を用いたパーサーの仕組みや、崩れたHTMLに対するブラウザの補完ルール、DOCTYPE宣言が与える影響までを深掘りしています。",
+      "whyRecommended": "フロントエンドエンジニアとして日常的に触れているDOM構築のプロセスを、ブラウザの内部実装仕様という低レイヤーの観点から論理的に学べるため。ブラックボックスになりがちな「ブラウザの挙動」を言語化して理解するのに最適です。",
+      "learningPoints": [
+        "ブラウザは状態機械を実装しており、文字を1つずつ読み込みながら「タグ開始」「文字」などの状態を遷移させてトークン化を行う。",
+        "HTML内のタグの閉じ忘れや不完全なマークアップは仕様によって補完ルールが明確に決まっており、どのブラウザでも一貫したDOMが構築される。",
+        "DOCTYPE宣言の有無によりブラウザの解析モードが変わり、標準モードと互換モード（Quirks mode）ではDOM構造の解釈やCSSの計算ロジックが異なる。",
+        "サーバーが送信するContent-Typeヘッダーの情報を基に、ブラウザはバイト列を適切な文字コードに変換して解釈を開始する。"
+      ],
+      "signalsUsed": [
+        "browser_internals",
+        "dom_construction",
+        "html_specification",
+        "state_machine"
+      ]
     }
   ]
 }
