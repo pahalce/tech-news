@@ -6634,6 +6634,60 @@
         "bug_fix_process",
         "java_development"
       ]
+    },
+    {
+      "articleId": "dfb39e21bb51d3f0a2a795293dda8e0acab9b61ea8a60f7dd93303a1e145e2ed",
+      "summary": "この記事は、JWT認証におけるアクセストークンの期限切れをHTTP 205で検知し、axiosのインターセプターでシームレスにトークンを更新・再リクエストする実装手法を解説しています。実務での運用経験に基づき、エラーハンドリングの簡素化や新しいタブでの認証状態の管理といった実践的な課題と解決策を網羅しています。",
+      "whyRecommended": "HTTPステータスコードを戦略的に活用して認証ロジックを簡潔に保つ手法は、フロントエンドの設計において非常に参考になります。トラブルシューティングを含む現場の知見が共有されており、認証機能を実装するエンジニアにとって即戦力となる内容だからです。",
+      "learningPoints": [
+        "アクセストークンの期限切れを401ではなく205で受け取ることで、axiosの成功側インターセプターで更新処理を実行でき、エラーハンドリングと処理経路を明確に分離できる。",
+        "axiosのレスポンスオブジェクトが保持するres.configを活用すれば、失敗したリクエストの設定をそのまま再利用して容易にリクエストを送り直せる。",
+        "トークンの期限切れと未ログイン状態は性質が異なるため、アプリ起動時のリフレッシュ処理とインターセプターによる更新処理を切り分けて実装すべきである。",
+        "複数のリクエストが同時に期限切れとなった場合、リフレッシュ処理が重複しないようリクエストをキューイングしてロックする機構の実装が推奨される。",
+        "認証関連のAPI呼び出し時の401はログアウトへ誘導する一方、一般APIの401は呼び出し側に返すなど、状況に応じた振り分けが必要である。"
+      ],
+      "signalsUsed": [
+        "axios_interceptor",
+        "jwt_auth",
+        "http_status_codes"
+      ]
+    },
+    {
+      "articleId": "ad55ee64b21f00fc5e0a5eb8d58c31891c2d2520e825b61f42807661c4ea31f3",
+      "summary": "Next.jsとSupabase Authを組み合わせたミドルウェアで発生しがちな、ログイン後のリダイレクトループ問題を解決するための実戦的なガイド。原因となる3つの典型的なパターンと、それらを見分けるためのデバッグ手法を解説しています。",
+      "whyRecommended": "Next.js App Routerでの認証実装における具体的なつまづきポイントを網羅しており、特にCookieの操作やNext.js 15での変更点など、公式ドキュメントだけでは気づきにくい実装の落とし穴を最短で解消できるためです。",
+      "learningPoints": [
+        "Supabaseの`setAll`の実装が空だとJWTの更新用Cookieが保存されず、認証が維持できない。",
+        "ミドルウェアの`matcher`設定に`/auth/callback`を含めてしまうと、認証フロー自体が遮断されてループの原因になる。",
+        "Next.js 15からは`cookies()`関数に対して`await`が必須となっており、呼び出しを忘れると正しくCookieを取得できない。",
+        "リダイレクトループ発生時は`location`ヘッダーと`console.log`によるパスの出力を確認することで、どのパターンに該当するかを特定できる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "supabase_auth",
+        "middleware_debugging",
+        "actionable_steps",
+        "deep_technical_explanation"
+      ]
+    },
+    {
+      "articleId": "45d8fa74ba67c4b2296b2df33acbfd321e8f289fb8fe9dcc8eb9de358429e522",
+      "summary": "DependabotはGitHubによってレビューが完了した脆弱性情報のみを通知対象とするため、公式ブログ等での公表直後には検知できないケースがあります。本記事は、Next.jsの脆弱性を例に、Dependabotが通知を発行するまでの技術的な条件と、タイムラグ発生時の対策を調査した記録です。",
+      "whyRecommended": "自動化ツールであるDependabotが「なぜ反応しないのか」というエンジニアが直面しがちな疑問に対し、公式ドキュメントやAPIを用いた検証で明確に回答しており、セキュリティ運用における実用的な洞察が得られるためです。",
+      "learningPoints": [
+        "Dependabotによるアラート発行は、GitHubがレビューを行い「GitHub-reviewed」となった脆弱性情報のみがトリガーとなります。",
+        "メンテナが公開したアドバイザリがGitHubのデータベースに反映されるまで、最大72時間の目安がありますが、最近は1週間以上かかるケースも珍しくありません。",
+        "GitHub APIを使用して各アドバイザリの公開日時とレビュー完了日時を比較することで、独自の反映スピードを計測可能です。",
+        "Dependabotは定期的なスキャンではなく、アドバイザリの追加や依存関係グラフの変更などのイベント発生時にのみ動作します。",
+        "脆弱性の公表を確認した際は、GHSA IDを使ってGitHub Advisory Databaseを直接検索し、404になる場合は手動での対応を検討する必要があります。"
+      ],
+      "signalsUsed": [
+        "github_advisory_database_research",
+        "vulnerability_management_workflow",
+        "deep_technical_explanation",
+        "real_world_experience",
+        "code_examples"
+      ]
     }
   ]
 }
