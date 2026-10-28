@@ -6803,6 +6803,67 @@
         "three_tier_architecture",
         "data_security"
       ]
+    },
+    {
+      "articleId": "e4db4c1672ec1ae07b82b4086ce9c6b236aa5c6a420251c6dec184c0b8222d97",
+      "summary": "TypeScriptの`exactOptionalPropertyTypes`を利用し、PATCHリクエストにおける意図しない値の上書きを防ぐ手法を解説しています。型安全性だけでなく、実行時のJSON検証を組み合わせることで、API契約に基づいた堅牢な部分更新を実装する方法を学びます。",
+      "whyRecommended": "バックエンド開発において、APIのPATCHリクエストで「未指定」「null」「undefined」の扱いを曖昧にすると予期せぬデータ破壊を招きます。この記事は、TypeScriptの設定と実務的なバリデーションを組み合わせて、この典型的な罠を回避する具体的な実装パターンを提示しているため、設計の品質向上に大きく貢献します。",
+      "learningPoints": [
+        "TypeScriptの`exactOptionalPropertyTypes`を有効にすると、任意プロパティ（?）に対して`undefined`を直接代入することがコンパイルエラーになる。",
+        "JavaScriptの`Object.hasOwn`を使用することで、オブジェクトがプロパティを直接保持しているかを確認でき、JSONの「キー省略」と「値の存在」を区別できる。",
+        "`Partial<T>`をそのままPATCHの型定義に使うと、更新すべきでないID項目まで変更可能になるため、`Pick`を組み合わせて専用の型を定義する方が安全である。",
+        "外部から受け取るJSONデータは`unknown`型として扱い、実行時にバリデーション関数を通して必要なフィールドだけを抽出することで安全な更新処理を実現できる。",
+        "JSONの`undefined`は`JSON.stringify`でキーごと削除されるため、ネットワーク越しに値を削除したい場合は`null`などを代入するAPI契約にする必要がある。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "backend",
+        "exact_optional_property_types",
+        "api_contract_design",
+        "json_validation"
+      ]
+    },
+    {
+      "articleId": "b9db95386b3dac2eec3ea8eb25e97fb6d035468ab1ec9b400d4517766ffb3fe4",
+      "summary": "TypeScriptのsatisfies演算子を活用して、ReactやNext.jsにおける多言語対応の翻訳辞書を型安全にする手法を解説しています。日本語辞書からキー型を自動導出し、他言語辞書でのキー漏れや誤字をコンパイル時に検出する方法が紹介されています。",
+      "whyRecommended": "翻訳辞書の管理で発生しがちな「未定義キーによる表示崩れ」を、型定義の工夫というアプローチで解決する実践的な記事です。小規模から中規模のプロジェクトで即座に導入できるコード構成であり、型安全性を高めたい開発者に非常に役立ちます。",
+      "learningPoints": [
+        "日本語辞書からkeyof typeofを使いキーのユニオン型を導出することで、翻訳キーの二重管理を回避できる。",
+        "英語などの他言語辞書に対してsatisfies Record<MessageKey, string>を適用することで、キーの不足や誤字をコンパイル時に検知できる。",
+        "外部から入力される言語コードは、ユーザー定義型ガード（value is Locale）を用いて実行時に検証・絞り込みを行う必要がある。",
+        "tsc --noEmitコマンドをCIに組み込むことで、翻訳キーの不整合をプルリクエストの段階で自動的に検出できる。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "frontend",
+        "react",
+        "nextjs",
+        "i18n_type_safety",
+        "typescript_satisfies_operator"
+      ]
+    },
+    {
+      "articleId": "b922d96dfa807cf815988a20ab27ac002c93f408a0eae11f3be8465a8a2e9eda",
+      "summary": "デジタル書籍の同一性・版管理・真正性を、人間とAIの両方が検証可能にするための「身分データ（IDA）」実装手法を解説した記事です。JSON-LDでの書誌定義から、台帳ファイルによるファイル整合性確認、Ed25519による署名検証までの具体的なアーキテクチャが網羅されています。",
+      "whyRecommended": "技術的な正確性と実用的な実装パターンが非常に高く、特に「AIに正しい書誌情報を認識させる」という現代的な課題に対するアーキテクチャ設計として参考になります。SEOやデータインテグリティに関心があるエンジニアにとって、実践的な構成要素を学べる貴重な資料です。",
+      "learningPoints": [
+        "schema.orgのBookクラスを用いて、作品単位のworkノードと言語・版ごとのノードを階層的に定義することで、同一作品の複数言語版を適切に構造化できる。",
+        "JSON-LDだけでなく、LLMが効率的に情報を抽出できるようbrief.txtとllms.txtという二段構えのテキスト索引を併置する手法が有効である。",
+        "各版のファイルサイズとSHA-256ハッシュ値を記録した台帳JSONを作成し、その台帳自体にEd25519署名を行うことで、ファイル群の真正性を効率的に担保できる。",
+        "OpenSSL 3のpkeyutlコマンドを使用することで、公開鍵を用いた署名の検証をコマンドラインから確実に行うことができる。",
+        "DOIを全版共通のconcept DOIと特定の版を指すversion DOIに使い分けることで、引用先と最新版の解決を適切に制御できる。"
+      ],
+      "signalsUsed": [
+        "web_development",
+        "nextjs",
+        "llm",
+        "deep_technical_explanation",
+        "architecture_decision_support",
+        "code_examples",
+        "digital_signature_verification",
+        "data_integrity",
+        "json_ld_schema"
+      ]
     }
   ]
 }
