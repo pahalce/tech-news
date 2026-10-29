@@ -6864,6 +6864,61 @@
         "data_integrity",
         "json_ld_schema"
       ]
+    },
+    {
+      "articleId": "209d697077c5e37c17c5ae1fb5a794c0a91cbf9573e99bf980b564845803ae5a",
+      "summary": "既存のSPAにReact Compilerを導入した際に発生した、UIの更新不具合とその解決記録です。主要ライブラリとCompilerによるメモ化が競合した際の問題特定手法と、具体的な修正手順がまとめられています。",
+      "whyRecommended": "React Compiler導入時に直面しがちな「外部ライブラリとのキャッシュ競合」を具体例とともに網羅しており、運用フェーズでのトラブルシューティングの参考として非常に質が高いです。",
+      "learningPoints": [
+        "Compiler導入の検証時は、環境変数を活用してCompilerのON/OFFを切り替えられる構成にすると、変換が原因の不具合か即座に切り分けられる。",
+        "TanStack RouterのuseMatchRouteなど、参照が変わらなくても内部状態によって結果が変わる関数をCompilerが最適化すると、最新のURL状態が反映されず画面が更新されない現象が起きる。",
+        "React Hook Formのreset()実行時にkeepFieldsRef: trueを指定することで、フィールド参照の破棄を避け、Compilerの最適化を維持したまま入力をリセットできる。",
+        "Rules of Reactの準拠確認にはOxlintのルール設定が有効だが、LintをパスしてもCompiler固有のバグは発生しうるため、実際のUI挙動テストが不可欠である。",
+        "コンポーネント全体に「use no memo」を付与するのは一時的な回避策であり、将来的に外せるようkeepFieldsRefへの移行など根本的な解決を目指すべきである。"
+      ],
+      "signalsUsed": [
+        "react_compiler_adoption",
+        "tanstack_router_integration",
+        "react_hook_form_compatibility",
+        "vite_configuration"
+      ]
+    },
+    {
+      "articleId": "1de385e78ffdddd008ec5feaca35977d7bd4e03765ee9da147213d1cfecce7c9",
+      "summary": "Supabaseの無料枠（5GB）を大幅に超過した実体験をもとに、データ転送量が増大する原因と解決策を解説しています。高頻度なselect('*')ポーリングが引き起こす転送量肥大化のメカニズムと、実装上の対策を学ぶことができます。",
+      "whyRecommended": "サーバーレス環境におけるコスト意識の重要性と、具体的なパフォーマンスチューニングの手法が実体験ベースで語られており、個人開発や小規模チームでの開発に役立つ実践的な知見が詰まっているためです。",
+      "learningPoints": [
+        "大きな文字列データを含むテーブルに対してselect('*')を頻繁に行うと、短期間でネットワーク転送量（egress）が膨大になる。",
+        "データベースのGENERATED ALWAYSカラムを利用してデータの有無をフラグ化することで、転送に必要なデータ量を最小限に抑えられる。",
+        "ブラウザのvisibilitychangeイベントを監視し、ページが非表示のときにポーリングを停止することで不要な通信を削減できる。",
+        "ポーリング間隔を5秒から30秒へ変更するだけでも、通信回数が激減しコスト削減につながる。",
+        "Supabaseの無料枠には現状egressアラートがないため、ダッシュボードを定期的に確認する習慣が必要である。"
+      ],
+      "signalsUsed": [
+        "egress_cost_optimization",
+        "supabase_database_best_practices",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "real_world_experience"
+      ]
+    },
+    {
+      "articleId": "934549f2b9466de187c62b5a62b52a5bff7e314d9a9ec011b644da31113234b2",
+      "summary": "HTTP 200 OKが返ってきても、レスポンスボディが不正なJSONやnullである場合に適切にエラーとして扱う実装手法を紹介しています。fetchを使用した共通リクエスト関数において、型アサーションに頼らず実行時のデータ整合性を担保する方法を解説します。",
+      "whyRecommended": "フロントエンド開発において、APIからのレスポンスを正しく検証し、予期せぬ実行時エラーを防ぐための堅牢な設計パターンが具体的に示されているためです。",
+      "learningPoints": [
+        "HTTP 200応答であっても、レスポンスが空文字やHTML、不正なJSONであれば例外として扱う処理が必須です。",
+        "Response.json()が解析に失敗して返したnullと、サーバーから有効なJSONとして返されたnullはどちらも値としてnullになり得るため、成功時の期待値と合致しない場合は例外として処理します。",
+        "共通APIリクエスト関数において、レスポンスのステータスチェックを先に行い、その後にnullチェックを挟むことでエラー理由の優先順位を明確に制御できます。",
+        "テスト環境でfetchをグローバルでモックすることにより、不正なJSON、HTML、空レスポンスなど、様々な異常系シナリオを再現して検証できます。"
+      ],
+      "signalsUsed": [
+        "fetch_api",
+        "error_handling",
+        "typescript",
+        "testing",
+        "vitest"
+      ]
     }
   ]
 }
