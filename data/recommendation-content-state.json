@@ -6919,6 +6919,62 @@
         "testing",
         "vitest"
       ]
+    },
+    {
+      "articleId": "7c1b6df307005f28fe118d80597fe829db0c8556190bec5f13ef35beeb1c7e64",
+      "summary": "メモリ不足で失敗していたCSV生成処理を、全データをメモリに展開せず500人単位でストリーミング配信するように改修した事例です。トランザクション管理やストリーム中のエラーハンドリング、DB接続プール対策など、実運用における難所とその解決策がまとめられています。",
+      "whyRecommended": "メモリ制約のあるコンテナ環境において、巨大なデータセットを扱うバックエンドの実装判断とチューニングプロセスが非常に具体的に記述されており、パフォーマンス最適化の参考になるため。",
+      "learningPoints": [
+        "ストリーミング処理中はリクエスト時のトランザクションが既にコミットされているため、ストリーム内ではバッチごとに別途トランザクションを開始して接続を即座に解放する必要がある。",
+        "ストリーミング中にエラーが発生した場合は、controller.error()を使用して明示的にエラーを通知することで、クライアント側で正しい失敗検知が可能になる。",
+        "Bunのサーバー設定（idleTimeout）では、チャンク間の無通信時間が10秒を超えるとタイムアウトするため、バッチ処理の実行時間を収める設計が必要である。",
+        "ブラウザ上のJavaScriptソートは実行環境のロケールに依存するため、安定した行順を維持するにはlocaleCompareではなく文字コードによる比較を行うべきである。",
+        "Responseのtext()でストリームを読むと先頭のBOMが削除されるため、テスト時にBOMを扱う場合はTextDecoderのignoreBOM設定に注意が必要である。"
+      ],
+      "signalsUsed": [
+        "streaming_optimization",
+        "memory_management",
+        "backend",
+        "performance",
+        "typescript"
+      ]
+    },
+    {
+      "articleId": "10c051d318b29d5be74086677ed900f145a2d6ed2352fe549c620c22dcb71700",
+      "summary": "Create React AppからViteへの移行時に本番ビルドでのみSVGが表示されない、あるいは巨大化する現象の原因と解決策を解説しています。Viteのデフォルトの資産インライン化設定とCSSのurl()仕様が衝突することが主な要因です。",
+      "whyRecommended": "Vite移行時に遭遇しやすい盲点であり、本番環境でのみ発生するトラブルを技術的な背景から理解し、安全な設定修正方法を提示しているためです。",
+      "learningPoints": [
+        "Viteはデフォルトで4KiB未満の資産をData URIとして埋め込みますが、SVGの場合はURLエンコードされた文字列として埋め込まれるためシングルクォートが含まれます。",
+        "CSSのurl()関数において、引用符で囲まれていないパスにシングルクォートが含まれると、その宣言全体が不正とみなされスタイルが崩れます。",
+        "vite.config.tsのbuild.assetsInlineLimit設定に条件分岐関数を渡すことで、SVGファイルのみ埋め込みを無効化し、CRA同様にファイルとして出力できます。",
+        "開発サーバーではData URI変換が行われないため、今回の問題はビルド後まで気づきにくいという特性があります。"
+      ],
+      "signalsUsed": [
+        "vite_configuration",
+        "migration_path",
+        "edge_cases",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "0e3320246ab2e4401a4f3efb502ab1d0598827d0340ba9874f5b8526c5f558cd",
+      "summary": "ローカル環境で実行するPlaywrightのE2Eテストが、誤って本番環境のSupabaseデータベースに書き込んでしまう事故を防ぐための対策を解説しています。環境変数の分離やテストデータの削除戦略について、即座に実践可能な手法を提示しています。",
+      "whyRecommended": "個人開発において、テスト環境と本番環境の混同によるデータ汚染は致命的なトラブルになり得るため、具体的な設定ミスとその防止策を学ぶのに最適な記事です。",
+      "learningPoints": [
+        "SUPABASE_SERVICE_ROLE_KEYはRLSを完全にバイパスするため、テストから本番DBに書き込みが発生すると非常に危険である。",
+        "playwright.config.ts内でDOTENV_CONFIG_PATHを指定し、.env.local.testファイルを利用することで本番環境との接続情報を物理的に分離できる。",
+        "テスト用データに[TEST]のようなプレフィックスを付けることで、globalTeardown時に一括削除するクエリを作成しやすくなる。",
+        "npx supabase startコマンドを実行してローカル専用のSupabaseインスタンスを構築するのが、環境分離において最も安全な解決策である。",
+        "StripeやResendなどの外部APIキーも、テスト環境と本番環境で確実に分離しなければ誤課金や誤送信のリスクがある。"
+      ],
+      "signalsUsed": [
+        "testing",
+        "backend",
+        "web_development",
+        "data_pollution",
+        "environment_separation",
+        "supabase_service_role_key"
+      ]
     }
   ]
 }
