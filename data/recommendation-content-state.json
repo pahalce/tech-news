@@ -6975,6 +6975,65 @@
         "environment_separation",
         "supabase_service_role_key"
       ]
+    },
+    {
+      "articleId": "8f5fa06468786cd5903d1454224586cc62d3f74818f9f9f5e2e4846153fc505b",
+      "summary": "Reactで作成したエディタにおいて、画像書き出し機能だけでは再編集が不可能であるという課題に対し、保存データの設計から自動保存の実装、外部データのバリデーションまでを詳解した実践的開発記録です。状態管理と永続化の陥りやすい罠と、その具体的な回避策を技術的視点から紐解いています。",
+      "whyRecommended": "フロントエンド開発において頻出する「状態保存の不整合」や「localStorageの容量制限」といった現実的な課題に対し、概念的な解決策だけでなく具体的なコード設計パターンが提示されており、非常に実用的かつ示唆に富んでいるため。",
+      "learningPoints": [
+        "画像書き出し（完成品）と編集状態の保存（材料）は別物であり、再編集には「画面を同じ状態に再構築できる最小構成のデータ」を保持する必要がある。",
+        "ReactのuseEffectで自動保存を実装する際、復元処理より先に保存処理が走ってデータを空にしてしまう事故を防ぐには、refを用いて復元完了フラグで書き込みを制御する。",
+        "localStorageには容量上限があり、保存に失敗した際は「下絵を捨てる」など、重要度の低いデータから順に削除して保存を完遂させる例外処理が必要である。",
+        "外部から読み込むデータは「弾く」だけでなく、未知のキーを保持しつつ不整合な値だけを修正する「捨てる・直す・持ち越す」のアプローチをとることで、将来的な機能拡張にも耐えうる設計にできる。"
+      ],
+      "signalsUsed": [
+        "react",
+        "typescript",
+        "local_storage_persistence",
+        "data_sanitization",
+        "state_management",
+        "postmortem"
+      ]
+    },
+    {
+      "articleId": "81bc21a179f93789cd21aff73efcf96952c40e1add2c42f2f60563752e028ddf",
+      "summary": "UIの「器」の選択基準を、AppleやMaterialなどの主要デザインシステム8種から比較検証した記事です。名前や見た目だけで判断せず、作業内容やユーザーの環境に応じて指針を適切に選ぶ手法を解説しています。",
+      "whyRecommended": "現場で起きがちな「異なるデザインシステムの指針による議論の衝突」を避けるための、論理的な意思決定プロセスが示されているためです。技術選定の根拠を言語化したいシニア層やUI実装者に非常に有益です。",
+      "learningPoints": [
+        "背後を覆うかどうかは、作業中に背後の情報を参照する必要があるかで判断し、必要ならModalではなくSide panelやNonmodalな器を選択する。",
+        "aria-modal属性と見た目での覆いが不一致だとアクセシビリティ上の問題が生じるため、HTMLのdialog要素でshowModal()とshow()を厳密に使い分ける。",
+        "複数ステップの作業について、Webでは専用ページへの遷移を推奨する傾向がある一方、ネイティブアプリではFull-screen dialogを用いるなど、出自により最適解が異なる。",
+        "Carbon Design SystemやUSWDSなど、デザインシステムごとにModal内のフォームフィールド数などの許容目安が異なるため、一つの閾値にまとめず、特定のシステムの物差しを丸ごと採用する。",
+        "閉じるアイコンの有無よりも、背景クリックやEscキーで閉じた際に入力中のデータが失われないかという「破棄の仕様」を優先的に設計する。"
+      ],
+      "signalsUsed": [
+        "design_systems",
+        "ux_design",
+        "accessibility",
+        "comparison",
+        "tradeoff_analysis",
+        "architecture_decision_support",
+        "operationally_applicable"
+      ]
+    },
+    {
+      "articleId": "19fcc025ca412542fa04d36b0bc083b145e7113fe72f9d9724da12cd9815e76d",
+      "summary": "NestJS環境において、外部のHTTPライブラリへの依存を分離するためのカスタムHTTPクライアント設計を紹介しています。インターフェースの抽象化とBuilderパターンの活用により、保守性が高くテスト容易なコードを実現する手法を解説しています。",
+      "whyRecommended": "NestJSの標準機能であるHttpServiceが抱える型依存やReactive Streamsへの強制的な依存という課題に対し、現実的な設計判断で応える良記事です。拡張性とテスト容易性を優先するアーキテクチャの知見が具体的に共有されています。",
+      "learningPoints": [
+        "NestJSのHttpServiceはAxiosやRxJSの型に依存するため、ライブラリの廃止や変更時にアプリケーションコードの大幅な修正が必要となる。",
+        "HTTPクライアントを独自のインターフェースでラップし、抽象化することで、ライブラリの交換コストをモジュールの差し替えのみに限定できる。",
+        "BuilderパターンをHTTPクライアントに適用することで、リクエスト構築と送信の責務を分離し、可読性と再利用性を高められる。",
+        "HTTPクライアントをインターフェース経由で注入することで、外部通信を伴わないモック実装による高速かつ依存関係のない純粋なユニットテストが可能になる。",
+        "OpenFeignやSpringのHTTP Interfaceのように、インターフェース定義からリクエストを自動生成する宣言的アプローチを採用することで、通信ロジックをサービス層から排除できる。"
+      ],
+      "signalsUsed": [
+        "builder_pattern",
+        "nest_http_interface_library",
+        "dependency_inversion",
+        "architecture_explanation",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
