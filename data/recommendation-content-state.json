@@ -7034,6 +7034,58 @@
         "architecture_explanation",
         "reusable_implementation_pattern"
       ]
+    },
+    {
+      "articleId": "ccbbad9b79731349d1770f700b7bb7567ceab62f1978fb768cf06b2e74f3911d",
+      "summary": "Next.jsにおける`generateStaticParams()`の役割と、未対応パスを確実に404にするための`dynamicParams = false`設定の重要性を解説しています。また、Next.jsのMetadataが浅くマージされる仕様によるOGPメタデータの欠落問題と、その解決策を実務経験に基づいてまとめています。",
+      "whyRecommended": "Next.jsのApp Routerを利用する際に見落としがちなルーティングの挙動と、メタデータ管理における落とし穴を具体的な検証プロセスと共に学べるため、実務でNext.jsを扱うエンジニアにとって非常に有益な知見です。",
+      "learningPoints": [
+        "generateStaticParams()はビルド時にパスを生成する仕組みであり、未定義パスを拒否する許可リストとしては機能しない。",
+        "意図しないパスへのリクエストを遮断するには、対象のルートセグメントに`dynamicParams = false`を設定する必要がある。",
+        "Next.jsのMetadata（特にopenGraphオブジェクトなど）は浅くマージされるため、ネストしたフィールドの一部を上書きすると共通設定が消失する。",
+        "opengraph-image.tsxやtwitter-image.tsxは単なる画像生成だけでなく、Next.jsの特殊なRoute Handlerとして動作するため、個別に動的設定や検証が必要である。",
+        "設定の有効性はビルド時のログだけでなく、.next/prerender-manifest.jsonのfallback値確認や、実際のデプロイ環境でのHTTPステータスおよび最終出力HTMLの確認まで含めるべきである。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "nextjs_metadata_api",
+        "dynamic_params_config",
+        "opengraph_image_generation"
+      ]
+    },
+    {
+      "articleId": "0ea83d52e651eeb85b4e7effe1ca121ff5ba53a5c03f4c61516736c3ec25e6dd",
+      "summary": "JWTの仕様上、発行後は期限まで取り消せない問題を解決するための3つのアプローチを比較し、実用的な「tokenVersion」方式の実装を解説した記事です。ユーザー削除やパスワード変更時の即時無効化を、DB問い合わせとバージョン管理を組み合わせて実現する方法が紹介されています。",
+      "whyRecommended": "JWTの「ステートレス性」と「ユーザー管理の即時性」というトレードオフに対して、現場で現実的な落とし所であるtokenVersion方式を提案しています。コード例やDB設計の理由が明確で、セキュリティ要件に応じた実装判断の参考になるため推奨します。",
+      "learningPoints": [
+        "JWTの検証にDBのユーザーテーブル（tokenVersion列）を1回追加することで、ユーザー削除やパスワード変更に伴う即時無効化を実現できる。",
+        "権限（role）の変更はトークンの失効を待たずとも、API実行時にDBから最新の値を取得して置き換えるだけで対応可能。",
+        "導入前の古いトークンを拒否すると全ユーザーがログアウトしてしまうため、トークンにバージョン番号がない場合は0として扱う移行策が有効。",
+        "DB障害時に認証を失敗させないよう、DB問い合わせはJWT検証のtry-catchの外で行い、予期せぬ全ログアウトを防ぐ。",
+        "iat（発行日時）による比較は秒単位の境界問題が発生するため、整数値のバージョン番号管理の方が確実。"
+      ],
+      "signalsUsed": [
+        "jwt_revocation",
+        "token_versioning"
+      ]
+    },
+    {
+      "articleId": "99f88ab0faa72bc2dd44fc77f0452201583ebdec3014c86ea38b04d39b5055f7",
+      "summary": "Next.jsのstandaloneオプションを活用し、Dockerイメージサイズを大幅に削減してデプロイ時間を短縮した実例を紹介しています。モノレポ構成や環境変数の取り扱いなど、実務で直面しやすい課題の解決策が示されています。",
+      "whyRecommended": "Next.jsを用いた大規模なプロダクト運用において、CI/CD効率化とイメージサイズ最適化の具体的な手法を学べる良質なケーススタディであるため。",
+      "learningPoints": [
+        "Next.jsのoutput: 'standalone'設定により、実行に必要な最小限のコードのみが抽出され、Dockerイメージサイズが数ギガバイト単位で削減可能です。",
+        "Next.js v12以前のモノレポ構成では、outputFileTracingRoot設定を正しく指定しないと、ビルド時に必要なライブラリが抽出されない問題が発生します。",
+        "ビルド時に生成される.standaloneフォルダには静的ファイルが含まれないため、publicやstaticフォルダは別途Dockerfileでコピーする必要があります。",
+        "環境変数がstandalone内に含まれない問題は、ビルド時に環境変数ファイルをルート直下の.envへ動的にコピーするシェルスクリプトを導入することで解決できます。",
+        "dd-traceなどの事前ロードが必要なライブラリは、コード内でinitモジュールをインポートすることで、node_modulesを削除した軽量な環境でも動作可能です。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "docker_optimization",
+        "ci_cd_improvement",
+        "production_case_study"
+      ]
     }
   ]
 }
