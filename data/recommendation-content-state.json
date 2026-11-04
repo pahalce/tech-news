@@ -7146,6 +7146,65 @@
         "webassembly",
         "production_case_study"
       ]
+    },
+    {
+      "articleId": "4f039399a82b1365c781be3266e3f8673a538d385267ade0e9e7529c9a52e698",
+      "summary": "Next.jsからTanStack Startへの移行により、Cloudflare WorkersのCPU時間が10分の1に削減された事例です。OpenNextなどのアダプターを介さずWeb標準に準拠した構成へ変更することで、無料プランの制約下でのパフォーマンスを劇的に改善しました。",
+      "whyRecommended": "Cloudflare Workersの無料プランにおけるCPU時間制限というシビアな制約条件下で、実測値を基にフレームワーク選定の重要性を解説しており、エッジコンピューティング環境の最適化を目指すエンジニアにとって非常に示唆に富むケーススタディだからです。",
+      "learningPoints": [
+        "Next.jsをOpenNextでWorkers上で動かす場合と比較して、TanStack Startへの移行によりCPU時間の中央値が約400msから30msに短縮された。",
+        "WorkersのCPU時間はisolateのコード読み込み・評価時間も含まれるため、バンドルサイズを小さくすることがコールドスタート時のエラー回避に直結する。",
+        "TanStack StartはViteとWeb標準のFetch/Responseで動作するため、Cloudflare公式Viteプラグインを介したネイティブなデプロイが可能である。",
+        "移行期間中は本番ドメインの横に別ドメインのプレビュー環境を構築し、X-Robots-Tagやrobots.txtでnoindexを設定して慎重に動作検証を行った。",
+        "Viteのresolve.aliasを活用することで、Next.js専用のAPIをTanStack Router側の互換層へリダイレクトさせ、コンポーネントを書き換えずに段階的な移行を実現した。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "tanstack_start",
+        "cloudflare_workers",
+        "performance",
+        "production_case_study"
+      ]
+    },
+    {
+      "articleId": "65842c7f96d7cc1f2db18b1745b2a6ac43a5e30399aab2814cc9a910a87654ca",
+      "summary": "SVGを用いた構成図エディタを開発する過程で直面した、直角ルーティングの実装やグループ移動の管理手法について解説しています。ロジックと描画を分離し、幾何学的な計算に基づいたUI操作やデータの整合性を保つための設計方針が詳しく示されています。",
+      "whyRecommended": "フロントエンドにおける高度なSVG操作と、UIの状態管理における現実的な課題解決策が学べるため。特に「DOMに依存しないロジック設計」という堅実なアプローチが非常に参考になります。",
+      "learningPoints": [
+        "状態からSVG文字列を生成する純粋なロジックを分離することで、プレビューと書き出しで同一の関数を利用し、表示の不一致を構造的に排除できる。",
+        "直角ルーティングは始点と終点の接続点から一定の距離（スタブ）を出し、その間の経路を4つのパターンに場合分けすることで簡潔に実装できる。",
+        "グループの所属関係をデータとして保持せず、ドラッグ開始時に幾何学的な重なり判定を行って計算することで、入れ子構造やデータ整合性の問題を回避できる。",
+        "SVG要素の再描画によるポインターイベントの消失を防ぐため、イベントリスナーを親コンテナに設置し、setPointerCaptureを利用して制御する。",
+        "SVGのテキスト要素に対しpaint-order属性を用いて白い縁取りを施すことで、線が重なった際にもラベルを視認しやすくできる。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "svg_rendering",
+        "geometric_calculation",
+        "implementation_guide",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "fc22dc2ec0232ade0f997107b2e7c554ba0b6e17386a49500207c9bbd6d26bb3",
+      "summary": "Jenkins環境におけるCI/CDパイプラインをpnpmとTurborepoの活用で最大4.6倍高速化する実践ガイドです。依存関係キャッシュとリモートキャッシュサーバーを構築することで、CI実行時間を大幅に短縮する方法を解説しています。",
+      "whyRecommended": "Jenkinsを用いたモノレポ環境で、CIのボトルネックを具体的に分析し、pnpmのキャッシュ戦略やTurborepoのリモートキャッシュ導入といった実用的な解決策を提示しているため、DevOpsの改善を目指すエンジニアにとって非常に有益です。",
+      "learningPoints": [
+        "pnpmのインストール時に--frozen-lockfileを使用し、CI環境でグローバルキャッシュディレクトリを共有マウントすることで依存関係インストールを約97%高速化できる。",
+        "JenkinsのMultibranch PipelineではWorkspaceが動的に変わるため、キャッシュパスを固定して明示的にマウントしないとブランチ間での依存関係キャッシュが効かない。",
+        "TurborepoのRemote Cachingを導入し、ducktors/turborepo-remote-cacheなどのカスタムサーバーを立てることで、ビルドエージェントを跨いだTaskキャッシュの共有が可能になる。",
+        "SonarQubeなどの静的解析ツールがボトルネックとなる場合、解析対象から不要なファイルを指定して除外するか、デプロイ待機時間中に並行実行することでCI全体の完了時間を短縮できる。"
+      ],
+      "signalsUsed": [
+        "ci_cd_optimization",
+        "monorepo_management",
+        "pnpm",
+        "turborepo",
+        "jenkins",
+        "actionable_steps",
+        "developer_productivity",
+        "measured_results"
+      ]
     }
   ]
 }
