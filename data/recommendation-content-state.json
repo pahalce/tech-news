@@ -7266,6 +7266,63 @@
         "real_world_experience",
         "tradeoff_analysis"
       ]
+    },
+    {
+      "articleId": "a537d03f1e57051e904bdf82f94a5be9e753b14b51b35e18b6d8eab016eba3e7",
+      "summary": "Reactアプリケーションにおいて、非同期処理の競合により状態更新が消失する問題を解決した実践記録です。Promiseチェーンを活用した小さなキューを導入し、操作順序を制御することで競合を防ぐ手法を解説しています。",
+      "whyRecommended": "フロントエンド開発で避けて通れない「非同期処理の競合」に対する、Reactの特性を考慮した非常に現実的で具体的な解決策が提示されているためです。テストの手法まで含めた網羅的な内容が評価できます。",
+      "learningPoints": [
+        "非同期処理が並列で実行されると古い状態を基に更新が行われるため、Promiseを順次実行するキューを作成して解決できる。",
+        "最新の状態を読み取るにはuseStateではなくuseRefを使い、実行時に最新の値を参照するように役割を分離する。",
+        "「ボタンを押した時点の人」と「実行時の最新状態」のように、値を確保するタイミングと参照するタイミングを適切に使い分ける必要がある。",
+        "非同期処理の競合を再現するために、Playwrightを用いてボタンクリックとセレクトボックスの変更を連続実行する自動テストが有効である。",
+        "Reactのセレクトボックスをプログラムで操作する際は、プロトタイプのセッターを通さないと値が正しく反映されないケースがある。"
+      ],
+      "signalsUsed": [
+        "react",
+        "typescript",
+        "race_conditions",
+        "promise_chaining",
+        "reusable_implementation_pattern",
+        "playwright_testing"
+      ]
+    },
+    {
+      "articleId": "66aafea88b9d29b9817cee4a1ba99d7753edb2c2bb95251f2635033bed9f9cf0",
+      "summary": "Amazon S3、Glue、Athenaを組み合わせたApache Icebergによるデータレイクハウス構築の検証記事です。テーブル作成からCRUD操作、スナップショットによる履歴管理、ファイル最適化の仕組みを実証しています。",
+      "whyRecommended": "データレイクハウスの概念を技術レベルで深く理解したいエンジニアにとって、S3上の物理ファイルとメタデータ階層の関係を具体的に確認できる非常に有益な構成ガイドです。",
+      "learningPoints": [
+        "IcebergはS3内のデータファイルと、スナップショットを管理するメタデータ（JSON/Avro）を分離して管理している。",
+        "UPDATEやDELETE操作時、元データは保持したままPosition Deleteファイルを作成することで変更履歴を管理している。",
+        "特定のSNAPSHOT IDやタイムスタンプを指定することで、過去のデータ状態をいつでも参照できる。",
+        "OPTIMIZEコマンドは、断片化した小さなデータファイルや削除情報を統合し、読み取りパフォーマンスを改善するために有効である。",
+        "VACUUMコマンドは保持期間を過ぎたスナップショットや不要なファイルを物理的に削除するが、デフォルトでは5日間の保持制限がある。"
+      ],
+      "signalsUsed": [
+        "aws_services",
+        "apache_iceberg",
+        "data_lakehouse",
+        "deep_technical_explanation",
+        "code_examples",
+        "measured_results"
+      ]
+    },
+    {
+      "articleId": "133ae36b0d6d44cb919d65362a53e20f689fc2f900272708bffbd001b124a64c",
+      "summary": "iOSのブラウザでinputタグのaccept属性に独自の拡張子を指定すると、システムが対応するUTIを判別できずファイルが選択不能になる問題についての解説記事です。この制限を回避するためのMIMEタイプ指定と、選択されたファイルのバリデーション手法を紹介しています。",
+      "whyRecommended": "iOS特有の挙動であるUTI判定というニッチな制約に直面した際の、実用的な解決策と副作用への対策が簡潔にまとめられており、実務的なトラブルシューティングとして非常に有益です。",
+      "learningPoints": [
+        "iOSではaccept属性に指定された拡張子が内部でUTIに変換されるため、OSに未登録の独自拡張子は選択対象として認識されない。",
+        "独自拡張子ファイルをiOSで選択させるには、accept属性に application/octet-stream を併記して汎用的なバイナリとして許可する必要がある。",
+        "accept属性の指定による副作用として全ファイルが選択可能になるため、JavaScript側でファイル名や内容の拡張子チェックを実装する必要がある。",
+        "ブラウザから直接iOSの独自UTIを登録する手段はないため、独自形式を扱う際はZIPなどの既存UTIが存在する形式の利用を検討すべきである。"
+      ],
+      "signalsUsed": [
+        "ios_browser_behavior",
+        "html_input_file_api",
+        "uti_system_limitation",
+        "edge_cases"
+      ]
     }
   ]
 }
