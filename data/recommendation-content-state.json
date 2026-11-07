@@ -7381,6 +7381,71 @@
         "nodejs_profiling",
         "cdn_caching_strategy"
       ]
+    },
+    {
+      "articleId": "ce7fd9db487bafa540b669868001d43b3f295f1548ffce7aaf61b6d54553945d",
+      "summary": "Cloudflareの技術スタック（Astro, Hono, D1）を活用し、RSSリーダー「feedge」で新規ユーザーのコールドスタート問題を解決するスターターパック機能の設計と実装を解説しています。1クリックで関心のあるフィードを一括登録し、バックグラウンド同期で待ち時間を発生させないUI/UXの構築手法を紹介しています。",
+      "whyRecommended": "ユーザーの定着率に直結するオンボーディング体験の改善策として、実用的な技術的工夫が盛り込まれています。特にCloudflareの特性を活かした非同期処理の実装や、メンテナンス性を考慮したフロントエンドコンポーネント設計は、同様のWebサービス開発における強力なリファレンスになります。",
+      "learningPoints": [
+        "Cloudflare Workersの`ctx.waitUntil`を活用することで、重い外部RSS取得処理をレスポンスに影響させず非同期に実行可能です。",
+        "ユーザープランの購読上限数は、新規登録前に既存DBの値と追加予定分を足し合わせてバリデーションすることで超過を安全に防げます。",
+        "UIコンポーネントでカスタムイベント（`dispatchEvent`）を発行することで、親ダッシュボードとの依存関係を切り離し、再利用性を高めることができます。",
+        "RSSフィードのメタデータを一元管理し、重複したURLを除外する`Set`を用いたフィルタリング処理を挟むことで冪等性を確保できます。",
+        "ライトモードとダークモード両対応のUI構築には、Tailwind CSSのカスタムバリアントを用いて、それぞれの背景色に対する枠線やコントラスト比を個別に調整するのが有効です。"
+      ],
+      "signalsUsed": [
+        "astro_framework",
+        "cloudflare_workers",
+        "hono_framework",
+        "sqlite_d1",
+        "user_onboarding"
+      ]
+    },
+    {
+      "articleId": "9f783cd5435d0a4ef0a2512a682e291bac9a231665074e03192d4efaebf8b6fc",
+      "summary": "kintoneのレコードからGitHub Issueを生成・同期するプラグインの開発経験を共有する記事です。プラグイン設計における自動化の是非やトークンの安全な管理、GitHub API利用時の競合回避など、実務的な課題とその解決策がまとめられています。",
+      "whyRecommended": "kintoneプラグインという特定のプラットフォーム開発において、セキュリティ（APIトークン管理）やUX（競合制御）、テスト戦略（ロジックと外部依存の分離）といった、中級者以上が直面する設計の要点が網羅されているためです。",
+      "learningPoints": [
+        "kintone.plugin.app.setProxyConfigを使用することで、ブラウザ上のJavaScriptから直接トークンを読み取れない安全なAPIリクエストが可能になる。",
+        "レコード保存時の自動実行ではなく詳細画面のボタン操作に限定することで、不要なIssue生成を防ぎ、責任範囲を明確化できる。",
+        "GitHub APIの呼び出しには冪等キーがないため、ボタン押下直前に最新のレコード情報を取得して二重生成を防止する実装が有効である。",
+        "kintoneのAPI呼び出しを伴うロジックを独立した関数群として設計することで、Node.js上での単体テストが容易になる。",
+        "外部API呼び出しとレコード更新が分断される障害時を想定し、再試行ボタンの提供など、ユーザーが手動でリカバリーできる設計を用意しておく。"
+      ],
+      "signalsUsed": [
+        "kintone_platform",
+        "tradeoff_analysis",
+        "deep_technical_explanation",
+        "edge_cases",
+        "real_world_experience",
+        "code_examples"
+      ]
+    },
+    {
+      "articleId": "b70fb9570b212e8e45a0d2df4857b97ef2c40d2fb3350bf4592b125a19d3df16",
+      "summary": "個人開発のVPSサーバーがクローラーのアクセスで過負荷になり、502エラーが頻発した障害の経緯と分析です。レート制限の閾値を「クローラーを止めないこと」のみを基準に設定していたことが原因で、サーバーの処理能力に見合った値への見直しが求められました。",
+      "whyRecommended": "技術記事のキュレーションサービスという実運用環境で発生した、負荷対策の失敗と振り返りが具体的に記述されており、レート制限設計時の落とし穴を学べる良質なポストモーテムです。",
+      "learningPoints": [
+        "レート制限の閾値は、クローラーの巡回速度だけでなく、サーバーのリソースが許容できる処理上限（ワーカーのキャパシティ）を基準に決定する必要がある。",
+        "SSRの過程でバックエンドへ複数回の内部呼び出しを行う場合、フロントエンドのページ単位の制限だけでなく、トータルのリクエスト数から負荷を逆算しなければならない。",
+        "分散型クローラーによる攻撃や過剰なアクセスに対しては、IP単位の制限だけでは不十分であり、同時実行数制限などの全体制御が必要になる。",
+        "負荷対策としてのレート制限は、場当たり的な数値調整ではなく、負荷試験による実測値に基づいて段階的に最適化すべきである。"
+      ],
+      "signalsUsed": [
+        "backend",
+        "web_development",
+        "nextjs",
+        "performance",
+        "postmortem",
+        "tradeoff_analysis",
+        "constraints_explained",
+        "real_world_experience",
+        "architecture_decision_support",
+        "specific_problem",
+        "production_context_named",
+        "rate_limiting",
+        "crawler_management"
+      ]
     }
   ]
 }
