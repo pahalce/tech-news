@@ -7614,6 +7614,68 @@
         "java_spring_boot",
         "batch_processing"
       ]
+    },
+    {
+      "articleId": "d912fe60e1eac4b3224e9689a9588e21bb80537c9aaa0a2ecd7718b47bb5bf16",
+      "summary": "大規模なライブラリに依存せず、独自の設計図を基にコンポーネントカタログを自作するアプローチを紹介した記事です。10個の技術スタックで実装を検証し、本番環境への混入防止やテスト環境での運用など、実務で直面する技術的課題とその解決策がまとめられています。",
+      "whyRecommended": "依存関係を最小限に抑えつつ、AIを活用した実用的なUI管理手法を提示しており、複雑なツールセットに疲弊しているエンジニアにとって非常に有益な知見だからです。",
+      "learningPoints": [
+        "コンポーネントカタログ専用のページをアプリ内に自作すれば、外部ライブラリを一切追加せずにStorybookのような機能を実現できる。",
+        "Atomic Designの階層分けに「自分より下の階層しか使えない」というルールを設けることで、分類の迷いを減らし一貫性を保てる。",
+        "開発用のルーティングを定義する際は、テスト環境でも同様に有効化しないとテスト実行時に404エラーが発生する。",
+        "GoのembedやLaravelのキャッシュ機能を使用する際は、ソースコードや不要な設定が本番バイナリやキャッシュに混入しないよう注意が必要である。",
+        "コンポーネントの表示パターン（fixture）をテストコードから直接再利用することで、テストとカタログの整合性を維持できる。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "edge_cases",
+        "code_examples",
+        "real_world_experience",
+        "comparison",
+        "reusable_implementation_pattern",
+        "actionable_steps",
+        "multi_stack_validation"
+      ]
+    },
+    {
+      "articleId": "42630fe375194806903b22ddc5c4ef545a219c96997e636f297a73ee570ced38",
+      "summary": "Next.js 16を用いた、中学受験のタスクをスマホ片手で即座に把握できるUI設計の実装記録です。サーバーへの再フェッチを行わず、クライアントサイドのuseMemoを活用して月別の動的ステート管理を瞬時に行う手法を解説しています。",
+      "whyRecommended": "具体的なプロダクト開発におけるフロントエンドの最適化手法が学べ、特にUXを重視した状態管理の実装例として非常に実践的であるため。",
+      "learningPoints": [
+        "月タブの切り替え時にサーバーへ再フェッチせず、useMemoを用いてクライアントサイドでタスクの抽出とカウントを瞬時に再計算している。",
+        "TypeScriptのインターフェース設計において、お弁当の要不要や延納締切などの固有情報を型レベルで保持することで、UI上のアラート表示を制御しやすくしている。",
+        "100件以上の複雑なタスクを、Props DownとEvents Upの単方向データフローで整理し、コンポーネントツリーの可読性を高めている。",
+        "タスクの重要度や完了状態を型定義に含めることで、条件に応じたアイコン表示やきめ細かいUI表現を実現している。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "frontend",
+        "typescript",
+        "implementation_guide",
+        "code_examples",
+        "ui_ux_design",
+        "state_management"
+      ]
+    },
+    {
+      "articleId": "8a67e133e1610513948967bedb53b2d626216a2cf6e77b2ddc847d6cbe628da7",
+      "summary": "以前はJavaScriptで行っていたUI制御やアニメーションが、CSSの進化により標準機能として実装可能になりました。Baselineの区分別に、どの機能を今すぐ導入すべきか、あるいは注意が必要かを整理した実用的なガイドです。",
+      "whyRecommended": "フロントエンド開発においてJavaScriptを減らし、ブラウザネイティブな機能へ移行するための具体的かつ信頼できる判断基準が示されています。最新のBaseline状況を網羅しており、実装の現代化を図る開発者にとって非常に価値が高い内容です。",
+      "learningPoints": [
+        ":has()やコンテナサイズクエリ、<dialog>要素は主要ブラウザでWidely availableとなっており、フォールバックなしでJSからの置き換えが可能です。",
+        "textareaの自動リサイズはfield-sizing: contentを指定するだけで実装でき、未対応ブラウザでは固定サイズとして動作します。",
+        "スクロール連動アニメーションはanimation-timeline: scroll()を使用することで、メインスレッドへの負荷を抑えつつブラウザのコンポジタ側で処理できます。",
+        "anchor-nameやpopover属性などNewly availableな機能は、@supports等で囲むか、現行のブラウザ要件と照らし合わせてプログレッシブエンハンスメントとして導入するのが適切です。",
+        "新機能の導入判断は「全ブラウザ対応か」ではなく「Baselineの区分（Widely, Newly, Limited）」を目安にすると、迷わず意思決定ができます。"
+      ],
+      "signalsUsed": [
+        "css_modernization",
+        "javascript_reduction",
+        "browser_baseline_compatibility",
+        "actionable_steps",
+        "comparison"
+      ]
     }
   ]
 }
