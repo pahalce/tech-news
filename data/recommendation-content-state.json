@@ -7676,6 +7676,62 @@
         "actionable_steps",
         "comparison"
       ]
+    },
+    {
+      "articleId": "b34abfca960c084edd046de840c9e1654590e4c345d005b6beb133d8abb35949",
+      "summary": "個人開発SaaSの起動時に発生していた過剰なSupabaseリクエストと、不要なJSバンドルの読み込みを徹底的に最適化した事例です。useEffectの依存管理やRPCによるAPI集約、動的ロードの工夫により、初回リクエスト数を劇的に削減しつつパフォーマンスを向上させています。",
+      "whyRecommended": "ReactとSupabaseの組み合わせで陥りやすい「リクエスト過多」や「コード分割の落とし穴」に対する、具体的かつ実践的な解決策がまとめられています。特に、実数値に基づいたパフォーマンス改善のプロセスは個人開発者にとって非常に参考になります。",
+      "learningPoints": [
+        "useEffectの依存配列によるリフェッチ連鎖を防ぐには、データを再取得せずメモリ上の既存データと紐付ける設計が有効です。",
+        "Supabaseで設定テーブル等の複数リクエストをまとめる際は、SECURITY INVOKERを指定したRPC関数を用いるとRLSを維持しつつ1往復に短縮できます。",
+        "React.lazyで遅延ロードしていても、コンポーネントがJSX内に記述されていればマウント時にチャンクが読み込まれるため、開いた実績を作るuseOpenedOnceフック等の仕組みが必要です。",
+        "静的プリレンダリングを行う際、requestIdleCallback等で遅延読み込みしたモジュールのmodulepreloadタグがHTMLに埋め込まれることがあるため、ビルドスクリプトでこれを除去する必要があります。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "performance",
+        "react",
+        "supabase_optimization",
+        "vite_build_optimization"
+      ]
+    },
+    {
+      "articleId": "2885bc3e3ef3a469e2d6c77258396bac2fb8bbe41549b5aa422fde10e4e754fa",
+      "summary": "Next.jsの静的書き出し環境において、PCとスマホで画質を分ける後処理を追加したことでビルド時間が急増した問題を解決した事例です。sharpのエンコード設定（effort）の最適化と、処理結果のハッシュキャッシュを導入することで、ビルド時間を大幅に短縮しています。",
+      "whyRecommended": "静的サイト生成におけるパフォーマンス最適化の勘所や、ビルドパイプラインのキャッシュ戦略など、フロントエンドエンジニアが実戦で役立つ深い知見が含まれているため。",
+      "learningPoints": [
+        "sharpのWebP設定において、effortを既定の4から6へ上げるとエンコード時間が約13倍になる一方、ファイルサイズ削減効果は4.3%程度に留まるため、多くのケースで既定値が最適である。",
+        "ビルド時の後処理でハッシュ化したメタデータをキーに処理結果をキャッシュすることで、2回目以降のビルド時間を大幅に短縮できる。",
+        "JavaScriptの非同期処理において、`await`を挟んだ状態で変数に加算（x += await f()）を行うと、並列実行時に中間状態の読み込み競合が発生し計算結果が壊れるため、値を確定させてから加算すべきである。",
+        "CPU負荷の高い処理（画像処理など）を並列実行する場合、Node.jsのos.availableParallelism()を用いて同時実行数を物理コア数程度に制限しないと、メモリ使用量が増えるだけで処理速度は向上しない。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "performance",
+        "image_optimization",
+        "build_time_optimization",
+        "sharp_library",
+        "javascript_concurrency"
+      ]
+    },
+    {
+      "articleId": "5cbfb5e1a6876ad48cb546f036d5306e6c656aae30a6ccabf3c196baa838bfb0",
+      "summary": "Next.js 16のCache Components導入に伴い、ルート設定ファイルから削除すべきdynamicやfetchCacheの設定を、データ層の責務へ移行する具体的な手法を解説しています。実案件の移行事例をベースに、コードの変換対応表とキャッシュライフサイクルの定義方法をまとめています。",
+      "whyRecommended": "Next.jsの最新機能であるCache Componentsへの移行プロセスを、実例と具体的な変換表を用いて解説しており、公式ドキュメントだけでは把握しづらい既存コードの置き換え指針が明確に理解できるため。",
+      "learningPoints": [
+        "dynamic = 'force-dynamic'などのページレベル設定は削除し、動的な処理はSuspense内の子コンポーネントでconnection()を呼び出す構造へ変更する。",
+        "キャッシュの寿命や再検証の設定は、next.config.tsでcacheLifeプロファイルを定義し、データ取得関数内でcacheLife()関数を使用して適用する。",
+        "unstable_cacheは「use cache」指令とcacheTag()を用いた宣言へ置き換え、手動のキャッシュキー指定を不要にする。",
+        "Server Actionで即座にデータ反映を行いたい場合は、revalidatePathの代わりにupdateTag()を使用する。",
+        "「use cache」のデフォルトはインメモリキャッシュであり、永続化にはリモートキャッシュの設定やカスタムハンドラが別途必要になる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "migration_guidance",
+        "cache_component_architecture",
+        "code_examples",
+        "deep_technical_explanation"
+      ]
     }
   ]
 }
