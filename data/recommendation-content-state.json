@@ -7844,6 +7844,59 @@
         "d1_r2_mocking",
         "developer_productivity"
       ]
+    },
+    {
+      "articleId": "ebb4d57f00f151aa82f704f22757aa3e60f4ea0629acf3502398b22cab15126a",
+      "summary": "Tailwind CSS v4への移行に伴うshadcn/ui環境の変更点と具体的な対応策を解説した記事です。設定ファイルの廃止やCSS-firstへの移行など、重要なアーキテクチャ変更を網羅しています。",
+      "whyRecommended": "shadcn/uiを利用しているプロジェクトにおいて、Tailwind v4へ安全かつ確実に移行するためのチェックリストやエラーの対処法が網羅されており、実務の移行作業に直結する内容だからです。",
+      "learningPoints": [
+        "Tailwind CSS v4ではtailwind.config.jsが不要になり、すべての設定をCSS内の@themeディレクティブで行うCSS-firstアーキテクチャに変わりました。",
+        "PostCSSの設定では従来のtailwindcssプラグインは廃止され、@tailwindcss/postcssの使用とautoprefixerの削除が必要です。",
+        "既存のCSS変数をTailwindのテーマとして統合するには、@theme inlineディレクティブを使用して変数を参照させる必要があります。",
+        "ボーダー色がデフォルトでcurrentColorに変更されたため、以前のように意図した色を表示するにはborder-border等のクラスを明示的に付与する必要があります。",
+        "shadcn/uiのCLI設定（components.json）において、tailwind.configを空文字に設定することでv4環境として正しく認識させることができます。"
+      ],
+      "signalsUsed": [
+        "tailwind_css_v4_migration",
+        "shadcn_ui_integration"
+      ]
+    },
+    {
+      "articleId": "9939b46c555b1effbd85248ee6187d2e5cfc8ffbf6b8ca4bc3b337179ced1743",
+      "summary": "React Hook Formで「初期値は空文字だが送信時は必須」という条件を実現するためのZod活用術を紹介。z.inputとz.outputを活用して、入力時の型とバリデーション後の型を個別に管理する方法を解説しています。",
+      "whyRecommended": "フォームバリデーションにおける「入力時」と「出力時」の型の不一致という、実務で頻出する課題に対する、型安全かつスマートな解決策が提示されているため。",
+      "learningPoints": [
+        "z.unionとz.transformを組み合わせることで、特定の値をバリデーションエラーとして弾きつつ、型変換を伴うスキーマを作成できます。",
+        "z.inputでバリデーション前の入力値の型を取得し、z.outputでバリデーション後の型を取得できます。",
+        "z.inferはデフォルトでz.outputと同じ挙動をします。",
+        "useFormのジェネリクスにuseForm<入力値の型, コンテキスト, 出力値の型>と指定することで、React Hook Formで入力と送信後の型を分離して扱えます。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "react",
+        "zod_library",
+        "react_hook_form",
+        "form_validation"
+      ]
+    },
+    {
+      "articleId": "11709c2adb40051c72815a9c97675bf89d273b5e6a054a83e89b900e378ae470",
+      "summary": "ミューテーションテストを用いて、テストコードの品質を担保しデッドコードを発見する手法を解説した記事です。Vitest環境で高速に動作するOSS「@mizchi/mutator」の導入と運用方法についても詳しく紹介されています。",
+      "whyRecommended": "テストカバレッジが頭打ちになる開発の後半期において、テストの有効性を客観的に評価する実用的な手段としてミューテーションテストを推奨しているためです。著者が自作した軽量なツールにより、導入障壁を下げている点も魅力的です。",
+      "learningPoints": [
+        "ミューテーションテストはソースコードを意図的に改変し、テストがそれを検知して失敗するかを確認することで、テストコード自体の品質を保証する手法です。",
+        "テストカバレッジ95%超えは「テストのためのテスト」になりやすく有害な側面があるため、ミューテーションテストを活用して本当に効果のあるテストを見極めるのが効果的です。",
+        "CIで常に実行するのではなく、リファクタリング時に手元で実行するツールとして運用することで、実行速度の問題を回避できます。",
+        "「@mizchi/mutator」は静的検査とGit差分検出を活用しており、Vitest環境であれば設定ファイルを追加するだけで既存のテスト資産を活かして高速に動作します。",
+        "生き残ったミュータント（テストが検知できなかった改変）は、テスト不足か、あるいは不要なデッドコードである可能性が高いと判断できます。"
+      ],
+      "signalsUsed": [
+        "mutation_testing",
+        "vitest",
+        "mizchi_mutator",
+        "test_coverage",
+        "actionable_steps"
+      ]
     }
   ]
 }
