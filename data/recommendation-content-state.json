@@ -7897,6 +7897,62 @@
         "test_coverage",
         "actionable_steps"
       ]
+    },
+    {
+      "articleId": "24ad26654f81b9cb8c8c8090602a4211c5c82a71df7dfbcea9c425c1e94213c7",
+      "summary": "TypeScriptのRust移植である「tsrs」を導入し、oxlintの型チェックと型推論lintを高速化した実例を紹介する記事です。CIの実行時間を劇的に短縮しつつ、既存のtscキャッシュ戦略を廃止した知見がまとめられています。",
+      "whyRecommended": "開発効率を劇的に改善させるパフォーマンスチューニングの具体的な成功事例であり、betaツールを安全にCIへ導入する段階的な戦略が示されているため、技術スタックのモダン化を検討するエンジニアに有益です。",
+      "learningPoints": [
+        "tsrsを導入することで、バックエンドの型チェック時間を229秒から11秒へと大幅に短縮できた。",
+        "tsrsはtscと異なり.tsbuildinfoを読み捨てて全件検査を行うため、CIキャッシュに頼らないクリーンな検証が高速に実行可能になる。",
+        "beta段階のツールを導入する際は、既存のtscと並行稼働させて結果の一致を検証するステップを踏むことでリスクを抑えられる。",
+        "TypeScript 7.0から7.1への更新に伴い、無名クラス式内でのnew this()呼び出しなどでTS2674エラーが発生する場合がある。",
+        "oxlint-tsgolintとtsrsの両方が環境にあるとoxlintがtsgolintを優先するため、移行時は古いパッケージを削除する必要がある。"
+      ],
+      "signalsUsed": [
+        "typescript",
+        "performance",
+        "oxlint",
+        "tsrs",
+        "migration",
+        "measured_results"
+      ]
+    },
+    {
+      "articleId": "796d60e0998a10e0c8d5732314bacef882edc34f31572ef1cb9ad783a496d3b1",
+      "summary": "500万社規模の法人データベースを運用するプラットフォームにおける、高パフォーマンスな情報設計とデータベース最適化の知見をまとめた記事です。Next.jsのISR、Cloudflareキャッシュ、PostgreSQLの部分インデックスを組み合わせることで、ミリ秒単位の高速応答とSEO最適化を実現する手法が解説されています。",
+      "whyRecommended": "大規模なデータセットを扱うアプリケーションにおいて、パフォーマンスとSEOを両立させるための具体的かつ実用的なアーキテクチャ設計が詳細に語られており、バックエンドとフロントエンドの両面で参考になるため。",
+      "learningPoints": [
+        "500万件規模のDBでCOUNT(*)を避けるため、集計データを別テーブルで管理し、非同期で事前更新する。",
+        "PostgreSQLの部分インデックスとINCLUDE句を用いたカバリングインデックスにより、ヒープフェッチを排除しIndex-Only Scanを実現する。",
+        "Next.jsのISRとCloudflareのEdgeキャッシュを組み合わせ、動的サイトでありながらエッジヒットで10ms以下の応答を実現する。",
+        "Programmatic SEOにおいて、詳細ページへ直接リンクせず中間ハブページを挟むことでクロール深度を浅くし、SEOの最適化を行う。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "backend",
+        "performance",
+        "postgresql_optimization",
+        "programmatic_seo",
+        "cloudflare_caching"
+      ]
+    },
+    {
+      "articleId": "d4acfba99e412a60f55248059903f64713f16eb16c4e0399db61aaa45b256d72",
+      "summary": "Node.jsで重い同期計算を直接実行するとメインスレッドがブロックされ、ヘルスチェックを含めた他のリクエストが停滞する問題の解決策を解説しています。worker_threadsを用いたスレッドプールによる並列処理の実装手法と、適切な設計の勘所を提示しています。",
+      "whyRecommended": "Node.js特有の「メインスレッドを止めない」ためのベストプラクティスが具体的かつ実証的にまとめられており、バックエンド開発におけるスケーラビリティ改善の知見として非常に実践的であるため。",
+      "learningPoints": [
+        "Node.jsで重い同期計算をasync関数で包んでも、最初のawaitまでは同期的に実行されるため、メインスレッドのブロッキングは防げない。",
+        "worker_threadsの起動コストを避けるため、毎回新規作成するのではなく、ワーカーを使い回すプール機構を実装して運用するのが効率的である。",
+        "ワーカー内でエラーが発生した場合は状態が汚染される可能性があるため、使い回さずにterminate()して破棄し、新しく生成するのが安全である。",
+        "worker_threadsへのデータ受け渡しにはシリアライズのコストがかかるため、巨大なデータはArrayBufferを用いたtransferによる転送が推奨される。",
+        "OSのCPUコア数に依存するos.availableParallelism()はNode.jsのバージョンやコンテナ環境によって値が変わる可能性があるため、ワーカー数は環境変数で明示的に管理すべきである。"
+      ],
+      "signalsUsed": [
+        "nodejs_worker_threads",
+        "concurrency_control",
+        "resource_pooling"
+      ]
     }
   ]
 }
