@@ -8012,6 +8012,68 @@
         "architecture_explanation",
         "implementation_guide"
       ]
+    },
+    {
+      "articleId": "5e15da7e9525d5203bbd00fecebc0b9ab5bf4211efa5c7f22a8936b6440b3b0e",
+      "summary": "AWS CDKで管理していたインフラ資産を、本番環境の無停止を維持しつつTerraformへ移行した実例を紹介する記事です。RemovalPolicyの活用や段階的なスタック移行を通じて、安全にIaC管理権限を移譲するプロセスを詳述しています。",
+      "whyRecommended": "本番環境という高リスクな条件下でのIaC移行における「所有権移譲」という手法が極めて具体的で再現性が高いためです。技術的負債の解消と運用の効率化を目指すチームにとって、そのままマニュアルとして使える品質の高さが評価できます。",
+      "learningPoints": [
+        "RemovalPolicy: RETAINを設定してdeployすることで、CloudFormationスタックから定義を削除してもAWS上の実リソースを維持できる。",
+        "Terraformのimportブロックとcdk diffを組み合わせ、インフラを無停止で移行先ツールへ紐づけられる。",
+        "IaC移行作業中に既存設定の改善を行わず、設定変更と移行タスクを分離することで予期せぬトラブルを回避できる。",
+        "tfcmtを用いてTerraform planの差分をGitHub PRへ自動投稿し、レビュー負荷を軽減する運用が効率的である。",
+        "CloudFormationのExport参照を事前にlist-importsで洗い出すことで、削除時のエラーを未然に防げる。"
+      ],
+      "signalsUsed": [
+        "devops",
+        "production_case_study",
+        "migration_guidance",
+        "code_examples",
+        "real_world_experience",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "d6ee37bb9b14c35b956df2895851b1bb4c99c3eac8acf9c5889b8effb3836683",
+      "summary": "本書は、脆弱性検査で発覚した問題を単発で修正するだけでなく、テストの自動生成やCI/CDを活用して恒久的なセキュリティ強化を図る取り組みを解説しています。Next.jsアプリにおける権限管理の不備や、外部サービス連携に伴うリスクに対し、機械的なゲートを導入して脆弱性を防ぐ具体的な手法を共有します。",
+      "whyRecommended": "セキュリティ検査を「一過性のイベント」で終わらせず、開発プロセス全体を仕組み化して自動的に防御するアプローチは、堅牢なシステム運用を目指すエンジニアにとって非常に示唆に富んでいます。実戦的なチェックリストやツールの導入事例が網羅されており、設計の参考になります。",
+      "learningPoints": [
+        "認可テスト行列を作成し、全ルート×全操作×全アクターに対して権限チェックが漏れていないかをCIで自動検査する仕組みを構築できる。",
+        "秘密情報をコードに含ませずカナリア値として管理し、ログやAPIレスポンス、クライアントバンドルへの漏洩をCIのゲートで検出できる。",
+        "Next.jsのServer Actionは独立したAPIとして公開されるため、内部関数であっても利用者の権限確認を別途実装しないと不正アクセスの温床になる。",
+        "外部サービスごとにセキュリティ要件を「契約」として文書化し、SDKの利用時に必要な引数が要件を満たしているかテストで検証する。",
+        "手書きコードのセキュリティ対策として、生成器から権限確認やレート制限を必須化する検証用補助関数を配布し、CIでゲートを設ける。"
+      ],
+      "signalsUsed": [
+        "security",
+        "web_development",
+        "nextjs",
+        "testing",
+        "devops",
+        "production_case_study",
+        "deep_technical_explanation",
+        "vulnerability_management",
+        "automated_testing",
+        "ci_cd_security"
+      ]
+    },
+    {
+      "articleId": "f19d1f9feb9aa0166fd3e9f00892a2cab702c8babef7118b43a35a1cc19f6b43",
+      "summary": "Reactのリストにおけるkeyの役割が、描画の効率だけでなくフォーカスの継続性に直結していることを実験で検証した記事です。keyにindexを指定すると、要素の入れ替え時にフォーカスが元の位置に残ることで誤操作を誘発する仕組みを解説しています。",
+      "whyRecommended": "React開発で「keyにはindexを使うな」と教わる理由を、描画効率やStateの整合性だけでなく、アクセシビリティ（フォーカス管理）の観点から深く理解できるため、中級者の知識を補強するのに最適です。",
+      "learningPoints": [
+        "リストのkeyにindexを使用すると、要素を並び替えた際にフォーカスが元の位置（同じインデックスのノード）に留まり、意図しない別の要素にフォーカスが当たります。",
+        "一意なIDをkeyに指定することで、ReactはDOMノードを再利用せずに移動させるため、フォーカスも追従して正しく維持されます。",
+        "見た目の並び順は正しくても、keyが適切でないとキーボード操作において予期せぬ誤操作を引き起こす原因となります。",
+        "技術的な挙動が予想と異なる場合、短時間でも検証コードを書いて実測することで「なんとなく動いている」状態から脱却できます。"
+      ],
+      "signalsUsed": [
+        "accessibility_impact",
+        "focus_management",
+        "react_keys",
+        "real_world_experience",
+        "measured_results"
+      ]
     }
   ]
 }
