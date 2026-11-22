@@ -8074,6 +8074,70 @@
         "real_world_experience",
         "measured_results"
       ]
+    },
+    {
+      "articleId": "62cfc0ffd6f0323884283294a2af4977042430877a376e39863de535cb02c05d",
+      "summary": "入力チェックを「形と長さ」と「業務ルール」に分類し、画面とAPI間で共有する手法を解説した記事。Zodスキーマと純粋関数を用いることで、フロントエンドとバックエンドのバリデーションの不整合を防ぐ設計を紹介しています。",
+      "whyRecommended": "フォームバリデーションの責務を適切に分離し、DRY原則を徹底するための実践的なパターンがまとめられています。特に、MSWを用いた検証からテスト設計までの流れが一貫しており、保守性の高い業務システム構築の参考になります。",
+      "learningPoints": [
+        "バリデーションをZodで定義する「形と長さ」と、純粋関数で定義する「業務ルール」に分離すると再利用性が高まる。",
+        "APIのレスポンスにエラー理由のコードを定義し、UI側でどの項目にエラーを表示するかを決定すると柔軟な実装ができる。",
+        "バリデーションエラー時にはaria-invalid属性とaria-describedbyを付与することで、アクセシビリティを確保できる。",
+        "画面側のチェックはUX向上のため、API側のチェックはシステム整合性担保のためにそれぞれ必須である。",
+        "バリデーションルールを独立した関数に定義することで、Vitest等を用いた単体テストが容易になる。"
+      ],
+      "signalsUsed": [
+        "zod_integration",
+        "react_hook_form_usage",
+        "msw_mocking",
+        "fullstack_validation_strategy"
+      ]
+    },
+    {
+      "articleId": "6584c7cf907f241d540c85837ecf74049cdc6b1c1da56ae0111822c8c1ab9876",
+      "summary": "Next.js、Biome、Vitest、Playwrightを組み合わせた、AI駆動開発に最適化されたWebプロジェクトの技術スタックを紹介する記事です。安全性を確保しつつ開発効率を最大化するための構成設計と、AIに実装を任せる際の具体的な注意点を網羅しています。",
+      "whyRecommended": "AIの出力を前提としたモダンなスタック選定基準と、実務でハマりやすい境界条件（特にNext.jsのRSCやバリデーション）への対策が非常に実用的であり、プロジェクトの品質担保に直結する内容だからです。",
+      "learningPoints": [
+        "Next.jsのApp Routerでサーバー専用コードがクライアントに混入するのを防ぐために、server-onlyパッケージをインポートし、ビルド時にエラーを検知させる。",
+        "外部から入力される値（フォーム、APIレスポンス、環境変数）はすべてZodでパースすることで、コードの内側では型安全を信頼できる状態を作る。",
+        "Biomeはリンターとフォーマッタが統合されており、設定の衝突が起きないため、AIにコード生成を任せる際に設定周りで時間を浪費しない。",
+        "コンポーネントテストでは実装詳細ではなくユーザー視点（アクセシビリティロールなど）をテストし、E2Eテストは主要導線の検証に絞ることで保守コストを抑える。",
+        "AIは「正常系」のコードは得意だが「起きないこと」の検証は書かない傾向があるため、負のシナリオのテストは明示的に指示する必要がある。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "web_development",
+        "typescript",
+        "testing",
+        "frontend",
+        "implementation_guide",
+        "deep_technical_explanation",
+        "tradeoff_analysis",
+        "real_world_experience",
+        "actionable_steps",
+        "operationally_applicable",
+        "ai_driven_development",
+        "best_practices",
+        "boilerplate_template"
+      ]
+    },
+    {
+      "articleId": "d1494244fd7d4e927b87f1f3f5da90e171628ec478559330b0ca51d9ce136e33",
+      "summary": "個人開発のAI診断アプリを検索エンジンやAI検索から流入させるためのハイブリッドなアーキテクチャ設計を紹介しています。Next.js 16の動的ルートと静的SSG記事を組み合わせる手法や、AIクローラー向けの構造化データ実装、React 19での安全なハイドレーション回避策を解説しています。",
+      "whyRecommended": "個人開発アプリが直面しがちな「SEO評価が低い」という課題に対し、Next.js 16やReact 19といった最新技術を用いた具体的な解決策が提示されており、技術的負債を抑えた堅実なアーキテクチャ設計が学べるためです。",
+      "learningPoints": [
+        "Next.js 16のgenerateStaticParamsとgenerateMetadataを使い、動的なAI診断ツールと静的なSSG記事ページを混在させることでSEOの受け皿を増やす。",
+        "schema.orgの@graphを活用し、パンくずリスト、記事情報、スポット情報、FAQの4層を単一のJSON-LDとして埋め込むことで、AI検索エンジンへ効率的に情報を伝える。",
+        "React 19の厳格なLintルール下で日付依存のUIを扱う際、useSyncExternalStoreを用いることで、SSRとクライアントレンダリング間のハイドレーション不整合を安全に解決する。",
+        "llms.txtをサイトルートに配置することで、LLMエージェントに対してサイト全体の構造と全ページのURLマップを効率的にクローリングさせる。"
+      ],
+      "signalsUsed": [
+        "nextjs",
+        "seo_strategy",
+        "llm_optimization",
+        "hydration_handling",
+        "reusable_implementation_pattern"
+      ]
     }
   ]
 }
