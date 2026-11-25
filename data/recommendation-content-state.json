@@ -8196,6 +8196,62 @@
         "web_components",
         "glsl_shader"
       ]
+    },
+    {
+      "articleId": "d76563635001f6f4fc778edad47bfa77fad3d436d580bebd953753559147c468",
+      "summary": "この記事では、APIキーをブラウザに公開せず、役席の権限で安全に外部連携を代行実行する仕組みを解説しています。KongやMuleSoftを用いた外部連携と同じ経路を通すことで、検証ロジックを共通化しつつ権限管理を実現するアーキテクチャを紹介しています。",
+      "whyRecommended": "金融システムを模したセキュアな設計と、Next.js・Kong・MuleSoftの具体的な実装パターンが非常に実践的で、APIプロキシを利用した権限委譲の構成を学ぶのに最適な良記事だからです。",
+      "learningPoints": [
+        "ブラウザにはAPIキーを渡さず、サーバー側（Route Handler）で中継することでセキュリティを担保する。",
+        "X-Requested-Withヘッダーの必須化とOriginチェックにより、CSRF攻撃を防ぐ設計を行う。",
+        "KongのACLプラグインとX-Consumer-Usernameを利用し、特定の利用者（bank-ops）経由の場合のみ行員IDヘッダーを信用する。",
+        "外部連携先と同一のパスを通すことで、バリデーションやレート制限のロジックを一元管理する。",
+        "全銀データ処理時にバイト列のまま転送し、文字コード変換を後続の連携基盤側のみで行うことでエンコーディング問題を回避する。"
+      ],
+      "signalsUsed": [
+        "api_gateway_proxy_pattern",
+        "financial_system_security_design",
+        "csrf_and_security_best_practices",
+        "kong_api_gateway_configuration"
+      ]
+    },
+    {
+      "articleId": "ca0a1ea58afe66bfc8e490843615d7f54538c737e78fcad6fe061f2e4ae8ad8d",
+      "summary": "固定ヘッダーでページ内リンク先の見出しが隠れる問題を、CSSのscroll-padding-topを用いて解決する手法を解説しています。静的な高さだけでなく、レスポンシブや動的なコンテンツ変化にもCSS変数やResizeObserverで対応する実践的なアプローチがまとめられています。",
+      "whyRecommended": "現代的なWeb標準技術（CSS Scroll Snap Module）を用いたクリーンな実装方法であり、アクセシビリティ（WCAG 2.2）やキーボード操作まで考慮した高品質な技術解説であるため。",
+      "learningPoints": [
+        "html要素にscroll-padding-topを指定することで、ページ全体に対して固定ヘッダー分のオフセットを確保できる。",
+        "scroll-margin-topは指定した要素にしか効かないが、scroll-padding-topはコンテナ内のすべてのスクロール位置合わせに影響する。",
+        "キーボード操作で要素へフォーカス移動した際もヘッダーの裏に隠れないよう、scroll-padding-topを適切に設定することはWCAG 2.2の達成基準2.4.11を満たす対策になる。",
+        "レスポンシブでヘッダー高さが変わる場合は、CSS変数で高さを管理し、変数値をメディアクエリで更新することでレイアウトのずれを防げる。",
+        "内容によりヘッダーの高さが変動する場合は、JavaScriptのResizeObserverで実際のoffsetHeightを計測し、CSS変数に反映させるのが有効。"
+      ],
+      "signalsUsed": [
+        "specific_problem",
+        "concrete_technology_named",
+        "actionable_steps",
+        "reusable_implementation_pattern",
+        "deep_technical_explanation",
+        "accessibility_compliance"
+      ]
+    },
+    {
+      "articleId": "c354c5a07c92cbc8955498d62b9b716f90cb2086ce7d264efed34d28bd07f2b9",
+      "summary": "個人開発SaaSのデモ環境におけるユーザー行動をGA4で詳細に分析し、離脱の真因を特定した事例です。イベント設計の工夫によって計測のブラックボックス化を防ぎ、データに基づいた具体的な改善策を導き出しています。",
+      "whyRecommended": "個人開発者が限られたリソースでいかに効果的なデータ分析環境を構築し、仮説検証を行うべきかという実践的な指針が、具体的なコード例と共に提示されており非常に有益です。",
+      "learningPoints": [
+        "GA4のカスタムディメンション登録の手間を避けるため、Data APIで集計しやすいようイベント名自体を階層的に分けて送信する。",
+        "バックグラウンドタブでの放置を防ぐため、document.visibilityStateを監視し、前面表示中のみの滞在時間を計測する。",
+        "ユーザー行動の重複カウントを避けるため、sessionStorageとSetを用いて1セッションにつき1回のみイベントを発火させる設計にする。",
+        "ページ遷移直前の通信にはfetchではなくnavigator.sendBeaconを使用することで、計測データの欠落を防ぐ。",
+        "登録フォームのエラー内容を分類して別々のイベントとして計測することで、ユーザーが離脱した具体的な障害ポイントを把握できる。"
+      ],
+      "signalsUsed": [
+        "ga4_event_design",
+        "user_funnel_analysis",
+        "data_api_optimization",
+        "browser_visibility_api"
+      ]
     }
   ]
 }
