@@ -8252,6 +8252,60 @@
         "data_api_optimization",
         "browser_visibility_api"
       ]
+    },
+    {
+      "articleId": "21f561c50099638866ac148902d297b8aea59b2d9c6852aec4d45cc048aa167f",
+      "summary": "RESTの原則に基づいたパス設計から、HTTPメソッドの使い分け、ステータスコードの選定基準までを網羅した実践的なWeb API設計ガイドです。RFCに準拠したHTTPヘッダーの正しい書式や、冪等性を考慮したエラーハンドリングなど実務で迷いやすいポイントを深く解説しています。",
+      "whyRecommended": "API設計における「なぜその設計にするのか」という根拠がREST原則やRFCという明確な仕様に基づいて言語化されており、チーム開発で説得力のある設計指針を共有したい場合に最適です。",
+      "learningPoints": [
+        "リソースパスは複数形で定義し、1つしか存在しない概念（パスワード等）は単数形を用いる。",
+        "リソースの特定はパスパラメータで行い、データの絞り込みやソートなどの表現制御にはクエリパラメータを使用する。",
+        "DELETEを2回実行した際は、リソースの状態を正確に反映するため404 Not Foundを返すのが推奨される。",
+        "ETagは必ずダブルクォートで囲む必要があり、囲まないとプロキシやCDNで誤動作する可能性がある。",
+        "401は認証失敗、403は認証済みだが権限不足、422は形式は正しいがビジネスルール違反の際に使い分ける。"
+      ],
+      "signalsUsed": [
+        "rest_api_design",
+        "http_protocol",
+        "best_practices",
+        "architecture_decision_support",
+        "implementation_guide"
+      ]
+    },
+    {
+      "articleId": "25ed408e2ac2fc393c1086bb67d526c41b89f1ba16752746bdf24be1ddb4cb81",
+      "summary": "Next.js 16のmiddlewareからproxyへの移行時、公式ドキュメントに記載された関数名が実際の型定義と異なっておりAIが誤ったコードを出力する問題が発生しました。本記事では、AIエージェントへの指示に型定義の確認プロセスを組み込み、内部実装の乖離を回避する手法を解説しています。",
+      "whyRecommended": "最新のフレームワーク移行におけるAIのハルシネーションリスクを指摘し、AIエージェントを実務で安全に運用するための具体的なプロンプト設計と検証手法が実践的であるため。",
+      "learningPoints": [
+        "Next.js 16.4.2環境において、ドキュメント記載のunstable_doesProxyMatchは存在せず、実際にはunstable_doesMiddlewareMatchを使用する必要がある。",
+        "AIエージェントにコード生成を指示する際は、ドキュメントの信頼性を疑い、必ずプロジェクト内の型定義（.d.ts）で実在を確認させる工程を含めるべきである。",
+        "Next.jsのproxy移行においてruntimeを指定していないmiddlewareはEdgeで動作するが、proxyへ移行するとNode.js固定となるため実行環境の変更に注意が必要である。",
+        "一括置換を行うと内部的なヘッダ名（x-middleware-nextなど）まで書き換わってしまうリスクがあるため、置換対象を限定する指示が不可欠である。"
+      ],
+      "signalsUsed": [
+        "deep_technical_explanation",
+        "edge_cases",
+        "real_world_experience",
+        "actionable_steps",
+        "ai_agent_prompting"
+      ]
+    },
+    {
+      "articleId": "6aa220505110ca9a03465bf0fac1994d6b3af92bcecd5b7dd24f9851a4220a74",
+      "summary": "公開ステータスページにおける「Operational」と「Connection healthy」といったラベルが、それぞれ異なるレイヤーの可用性を指していることを解説しています。監視対象の範囲を正しく理解し、データが不足している状態（ダッシュ表記）を障害や正常と誤認しないための考え方を提示しています。",
+      "whyRecommended": "インフラやフロントエンドの監視に関わるエンジニアが、ステータスページの数値を盲信せず、技術的な正確性に基づいてインシデント判断を行うための視点が得られるためです。",
+      "learningPoints": [
+        "「Operational」はHTTPエンドポイントの応答までを指すが、「Connection healthy」は主にTCP/TLSの接続成功のみを指し、アプリケーションの動作までは保証しない。",
+        "ステータスページ上の「ダッシュ（—）」表記は0%や0msを意味するのではなく、単に測定データが不足している状態を指す。",
+        "報告件数が0件であることは「障害が発生していない」ことの証明ではなく、単にユーザーからの申告がないだけである。",
+        "ステータス監視の際は、CDNやゲートウェイまでしか到達していない可能性を考慮し、ログインやAPIの成否とは切り分けて考える必要がある。"
+      ],
+      "signalsUsed": [
+        "availability_monitoring",
+        "status_page_interpretation",
+        "architecture_explanation",
+        "checklist_or_playbook"
+      ]
     }
   ]
 }
