@@ -8306,6 +8306,63 @@
         "architecture_explanation",
         "checklist_or_playbook"
       ]
+    },
+    {
+      "articleId": "4bdc05e2633ca2d6b6c8b6f9dda5cbd16ebd84fb20d8188fb3873bf8fbd674be",
+      "summary": "Vercel上のNext.jsアプリケーションにおいて、関数の実行地域がデータベースと離れていたことが原因で発生していた遅延を解消した事例です。さらに、Server Actionの逐次処理によるボトルネックをRoute Handlerへの切り替えで最適化した経験を共有しています。",
+      "whyRecommended": "VercelとSupabaseを利用する際の「実行地域を合わせる」という基本設定の重要性と、Next.jsのServer Action特有の並列実行の制限という、実務でハマりやすい罠を具体的な計測データと共に解説しているため、非常に実用的です。",
+      "learningPoints": [
+        "Vercelのvercel.jsonでregionsを東京(hnd1)に固定することで、遠隔地データベースへの往復時間を劇的に短縮できる。",
+        "Next.jsのServer Actionはルーターの待ち行列で管理されており、前の呼び出しが終わるまで後続の処理が開始されない。",
+        "ログイン直後の軽い判定処理をServer Actionで行うと、直列に並ぶ重いデータ取得処理の完了まで待たされるため、Route Handlerへ移行して並列化すべきである。",
+        "Vercelの関数実行時間は地域によって単価が異なるが、データベースの待機時間が減ることで、トータルのコストは最適化される場合がある。"
+      ],
+      "signalsUsed": [
+        "vercel_region_optimization",
+        "server_action_queuing_issue",
+        "measured_results",
+        "architecture_decision_support"
+      ]
+    },
+    {
+      "articleId": "32f179e7b1a561803d4d63843e268c1e0d2beb07dc21c827c0c4767d5639fb46",
+      "summary": "React、Express、DynamoDBをECS on Fargateで構築するフルスタック環境の設計ガイドです。AWS CDKを用いてインフラとアプリをコードベースで一元管理し、ローカルと本番の差異を吸収するアーキテクチャを解説しています。",
+      "whyRecommended": "インフラ構築だけでなく、ローカル開発環境との差異を最小化する設計思想や、CI/CD・テスト戦略まで含めた実践的な内容です。コストを抑えつつFargateを導入したい層にとって、具体的なCDK実装コードが非常に参考になります。",
+      "learningPoints": [
+        "フロントエンドからAPIを呼び出す際に相対パス（/api/xxx）を利用することで、CORS設定や環境ごとのURL書き換えを不要にできる。",
+        "ALBのパスベースルーティングとNginxのリバースプロキシを組み合わせることで、ローカルとAWS本番環境で同じアプリケーションコードを動作させられる。",
+        "CDKでNAT Gatewayを省きパブリックサブネットのみで構成することで、検証用インフラのランニングコストを低減できる。",
+        "supertestとaws-sdk-client-mockを組み合わせることで、実際のDynamoDBに依存せずバックエンドAPIの高速なテストを実行できる。",
+        "CDKのtable.grantReadWriteDataメソッドを使うと、IAMポリシーを手書きせず対象テーブルへの最小権限を自動生成できる。"
+      ],
+      "signalsUsed": [
+        "aws_cdk",
+        "ecs_fargate",
+        "infrastructure_as_code",
+        "typescript",
+        "nextjs",
+        "react"
+      ]
+    },
+    {
+      "articleId": "8124219fd730b09559ca1ea2cf38d72c7386b36f737026d0b28b8431708015a3",
+      "summary": "パッケージを更新しても解消されない推移的依存の脆弱性を、pnpmのoverrides機能を用いて安全に解決する手法を解説しています。実害の有無を確認しつつ、監査ツールでの検知ゼロを維持するための具体的な手順と、設定を外すタイミングの判断基準が示されています。",
+      "whyRecommended": "依存関係の解決トラブルは実務で頻発しますが、安易にオーバーライドして壊すリスクを避けるための「差分確認」や「解除条件の設定」といったエンジニアリングの勘所が網羅されているため、実用性が非常に高いです。",
+      "learningPoints": [
+        "pnpm whyコマンドを使用して、脆弱性のあるパッケージがどの親依存関係から持ち込まれているかを特定する。",
+        "親パッケージがバージョンを固定している場合や、必要な修正版が別メジャーバージョンにある場合にpnpm overridesが有効である。",
+        "メジャーバージョンを跨ぐオーバーライドを行う際は、ビルド前後の成果物（CSSなど）を比較し、動作に影響がないことを確認する。",
+        "オーバーライドを設定する際は、どの脆弱性対策のために入れたかをコミットメッセージに残し、将来的に設定を外す条件を明確にしておく。",
+        "アドバイザリは後から更新され、6.x系のような既存メジャーバージョン向けに修正版がバックポートされる場合があるため、一度入れた設定も定期的に見直す。"
+      ],
+      "signalsUsed": [
+        "frontend",
+        "security",
+        "nextjs",
+        "pnpm_specific",
+        "dependency_management",
+        "implementation_guide"
+      ]
     }
   ]
 }
