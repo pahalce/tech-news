@@ -8363,6 +8363,62 @@
         "dependency_management",
         "implementation_guide"
       ]
+    },
+    {
+      "articleId": "7833bba132905e8b555ba6a69096bd7172a9bae9f57e1b35b936aed41f953ab3",
+      "summary": "サーバー負荷やプライバシー問題を解決するため、Canvas APIを用いた完全ブラウザ完結型の画像生成ツールを設計する手法を解説しています。Webフォントの読み込み管理から、Retina対応の2倍出力、Canvas汚染を防ぐアイコン描画戦略まで、実務的な実装の工夫がまとめられています。",
+      "whyRecommended": "フロントエンドのみで完結する画像処理ツールの技術的課題と、その具体的な回避策が網羅されています。実用的なコード例が豊富で、UXを損なわずにブラウザで高度な画像編集機能を実装したい開発者に最適な構成です。",
+      "learningPoints": [
+        "document.fonts.load(fontSpec, text) に使用する文字列を渡すことで、日本語フォントのサブセット読み込み完了を確実に待機できる。",
+        "Retina対応は端末のdevicePixelRatioに依存せず、内部論理サイズと2倍の出力倍率を分離して設計することで、出力の再現性を担保できる。",
+        "Canvasでの角丸処理には、主要ブラウザで利用可能な roundRect() メソッドと clip() を組み合わせると効率的である。",
+        "SVGアイコンを外部ファイルとして読み込むとCORS制約によるCanvas汚染が発生するため、Path2DとしてJavaScript内に保持することで問題を回避できる。"
+      ],
+      "signalsUsed": [
+        "canvas_api",
+        "client_side_processing",
+        "web_fonts",
+        "code_examples",
+        "actionable_steps"
+      ]
+    },
+    {
+      "articleId": "d68a1b1120c14cedcb3267612f5fef9c6c40e338ec9e111f62444a3ab29ef9c6",
+      "summary": "Cloudflare Pages、D1、Workersを駆使し、維持費を極限までゼロに抑えた2つのWebアプリケーションの開発事例です。エッジ基盤の特性を活かし、契約業務の自動化やフリマ配送の損益計算を安全かつ高速に実現するアーキテクチャ設計を解説しています。",
+      "whyRecommended": "個人開発において、無料枠を最大限に活用しつつ実務に耐えうる品質を維持するための、具体的な技術選択とアーキテクチャのトレードオフが示されているためです。",
+      "learningPoints": [
+        "Cloudflare WorkersランタイムのPBKDF2（crypto.subtle.deriveBits）では、反復回数が100,000回に制限されている。",
+        "ヘッドレスChromiumのpage.pdf機能を使用することで、ブラウザ上の表示と完全に一致するA4ベクターPDFを生成できる。",
+        "配送ルートの損益計算や手数料計算をブラウザローカルで完結させることで、ユーザーの入力データを外部に送信せずにプライバシーを保護できる。",
+        "厚さの境界条件をロジックで判定し、あと何cm薄くすれば上位の配送区分（安価なプラン）へ変更できるかを提示することで、ユーザーの金銭的メリットを最大化できる。",
+        "Cloudflare D1とnavigator.sendBeaconを組み合わせることで、Cookieを使わずに匿名化されたイベント計測を無料枠内で実装できる。"
+      ],
+      "signalsUsed": [
+        "production_case_study",
+        "architecture_explanation",
+        "deep_technical_explanation",
+        "code_examples",
+        "real_world_experience",
+        "cloudflare_d1",
+        "cloudflare_pages"
+      ]
+    },
+    {
+      "articleId": "a4492234e36d0c0bcfa838dc907b4357d1d3d99cfe63c9bea3c53cda6ca6c72a",
+      "summary": "GitHub Actionsの運用において、長命なクレデンシャルであるGitHub App Private Keyを安全に扱うためのソリューション「GATES」を紹介する記事です。GitHub OIDCとAWS KMSを活用することで、Private Keyを直接参照せずにGitHub App Tokenを払い出す仕組みを解説しています。",
+      "whyRecommended": "CI/CD環境におけるクレデンシャル管理のセキュリティ強化という、DevOps現場で切実な課題に対して、モダンなアーキテクチャによる実践的な解決策を提示しているためです。技術選定の意図やセキュリティ設計の考え方が非常に論理的で参考になります。",
+      "learningPoints": [
+        "GitHub App Private KeyをKMSへインポートすることで、管理者でも平文を取り出せない環境で署名処理を完結できる。",
+        "GitHub OIDCとAWS IAMを組み合わせることで、ワークフローへの固定的な認証情報埋め込みを排除できる。",
+        "独自のAPIエンドポイントを公開する代わりにLambda Invoke APIを利用することで、認証・認可をAWS基盤に丸投げして設計を簡素化できる。",
+        "GitHub App Token発行時の署名処理をKMS側に限定することで、万が一のアクション実行権限漏えい時の被害を最小化できる。"
+      ],
+      "signalsUsed": [
+        "oidc_authentication",
+        "aws_kms",
+        "github_actions",
+        "keyless_infrastructure"
+      ]
     }
   ]
 }
